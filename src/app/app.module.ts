@@ -4,6 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {KeycloakAngularModule, KeycloakService} from "keycloak-angular";
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ToolbarComponent } from './shared/toolbar/toolbar.component';
+import {MatButton, MatFabButton} from "@angular/material/button";
+import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -21,22 +25,23 @@ function initializeKeycloak(keycloak: KeycloakService) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent, ToolbarComponent, SideMenuComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    KeycloakAngularModule
+    KeycloakAngularModule,
+    MatFabButton,
+    MatButton,
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
-      deps: [KeycloakService]
-    }
+      deps: [KeycloakService],
+    },
+    provideAnimationsAsync(),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
