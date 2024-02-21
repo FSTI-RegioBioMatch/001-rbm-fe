@@ -10,7 +10,7 @@ RUN npm run build -- --output-path=./dist --configuration $configuration
 FROM nginx
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d
-COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY --from=build-stage /app/dist /usr/share/nginx/html/
 #COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy the default nginx.conf provided by tiangolo/node-frontend
 #COPY --from=build-stage /nginx.conf /etc/nginx/conf.d/default.conf
