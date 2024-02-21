@@ -7,9 +7,9 @@ COPY ./ /app/
 ARG configuration=production
 RUN npm run build -- --output-path=./dist --base-href browser --configuration $configuration
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx
+FROM nginx:latest
 RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist/ /usr/share/nginx/html/
 #COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy the default nginx.conf provided by tiangolo/node-frontend
