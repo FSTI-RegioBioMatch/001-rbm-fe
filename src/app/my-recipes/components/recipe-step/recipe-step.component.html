@@ -1,0 +1,22 @@
+<div class="step-container">
+  <span class="mt-4 step">{{ stepHeader }}</span>
+  @for (step of steps; track step; let i = $index) {
+    <div class="row d-flex mt-2">
+      <div class="col-1">
+        <span class="step-counter">{{ i + 1 }}</span>
+      </div>
+      <div class="col-10">
+        {{ step.desc }}
+
+        @if (step.imagePath) {
+          <img
+            [src]="step.imagePath"
+            alt="image of food"
+            style="max-width: 531px"
+            class="rounded-2 mt-2"
+          />
+        }
+      </div>
+    </div>
+  }
+</div>

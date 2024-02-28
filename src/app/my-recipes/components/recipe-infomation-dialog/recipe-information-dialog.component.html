@@ -1,34 +1,75 @@
-<div class="container p-4">
-  <div class="d-flex align-items-end flex-column-reverse">
-    <mat-icon>close</mat-icon>
+<div class="container p-4 w-100">
+  <div class="d-flex justify-content-between w-100">
+    <div class="d-flex gap-5">
+      <span>Borscht</span>
+      <mat-chip-set aria-label="Dog selection">
+        <mat-chip>
+          <img
+            matChipAvatar
+            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+            alt="Photo of a Shiba Inu"
+          />
+          Dog one
+        </mat-chip>
+        <mat-chip color="primary">
+          <img
+            matChipAvatar
+            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+            alt="Photo of a Shiba Inu"
+          />
+          Dog two
+        </mat-chip>
+        <mat-chip color="accent">
+          <img
+            matChipAvatar
+            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
+            alt="Photo of a Shiba Inu"
+          />
+          Dog three
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <div class="d-flex gap-2 align-items-end flex-row-reverse">
+      <button mat-mini-fab>
+        <mat-icon>close</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        color="warn"
+        aria-label="Example icon button with a filter list icon"
+      >
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </div>
   </div>
-  <div class="d-flex justify-content-between">
-    <span>Borscht</span>
-    <mat-chip-set aria-label="Dog selection">
-      <mat-chip>
-        <img
-          matChipAvatar
-          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-          alt="Photo of a Shiba Inu"
+
+  <div class="row mt-4">
+    <div class="col-6">
+      <span>Values</span>
+      <table>
+        <tr>
+          <th>Energy</th>
+          <td>500 kcal</td>
+        </tr>
+        <tr>
+          <th>Portions per serving</th>
+          <td>4 portions</td>
+        </tr>
+        <tr>
+          <th>Nutrition Score</th>
+          <td>5/5 points</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-6">
+      <span>Instructions</span>
+      @for (instruction of instructions; track instruction) {
+        <app-recipe-step
+          [stepHeader]="instruction.stepHeader"
+          [steps]="instruction.steps"
         />
-        Dog one
-      </mat-chip>
-      <mat-chip color="primary">
-        <img
-          matChipAvatar
-          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-          alt="Photo of a Shiba Inu"
-        />
-        Dog two
-      </mat-chip>
-      <mat-chip color="accent">
-        <img
-          matChipAvatar
-          src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-          alt="Photo of a Shiba Inu"
-        />
-        Dog three
-      </mat-chip>
-    </mat-chip-set>
+      }
+    </div>
   </div>
 </div>

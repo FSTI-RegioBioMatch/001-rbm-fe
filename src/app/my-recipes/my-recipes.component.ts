@@ -43,24 +43,12 @@ export class MyRecipesComponent implements OnInit {
   constructor(public dialog: MatDialog) {}
 
   openRecipeDialog() {
-    const dialogRef = this.dialog.open(RecipeInformationDialogComponent);
+    const dialogRef = this.dialog.open(RecipeInformationDialogComponent, {
+      width: '1300px',
+    });
   }
 
   ngOnInit(): void {
-    // this.dialog.open(RecipeInformationDialogComponent);
-    const test = new Function(
-      'if(1===1){' +
-        'console.log(this.cards); ' +
-        'return true' +
-        '}' +
-        'else{' +
-        'return false' +
-        '}',
-    );
-    console.log(this.caller(test()));
-  }
-
-  caller(name: any) {
-    return name;
+    this.openRecipeDialog();
   }
 }

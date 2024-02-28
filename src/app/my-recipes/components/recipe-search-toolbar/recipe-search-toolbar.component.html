@@ -6,9 +6,14 @@
   </button>
 </div>
 <div class="d-flex gap-2 mt-4">
-  <mat-form-field [formGroup]="form">
+  <mat-form-field [formGroup]="form" style="width: 40%">
     <mat-label>Toppings</mat-label>
-    <mat-select formControlName="filter" multiple>
+    <mat-select
+      panelClass="fit-content"
+      class="w-100"
+      formControlName="filter"
+      multiple
+    >
       <mat-select-trigger>
         {{ sortByArr[0].name }}
         @if ((sortByArr.length || 0) > 1) {
@@ -19,7 +24,9 @@
         }
       </mat-select-trigger>
       @for (sortBy of sortByArr; track sortBy) {
-        <mat-option [value]="sortBy.name">{{ sortBy.name }}</mat-option>
+        <mat-option [value]="sortBy.name" style="width: 422px">{{
+          sortBy.name
+        }}</mat-option>
       }
     </mat-select>
   </mat-form-field>

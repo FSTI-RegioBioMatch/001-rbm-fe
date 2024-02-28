@@ -16,13 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
-import {
-  MatOption,
-  MatSelect,
-  MatSelectTrigger,
-} from '@angular/material/select';
+import { MatOption, MatSelect } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatInput } from '@angular/material/input';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 function initializeKeycloak(keycloak: KeycloakService) {
