@@ -1,0 +1,15 @@
+<div class="container p-3">
+  <app-recipe-search-toolbar />
+
+  <div class="row">
+    @for (card of cards; track card) {
+      <div class="col mt-4">
+        <app-recipe-card
+          (click)="openRecipeDialog()"
+          [name]="card.name"
+          [img]="card.img || ''"
+        />
+      </div>
+    }
+  </div>
+</div>

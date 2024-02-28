@@ -30,5 +30,13 @@
 
 .button-activated {
   background-color: $dark-green;
+  justify-content: space-between;
 }
 
+.button-text-container {
+  width: 250px;
+}
+
+:host {
+  padding: 10px 25px;
+}

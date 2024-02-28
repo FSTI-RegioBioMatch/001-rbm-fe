@@ -1,0 +1,14 @@
+<div class="card">
+  <img class="card-img" [src]="img || imageUrl" alt="image of recipe" />
+  <div
+    class="d-flex align-items-end justify-content-between ps-4 pe-4 p-2 w-100 card-footer-text"
+  >
+    <span style="font-weight: 600; font-size: 20px">{{ name }}</span>
+    <img
+      class="mb-1"
+      [src]="mealIcon"
+      alt=""
+      style="width: 20px; height: 20px"
+    />
+  </div>
+</div>
