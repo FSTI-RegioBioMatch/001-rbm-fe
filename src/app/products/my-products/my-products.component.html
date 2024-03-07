@@ -1,0 +1,43 @@
+<div class="container p-3">
+  <div class="header-container d-flex justify-content-between">
+    <h4 class="text-green">My Products</h4>
+    <button mat-fab extended (click)="openAddProductDialog()">
+      <mat-icon>add</mat-icon>
+      Add
+    </button>
+  </div>
+  <div class="row">
+    <mat-form-field class="col-4">
+      <mat-label>Saisonstart</mat-label>
+      <input matInput [matDatepicker]="datepickerSeasonStart" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="datepickerSeasonStart"
+      ></mat-datepicker-toggle>
+      <mat-datepicker [startView]="'month'" #datepickerSeasonStart>
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>
+            Apply
+          </button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="col-4">
+      <mat-label>Saisonstart</mat-label>
+      <input matInput [matDatepicker]="datepickerSeasonEnd" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="datepickerSeasonEnd"
+      ></mat-datepicker-toggle>
+      <mat-datepicker [startView]="'month'" #datepickerSeasonEnd>
+        <mat-datepicker-actions>
+          <button mat-button matDatepickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDatepickerApply>
+            Apply
+          </button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+  </div>
+</div>

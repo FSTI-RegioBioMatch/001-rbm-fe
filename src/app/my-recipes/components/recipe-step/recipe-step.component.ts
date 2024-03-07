@@ -8,5 +8,9 @@ import { Component, Input } from '@angular/core';
 })
 export class RecipeStepComponent {
   @Input() stepHeader = '';
-  @Input() steps: { desc: string; imagePath: string }[] = [];
+  @Input() steps: {
+    desc: string;
+    imagePath: string;
+    note: { type: string; text: string };
+  }[] = [];
 }

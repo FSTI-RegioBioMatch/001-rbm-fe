@@ -27,6 +27,28 @@ export class SideMenuComponent implements OnInit, AfterViewInit {
       isActivated: false,
       route: '/my-recipes',
     },
+    {
+      id: 3,
+      name: 'Community recipes',
+      icon: 'restaurant_menu',
+      isActivated: false,
+      route: '/com-recipes',
+    },
+    {
+      id: 4,
+      name: '',
+      icon: '',
+      isActivated: false,
+      route: '',
+      isDivider: true,
+    },
+    {
+      id: 5,
+      name: 'My products',
+      icon: 'inventory_2',
+      isActivated: false,
+      route: '/products/my-products',
+    },
   ];
 
   onClickActivateButton(button: ButtonType) {

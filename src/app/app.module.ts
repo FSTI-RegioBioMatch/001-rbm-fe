@@ -3,7 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import {
+  KeycloakAngularModule,
+  KeycloakBearerInterceptor,
+  KeycloakService,
+} from 'keycloak-angular';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import {
@@ -15,10 +19,27 @@ import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
-import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatHint,
+  MatLabel,
+  MatSuffix,
+} from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { MatInput } from '@angular/material/input';
+import { MatDivider } from '@angular/material/divider';
+import { RecipeSearchToolbarComponent } from './my-recipes/components/recipe-search-toolbar/recipe-search-toolbar.component';
+import {
+  MatDatepicker,
+  MatDatepickerActions,
+  MatDatepickerApply,
+  MatDatepickerCancel,
+  MatDatepickerInput,
+  MatDatepickerToggle,
+} from '@angular/material/datepicker';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -32,6 +53,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
         onLoad: 'login-required',
         flow: 'standard',
       },
+      loadUserProfileAtStartUp: true,
+      // enableBearerInterceptor: true, // attach ACCESS_TOKEN on each request
+      // bearerPrefix: 'Bearer', // prefix "bearer <TOKEN> on each request
+      bearerExcludedUrls: [],
     });
 }
 
@@ -55,6 +80,17 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatOption,
     ReactiveFormsModule,
     MyRecipesComponent,
+    MatInput,
+    MatDivider,
+    RecipeSearchToolbarComponent,
+    MatDatepicker,
+    MatDatepickerActions,
+    MatDatepickerApply,
+    MatDatepickerCancel,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatLabel,
+    MatSuffix,
   ],
   providers: [
     {
@@ -65,6 +101,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     },
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
+    // provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withFetch()),
   ],
   bootstrap: [AppComponent],
 })

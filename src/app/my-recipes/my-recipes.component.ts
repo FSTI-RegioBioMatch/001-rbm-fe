@@ -4,6 +4,11 @@ import { RecipeCardComponent } from './components/recipe-card/recipe-card.compon
 import { Card } from './types/card';
 import { MatDialog } from '@angular/material/dialog';
 import { RecipeInformationDialogComponent } from './components/recipe-infomation-dialog/recipe-information-dialog.component';
+import { TheMealDbService } from '../shared/services/the-meal-db.service';
+import {
+  Meals,
+  MealTheMealDbType,
+} from '../community-recipes/types/meal-the-meal-db.type';
 
 @Component({
   selector: 'app-my-recipes',
@@ -14,41 +19,27 @@ import { RecipeInformationDialogComponent } from './components/recipe-infomation
   providers: [],
 })
 export class MyRecipesComponent implements OnInit {
-  cards: Card[] = [
-    {
-      name: 'Fancy banana',
-      img: 'assets/food-picture.jpg',
-    },
-    {
-      name: 'Borscht',
-    },
-    {
-      name: 'Fancy banana',
-      img: 'assets/food-picture.jpg',
-    },
-    {
-      name: 'Borscht',
-    },
-    {
-      name: 'Borscht',
-    },
-    {
-      name: 'Borscht',
-    },
-    {
-      name: 'Borscht',
-    },
-  ];
+  meals!: Meals;
 
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private mealDbService: TheMealDbService,
+  ) {}
 
-  openRecipeDialog() {
+  openRecipeDialog(meal: MealTheMealDbType) {
     const dialogRef = this.dialog.open(RecipeInformationDialogComponent, {
       width: '1300px',
+      height: 'auto',
+      data: {
+        meal: meal,
+        isCanFork: true,
+      },
     });
   }
 
   ngOnInit(): void {
-    this.openRecipeDialog();
+    this.mealDbService.get10RandomMeals().subscribe((meals) => {
+      this.meals = meals;
+    });
   }
 }

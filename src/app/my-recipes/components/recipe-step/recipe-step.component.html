@@ -1,5 +1,7 @@
 <div class="step-container">
-  <span class="mt-4 step">{{ stepHeader }}</span>
+  @if (stepHeader) {
+    <span class="mt-4 step">{{ stepHeader }}</span>
+  }
   @for (step of steps; track step; let i = $index) {
     <div class="row d-flex mt-2">
       <div class="col-1">
@@ -12,9 +14,34 @@
           <img
             [src]="step.imagePath"
             alt="image of food"
-            style="max-width: 531px"
+            style="max-width: 430px"
             class="rounded-2 mt-2"
           />
+        }
+
+        @if (step.note) {
+          @switch (step.note.type) {
+            @case ("success") {
+              <div class="alert alert-success mt-2" role="alert">
+                {{ step.note.text }}
+              </div>
+            }
+            @case ("info") {
+              <div class="alert alert-info mt-2" role="alert">
+                {{ step.note.text }}
+              </div>
+            }
+            @case ("warning") {
+              <div class="alert alert-warning mt-2" role="alert">
+                {{ step.note.text }}
+              </div>
+            }
+            @case ("danger") {
+              <div class="alert alert-danger mt-2" role="alert">
+                {{ step.note.text }}
+              </div>
+            }
+          }
         }
       </div>
     </div>

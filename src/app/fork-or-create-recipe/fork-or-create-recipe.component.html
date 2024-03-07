@@ -1,0 +1,98 @@
+@if (!loading) {
+  @if (mealId) {
+    <form [formGroup]="form" class="container">
+      <div class="row">
+        <div class="pb-3">
+          <div class="row">
+            <div class="image-upload col-md-6">
+              <input type="file" hidden #fileInput />
+              <img
+                [src]="form.value.strMealThumb || 'placeholder-image-url'"
+                height="100"
+                class="rounded-4"
+              />
+              <button mat-button (click)="fileInput.click()">
+                Choose Image
+              </button>
+            </div>
+
+            <mat-form-field class="col-md-6">
+              <mat-label>Name</mat-label>
+              <input formControlName="strMeal" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div>
+          <div class="row">
+            <mat-form-field class="col-md-6">
+              <mat-label>Area</mat-label>
+              <mat-select formControlName="strArea">
+                @for (area of areas; track area) {
+                  <mat-option [value]="area.strArea">{{
+                    area.strArea
+                  }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="col-md-6">
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="strCategory">
+                @for (category of categories; track category) {
+                  <mat-option [value]="category.strCategory">{{
+                    category.strCategory
+                  }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div formArrayName="ingredients">
+          @for (
+            ingredientCtrl of ingredients.controls;
+            let i = $index;
+            track ingredientCtrl
+          ) {
+            <div class="row" [formGroupName]="i">
+              <mat-form-field class="col-md-6">
+                <mat-label>Measure</mat-label>
+                <input formControlName="strMeasure" matInput />
+              </mat-form-field>
+
+              <mat-form-field class="col-md-6">
+                <mat-label>Ingredient</mat-label>
+                <mat-select formControlName="strIngredient">
+                  @for (ingredient of ingredientsList; track ingredient) {
+                    <mat-option [value]="ingredient.strIngredient">{{
+                      ingredient.strIngredient
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          }
+          <button mat-button type="button" (click)="addIngredient()">
+            Add Ingredient
+          </button>
+          <button mat-button type="button" (click)="testSend()">send</button>
+        </div>
+      </div>
+    </form>
+  } @else {
+    <div class="container">
+      <mat-form-field>
+        <mat-label>Input</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </div>
+  }
+} @else {
+  <div
+    class="d-flex justify-content-center align-items-center"
+    style="height: 80vh; width: 80vw"
+  >
+    <mat-spinner></mat-spinner>
+  </div>
+}

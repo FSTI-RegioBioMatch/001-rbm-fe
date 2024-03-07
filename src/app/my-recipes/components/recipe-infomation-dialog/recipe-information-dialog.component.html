@@ -1,52 +1,42 @@
 <div class="container p-4 w-100">
   <div class="d-flex justify-content-between w-100">
     <div class="d-flex gap-5">
-      <span>Borscht</span>
-      <mat-chip-set aria-label="Dog selection">
-        <mat-chip>
-          <img
-            matChipAvatar
-            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-            alt="Photo of a Shiba Inu"
-          />
-          Dog one
-        </mat-chip>
-        <mat-chip color="primary">
-          <img
-            matChipAvatar
-            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-            alt="Photo of a Shiba Inu"
-          />
-          Dog two
-        </mat-chip>
-        <mat-chip color="accent">
-          <img
-            matChipAvatar
-            src="https://material.angular.io/assets/img/examples/shiba1.jpg"
-            alt="Photo of a Shiba Inu"
-          />
-          Dog three
-        </mat-chip>
-      </mat-chip-set>
+      <h2>{{ data.meal.strMeal }}</h2>
+      @if (data.meal.strTags) {
+        <mat-chip-set aria-label="Dog selection">
+          @for (tag of data.meal.strTags.split(","); track tag) {
+            <mat-chip> {{ tag }} </mat-chip>
+          }
+        </mat-chip-set>
+      }
     </div>
 
-    <div class="d-flex gap-2 align-items-end flex-row-reverse">
-      <button mat-mini-fab>
-        <mat-icon>close</mat-icon>
-      </button>
+    <div class="d-flex gap-2">
+      @if (data.isCanFork) {
+        <button
+          (click)="onClickNavigateToFork()"
+          mat-icon-button
+          aria-label="Button to close the modal"
+        >
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      }
       <button
-        mat-mini-fab
-        color="warn"
+        mat-icon-button
+        class="btn-settings"
         aria-label="Example icon button with a filter list icon"
       >
         <mat-icon>filter_list</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Button to close the modal">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
   </div>
 
   <div class="row mt-4">
     <div class="col-6">
-      <span>Values</span>
+      <h6>Values</h6>
       <table>
         <tr>
           <th>Energy</th>
@@ -61,8 +51,66 @@
           <td>5/5 points</td>
         </tr>
       </table>
+
+      <div class="row mt-3">
+        <img
+          [src]="data.meal.strMealThumb"
+          [alt]="data.meal.strDrinkAlternate"
+          style="max-width: 200px"
+          class="col-3 rounded-4"
+        />
+        <div class="col-9">
+          <h6>Description</h6>
+          <span
+            >Borscht is a traditional Ukrainian soup known for its vibrant color
+            and rich, hearty flavor. Here's a basic recipe for Ukrainian Borscht
+            along with its ingredients:</span
+          >
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h6>Ingredients</h6>
+        <table class="ingredients-table mt-4 rounded-2">
+          @for (
+            ingreadient of ingreadients;
+            track ingreadient;
+            let i = $index
+          ) {
+            @if (ingreadient && i > 0) {
+              <tr>
+                <td>{{ ingreadient.left }}</td>
+                <td>{{ ingreadient.right }}</td>
+              </tr>
+            }
+          }
+        </table>
+      </div>
+      <div class="mt-4">
+        <!--        <h6>Optional</h6>-->
+        <!--        <div class="optional-card-container d-flex flex-column gap-2">-->
+        <!--          <div class="optional-card p-2 rounded-2 border-black border-2">-->
+        <!--            <div class="d-flex flex-column">-->
+        <!--              <span>Fresh dill, cilantro or parsley</span>-->
+        <!--              <span class="text-muted">chopped</span>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--          <div class="optional-card p-2 rounded-2 border-black border-2">-->
+        <!--            <div class="d-flex flex-column">-->
+        <!--              <span>Fresh dill, cilantro or parsley</span>-->
+        <!--              <span class="text-muted">chopped</span>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--          <div class="optional-card p-2 rounded-2 border-black border-2">-->
+        <!--            <div class="d-flex flex-column">-->
+        <!--              <span>Fresh dill, cilantro or parsley</span>-->
+        <!--              <span class="text-muted">chopped</span>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->0
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-6 instructions">
       <span>Instructions</span>
       @for (instruction of instructions; track instruction) {
         <app-recipe-step
