@@ -1,0 +1,52 @@
+<div class="container mx-auto">
+  <table>
+    <tr class="table-header">
+      <th colspan="2">Vegetable</th>
+      @for (month of monthsOfYear; track month) {
+        <th style="width: 90px">
+          {{ month }}
+        </th>
+      }
+    </tr>
+    @for (vegetable of seasonCalendarData; track vegetable) {
+      <tr class="table-row">
+        <td rowspan="3" class="text-left">
+          <img
+            class="w-25 h-25 rounded-3"
+            [src]="imageFinder(vegetable.name)"
+            alt=""
+          />
+          {{ vegetable.name }}
+        </td>
+        <td>Sow</td>
+        @for (month of monthsNumber; track month) {
+          <td>
+            @if (vegetable.sowMonths.includes(month)) {
+              <span class="checkmark">✔</span>
+            }
+          </td>
+        }
+      </tr>
+      <tr class="table-row">
+        <td>Plant</td>
+        @for (month of monthsNumber; track month) {
+          <td>
+            @if (vegetable.plantMonths.includes(month)) {
+              <span class="checkmark">✔</span>
+            }
+          </td>
+        }
+      </tr>
+      <tr class="table-row">
+        <td>Harvest</td>
+        @for (month of monthsNumber; track month) {
+          <td>
+            @if (vegetable.harvestMonths.includes(month)) {
+              <span class="checkmark">✔</span>
+            }
+          </td>
+        }
+      </tr>
+    }
+  </table>
+</div>

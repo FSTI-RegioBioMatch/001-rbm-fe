@@ -49,6 +49,21 @@ export class SideMenuComponent implements OnInit, AfterViewInit {
       isActivated: false,
       route: '/products/my-products',
     },
+    {
+      id: 6,
+      name: '',
+      icon: '',
+      isActivated: false,
+      route: '',
+      isDivider: true,
+    },
+    {
+      id: 7,
+      name: 'Season calendar',
+      icon: 'inventory_2',
+      isActivated: false,
+      route: '/season-calendar',
+    },
   ];
 
   onClickActivateButton(button: ButtonType) {

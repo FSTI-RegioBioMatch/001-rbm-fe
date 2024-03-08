@@ -3,11 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {
-  KeycloakAngularModule,
-  KeycloakBearerInterceptor,
-  KeycloakService,
-} from 'keycloak-angular';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import {
