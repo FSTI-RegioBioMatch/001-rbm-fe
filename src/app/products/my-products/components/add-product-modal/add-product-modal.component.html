@@ -1,4 +1,4 @@
-<div class="container p-3">
+<div class="container p-5">
   <form [formGroup]="form">
     <div class="row">
       <mat-form-field class="col-md-6">
@@ -14,12 +14,62 @@
     <div class="row mt-4">
       <mat-form-field class="col-12">
         <mat-label>Product name</mat-label>
-        <input readonly formControlName="productName" matInput />
+        <input formControlName="productName" matInput />
       </mat-form-field>
     </div>
     <div class="row">
       <mat-form-field class="col-12">
         <mat-label>Description</mat-label>
+        <textarea formControlName="productDescription" matInput></textarea>
+      </mat-form-field>
+    </div>
+    <mat-divider />
+    <div class="row mt-4">
+      <label for="availability">Period of availability per product</label>
+
+      <section>
+        <mat-checkbox id="availability">Entire year</mat-checkbox>
+      </section>
+
+      <mat-form-field class="col-12 mt-2">
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date" />
+          <input matEndDate placeholder="End date" />
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+          <mat-icon>calendar_today</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+    <mat-divider class="mt-4" />
+    <div class="row mt-4">
+      <mat-form-field class="col-4">
+        <mat-label>Price per unit</mat-label>
+        <input matInput />
+      </mat-form-field>
+      <mat-form-field class="col-4">
+        <mat-label>Estimated quantity</mat-label>
+        <input matInput />
+      </mat-form-field>
+
+      <mat-form-field class="col-4">
+        <mat-label>Measuring unit</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </div>
+    <mat-divider class="" />
+    <div class="row mt-4">
+      <mat-form-field class="col-12">
+        <mat-label>Where are you bio-certified?</mat-label>
+        <input matInput />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-12">
+        <mat-label>Supplements (Please add your details here)</mat-label>
         <textarea formControlName="productDescription" matInput></textarea>
       </mat-form-field>
     </div>

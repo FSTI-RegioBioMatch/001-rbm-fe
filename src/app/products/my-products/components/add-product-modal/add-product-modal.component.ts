@@ -5,16 +5,49 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
+import {
+  MatFormField,
+  MatFormFieldModule,
+  MatHint,
+  MatLabel,
+} from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
+import {
+  MatDatepickerModule,
+  MatDatepickerToggle,
+  MatDateRangeInput,
+  MatDateRangePicker,
+  MatEndDate,
+  MatStartDate,
+} from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-add-product-modal',
   templateUrl: './add-product-modal.component.html',
   styleUrl: './add-product-modal.component.scss',
   standalone: true,
-  imports: [MatFormField, ReactiveFormsModule, MatInput, MatLabel, MatDivider],
+  imports: [
+    MatFormField,
+    ReactiveFormsModule,
+    MatInput,
+    MatLabel,
+    MatDivider,
+    MatDateRangeInput,
+    MatDatepickerToggle,
+    MatDateRangePicker,
+    MatHint,
+    MatStartDate,
+    MatEndDate,
+    MatIcon,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatCheckbox,
+  ],
+  providers: [provideNativeDateAdapter()],
 })
 export class AddProductModalComponent {
   form: FormGroup;

@@ -1,5 +1,19 @@
-<div class="card">
-  <img class="card-img" [src]="img || imageUrl" alt="image of recipe" />
+<div
+  class="card"
+  [ngClass]="{
+    'card-rect': typeOverride === 'rect',
+    'card-square': typeOverride === 'square'
+  }"
+>
+  <img
+    class="card-img"
+    [ngClass]="{
+      'card-img-rect': typeOverride === 'rect',
+      'card-img-square': typeOverride === 'square'
+    }"
+    [src]="img || imageUrl"
+    alt="image of recipe"
+  />
   <div
     class="d-flex align-items-end justify-content-between ps-4 pe-4 p-2 w-100 card-footer-text"
   >

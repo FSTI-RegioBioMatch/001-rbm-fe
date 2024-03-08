@@ -1,1 +1,72 @@
-<p>dashboard works!</p>
+<div class="container w-100">
+  <h4 class="text-green">Dashboard</h4>
+
+  <div class="header-container mt-4 mb-4">
+    <span class="text-big">My data</span>
+  </div>
+  <div class="row d-flex gap-3 justify-content-between">
+    <div class="col-6 p-4 rounded-5 card-green-1-container">
+      <div class="card-elements w-100">
+        <img src="assets/img/dummy-avatar.png" alt="" />
+        <div class="d-flex flex-column gap-1">
+          <span class="text-big">Pepper potis</span>
+          <span class="text-sm">CEO</span>
+          <span class="text-sm">Königstor 22</span>
+          <span class="text-sm">34117 Kassel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 p-4 rounded-5 card-green-2-container">
+      <div class="card-elements w-100">
+        <img src="assets/img/dummy-company-logo.png" alt="" />
+        <div class="d-flex flex-column gap-1">
+          <span class="text-big">Canteen Industries GmbH</span>
+          <span class="text-sm">‘High-tech dining for everyone.’</span>
+          <span class="text-sm">Königstor 22</span>
+          <span class="text-sm">34117 Kassel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (!loadingRecipes) {
+    <div class="header-container mt-4 mb-4 d-flex justify-content-between">
+      <span class="text-big">Trending recipes</span>
+      <button mat-stroked-button class="rounded-3">SHOW ALL</button>
+    </div>
+    <div class="row">
+      @for (meal of trendingMeals; track meal) {
+        <div class="col-3">
+          <app-recipe-card
+            [name]="meal.strMeal"
+            [img]="meal.strMealThumb"
+            [typeOverride]="'rect'"
+          />
+        </div>
+      }
+    </div>
+
+    <div class="header-container mt-5 mb-4 d-flex justify-content-between">
+      <span class="text-big">My recipes</span>
+      <button mat-stroked-button class="rounded-3">SHOW ALL</button>
+    </div>
+    <div class="row">
+      @for (meal of myRecipesMeals; track meal) {
+        <div class="col-3">
+          <app-recipe-card
+            [name]="meal.strMeal"
+            [img]="meal.strMealThumb"
+            [typeOverride]="'rect'"
+          />
+        </div>
+      }
+    </div>
+  } @else {
+    <div
+      class="d-flex position-absolute justify-content-center"
+      style="top: 50%; left: 55%"
+    >
+      <mat-spinner diameter="50" strokeWidth="8"></mat-spinner>
+    </div>
+  }
+</div>

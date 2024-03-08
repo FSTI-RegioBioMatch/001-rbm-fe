@@ -40,6 +40,8 @@ import {
   MatDatepickerInput,
   MatDatepickerToggle,
 } from '@angular/material/datepicker';
+import { RecipeCardComponent } from './my-recipes/components/recipe-card/recipe-card.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -91,6 +93,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDatepickerToggle,
     MatLabel,
     MatSuffix,
+    RecipeCardComponent,
+    MatProgressSpinner,
   ],
   providers: [
     {

@@ -1,13 +1,21 @@
 .card {
   position: relative;
   width: 320px;
-  min-width: 200px;
-  max-width: 400px;
   max-height: 400px;
-
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
   border-radius: 24px;
   z-index: 1;
+}
+
+.card-rect {
+  min-width: 200px;
+  max-width: 500px;
+  max-height: 210px;
+}
+
+.card-square {
+  min-width: 200px;
+  max-width: 400px;
 }
 
 .card:hover {
@@ -20,8 +28,15 @@
 .card-img {
   box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.12);
   border-radius: 24px;
-  max-height: 300px;
   object-fit: cover;
+}
+
+.card-img-square {
+  max-height: 300px;
+}
+
+.card-img-rect {
+  max-height: 208px;
 }
 
 .card-footer-text {
