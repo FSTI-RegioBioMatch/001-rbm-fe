@@ -57,6 +57,66 @@ export class SeasonCalendarComponent implements OnInit {
       harvestMonths: [7, 8, 9],
       plantMonths: [4, 5, 6],
     },
+    {
+      name: 'Tomato',
+      sowMonths: [1, 2, 3, 4],
+      harvestMonths: [6, 7, 8],
+      plantMonths: [3, 4, 5],
+    },
+    {
+      name: 'Potato',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
+    {
+      name: 'Carrot',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
+    {
+      name: 'Cucumber',
+      sowMonths: [4, 5, 6],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [5, 6, 7],
+    },
+    {
+      name: 'Onion',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
+    {
+      name: 'Tomato',
+      sowMonths: [1, 2, 3, 4],
+      harvestMonths: [6, 7, 8],
+      plantMonths: [3, 4, 5],
+    },
+    {
+      name: 'Potato',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
+    {
+      name: 'Carrot',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
+    {
+      name: 'Cucumber',
+      sowMonths: [4, 5, 6],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [5, 6, 7],
+    },
+    {
+      name: 'Onion',
+      sowMonths: [3, 4, 5],
+      harvestMonths: [7, 8, 9],
+      plantMonths: [4, 5, 6],
+    },
   ];
 
   constructor(private mealDbService: TheMealDbService) {}

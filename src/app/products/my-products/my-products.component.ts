@@ -36,7 +36,9 @@ import { MatButton, MatFabButton } from '@angular/material/button';
 })
 export class MyProductsComponent implements OnInit {
   constructor(private dialog: MatDialog) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.openAddProductDialog();
+  }
   openAddProductDialog() {
     const dialogRef = this.dialog.open(AddProductModalComponent, {
       width: '1300px',
