@@ -13,7 +13,6 @@ import {
 } from '@angular/material/button';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 import { MatIconModule } from '@angular/material/icon';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import {
   MatFormField,
@@ -38,6 +37,23 @@ import {
 } from '@angular/material/datepicker';
 import { RecipeCardComponent } from './my-recipes/components/recipe-card/recipe-card.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import {
+  MatButtonToggle,
+  MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -59,12 +75,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ToolbarComponent,
-    SideMenuComponent,
-    DashboardComponent,
-  ],
+  declarations: [AppComponent, ToolbarComponent, SideMenuComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -91,6 +102,20 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatSuffix,
     RecipeCardComponent,
     MatProgressSpinner,
+    MatTabGroup,
+    MatTab,
+    MatHeaderCell,
+    MatTable,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    MatRowDef,
+    MatHeaderRowDef,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatColumnDef,
+    MatButtonToggleGroup,
+    MatButtonToggle,
   ],
   providers: [
     {

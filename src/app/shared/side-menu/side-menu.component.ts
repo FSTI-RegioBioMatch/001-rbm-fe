@@ -13,52 +13,66 @@ export class SideMenuComponent implements OnInit, AfterViewInit {
 
   buttons: ButtonType[] = [
     {
-      id: 1,
-      name: 'Dashboard',
+      name: 'Kitchens',
+      icon: '',
+      isActivated: false,
+      route: '',
+      isDivider: true,
+    },
+    {
+      name: 'Dashboard 1',
       badgeCounter: 3,
       icon: 'dashboard',
-      isActivated: false,
+      isActivated: true,
       route: '/',
     },
     {
-      id: 2,
       name: 'My Recipes',
       icon: 'restaurant_menu',
       isActivated: false,
       route: '/my-recipes',
     },
     {
-      id: 3,
       name: 'Community recipes',
       icon: 'restaurant_menu',
       isActivated: false,
       route: '/com-recipes',
     },
     {
-      id: 4,
-      name: '',
+      name: 'Producers',
       icon: '',
       isActivated: false,
       route: '',
       isDivider: true,
     },
     {
-      id: 5,
+      name: 'Dashboard 2',
+      badgeCounter: 3,
+      icon: 'dashboard',
+      isActivated: false,
+      route: '/',
+    },
+    {
       name: 'My products',
       icon: 'inventory_2',
       isActivated: false,
       route: '/products/my-products',
     },
     {
-      id: 6,
-      name: '',
+      name: 'Refiner',
       icon: '',
       isActivated: false,
       route: '',
       isDivider: true,
     },
     {
-      id: 7,
+      name: 'Dashboard 3',
+      badgeCounter: 3,
+      icon: 'dashboard',
+      isActivated: false,
+      route: '/',
+    },
+    {
       name: 'Season calendar',
       icon: 'inventory_2',
       isActivated: false,
@@ -81,9 +95,9 @@ export class SideMenuComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const currentPath = this.route.url;
     console.log(currentPath);
-    this.buttons.forEach((button) => {
-      button.isActivated = currentPath === button.route;
-    });
+    // this.buttons.forEach((button) => {
+    //   button.isActivated = currentPath === button.route;
+    // });
   }
 
   ngAfterViewInit(): void {}

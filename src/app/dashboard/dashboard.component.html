@@ -29,6 +29,24 @@
       </div>
     </div>
   </div>
+  <div class="col-6 mt-4 mb-4">
+    <mat-tab-group [color]="'primary'">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Unread messages</span>
+          <span class="ms-4" matBadge="2"></span>
+        </ng-template>
+        <app-message />
+        <app-message />
+
+        <div class="mt-4 mb-4">
+          <button mat-raised-button>View all</button>
+        </div>
+      </mat-tab>
+      <mat-tab label="Open offers"></mat-tab>
+    </mat-tab-group>
+  </div>
+
   @if (!loadingRecipes) {
     <div class="header-container mt-4 mb-4 d-flex justify-content-between">
       <span class="text-big">Trending recipes</span>

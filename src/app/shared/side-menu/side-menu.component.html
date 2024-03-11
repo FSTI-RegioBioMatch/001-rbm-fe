@@ -1,8 +1,9 @@
 <div class="side-menu-container">
   <div class="d-flex flex-column gap-2">
-    @for (button of buttons; track button.id) {
+    @for (button of buttons; track button) {
       @if (button.isDivider) {
-        <mat-divider></mat-divider>
+        <!--        <mat-divider>test</mat-divider>-->
+        <div class="divider">{{ button.name }}</div>
       } @else {
         <button
           [ngClass]="button.isActivated ? 'button-activated' : ''"

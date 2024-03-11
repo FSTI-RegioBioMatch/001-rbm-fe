@@ -41,3 +41,17 @@
   padding: 10px 25px;
   min-height: 100%;
 }
+
+.divider {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.divider::before, .divider::after {
+  flex: 1;
+  content: '';
+  padding: 1px;
+  background-color: black;
+  margin: 5px;
+}
