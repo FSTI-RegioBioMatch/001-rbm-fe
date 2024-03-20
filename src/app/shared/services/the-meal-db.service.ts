@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  Meals,
-  MealTheMealDbType,
-} from '../../community-recipes/types/meal-the-meal-db.type';
 import { environment } from '../../../environments/environment.development';
 import { MealdbAreaType } from '../types/mealdb-area.type';
 import { MealdbCategoryType } from '../types/mealdb-category.type';
 import { MealdbIngredientType } from '../types/mealdb-ingredient.type';
+import { Meals } from '../../community-recipes/types/meal-the-meal-db.type';
 
 @Injectable({
   providedIn: 'root',

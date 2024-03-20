@@ -1,0 +1,79 @@
+<div class="container">
+  <form [formGroup]="form">
+    <span class="text-green">About my company</span>
+    <div class="row">
+      <mat-form-field class="col-md-4">
+        <mat-label>Street and house number</mat-label>
+        <input formControlName="companyStreet" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-4">
+        <mat-label>City</mat-label>
+        <input formControlName="companyCity" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-4">
+        <mat-label>Postcode</mat-label>
+        <input formControlName="companyZip" matInput />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-6">
+        <mat-label>Betriebsname</mat-label>
+        <input formControlName="companyName" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-6">
+        <mat-label>Marketname</mat-label>
+        <input formControlName="marketName" matInput />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-12">
+        <mat-label>Slogan</mat-label>
+        <input formControlName="slogan" matInput />
+      </mat-form-field>
+    </div>
+
+    <span class="text-green">Contact</span>
+    <div class="row">
+      <mat-form-field class="col-md-6">
+        <mat-label>Phone</mat-label>
+        <input formControlName="phone" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-6">
+        <mat-label>Contact email</mat-label>
+        <input formControlName="contactEmail" matInput />
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="col-md-6">
+        <mat-label>Faxnumber</mat-label>
+        <input formControlName="faxNumber" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-6">
+        <mat-label>Website</mat-label>
+        <input formControlName="website" matInput />
+      </mat-form-field>
+    </div>
+
+    <span class="text-green">Betriebsdaten</span>
+    <div class="row">
+      <mat-form-field class="col-md-4">
+        <mat-label>Eco-control number</mat-label>
+        <input formControlName="ecoControlNumber" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-4">
+        <mat-label>Registernumber</mat-label>
+        <input formControlName="registerNumber" matInput />
+      </mat-form-field>
+      <mat-form-field class="col-md-4">
+        <mat-label>Taxnumber</mat-label>
+        <input formControlName="taxNumber" matInput />
+      </mat-form-field>
+    </div>
+
+    <div class="d-flex mb-4 justify-content-end">
+      <button mat-raised-button color="primary" (click)="onSubmit()">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>

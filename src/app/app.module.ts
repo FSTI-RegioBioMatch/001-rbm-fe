@@ -5,28 +5,27 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import {
   MatButton,
   MatFabAnchor,
   MatFabButton,
 } from '@angular/material/button';
-import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 import { MatIconModule } from '@angular/material/icon';
-import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import {
   MatFormField,
-  MatHint,
   MatLabel,
   MatSuffix,
 } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withFetch,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
-import { RecipeSearchToolbarComponent } from './my-recipes/components/recipe-search-toolbar/recipe-search-toolbar.component';
 import {
   MatDatepicker,
   MatDatepickerActions,
@@ -35,7 +34,6 @@ import {
   MatDatepickerInput,
   MatDatepickerToggle,
 } from '@angular/material/datepicker';
-import { RecipeCardComponent } from './my-recipes/components/recipe-card/recipe-card.component';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import {
@@ -54,6 +52,8 @@ import {
   MatButtonToggle,
   MatButtonToggleGroup,
 } from '@angular/material/button-toggle';
+import { ToolbarComponent } from './shared/toolbar/toolbar.component';
+import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -70,12 +70,15 @@ function initializeKeycloak(keycloak: KeycloakService) {
       loadUserProfileAtStartUp: true,
       // enableBearerInterceptor: true, // attach ACCESS_TOKEN on each request
       // bearerPrefix: 'Bearer', // prefix "bearer <TOKEN> on each request
-      bearerExcludedUrls: [],
+      bearerExcludedUrls: [
+        'https://www.themealdb.com/*',
+        'https://themealdb.com/*',
+      ],
     });
 }
 
 @NgModule({
-  declarations: [AppComponent, ToolbarComponent, SideMenuComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -88,10 +91,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatSelect,
     MatOption,
     ReactiveFormsModule,
-    MyRecipesComponent,
     MatInput,
     MatDivider,
-    RecipeSearchToolbarComponent,
     MatDatepicker,
     MatDatepickerActions,
     MatDatepickerApply,
@@ -100,7 +101,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatDatepickerToggle,
     MatLabel,
     MatSuffix,
-    RecipeCardComponent,
     MatProgressSpinner,
     MatTabGroup,
     MatTab,
@@ -116,6 +116,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatColumnDef,
     MatButtonToggleGroup,
     MatButtonToggle,
+    ToolbarComponent,
+    SideMenuComponent,
   ],
   providers: [
     {
@@ -126,9 +128,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
     },
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
-    // provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi()),
     provideHttpClient(withFetch()),
   ],
   bootstrap: [AppComponent],
+  exports: [],
 })
 export class AppModule {}

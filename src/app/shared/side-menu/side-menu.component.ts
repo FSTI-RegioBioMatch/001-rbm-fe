@@ -1,11 +1,16 @@
 import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { ButtonType } from './types/button.type';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-side-menu',
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
+  standalone: true,
+  imports: [NgClass, MatButton, MatIcon],
 })
 export class SideMenuComponent implements OnInit, AfterViewInit {
   private route = inject(Router);
@@ -87,14 +92,11 @@ export class SideMenuComponent implements OnInit, AfterViewInit {
     });
 
     button.isActivated = true;
-    this.route.navigateByUrl(button.route).then(() => {
-      console.log(this.route.url);
-    });
+    this.route.navigateByUrl(button.route).then(() => {});
   }
 
   ngOnInit(): void {
     const currentPath = this.route.url;
-    console.log(currentPath);
     // this.buttons.forEach((button) => {
     //   button.isActivated = currentPath === button.route;
     // });

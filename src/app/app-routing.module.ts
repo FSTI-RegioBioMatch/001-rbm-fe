@@ -6,6 +6,9 @@ import { CommunityRecipesComponent } from './community-recipes/community-recipes
 import { ForkOrCreateRecipeComponent } from './fork-or-create-recipe/fork-or-create-recipe.component';
 import { MyProductsComponent } from './products/my-products/my-products.component';
 import { SeasonCalendarComponent } from './season-calendar/season-calendar.component';
+import { CompleteProfileComponent } from './profile/complete-profile/complete-profile.component';
+import { MyProfileComponent } from './profile/my-profile/my-profile.component';
+import { ProfileCompaniesComponent } from './profile/my-profile/components/profile-companies/profile-companies.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -22,6 +25,18 @@ const routes: Routes = [
   {
     path: 'season-calendar',
     component: SeasonCalendarComponent,
+  },
+  {
+    path: 'complete-profile',
+    component: CompleteProfileComponent,
+  },
+  {
+    path: 'profile',
+    component: MyProfileComponent,
+  },
+  {
+    path: 'profile/companies',
+    component: ProfileCompaniesComponent,
   },
 ];
 

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
 import {
   Meals,
   MealTheMealDbType,
@@ -18,13 +17,14 @@ import {
 import { KeyValuePipe } from '@angular/common';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { forkJoin } from 'rxjs';
-import { Area } from '../shared/types/mealdb-area.type';
-import { Category } from '../shared/types/mealdb-category.type';
 import { MatButton } from '@angular/material/button';
 import { MatChipGrid, MatChipInput, MatChipRow } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
-import { Ingredient } from '../shared/types/mealdb-ingredient.type';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { Area } from '../shared/types/mealdb-area.type';
+import { Category } from '../shared/types/mealdb-category.type';
+import { Ingredient } from '../shared/types/mealdb-ingredient.type';
+import { TheMealDbService } from '../shared/services/the-meal-db.service';
 
 @Component({
   selector: 'app-fork-or-create-recipe',
@@ -86,9 +86,6 @@ export class ForkOrCreateRecipeComponent implements OnInit {
       areas: this.mealDbService.getAreas(),
       ingredients: this.mealDbService.getIngredients(),
     }).subscribe(({ categories, areas, ingredients }) => {
-      console.log('Categories:', categories);
-      console.log('Areas:', areas);
-      console.log('Ingredients:', ingredients);
       this.categories = categories.meals;
       this.areas = areas.meals;
       this.ingredientsList = ingredients.meals;
@@ -115,10 +112,6 @@ export class ForkOrCreateRecipeComponent implements OnInit {
 
   addIngredient() {
     this.ingredients.push(this.addIngredientFormGroup('', ''));
-  }
-
-  testSend() {
-    console.log(this.form);
   }
 
   private getMealById(mealId: string) {
@@ -154,8 +147,6 @@ export class ForkOrCreateRecipeComponent implements OnInit {
         }
       }
       // this.form.addControl();
-      console.log(this.meal);
-      console.log(this.form);
     });
   }
 }

@@ -1,6 +1,14 @@
-<app-toolbar />
+@if (!userService.loading && userService.userProfileWithActions) {
+  @if (userService.userProfileWithActions.requiredActions.length === 0) {
+    <app-toolbar />
+  }
 
-<div class="d-flex" style="min-height: 100%">
-  <app-side-menu></app-side-menu>
-  <router-outlet></router-outlet>
-</div>
+  <div class="d-flex" style="min-height: 100%">
+    @if (userService.userProfileWithActions.requiredActions.length === 0) {
+      <app-side-menu></app-side-menu>
+    }
+    <router-outlet></router-outlet>
+  </div>
+} @else {
+  <mat-spinner />
+}

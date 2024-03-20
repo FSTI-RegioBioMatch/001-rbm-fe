@@ -1,0 +1,28 @@
+<div class="container w-full">
+  <div class="d-flex justify-content-between">
+    <h4 class="text-green">My joined companies</h4>
+    <button
+      (click)="onClickModalCreateNewCompany()"
+      mat-fab
+      extended
+      routerLink="."
+    >
+      <mat-icon>add</mat-icon>
+      Create new company
+    </button>
+  </div>
+
+  <!--  <div class="d-flex flex-wrap">-->
+  <!--    <div class="card" *ngFor="let company of companies">-->
+  <!--      <div class="card-header">-->
+  <!--        <h4>{{ company.name }}</h4>-->
+  <!--      </div>-->
+  <!--      <div class="card-body">-->
+  <!--        <p>{{ company.description }}</p>-->
+  <!--      </div>-->
+  <!--      <div class="card-footer">-->
+  <!--        <button mat-button routerLink=".">View</button>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+</div>

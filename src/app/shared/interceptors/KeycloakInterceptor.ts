@@ -14,7 +14,6 @@ export class KeycloakInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    console.log('Intercepting Requests');
     return next.handle(request);
   }
 }

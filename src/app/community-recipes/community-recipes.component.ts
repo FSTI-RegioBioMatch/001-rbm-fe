@@ -4,11 +4,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommunityRecipePagingType } from './types/community-recipe-paging.type';
 import { RecipeCardComponent } from '../my-recipes/components/recipe-card/recipe-card.component';
 import { RecipeSearchToolbarComponent } from '../my-recipes/components/recipe-search-toolbar/recipe-search-toolbar.component';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
 import { Meals, MealTheMealDbType } from './types/meal-the-meal-db.type';
 import { JsonPipe } from '@angular/common';
 import { RecipeInformationDialogComponent } from '../my-recipes/components/recipe-infomation-dialog/recipe-information-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TheMealDbService } from '../shared/services/the-meal-db.service';
 
 @Component({
   selector: 'app-community-recipes',
@@ -41,7 +41,6 @@ export class CommunityRecipesComponent implements OnInit {
 
   getCommunityRecipesByPage() {
     this.communityRecipeService.getCommunityRecipes().subscribe((data) => {
-      console.log(data);
       this.communityRecipes = data;
       this.loading = false;
     });

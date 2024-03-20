@@ -105,8 +105,6 @@ export class RecipeInformationDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(111111, this.data);
-
     if (this.data.meal) {
       // Only do this if the data is available
       this.splitInstructions();

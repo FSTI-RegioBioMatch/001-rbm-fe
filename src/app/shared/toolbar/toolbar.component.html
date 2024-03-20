@@ -29,16 +29,21 @@
     </svg>
 
     <div class="d-flex gap-2">
-      <div class="avatar-container">
+      <div (click)="onClickAvatar()" class="avatar-container">
         <img
           class="rounded-5 user-avatar"
           src="https://ui-avatars.com/api/?name=John+Doe"
           alt="user-avatar"
         />
-        <span class="user-name-container user-name"> Michael Krause </span>
+        <span class="user-name-container user-name">
+          {{ userService.profile.firstName }}
+          {{ userService.profile.lastName }}</span
+        >
       </div>
       <button mat-fab class="menu-icon">
-        <span class="material-symbols-outlined"> chat </span>
+        <span class="material-symbols-outlined" (click)="onClickLogout()">
+          chat
+        </span>
       </button>
     </div>
   </div>

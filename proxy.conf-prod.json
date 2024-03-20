@@ -1,0 +1,8 @@
+{
+  "/services/masterdata": {
+    "target": "https://masterdata.regiobiomatch.de",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {"^/services/masterdata/api" : "/api/v1"}
+  }
+}

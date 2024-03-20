@@ -1,0 +1,11 @@
+export enum RequiredActionsEnum {
+  EMAIL = 'EMAIL',
+  USERNAME = 'USERNAME',
+  ADDRESS = 'ADDRESS',
+  PHONE = 'PHONE',
+  FIRSTNAME = 'FIRSTNAME',
+  LASTNAME = 'LASTNAME',
+  CITY = 'CITY',
+  ZIP = 'ZIP',
+  COUNTRY = 'COUNTRY',
+}

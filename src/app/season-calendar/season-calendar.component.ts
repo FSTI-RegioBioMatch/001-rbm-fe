@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
 import moment from 'moment';
-import {
-  Ingredient,
-  MealdbIngredientType,
-} from '../shared/types/mealdb-ingredient.type';
+import { Ingredient } from '../shared/types/mealdb-ingredient.type';
+import { TheMealDbService } from '../shared/services/the-meal-db.service';
 
 interface SeasonCalendarData {
   name: string;
@@ -133,7 +130,6 @@ export class SeasonCalendarComponent implements OnInit {
 
   private getIngredients() {
     this.mealDbService.getIngredients().subscribe((data) => {
-      console.log(data);
       this.ingredients = data.meals;
       this.loading = false;
     });

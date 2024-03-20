@@ -4,11 +4,11 @@ import { RecipeCardComponent } from './components/recipe-card/recipe-card.compon
 import { Card } from './types/card';
 import { MatDialog } from '@angular/material/dialog';
 import { RecipeInformationDialogComponent } from './components/recipe-infomation-dialog/recipe-information-dialog.component';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
 import {
   Meals,
   MealTheMealDbType,
 } from '../community-recipes/types/meal-the-meal-db.type';
+import { TheMealDbService } from '../shared/services/the-meal-db.service';
 
 @Component({
   selector: 'app-my-recipes',
