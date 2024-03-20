@@ -75,11 +75,13 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "001-rbm-dashboard-fe:build:production"
+            "browserTarget": "001-rbm-dashboard-fe:build:production",
+            "proxyConfig": "proxy.conf-dev.json"
           },
           "configurations": {
             "production": {
-              "buildTarget": "001-rbm-dashboard-fe:build:production"
+              "buildTarget": "001-rbm-dashboard-fe:build:production",
+              "proxyConfig": "proxy.conf-prod.json"
             },
             "development": {
               "buildTarget": "001-rbm-dashboard-fe:build:development"
