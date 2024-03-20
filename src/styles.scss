@@ -17,8 +17,42 @@ $light-focused: rgba(white, 0.12);
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+$rbm-palette-accent: (
+  50:   #e6f8e5,
+  100:  #c3edc0,
+  200:  #a0e09d,
+  300:  #7fd37a,
+  400:  #65c860,
+  500:  #4dbd44,
+  600:  #42ad3b,
+  700:  #369b30,
+  800:  #2b8926,
+  900:  #146a13,
+  A100: #146a13,
+  A200: #146a13,
+  A400: #146a13,
+  A700: #146a13,
+  contrast: (
+    50:   #00632b,
+    100:  #00632b,
+    200:  #00632b,
+    300:  #00632b,
+    400:  #00632b,
+    500:  #00632b,
+    600:  #00632b,
+    700:  #00632b,
+    800:  #00632b,
+    900:  #00632b,
+    A100: #00632b,
+    A200: #00632b,
+    A400: #00632b,
+    A700: #00632b,
+  )
+);
+
+
 // Define the $rbm-palette before using it
-$rbm-palette: (
+$rbm-palette-primary: (
   50: #e5f6eb,
   100: #bfe9ce,
   200: #95dbaf,
@@ -34,25 +68,25 @@ $rbm-palette: (
   A400: #00632b,
   A700: #00632b,
   contrast: (
-    50:   $dark-primary-text,
-    100:  $dark-primary-text,
-    200:  $dark-primary-text,
-    300:  $light-primary-text,
-    400:  $light-primary-text,
-    500:  $light-primary-text,
-    600:  $light-primary-text,
-    700:  $light-primary-text,
-    800:  $light-primary-text,
-    900:  $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $light-primary-text,
-    A400: $light-primary-text,
-    A700: $light-primary-text,
+    50:   #00632b,
+    100:  #00632b,
+    200:  #00632b,
+    300:  #00632b,
+    400:  #00632b,
+    500:  #00632b,
+    600:  #00632b,
+    700:  #00632b,
+    800:  #00632b,
+    900:  #00632b,
+    A100: #00632b,
+    A200: #00632b,
+    A400: #00632b,
+    A700: #00632b,
   )
 );
 
-$my-primary: mat.define-palette($rbm-palette, 500, 300, 700);
-$my-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-primary: mat.define-palette($rbm-palette-primary, 500, 300, 700);
+$my-accent: mat.define-palette($rbm-palette-accent, A200, A100, A400);
 
 $my-theme: mat.define-light-theme((
   color: (
