@@ -1,8 +1,9 @@
 {
   "/services/masterdata": {
-    "target": "http://localhost:8080",
-    "secure": false,
+    "target": "https://masterdata.regiobiomatch.de",
+    "secure": true,
     "changeOrigin": true,
     "pathRewrite": {"^/services/masterdata/api" : "/api/v1"}
   }
 }
+
