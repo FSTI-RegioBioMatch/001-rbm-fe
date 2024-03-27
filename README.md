@@ -1,3 +1,17 @@
+# Localhost proxy
+{
+"/services/masterdata": {
+"target": "http://localhost:8087",
+"secure": false,
+"changeOrigin": true,
+"pathRewrite": {"^/services/masterdata/api" : "/api/v1"}
+}
+}
+
+
+
+
+
 # 001RbmDashboardFe
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.0.
