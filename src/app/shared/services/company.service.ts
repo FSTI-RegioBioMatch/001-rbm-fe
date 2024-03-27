@@ -11,4 +11,16 @@ export class CompanyService {
   public createCompany(company: CompanyType) {
     this.http.post('/services/masterdata/api/company', company).subscribe();
   }
+
+  public getCompaniesByUserId() {
+    return this.http.get<CompanyType[]>(
+      `/services/masterdata/api/company/getUserCompanies`,
+    );
+  }
+
+  public getCompanyById(companyId: string) {
+    return this.http.get<CompanyType>(
+      `/services/masterdata/api/company/${companyId}`,
+    );
+  }
 }

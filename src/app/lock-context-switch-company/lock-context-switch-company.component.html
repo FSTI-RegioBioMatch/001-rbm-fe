@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="d-flex mt-5 gap-4 justify-content-center align-items-center row">
+    <div class="alert alert-secondary" role="alert">
+      <p>
+        Before you dive into the dashboard, there's just one small step left. To
+        unlock all the features and get a personalized experience, please select
+        a company from the list below. This ensures that the information and
+        options available are tailored specifically to your company's needs.
+      </p>
+      <p>Selecting a company is quick and easy:</p>
+      <ul>
+        <li>Click on the "Select Company" button below</li>
+        <li>Choose your company from the list</li>
+        <li>Click "Select" to confirm your choice</li>
+      </ul>
+    </div>
+
+    <span class="text-green text-big text-center">List of my companies</span>
+
+    @for (company of companies; track company) {
+      <mat-card
+        (click)="onClickSelectThisCompany(company)"
+        class="col-auto"
+        style="cursor: pointer"
+      >
+        <mat-card-content>{{ company.companyName }}</mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <span class="text-green text-big text-center">My open invitations</span>
+</div>

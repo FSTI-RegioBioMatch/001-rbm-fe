@@ -16,18 +16,21 @@
         </div>
       </div>
     </div>
-
-    <div class="col-6 p-4 rounded-5 card-green-2-container">
-      <div class="card-elements w-100">
-        <img src="assets/img/dummy-company-logo.png" alt="" />
-        <div class="d-flex flex-column gap-1">
-          <span class="text-big">Canteen Industries GmbH</span>
-          <span class="text-sm">‘High-tech dining for everyone.’</span>
-          <span class="text-sm">Königstor 22</span>
-          <span class="text-sm">34117 Kassel</span>
+    @if (company) {
+      <div class="col-6 p-4 rounded-5 card-green-2-container">
+        <div class="card-elements w-100">
+          <img src="assets/img/dummy-company-logo.png" alt="" />
+          <div class="d-flex flex-column gap-1">
+            <span class="text-big">{{ company.companyName }}</span>
+            <span class="text-sm">"{{ company.slogan }}"</span>
+            <span class="text-sm">{{ company.companyStreet }}</span>
+            <span class="text-sm"
+              >{{ company.companyZip }} {{ company.companyCity }}</span
+            >
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
   <div class="col-6 mt-4 mb-4">
     <mat-tab-group [color]="'primary'">

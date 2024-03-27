@@ -18,6 +18,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatBadge } from '@angular/material/badge';
 import { HttpClient } from '@angular/common/http';
 import { TheMealDbService } from '../shared/services/the-meal-db.service';
+import { CompanyService } from '../shared/services/company.service';
+import { CompanyType } from '../shared/types/company.type';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,13 +52,23 @@ export class DashboardComponent implements OnInit {
 
   loadingRecipes = true;
 
+  company!: CompanyType;
+
   constructor(
     private mealDbService: TheMealDbService,
     private http: HttpClient,
+    private companyService: CompanyService,
   ) {}
 
   ngOnInit(): void {
     this.get3RandomMeals();
+
+    const companyId = sessionStorage.getItem('company');
+    if (companyId) {
+      this.companyService.getCompanyById(companyId).subscribe((company) => {
+        this.company = company;
+      });
+    }
   }
 
   get3RandomMeals() {
