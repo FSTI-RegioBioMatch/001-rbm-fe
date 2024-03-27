@@ -1,7 +1,7 @@
 # Stage 0, "build-stage", based on Node.js, to build and compile the frontend
 FROM node:18 as build-stage
 WORKDIR /app
-COPY package*.json /app
+COPY package*.json ./
 RUN npm install
 COPY ./ /app/
 ARG configuration=production
