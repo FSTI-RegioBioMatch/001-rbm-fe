@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { CompleteUserProfileType } from '../../profile/complete-profile/types/complete-user-profile.type';
 import { CompanyService } from './company.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +57,7 @@ export class UserService {
 
   private sync() {
     const userSync$ = this.http.post<UserRequiredActionsType>(
-      '/services/masterdata/api/user/sync',
+      `${environment.MASTERDATA}/user/sync`,
       {},
     );
     const companies$ = this.companyService.getCompaniesByUserId().pipe(
@@ -105,7 +106,7 @@ export class UserService {
 
   completeUserProfile(completeUserProfileType: CompleteUserProfileType) {
     return this.http.post(
-      '/services/masterdata/api/user/complete-profile',
+      `${environment.MASTERDATA}/user/complete-profile`,
       completeUserProfileType,
     );
   }
