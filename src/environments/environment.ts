@@ -3,5 +3,5 @@ export const environment = {
   MASTERDATA: 'https://masterdata.regiobiomatch.de/api/v1',
 };
 
-// MASTERDATA: 'http://localhost:8087/api/v1',
+// MASTERDATA: 'http://localhost:8080/api/v1',
 // MASTERDATA: 'https://masterdata.regiobiomatch.de/api/v1',
