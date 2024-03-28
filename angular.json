@@ -76,15 +76,30 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "001-rbm-dashboard-fe:build:production",
-            "proxyConfig": "proxy.conf-dev.json"
+            "proxyConfig": "proxy.conf-dev.json",
+            "fileReplacements": [
+              {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.development.ts"
+              }
+            ]
           },
           "configurations": {
             "production": {
               "buildTarget": "001-rbm-dashboard-fe:build:production",
-              "proxyConfig": "proxy.conf-prod.json"
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.production.ts"
+                }]
             },
             "development": {
-              "buildTarget": "001-rbm-dashboard-fe:build:development"
+              "buildTarget": "001-rbm-dashboard-fe:build:development",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }]
             }
           },
           "defaultConfiguration": "development"
