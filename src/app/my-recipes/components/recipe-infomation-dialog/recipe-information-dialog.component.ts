@@ -153,4 +153,8 @@ export class RecipeInformationDialogComponent implements OnInit {
       .navigate(['/fork-or-create-recipe', this.data.meal.idMeal])
       .then(() => this.dialogRef.close());
   }
+  
+  onClickCloseRecipeDialog() {
+    this.dialogRef.close();
+  }
 }
