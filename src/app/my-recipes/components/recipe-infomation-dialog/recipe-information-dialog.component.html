@@ -5,7 +5,7 @@
       @if (data.meal.strTags) {
       <mat-chip-set aria-label="Dog selection">
         @for (tag of data.meal.strTags.split(","); track tag) {
-        <mat-chip> {{ tag }} </mat-chip>
+        <mat-chip style="background-color: #E9FFC2;"> {{ tag }} </mat-chip>
         }
       </mat-chip-set>
       }
@@ -31,18 +31,32 @@
       <h6>Values</h6>
       <table>
         <tr>
-          <th>Energy</th>
+          <th><img [src]="'assets/icons/local_fire_department.png' " height="24" class="value-icons">Energy</th>
           <td>500 kcal</td>
         </tr>
         <tr>
-          <th>Portions per serving</th>
+          <th><img [src]="'assets/icons/soup_kitchen.png' " height="24" class="value-icons">Portions per serving</th>
           <td>4 portions</td>
         </tr>
         <tr>
-          <th>Nutrition Score</th>
+          <th><img [src]="'assets/icons/local_fire_department.png' " height="24" class="value-icons">Nutrition Score
+          </th>
+          <td>5/5 points</td>
+        </tr>
+        <tr>
+          <th><img [src]="'assets/icons/public.png' " height="24" class="value-icons">Climate Score</th>
+          <td>4/5 Points</td>
+        </tr>
+        <tr>
+          <th><img [src]="'assets/icons/water_drop.png' " height="24" class="value-icons">Water Footprint</th>
+          <td>4/5 Points</td>
+        </tr>
+        <tr>
+          <th><img [src]="'assets/icons/local_shipping.png' " height="24" class="value-icons">Regio Score</th>
           <td>5/5 points</td>
         </tr>
       </table>
+
 
       <div class="row mt-3">
         <img [src]="data.meal.strMealThumb" [alt]="data.meal.strDrinkAlternate" style="max-width: 200px"
@@ -93,13 +107,14 @@
         <!--              <span class="text-muted">chopped</span>-->
         <!--            </div>-->
         <!--          </div>-->
-        <!--        </div>-->0
+        <!--        </div>-->
       </div>
     </div>
     <div class="col-6 instructions">
       <span>Instructions</span>
       @for (instruction of instructions; track instruction) {
       <app-recipe-step [stepHeader]="instruction.stepHeader" [steps]="instruction.steps" />
+      <p>test</p>
       }
     </div>
   </div>
