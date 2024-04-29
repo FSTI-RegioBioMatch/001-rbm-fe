@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './app.component.scss',
 })
 export class AppComponent implements OnInit {
-  title = '001-rbm-dashboard-fe';
+  title = 'RegioBioMatch';
 
   constructor(public userService: UserService) {}
 
