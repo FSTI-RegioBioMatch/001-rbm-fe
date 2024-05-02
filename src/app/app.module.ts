@@ -64,7 +64,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         clientId: 'regiobiomatch-client',
       },
       initOptions: {
-        onLoad: 'login-required',
+        onLoad: 'check-sso',
         flow: 'standard',
       },
       loadUserProfileAtStartUp: true,

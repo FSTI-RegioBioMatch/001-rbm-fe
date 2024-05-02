@@ -13,5 +13,10 @@
     <router-outlet></router-outlet>
   </div>
 } @else {
-  <mat-spinner />
+  @if (userService.loading) {
+    <!--    <mat-spinner />-->
+  }
+  @if (!keycloakService.isLoggedIn()) {
+    <router-outlet></router-outlet>
+  }
 }

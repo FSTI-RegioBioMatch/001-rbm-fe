@@ -10,11 +10,18 @@ import { CompleteProfileComponent } from './profile/complete-profile/complete-pr
 import { MyProfileComponent } from './profile/my-profile/my-profile.component';
 import { ProfileCompaniesComponent } from './profile/my-profile/components/profile-companies/profile-companies.component';
 import { LockContextSwitchCompanyComponent } from './lock-context-switch-company/lock-context-switch-company.component';
+import { ComponentsComponent } from './components/components.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: 'my-recipes', component: MyRecipesComponent },
-  { path: 'com-recipes', component: CommunityRecipesComponent },
+  {
+    path: 'my-recipes',
+    component: MyRecipesComponent,
+  },
+  {
+    path: 'com-recipes',
+    component: CommunityRecipesComponent,
+  },
   {
     path: 'fork-or-create-recipe/:id',
     component: ForkOrCreateRecipeComponent,
@@ -42,6 +49,10 @@ const routes: Routes = [
   {
     path: 'lock-dashboard',
     component: LockContextSwitchCompanyComponent,
+  },
+  {
+    path: 'components',
+    component: ComponentsComponent,
   },
 ];
 

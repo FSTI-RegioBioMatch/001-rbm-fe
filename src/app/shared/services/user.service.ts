@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { UserRequiredActionsType } from '../types/user-required-actions.type';
@@ -48,6 +48,7 @@ export class UserService {
   ) {}
 
   init() {
+    console.log('init called');
     this._loading = true;
     this.keycloakService.loadUserProfile().then((profile) => {
       this._profile = profile;
@@ -108,6 +109,25 @@ export class UserService {
     return this.http.post(
       `${environment.MASTERDATA}/user/complete-profile`,
       completeUserProfileType,
+    );
+  }
+
+  login() {
+    const header = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    let body = new HttpParams()
+      .set('client_id', 'regiobiomatch-client')
+      .set('username', 'mk')
+      .set('password', 'mk')
+      .set('grant_type', 'password')
+      .set('scope', 'openid');
+
+    return this.http.post(
+      'https://auth.regiobiomatch.de/realms/regiobiomatch/protocol/openid-connect/token',
+      body.toString(),
+      { headers: header },
     );
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from './shared/services/user.service';
 import { CompanyService } from './shared/services/company.service';
 import { Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,14 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = '001-rbm-dashboard-fe';
 
-  constructor(public userService: UserService) {}
+  constructor(
+    public userService: UserService,
+    public keycloakService: KeycloakService,
+  ) {}
 
   ngOnInit(): void {
+    if (this.keycloakService.isLoggedIn()) {
+    }
     this.userService.init();
   }
 }
