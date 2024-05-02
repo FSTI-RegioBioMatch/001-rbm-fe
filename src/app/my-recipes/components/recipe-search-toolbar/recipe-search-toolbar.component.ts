@@ -58,35 +58,35 @@ import { MatInput, MatInputModule } from '@angular/material/input';
 export class RecipeSearchToolbarComponent {
   sortByArr = [
     {
-      icon: '',
+      icon: 'arrow_up.png',
       name: 'Aufsteigend sortieren',
     },
     {
-      icon: '',
+      icon: 'arrow_down.png',
       name: 'Absteigend sortieren',
     },
     {
-      icon: '',
+      icon: 'traditional.png',
       name: 'Traditionell',
     },
     {
-      icon: '',
+      icon: 'lactose_free.png',
       name: 'Laktosefrei',
     },
     {
-      icon: '',
+      icon: 'gluten_free.png',
       name: 'Glutenfrei',
     },
     {
-      icon: '',
+      icon: 'vegan.png',
       name: 'Vegan',
     },
     {
-      icon: '',
+      icon: 'vegetarisch.png',
       name: 'Vegetarisch',
     },
     {
-      icon: '',
+      icon: 'clear.png',
       name: 'Filter löschen',
     },
   ];

@@ -7,26 +7,24 @@
 </div>
 <div class="d-flex gap-2 mt-4">
   <mat-form-field [formGroup]="form" style="width: 40%">
-    <mat-label>Toppings</mat-label>
-    <mat-select
-      panelClass="fit-content"
-      class="w-100"
-      formControlName="filter"
-      multiple
-    >
+    <mat-label>Sortieren nach</mat-label>
+    <mat-select panelClass="fit-content" class="w-100" formControlName="filter" multiple>
       <mat-select-trigger>
         {{ sortByArr[0].name }}
         @if ((sortByArr.length || 0) > 1) {
-          <span class="example-additional-selection">
-            (+{{ (sortByArr.length || 0) - 1 }}
-            {{ sortByArr.length === 2 ? "other" : "others" }})
-          </span>
+        <span class="example-additional-selection">
+          (+{{ (sortByArr.length || 0) - 1 }}
+          {{ sortByArr.length === 2 ? "other" : "others" }})
+        </span>
         }
       </mat-select-trigger>
       @for (sortBy of sortByArr; track sortBy) {
-        <mat-option [value]="sortBy.name" style="width: 422px">{{
-          sortBy.name
-        }}</mat-option>
+      <mat-option [value]="sortBy.name" style="width: 422px">
+        <img [src]="'assets/icons/' + sortBy.icon" alt="{{ sortBy.name }}" height="24">{{
+        sortBy.name
+        }}
+
+      </mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -37,10 +35,7 @@
   <mat-form-field class="example-form-field">
     <mat-label>Saisonstart</mat-label>
     <input matInput [matDatepicker]="datepickerSeasonStart" />
-    <mat-datepicker-toggle
-      matIconSuffix
-      [for]="datepickerSeasonStart"
-    ></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="datepickerSeasonStart"></mat-datepicker-toggle>
     <mat-datepicker #datepickerSeasonStart>
       <mat-datepicker-actions>
         <button mat-button matDatepickerCancel>Cancel</button>
@@ -54,10 +49,7 @@
   <mat-form-field class="example-form-field">
     <mat-label>Saisonende</mat-label>
     <input matInput [matDatepicker]="datepickerSeasonEnd" />
-    <mat-datepicker-toggle
-      matIconSuffix
-      [for]="datepickerSeasonEnd"
-    ></mat-datepicker-toggle>
+    <mat-datepicker-toggle matIconSuffix [for]="datepickerSeasonEnd"></mat-datepicker-toggle>
     <mat-datepicker #datepickerSeasonEnd>
       <mat-datepicker-actions>
         <button mat-button matDatepickerCancel>Cancel</button>
