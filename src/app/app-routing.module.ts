@@ -11,6 +11,7 @@ import { MyProfileComponent } from './profile/my-profile/my-profile.component';
 import { ProfileCompaniesComponent } from './profile/my-profile/components/profile-companies/profile-companies.component';
 import { LockContextSwitchCompanyComponent } from './lock-context-switch-company/lock-context-switch-company.component';
 import { ComponentsComponent } from './components/components.component';
+import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -53,6 +54,10 @@ const routes: Routes = [
   {
     path: 'components',
     component: ComponentsComponent,
+  },
+  {
+    path: 'settings/company',
+    component: CompanySettingsComponent,
   },
 ];
 

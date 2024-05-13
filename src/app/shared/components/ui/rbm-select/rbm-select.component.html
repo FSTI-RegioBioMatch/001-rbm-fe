@@ -5,17 +5,19 @@
       <span class="text-danger">*</span>
     }
   </mat-label>
-  <input
-    matInput
-    [placeholder]="placeholder"
-    [(ngModel)]="value"
-    (input)="updateValue($event)"
-    [type]="type"
-    (focus)="onInputFocus()"
-  />
+  <mat-select
+    [formControl]="form"
+    (selectionChange)="onSelectionChange($event.value)"
+  >
+    @for (value of values; track value) {
+      <mat-option [value]="value.value">
+        {{ value.viewValue }}
+      </mat-option>
+    }
+  </mat-select>
 </mat-form-field>
 <div>
-  @if (isRequired && logicForm.hasError("required") && logicForm.touched) {
+  @if (isRequired && form.hasError("required") && form.touched) {
     <mat-error
       >{{ elementName || "elementName is not yet defined" }} is
       <strong>required</strong></mat-error

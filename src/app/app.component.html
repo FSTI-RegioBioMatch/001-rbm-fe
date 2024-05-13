@@ -1,7 +1,7 @@
+<app-toolbar />
+
 @if (!userService.loading && userService.userProfileWithActions) {
-  @if (userService.userProfileWithActions.requiredActions.length === 0) {
-    <app-toolbar />
-  }
+  @if (userService.userProfileWithActions.requiredActions.length === 0) {}
 
   <div class="d-flex" style="min-height: 100%">
     @if (
