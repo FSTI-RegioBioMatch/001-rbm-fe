@@ -18,13 +18,33 @@
     background-color: #5a8461; /* Darker color when hovered */
 }
 
+.card-list-container::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.card-list-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Optional: Track color */
+}
+
+.card-list-container::-webkit-scrollbar-thumb {
+    background-color: #689571; /* Scrollbar color */
+    border-radius: 10px; /* Round edges */
+    border: 3px solid #f1f1f1; /* Space around scrollbar */
+}
+
+.card-list-containerr::-webkit-scrollbar-thumb:hover {
+    background-color: #5a8461; /* Darker color when hovered */
+}
+
+
+
 
 .container {
     display: flex;
     width: 100%; /* Ensure full width */
     height: 90%;
     padding: 10px; /* Adjust padding as needed */
-    margin: 0;
 }
 
 .card-list-container {
@@ -211,4 +231,12 @@ mat-card-title {
 
 .mat-button-toggle-checked:hover {
     background-color: #29784D !important; /* Ensure selected state color stays the same on hover */
+}
+
+.map-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }

@@ -48,7 +48,7 @@
       <div class="card-wrapper">
         <h2>Mein Name des Marktplatzes</h2>
         <mat-card class="card">
-          <app-map />
+          <app-map class="map-card" />
         </mat-card>
       </div>
 
@@ -60,19 +60,11 @@
           </mat-card-header>
           <mat-card-content>
             <div class="carousel-container">
-              <button
-                mat-button
-                class="carousel-button left"
-                (click)="scrollLeft()"
-              >
+              <button mat-button class="carousel-button left" (click)="scrollLeft()">
                 <mat-icon>chevron_left</mat-icon>
               </button>
               <div class="carousel-content" #carousel>
-                <mat-button-toggle-group
-                  name="ingredients"
-                  aria-label="Ingredients"
-                  multiple
-                >
+                <mat-button-toggle-group name="ingredients" aria-label="Ingredients" multiple>
                   <mat-button-toggle value="januar">Jan</mat-button-toggle>
                   <mat-button-toggle value="februar">Feb</mat-button-toggle>
                   <mat-button-toggle value="märz">Mrz</mat-button-toggle>
@@ -87,11 +79,7 @@
                   <mat-button-toggle value="dezember">Dez</mat-button-toggle>
                 </mat-button-toggle-group>
               </div>
-              <button
-                mat-button
-                class="carousel-button right"
-                (click)="scrollRight()"
-              >
+              <button mat-button class="carousel-button right" (click)="scrollRight()">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
