@@ -1,11 +1,10 @@
 <div class="container">
-  <div class="row">
-    <div class="col-6">
+  <div class="row row-cols-2">
+    <form [formGroup]="form" class="">
       <span class="header-text">Mein Betrieb</span>
-
-      <form [formGroup]="form">
-        <div class="d-flex flex-column gap-2">
-          <div class="col-6">
+      <div class="d-flex w-100 gap-3 company-wrapper">
+        <div class="">
+          <div class="col-12 mt-4">
             <app-rbm-input
               label="Betriebsname"
               [isRequired]="true"
@@ -15,7 +14,7 @@
               [form]="myCompany"
             ></app-rbm-input>
           </div>
-          <div class="col-6">
+          <div class="col-12 mt-4">
             <app-rbm-input
               label="Markenname"
               [isRequired]="true"
@@ -25,7 +24,7 @@
               [form]="marketName"
             ></app-rbm-input>
           </div>
-          <div class="col-6">
+          <div class="col-12 mt-4">
             <app-rbm-input
               label="Slogan"
               [isRequired]="false"
@@ -35,18 +34,36 @@
               [form]="slogan"
             ></app-rbm-input>
           </div>
-          <div class="col-6">
+          <div class="col-12 mt-4">
             <app-rbm-select
               [isRequired]="true"
               [label]="'Nachweise'"
               [values]="proofData"
               [form]="proof"
               [elementName]="'Nachweise'"
-            ></app-rbm-select>
+            />
           </div>
         </div>
-      </form>
-    </div>
+        <div class="company-logo w-100">
+          <div class="mx-auto position-relative p-2 w-100">
+            <div class="company-picture">
+              <img
+                class="storefront-icon mx-auto p-2"
+                src="assets/img/storefront.svg"
+                alt=""
+              />
+            </div>
+          </div>
+          <app-rbm-select
+            [isRequired]="true"
+            [label]="'Nachweise'"
+            [values]="proofData"
+            [form]="proof"
+            [elementName]="'Nachweise'"
+          />
+        </div>
+      </div>
+    </form>
     <div class="col-6">
       <span class="header-text">Mein Team</span>
       <button (click)="getForm()">get form</button>
