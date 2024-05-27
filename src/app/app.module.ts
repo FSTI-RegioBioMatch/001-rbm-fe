@@ -54,6 +54,7 @@ import {
 } from '@angular/material/button-toggle';
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
+import { MapComponent } from './new-dashboard/map/map.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -118,6 +119,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatButtonToggle,
     ToolbarComponent,
     SideMenuComponent,
+    MapComponent,
   ],
   providers: [
     {
