@@ -34,8 +34,6 @@ export abstract class UiLogicAbstract implements ControlValueAccessor {
   }
 
   updateValue(val: any) {
-    console.log(this._form);
-    console.log(val);
     if (val.target.value) {
       this.value = val.target.value;
       this.onChange(val.target.value);

@@ -49,9 +49,15 @@ export class RbmInputComponent extends UiLogicAbstract {
   @Input() type: 'text' | 'password' | 'email' = 'text';
   @Input() isRequired: boolean = false;
   @Input() elementName!: string;
+  @Input() readonly = false;
+  @Input() readonlyValue = '';
 
   @Input() set form(form: UntypedFormControl) {
-    this.logicForm = form;
+    if (!this.readonly) {
+      this.logicForm = form;
+    } else {
+      this.logicForm = new FormControl(this.readonlyValue);
+    }
   }
 
   constructor() {

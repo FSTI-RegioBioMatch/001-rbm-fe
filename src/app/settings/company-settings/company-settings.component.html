@@ -1,9 +1,10 @@
-<div class="container">
-  <div class="row row-cols-2">
-    <form [formGroup]="form" class="">
+<form [formGroup]="form" class="p-5">
+  <div class="row row-cols-2 row-cols-lg-auto">
+    <!-- Mein Betrieb -->
+    <div class="col-12 col-md-6 w-50">
       <span class="header-text">Mein Betrieb</span>
-      <div class="d-flex w-100 gap-3 company-wrapper">
-        <div class="">
+      <div class="d-flex w-100 gap-3">
+        <div class="w-50">
           <div class="col-12 mt-4">
             <app-rbm-input
               label="Betriebsname"
@@ -41,10 +42,12 @@
               [values]="proofData"
               [form]="proof"
               [elementName]="'Nachweise'"
-            />
+            ></app-rbm-select>
           </div>
         </div>
-        <div class="company-logo w-100">
+        <div
+          class="w-50 d-flex flex-column justify-content-between company-logo"
+        >
           <div class="mx-auto position-relative p-2 w-100">
             <div class="company-picture">
               <img
@@ -54,19 +57,227 @@
               />
             </div>
           </div>
-          <app-rbm-select
-            [isRequired]="true"
-            [label]="'Nachweise'"
-            [values]="proofData"
-            [form]="proof"
-            [elementName]="'Nachweise'"
-          />
+
+          <ng-container *ngIf="proof.value === '1' || proof.value === '2'">
+            <app-rbm-input
+              [isRequired]="true"
+              [label]="'Registriernummer'"
+              [form]="proofNumber"
+              [elementName]="'Registriernummer'"
+              formControlName="proofNumber"
+            ></app-rbm-input>
+          </ng-container>
         </div>
       </div>
-    </form>
-    <div class="col-6">
+
+      <!-- Kontaktdaten -->
+      <div class="mt-4">
+        <span class="header-text">Kontaktdaten</span>
+
+        <div class="d-flex w-100 gap-3">
+          <div class="w-50">
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Telefon"
+                [isRequired]="true"
+                [type]="'text'"
+                formControlName="telephone"
+                [elementName]="'Telefon'"
+                [form]="telephone"
+              ></app-rbm-input>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Mobiltelefon"
+                [isRequired]="false"
+                [type]="'text'"
+                formControlName="mobilePhone"
+                [elementName]="'Mobiltelefon'"
+                [form]="mobilePhone"
+              ></app-rbm-input>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Fax"
+                [isRequired]="false"
+                [type]="'text'"
+                formControlName="fax"
+                [elementName]="'Fax'"
+                [form]="fax"
+              ></app-rbm-input>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="E-Mail von deinem Betrieb"
+                [isRequired]="true"
+                [type]="'text'"
+                formControlName="companyEmail"
+                [elementName]="'E-Mail von deinem Betrieb'"
+                [form]="companyEmail"
+              ></app-rbm-input>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Webseite"
+                [isRequired]="false"
+                [type]="'text'"
+                formControlName="website"
+                [elementName]="'Webseite'"
+                [form]="website"
+              ></app-rbm-input>
+            </div>
+          </div>
+          <div class="w-50">
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Straße und Hausnummer"
+                [isRequired]="true"
+                [type]="'text'"
+                formControlName="streetAndHouseNumber"
+                [elementName]="'Straße und Hausnummer'"
+                [form]="streetAndHouseNumber"
+              ></app-rbm-input>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-input
+                label="Zusatzangaben (z.B. Abteilung)"
+                [isRequired]="true"
+                [type]="'text'"
+                formControlName="companyAdditionalInformation"
+                [elementName]="'Zusatzangaben (z.B. Abteilung)'"
+                [form]="companyAdditionalInformation"
+              ></app-rbm-input>
+            </div>
+            <div class="row mt-4">
+              <div class="col-4">
+                <app-rbm-input
+                  label="PLZ"
+                  [isRequired]="true"
+                  [type]="'text'"
+                  formControlName="zipCode"
+                  [elementName]="'PLZ'"
+                  [form]="zipCode"
+                ></app-rbm-input>
+              </div>
+              <div class="col-8">
+                <app-rbm-input
+                  label="Ort"
+                  [isRequired]="true"
+                  [type]="'text'"
+                  formControlName="city"
+                  [elementName]="'Ort'"
+                  [form]="city"
+                ></app-rbm-input>
+              </div>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-checkbox
+                [label]="'abweichende Rechnungsadresse'"
+                formControlName="differentBillingAddress"
+                [form]="differentBillingAddress"
+              ></app-rbm-checkbox>
+            </div>
+            <div class="col-12 mt-4">
+              <app-rbm-checkbox
+                [label]="'abweichende Lieferadresse'"
+                formControlName="differentDeliveryAddress"
+                [form]="differentDeliveryAddress"
+              ></app-rbm-checkbox>
+            </div>
+
+            <ng-container
+              *ngIf="
+                differentBillingAddress.value || differentDeliveryAddress.value
+              "
+            >
+              <!-- Abweichende Rechnungsadresse -->
+
+              <div class="col-12 mt-5">
+                <span class="header-text"
+                  >Abweichende
+                  {{
+                    differentBillingAddress.value
+                      ? "Rechnungsadresse"
+                      : "Lieferadresse"
+                  }}</span
+                >
+                <div class="col-12 mt-4">
+                  <app-rbm-input
+                    label="Straße und Hausnummer"
+                    [isRequired]="true"
+                    [type]="'text'"
+                    formControlName="streetAndHouseNumber"
+                    [elementName]="'Straße und Hausnummer'"
+                    [form]="streetAndHouseNumber"
+                  ></app-rbm-input>
+                </div>
+                <div class="col-12 mt-4">
+                  <app-rbm-input
+                    label="Zusatzangaben (z.B. Abteilung)"
+                    [isRequired]="true"
+                    [type]="'text'"
+                    formControlName="companyAdditionalInformation"
+                    [elementName]="'Zusatzangaben (z.B. Abteilung)'"
+                    [form]="companyAdditionalInformation"
+                  ></app-rbm-input>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-4">
+                    <app-rbm-input
+                      label="PLZ"
+                      [isRequired]="true"
+                      [type]="'text'"
+                      formControlName="zipCode"
+                      [elementName]="'PLZ'"
+                      [form]="zipCode"
+                    ></app-rbm-input>
+                  </div>
+                  <div class="col-8">
+                    <app-rbm-input
+                      label="Ort"
+                      [isRequired]="true"
+                      [type]="'text'"
+                      formControlName="city"
+                      [elementName]="'Ort'"
+                      [form]="city"
+                    ></app-rbm-input>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mein Team -->
+    <div class="col-12 col-md-6 w-50 team-member-wrapper">
       <span class="header-text">Mein Team</span>
-      <button (click)="getForm()">get form</button>
+      <!-- team member container -->
+      <div class="mt-4 d-flex flex-column gap-5 team-member-container">
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+        <app-company-member></app-company-member>
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="position-fixed bottom-0 w-100 bottom-container">
+    <mat-divider class="mt-4 mb-4" style="width: 95%" />
+    <button
+      class="position-relative bottom-button"
+      mat-flat-button
+      color="primary"
+      type="submit"
+    >
+      Speichern
+    </button>
+  </div>
+</form>

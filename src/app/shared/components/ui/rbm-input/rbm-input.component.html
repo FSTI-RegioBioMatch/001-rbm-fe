@@ -5,17 +5,31 @@
       <span class="text-danger">*</span>
     }
   </mat-label>
-  <input
-    matInput
-    [placeholder]="placeholder"
-    [(ngModel)]="value"
-    (input)="updateValue($event)"
-    [type]="type"
-    (focus)="onInputFocus()"
-  />
+  @if (readonly) {
+    <input
+      matInput
+      [disabled]="readonly"
+      [readOnly]="readonly"
+      value="{{ readonlyValue }}"
+    />
+  } @else {
+    <input
+      matInput
+      [placeholder]="placeholder"
+      [(ngModel)]="value"
+      (input)="updateValue($event)"
+      [type]="type"
+      (focus)="onInputFocus()"
+    />
+  }
 </mat-form-field>
 <div>
-  @if (isRequired && logicForm.hasError("required") && logicForm.touched) {
+  @if (
+    !readonly &&
+    isRequired &&
+    logicForm.hasError("required") &&
+    logicForm.touched
+  ) {
     <mat-error
       >{{ elementName || "elementName is not yet defined" }} is
       <strong>required</strong></mat-error
