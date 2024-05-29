@@ -12,6 +12,7 @@ import { ProfileCompaniesComponent } from './profile/my-profile/components/profi
 import { LockContextSwitchCompanyComponent } from './lock-context-switch-company/lock-context-switch-company.component';
 import { ComponentsComponent } from './components/components.component';
 import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
+import { NewDashboardComponent } from './new-dashboard/new-dashboard.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -59,6 +60,10 @@ const routes: Routes = [
     path: 'settings/company',
     component: CompanySettingsComponent,
   },
+  {
+    path: 'dashboard',
+    component: NewDashboardComponent,
+  }
 ];
 
 @NgModule({
