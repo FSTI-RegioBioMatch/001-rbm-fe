@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import { CommunityRecipesComponent } from './community-recipes/community-recipes.component';
 import { ForkOrCreateRecipeComponent } from './fork-or-create-recipe/fork-or-create-recipe.component';
@@ -12,10 +11,9 @@ import { ProfileCompaniesComponent } from './profile/my-profile/components/profi
 import { LockContextSwitchCompanyComponent } from './lock-context-switch-company/lock-context-switch-company.component';
 import { ComponentsComponent } from './components/components.component';
 import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
-import { NewDashboardComponent } from './new-dashboard/new-dashboard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
   {
     path: 'my-recipes',
     component: MyRecipesComponent,
@@ -62,7 +60,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: NewDashboardComponent,
+    component: DashboardComponent,
   }
 ];
 

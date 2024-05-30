@@ -1,93 +1,234 @@
-<div class="container w-100">
-  <h4 class="text-green">Dashboard</h4>
+<div class="container">
+  <div class="card-list-container">
+    <div class="card-list">
+      <div class="card-wrapper">
+        <h2>Meine Rezepte</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-wrapper">
+                <span>zur Vollansicht</span>
+                <button mat-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Name Rezept</p>
+            <p>Name Rezept</p>
+            <p>Name Rezept</p>
+            <p>Name Rezept</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
 
-  <div class="header-container mt-4 mb-4">
-    <span class="text-big">My data</span>
-  </div>
-  <div class="row d-flex gap-3 justify-content-between">
-    <div class="col-6 p-4 rounded-5 card-green-1-container">
-      <div class="card-elements w-100">
-        <img src="assets/img/dummy-avatar.png" alt="" />
-        <div class="d-flex flex-column gap-1">
-          <span class="text-big">Pepper potis</span>
-          <span class="text-sm">CEO</span>
-          <span class="text-sm">Königstor 22</span>
-          <span class="text-sm">34117 Kassel</span>
-        </div>
+      <div class="card-wrapper">
+        <h2>Meine Menüpkanung</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-wrapper">
+                <span>zur Vollansicht</span>
+                <button mat-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>KW</p>
+            <p>KW</p>
+            <p>KW</p>
+            <p>KW</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Mein Name des Marktplatzes</h2>
+        <mat-card class="card">
+          <app-map class="map-card" />
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Community-Saisonkalender</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>zur Vollansicht</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="carousel-container">
+              <button mat-button class="carousel-button left" (click)="scrollLeft()">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+              <div class="carousel-content" #carousel>
+                <mat-button-toggle-group name="ingredients" aria-label="Ingredients" multiple>
+                  <mat-button-toggle value="januar">Jan</mat-button-toggle>
+                  <mat-button-toggle value="februar">Feb</mat-button-toggle>
+                  <mat-button-toggle value="märz">Mrz</mat-button-toggle>
+                  <mat-button-toggle value="april">Apr</mat-button-toggle>
+                  <mat-button-toggle value="mai">Mai</mat-button-toggle>
+                  <mat-button-toggle value="juni">Jun</mat-button-toggle>
+                  <mat-button-toggle value="juli">Jul</mat-button-toggle>
+                  <mat-button-toggle value="august">Aug</mat-button-toggle>
+                  <mat-button-toggle value="september">Sep</mat-button-toggle>
+                  <mat-button-toggle value="oktober">Okt</mat-button-toggle>
+                  <mat-button-toggle value="november">Nov</mat-button-toggle>
+                  <mat-button-toggle value="dezember">Dez</mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <button mat-button class="carousel-button right" (click)="scrollRight()">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+
+            <p>Name Produkt</p>
+            <p>Name Produkt</p>
+            <p>Name Produkt</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
-    @if (company) {
-      <div class="col-6 p-4 rounded-5 card-green-2-container">
-        <div class="card-elements w-100">
-          <img src="assets/img/dummy-company-logo.png" alt="" />
-          <div class="d-flex flex-column gap-1">
-            <span class="text-big">{{ company.companyName }}</span>
-            <span class="text-sm">"{{ company.slogan }}"</span>
-            <span class="text-sm">{{ company.companyStreet }}</span>
-            <span class="text-sm"
-              >{{ company.companyZip }} {{ company.companyCity }}</span
-            >
-          </div>
-        </div>
+  </div>
+  <div class="side-scroll-container">
+    <h2>Rezeptempfehlungen für mich</h2>
+    <br>
+    <div class="small-card-list-container">
+      <button mat-button>
+        <mat-icon>list</mat-icon>
+      </button>
+      <div class="small-card-list">
+
+        <!-- Small gray cards -->
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
+        <div class="small-card"></div>
       </div>
-    }
+
+    </div>
   </div>
-  <div class="col-6 mt-4 mb-4">
-    <mat-tab-group [color]="'primary'">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <span>Unread messages</span>
-          <span class="ms-4" matBadge="2"></span>
-        </ng-template>
-        <app-message />
-        <app-message />
-
-        <div class="mt-4 mb-4">
-          <button mat-raised-button>View all</button>
-        </div>
-      </mat-tab>
-      <mat-tab label="Open offers"></mat-tab>
-    </mat-tab-group>
-  </div>
-
-  @if (!loadingRecipes) {
-    <div class="header-container mt-4 mb-4 d-flex justify-content-between">
-      <span class="text-big">Trending recipes</span>
-      <button mat-stroked-button class="rounded-3">SHOW ALL</button>
-    </div>
-    <div class="row">
-      @for (meal of trendingMeals; track meal) {
-        <div class="col-3">
-          <app-recipe-card
-            [name]="meal.strMeal"
-            [img]="meal.strMealThumb"
-            [typeOverride]="'rect'"
-          />
-        </div>
-      }
-    </div>
-
-    <div class="header-container mt-5 mb-4 d-flex justify-content-between">
-      <span class="text-big">My recipes</span>
-      <button mat-stroked-button class="rounded-3">SHOW ALL</button>
-    </div>
-    <div class="row">
-      @for (meal of myRecipesMeals; track meal) {
-        <div class="col-3">
-          <app-recipe-card
-            [name]="meal.strMeal"
-            [img]="meal.strMealThumb"
-            [typeOverride]="'rect'"
-          />
-        </div>
-      }
-    </div>
-  } @else {
-    <div
-      class="d-flex position-absolute justify-content-center"
-      style="top: 50%; left: 55%"
-    >
-      <mat-spinner diameter="50" strokeWidth="8"></mat-spinner>
-    </div>
-  }
 </div>
