@@ -65,7 +65,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         clientId: 'nearbuy',
       },
       initOptions: {
-        onLoad: 'login-required',
+        onLoad: 'check-sso',
         flow: 'standard',
       },
       loadUserProfileAtStartUp: true,
@@ -122,12 +122,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MapComponent,
   ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeKeycloak,
-      multi: true,
-      deps: [KeycloakService],
-    },
+    // TODO uncomment to enable Keycloak
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: initializeKeycloak,
+    //   multi: true,
+    //   deps: [KeycloakService],
+    // },
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
     provideHttpClient(withInterceptorsFromDi()),
