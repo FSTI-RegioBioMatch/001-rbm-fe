@@ -60,9 +60,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'https://auth.staging.nearbuy-food.de',
-        realm: 'nearbuy',
-        clientId: 'nearbuy',
+        url: 'https://auth.regiobiomatch.de',
+        realm: 'regiobiomatch',
+        clientId: 'regiobiomatch-client',
       },
       initOptions: {
         onLoad: 'check-sso',

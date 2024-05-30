@@ -14,6 +14,7 @@ import { CompanySettingsComponent } from './settings/company-settings/company-se
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
+  {path: '', component: DashboardComponent},
   {
     path: 'my-recipes',
     component: MyRecipesComponent,
