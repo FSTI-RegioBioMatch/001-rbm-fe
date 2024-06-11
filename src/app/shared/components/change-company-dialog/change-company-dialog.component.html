@@ -1,0 +1,11 @@
+<mat-dialog-content>
+  <p>Wechsel den Kontext deiner Firma</p>
+  <form [formGroup]="form">
+    <app-rbm-select
+      [label]="'Meine Firmen'"
+      [values]="companyValues"
+      [form]="company"
+      [selectedValue]="companyValues[0]"
+    ></app-rbm-select>
+  </form>
+</mat-dialog-content>

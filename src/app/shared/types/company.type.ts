@@ -1,17 +1,25 @@
 export interface CompanyType {
-  id?: string;
-  marketName: string;
-  companyName: string;
-  slogan: string;
+  id: string;
+  name: string;
+  legalstatus: string;
   phone: string;
-  contactEmail: string;
-  faxNumber: string;
-  website: string;
-  ecoControlNumber: string;
-  registerNumber: string;
-  taxNumber: string;
-  companyStreet: string;
-  companyCity: string;
-  companyZip: string;
-  userMaintainerId?: string;
+  email: string;
+  web: string;
+  fax: string;
+  description: string;
+  visibility: string;
+  address: string;
+  addresses: { self: string; type: string }[];
+  taxId: string;
+  mobile: string;
+  labelName: string;
+  verified: boolean;
+  links: {
+    self: string;
+    update: string;
+    remove: string;
+    logo: string;
+    verification: string;
+  };
+  tenant: string;
 }

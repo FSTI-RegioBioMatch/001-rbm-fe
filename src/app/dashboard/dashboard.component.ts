@@ -5,7 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
-import { UserService } from '../shared/services/user.service';
+import { CompanyStoreService } from '../shared/store/company.store.service';
+import { RequestService } from '../shared/services/request.service';
+import { AddressType } from '../shared/types/address.type';
+import { load } from '@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks';
+
 @Component({
   selector: 'app-new-dashboard',
   standalone: true,
@@ -23,13 +27,28 @@ import { UserService } from '../shared/services/user.service';
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
 
-  constructor(private userService: UserService) {}
+  address!: AddressType;
+  loading = true;
+
+  constructor(
+    private requestService: RequestService,
+    private companyStoreService: CompanyStoreService,
+  ) {}
 
   ngOnInit(): void {
-    this.userService.getPerson().subscribe((person) => {
-      console.log(person);
+    this.companyStoreService.selectedCompanyContext$.subscribe((company) => {
+      if (company) {
+        this.requestService
+          .doGetRequest(company.addresses[0].self)
+          .subscribe((data) => {
+            console.log(data as AddressType);
+            this.address = data as AddressType;
+            this.loading = false;
+          });
+      }
     });
   }
+
   scrollLeft() {
     this.carousel.nativeElement.scrollBy({ left: -150, behavior: 'smooth' });
   }

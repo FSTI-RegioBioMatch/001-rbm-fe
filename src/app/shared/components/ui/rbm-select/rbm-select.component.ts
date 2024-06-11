@@ -1,4 +1,10 @@
-import { Component, forwardRef, Input, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  forwardRef,
+  Input,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatOption, MatSelect } from '@angular/material/select';
 import {
@@ -49,15 +55,22 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     },
   ],
 })
-export class RbmSelectComponent implements ControlValueAccessor {
+export class RbmSelectComponent implements ControlValueAccessor, OnInit {
   @Input() label!: string;
   @Input() isRequired: boolean = false;
-  @Input() values: any[] = [];
+  @Input() values: { value: string; viewValue: string }[] = [];
   @Input() form!: FormControl;
   @Input() elementName!: string;
+  @Input() selectedValue!: { value: string; viewValue: string };
 
   private onChange = (_: any) => {};
   private onTouched = () => {};
+
+  ngOnInit(): void {
+    if (!this.selectedValue) {
+      this.selectedValue = { value: '', viewValue: '' };
+    }
+  }
 
   writeValue(value: any): void {
     this.form.setValue(value, { emitEvent: false });
