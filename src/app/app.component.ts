@@ -12,7 +12,12 @@ import { KeycloakService } from 'keycloak-angular';
 export class AppComponent implements OnInit {
   title = 'RegioBioMatch';
 
-  constructor(public keycloakService: KeycloakService) {}
+  constructor(
+    public keycloakService: KeycloakService,
+    private userService: UserService,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.userService.initPersonMeInformation();
+  }
 }

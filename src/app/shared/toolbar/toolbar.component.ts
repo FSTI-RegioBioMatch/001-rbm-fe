@@ -18,9 +18,7 @@ export class ToolbarComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onClickLogout() {
-    this.userService.logout();
-  }
+  onClickLogout() {}
 
   onClickAvatar() {
     this.route.navigate(['/profile']);

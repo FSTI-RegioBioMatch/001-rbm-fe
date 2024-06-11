@@ -8,20 +8,4 @@ import { environment } from '../../../environments/environment';
 })
 export class CompanyService {
   constructor(private http: HttpClient) {}
-
-  public createCompany(company: CompanyType) {
-    this.http.post(`${environment.MASTERDATA}/company`, company).subscribe();
-  }
-
-  public getCompaniesByUserId() {
-    return this.http.get<CompanyType[]>(
-      `${environment.MASTERDATA}/company/getUserCompanies`,
-    );
-  }
-
-  public getCompanyById(companyId: string) {
-    return this.http.get<CompanyType>(
-      `${environment.MASTERDATA}/company/${companyId}`,
-    );
-  }
 }
