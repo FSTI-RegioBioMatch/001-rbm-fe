@@ -104,20 +104,10 @@
           </mat-card>
         </div>
 
-        <div class="card-wrapper">
-          <h2>Produkte in meiner Region</h2>
-          <mat-card class="card card-my-recepies">
-            <mat-card-header>
-              <mat-card-title>Produkte finden</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <p>name</p>
-              <p>langer nam...</p>
-              <p>name</p>
-              <p>name</p>
-            </mat-card-content>
-          </mat-card>
-        </div>
+        <app-near-offers-card
+          [address]="address"
+          [searchRadiusInKM]="searchRadiusInKM"
+        />
 
         <div class="card-wrapper">
           <h2>Produkte in meiner Region</h2>

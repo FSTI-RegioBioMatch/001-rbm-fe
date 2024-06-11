@@ -9,6 +9,7 @@ import { CompanyStoreService } from '../shared/store/company.store.service';
 import { RequestService } from '../shared/services/request.service';
 import { AddressType } from '../shared/types/address.type';
 import { load } from '@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks';
+import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -22,10 +23,13 @@ import { load } from '@angular-devkit/build-angular/src/utils/server-rendering/e
     MatIconModule,
     MatButtonToggleModule,
     MapComponent,
+    NearOffersCardComponent,
   ],
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
+
+  searchRadiusInKM = 5;
 
   address!: AddressType;
   loading = true;
