@@ -1,0 +1,69 @@
+<div class="d-flex gap-5 overflow-hidden">
+  <!--  Menüpflege-->
+  <div class="w-100">
+    <div class="text-header">
+      <span class="text">Menüpflege</span>
+    </div>
+
+    <div class="d-flex gap-4 mt-4">
+      <div class="col-6">
+        <app-recipe-card />
+
+        <div class="mt-4">
+          <mat-form-field appearance="outline" class="" style="width: 100%">
+            <mat-label>Address</mat-label>
+            <textarea matInput placeholder="Ex. 100 Main St">
+1600 Amphitheatre Pkwy
+            </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <form class="col-6 d-flex flex-column gap-2 p-2">
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>First name</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Long Last Name That Will Be Truncated</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Long Last Name That Will Be Truncated</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="example-full-width">
+          <mat-label>Long Last Name That Will Be Truncated</mat-label>
+          <input matInput />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <!--  Weitere Rezepte-->
+  <div class="w-100 additional-recipes">
+    <div class="text-header">
+      <span class="text">Weitere Rezepte</span>
+    </div>
+
+    <div class="search-result-card p-4">
+      <div class="input-field">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Suche</mat-label>
+          <input matInput />
+        </mat-form-field>
+      </div>
+      <div
+        class="row row-cols-1 gap-4 justify-content-evenly"
+        style="padding: 21px"
+      >
+        <app-recipe-card />
+        <app-recipe-card />
+        <app-recipe-card />
+        <app-recipe-card />
+        <app-recipe-card />
+        <app-recipe-card />
+      </div>
+    </div>
+  </div>
+</div>

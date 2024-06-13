@@ -1,4 +1,4 @@
-@if (!loading) {
+@if (offerService.loaded) {
   <div class="container">
     <div class="card-list-container">
       <div class="card-list">
@@ -49,7 +49,11 @@
         <div class="card-wrapper">
           <h2>Mein Name des Marktplatzes</h2>
           <mat-card class="card">
-            <app-map [lat]="address.lat" [lng]="address.lon" class="map-card" />
+            <app-map
+              [lat]="offerService.address.lat"
+              [lng]="offerService.address.lon"
+              class="map-card"
+            />
           </mat-card>
         </div>
 
@@ -104,10 +108,7 @@
           </mat-card>
         </div>
 
-        <app-near-offers-card
-          [address]="address"
-          [searchRadiusInKM]="searchRadiusInKM"
-        />
+        <app-near-offers-card />
 
         <div class="card-wrapper">
           <h2>Produkte in meiner Region</h2>

@@ -5,11 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
-import { CompanyStoreService } from '../shared/store/company.store.service';
-import { RequestService } from '../shared/services/request.service';
-import { AddressType } from '../shared/types/address.type';
-import { load } from '@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-loader/loader-hooks';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
+import { OfferService } from '../shared/offer.service';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -29,29 +26,9 @@ import { NearOffersCardComponent } from './components/near-offers-card/near-offe
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
 
-  searchRadiusInKM = 5;
+  constructor(public offerService: OfferService) {}
 
-  address!: AddressType;
-  loading = true;
-
-  constructor(
-    private requestService: RequestService,
-    private companyStoreService: CompanyStoreService,
-  ) {}
-
-  ngOnInit(): void {
-    this.companyStoreService.selectedCompanyContext$.subscribe((company) => {
-      if (company) {
-        this.requestService
-          .doGetRequest(company.addresses[0].self)
-          .subscribe((data) => {
-            console.log(data as AddressType);
-            this.address = data as AddressType;
-            this.loading = false;
-          });
-      }
-    });
-  }
+  ngOnInit(): void {}
 
   scrollLeft() {
     this.carousel.nativeElement.scrollBy({ left: -150, behavior: 'smooth' });

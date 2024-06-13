@@ -1,0 +1,42 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+.text {
+  color: var(--dark-green, #29784D);
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+textarea {
+  background-color: #E2EDDB;
+}
+
+.mdc-text-field {
+  width: 100%;
+  background-color: #E2EDDB;
+
+}
+
+.mat-mdc-text-field-wrapper .mdc-text-field .mdc-text-field--outlined {
+  background-color: #E2EDDB;
+}
+
+
+.additional-recipes {
+  padding: 9px;
+}
+
+.input-field {
+  padding: 9px;
+}
+
+.search-result-card {
+  border-radius: 8px;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.04);
+}

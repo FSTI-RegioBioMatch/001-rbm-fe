@@ -1,17 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { UserStoreService } from '../store/user.store.service';
-import { MatFabButton } from '@angular/material/button';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 import { RbmSelectComponent } from '../components/ui/rbm-select/rbm-select.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangeCompanyDialogComponent } from '../components/change-company-dialog/change-company-dialog.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
   standalone: true,
-  imports: [MatFabButton, RouterLink, RbmSelectComponent],
+  imports: [
+    MatFabButton,
+    RouterLink,
+    RbmSelectComponent,
+    MatIconButton,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+  ],
 })
 export class ToolbarComponent implements OnInit {
   constructor(

@@ -8,6 +8,7 @@ import { SeasonCalendarComponent } from './season-calendar/season-calendar.compo
 import { ComponentsComponent } from './components/components.component';
 import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { MenuPlanningComponent } from './menu-planning/menu-planning.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+  },
+  {
+    path: 'menu-planning',
+    component: MenuPlanningComponent,
   },
 ];
 

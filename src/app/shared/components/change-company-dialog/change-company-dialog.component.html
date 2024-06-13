@@ -1,11 +1,13 @@
 <mat-dialog-content>
   <p>Wechsel den Kontext deiner Firma</p>
   <form [formGroup]="form">
-    <app-rbm-select
-      [label]="'Meine Firmen'"
-      [values]="companyValues"
-      [form]="company"
-      [selectedValue]="companyValues[0]"
-    ></app-rbm-select>
+    <mat-form-field appearance="outline">
+      <mat-label>Meine Firmen</mat-label>
+      <select matNativeControl required formControlName="company">
+        @for (company of companyValues; track company) {
+          <option [value]="company.value">{{ company.viewValue }}</option>
+        }
+      </select>
+    </mat-form-field>
   </form>
 </mat-dialog-content>

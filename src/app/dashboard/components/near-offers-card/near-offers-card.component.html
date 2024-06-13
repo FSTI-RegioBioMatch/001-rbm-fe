@@ -5,7 +5,10 @@
       <mat-card-title>Produkte finden</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      @for (ontoFoodType of displayedFoodTypes; track ontoFoodType) {
+      @for (
+        ontoFoodType of offerService.displayedFoodTypes;
+        track ontoFoodType
+      ) {
         <p>{{ ontoFoodType.label }}</p>
       }
     </mat-card-content>

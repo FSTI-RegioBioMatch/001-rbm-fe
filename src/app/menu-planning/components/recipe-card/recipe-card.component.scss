@@ -1,0 +1,42 @@
+:host {
+  max-width: 219px;
+}
+
+.recipe-card {
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.12);
+
+  display: flex;
+  //width: 200px;
+  height: 166px;
+  min-width: 200px;
+  max-width: 200px;
+  max-height: 260px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-card-text {
+  display: flex;
+  height: 60px;
+  max-height: 300px;
+  padding: 12px 24px;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 24px;
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, rgba(255, 255, 255, 0.44) 36.98%, rgba(255, 255, 255, 0.88) 63.54%, #FFF 100%);
+}
+
+.add-button-positioning {
+  position: relative;
+  left: 41%;
+  top: -18%;
+}
+
+.mdc-button__label {
+  color: white;
+}

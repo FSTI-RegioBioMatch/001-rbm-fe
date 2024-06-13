@@ -1,4 +1,4 @@
-import { Component, Inject, Injectable, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -16,10 +16,10 @@ import {
 } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { UserStoreService } from '../../store/user.store.service';
 import { RbmSelectComponent } from '../ui/rbm-select/rbm-select.component';
 import { CompanyType } from '../../types/company.type';
-import { CompanyStoreService } from '../../store/company.store.service';
+import { StoreService } from '../../store/store.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-change-company-dialog',
@@ -52,8 +52,8 @@ export class ChangeCompanyDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<ChangeCompanyDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private userStoreService: UserStoreService,
-    private companyStoreService: CompanyStoreService,
+    private store: StoreService,
+    private router: Router,
   ) {
     this.form = new FormGroup({
       company: new FormControl(''),
@@ -61,7 +61,7 @@ export class ChangeCompanyDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.companyStoreService.companies$.subscribe((companies) => {
+    this.store.companies$.subscribe((companies) => {
       companies.map((company) => {
         this.companyValues.push({
           value: company.id as string,
@@ -73,10 +73,20 @@ export class ChangeCompanyDialogComponent implements OnInit {
     });
 
     this.company.valueChanges.subscribe((value) => {
+      console.log('value', value);
       const company = this.companies.find((company) => company.id === value);
       if (company) {
-        this.companyStoreService.updateSelectedCompanyContext(company);
+        console.log(123123123);
+        this.store.updateSelectedCompanyContext(company);
+        window.location.reload();
       }
+    });
+  }
+
+  reloadCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
     });
   }
 }
