@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Meals,
-  MealTheMealDbType,
-} from '../community-recipes/types/meal-the-meal-db.type';
+
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
@@ -24,7 +21,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Area } from '../shared/types/mealdb-area.type';
 import { Category } from '../shared/types/mealdb-category.type';
 import { Ingredient } from '../shared/types/mealdb-ingredient.type';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
 
 @Component({
   selector: 'app-fork-or-create-recipe',
@@ -50,7 +46,6 @@ import { TheMealDbService } from '../shared/services/the-meal-db.service';
 export class ForkOrCreateRecipeComponent implements OnInit {
   loading = true;
 
-  meal!: MealTheMealDbType;
   areas: Area[] = [];
   categories: Category[] = [];
   ingredientsList: Ingredient[] = [];
@@ -64,7 +59,6 @@ export class ForkOrCreateRecipeComponent implements OnInit {
 
   constructor(
     private router: ActivatedRoute,
-    private mealDbService: TheMealDbService,
     private fb: FormBuilder,
   ) {
     this.form = new FormGroup({
@@ -78,27 +72,12 @@ export class ForkOrCreateRecipeComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.getRouterPathParam();
-
-    forkJoin({
-      categories: this.mealDbService.getCategories(),
-      areas: this.mealDbService.getAreas(),
-      ingredients: this.mealDbService.getIngredients(),
-    }).subscribe(({ categories, areas, ingredients }) => {
-      this.categories = categories.meals;
-      this.areas = areas.meals;
-      this.ingredientsList = ingredients.meals;
-
-      this.loading = false;
-    });
-  }
+  ngOnInit(): void {}
 
   private getRouterPathParam() {
     this.router.paramMap.subscribe((params) => {
       this.mealId = params.get('id');
       if (this.mealId) {
-        this.getMealById(this.mealId);
       }
     });
   }
@@ -112,41 +91,5 @@ export class ForkOrCreateRecipeComponent implements OnInit {
 
   addIngredient() {
     this.ingredients.push(this.addIngredientFormGroup('', ''));
-  }
-
-  private getMealById(mealId: string) {
-    this.mealDbService.getMealById(mealId).subscribe((meal) => {
-      this.meal = meal.meals[0];
-      this.form.get('strArea')?.setValue(this.meal.strArea);
-      this.form.get('strCategory')?.setValue(this.meal.strCategory);
-      this.form.get('strInstructions')?.setValue(this.meal.strInstructions);
-      this.form.get('strMeal')?.setValue(this.meal.strMeal);
-      this.form.get('strMealThumb')?.setValue(this.meal.strMealThumb);
-      this.form.get('strTags')?.setValue(this.meal.strTags);
-
-      const elementCounter = 20;
-
-      for (let index = 0; index < elementCounter; index++) {
-        const mealS = this.meal[
-          `strIngredient${index}` as keyof MealTheMealDbType
-        ] as string;
-        const measureM = this.meal[
-          `strMeasure${index}` as keyof MealTheMealDbType
-        ] as string;
-
-        if (mealS) {
-          // this.form.addControl(
-          //   `strIngredient${index}`,
-          //   new FormControl(mealS, Validators.required),
-          // );
-          // this.form.addControl(
-          //   `strMeasure${index}`,
-          //   new FormControl(measureM, Validators.required),
-          // );
-          this.ingredients.push(this.addIngredientFormGroup(mealS, measureM));
-        }
-      }
-      // this.form.addControl();
-    });
   }
 }

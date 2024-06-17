@@ -1,0 +1,18 @@
+.custom-datepicker-panel .mat-calendar-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-datepicker-panel .mat-calendar-body-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.custom-datepicker-panel .week-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+}

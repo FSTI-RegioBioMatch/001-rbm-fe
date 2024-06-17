@@ -1,6 +1,8 @@
 @use '@angular/material' as mat;
 @use 'sass:map';
 
+@import 'node_modules/@swimlane/ngx-datatable/themes/material';
+
 @include mat.core();
 
 $dark-primary-text: rgba(black, 0.87);

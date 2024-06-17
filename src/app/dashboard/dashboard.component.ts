@@ -7,6 +7,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/offer.service';
+import { SupabaseService } from '../shared/services/supabase.service';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -26,9 +27,14 @@ import { OfferService } from '../shared/offer.service';
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
 
-  constructor(public offerService: OfferService) {}
+  constructor(
+    public offerService: OfferService,
+    private supabaseService: SupabaseService,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.supabaseService.supabaseClient.from('recipes');
+  }
 
   scrollLeft() {
     this.carousel.nativeElement.scrollBy({ left: -150, behavior: 'smooth' });

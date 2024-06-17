@@ -1,4 +1,59 @@
-<div class="d-flex gap-5 overflow-hidden">
+<div class="d-flex gap-5 overflow-hidden p-5">
+  <!--  Menüpflege-->
+  <div class="w-100">
+    <div class="text-header">
+      <span class="text">Menüplanung</span>
+    </div>
+
+    <div class="d-flex gap-4 mt-4">
+      <div class="col-6">
+        <!--        <app-recipe-card />-->
+
+        <div class="mt-4">
+          <mat-form-field appearance="outline" class="" style="width: 100%">
+            <mat-label>Beschreibung</mat-label>
+            <textarea matInput placeholder=""> </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <form class="col-6 d-flex flex-column gap-2 p-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Menüname <span class="">*</span></mat-label>
+          <input matInput />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nächste Ausführung</mat-label>
+          <mat-select>
+            @for (week of weekNumbers; track week) {
+              <mat-option [value]="week">KW: {{ week }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Wochentag</mat-label>
+          <mat-select>
+            @for (weekDay of weekDays; track weekDay) {
+              <mat-option [value]="weekDay.day">{{
+                weekDay.viewDay
+              }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Ort</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Portionen (pP)</mat-label>
+          <input matInput />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
   <!--  Weitere Rezepte-->
   <div class="w-100 additional-recipes">
     <div class="text-header">
@@ -9,67 +64,53 @@
       <form [formGroup]="searchForm" class="input-field">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Suche</mat-label>
-          <input matInput formControlName="search" />
+          <input formControlName="search" matInput />
         </mat-form-field>
       </form>
       <div
         class="row row-cols-1 gap-4 justify-content-evenly overflow-y-auto"
-        style="padding: 21px; max-height: calc(100vh - 350px)"
+        style="padding: 21px; max-height: calc(100vh - 350px); max-width: 100%"
       >
-        @if (searchedRecipes.length === 0) {
-          <cdk-virtual-scroll-viewport itemSize="50">
-            <app-recipe-card
-              *cdkVirtualFor="let recipe of recipes"
-              [title]="recipe.title"
-            />
-          </cdk-virtual-scroll-viewport>
-        } @else {
-          @for (recipe of searchedRecipes; track recipe) {
-            <app-recipe-card [title]="recipe.title" />
-          }
-        }
+        <ngx-datatable
+          #table
+          class="material"
+          [columns]="columns"
+          [columnMode]="ColumnMode.force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          rowHeight="auto"
+          [limit]="5"
+          [rows]="rows"
+        >
+          <ngx-datatable-column name="img">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <img
+                [src]="'assets/img/RecipeDashlet.png'"
+                alt="Image"
+                style=""
+              />
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Title"
+            prop="title"
+          ></ngx-datatable-column>
+          <ngx-datatable-column name="" prop="">
+            <button mat-raised-button>Add</button>
+          </ngx-datatable-column>
+        </ngx-datatable>
+
+        <!--        @if (searchedRecipes.length === 0) {-->
+        <!--          @for (recipe of recipes; track recipe) {-->
+        <!--            <app-recipe-card [title]="recipe.title" />-->
+        <!--          }-->
+        <!--        } @else {-->
+        <!--          @for (recipe of searchedRecipes; track recipe) {-->
+        <!--            <app-recipe-card [title]="recipe.title" />-->
+        <!--          }-->
+        <!--        }-->
       </div>
-    </div>
-  </div>
-
-  <!--  Menüpflege-->
-  <div class="w-100">
-    <div class="text-header">
-      <span class="text">Menüpflege</span>
-    </div>
-
-    <div class="d-flex gap-4 mt-4">
-      <div class="col-6">
-        <app-recipe-card />
-
-        <div class="mt-4">
-          <mat-form-field appearance="outline" class="" style="width: 100%">
-            <mat-label>Address</mat-label>
-            <textarea matInput placeholder="Ex. 100 Main St">
-1600 Amphitheatre Pkwy
-            </textarea>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <form class="col-6 d-flex flex-column gap-2 p-2">
-        <mat-form-field appearance="outline" class="example-full-width">
-          <mat-label>First name</mat-label>
-          <input matInput />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="example-full-width">
-          <mat-label>Long Last Name That Will Be Truncated</mat-label>
-          <input matInput />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="example-full-width">
-          <mat-label>Long Last Name That Will Be Truncated</mat-label>
-          <input matInput />
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="example-full-width">
-          <mat-label>Long Last Name That Will Be Truncated</mat-label>
-          <input matInput />
-        </mat-form-field>
-      </form>
     </div>
   </div>
 </div>
