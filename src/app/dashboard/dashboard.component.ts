@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { SupabaseService } from '../shared/services/supabase.service';
 import { PublicRecipeType } from '../shared/types/public-recipe.type';
 import { PublicRecipeService } from '../shared/services/public-recipe.service';
+import { forkJoin, switchMap } from 'rxjs';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -26,6 +28,7 @@ import { PublicRecipeService } from '../shared/services/public-recipe.service';
     MatButtonToggleModule,
     MapComponent,
     NearOffersCardComponent,
+    NgOptimizedImage,
   ],
 })
 export class DashboardComponent implements OnInit {
@@ -42,7 +45,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getRecepies();
+    this.getRecipes();
   }
 
   scrollLeft() {
@@ -59,32 +62,31 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  async getRecepies() {
-    try {
-      const { data, error } = await this.supabaseService.supabaseClient
-        .from('recipes')
-        .select('*');
+  getRecipes() {
+    this.publicRecipeService.getRecipes().subscribe((recipes) => {
+      this.recipes = recipes;
+      this.suggestedRecipes = this.getRandom(recipes, 20);
+      this.randomRecipes = this.getRandom(recipes, 3);
 
-      if (error) {
-        throw error;
-      }
+      const imageFolderUUIDs = this.suggestedRecipes.map(
+        (recipe) => recipe.image_folder,
+      );
 
-      if (data && data.length > 0) {
-        this.recipes = data as PublicRecipeType[];
-        this.suggestedRecipes = this.getRandom(data as PublicRecipeType[], 20);
-        this.randomRecipes = this.getRandom(data as PublicRecipeType[], 3);
-
-        this.publicRecipeService
-          .getImagesByImageFolderUUID(this.recipes[0].image_folder)
-          .then((links: string[]) => {
-            console.log('Links:', links);
+      this.publicRecipeService
+        .getImagesByImageFolderUUIDs(imageFolderUUIDs)
+        .subscribe((images) => {
+          console.log('Suggested:', images);
+          this.suggestedRecipes.forEach((recipe: PublicRecipeType) => {
+            images.find((image) => {
+              if (image.folderUUID === recipe.image_folder) {
+                recipe.images = image.images;
+              }
+            });
           });
-      }
 
-      console.log('Recipies:', data);
-    } catch (error) {
-      console.error('Error fetching recipies:', error);
-    }
+          console.log(2314324234, this.suggestedRecipes);
+        });
+    });
   }
 
   getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
@@ -102,5 +104,9 @@ export class DashboardComponent implements OnInit {
     console.log('Random:', result);
 
     return result as PublicRecipeType[];
+  }
+
+  getFirstImagOfRecipe(recipe: PublicRecipeType): string {
+    return '';
   }
 }

@@ -137,11 +137,15 @@
         <div class="small-card-list">
           @for (item of suggestedRecipes; track $index) {
             <div class="small-card">
-              <img
-                class="w-100 h-100"
-                src="assets/img/RecipeDashlet.png"
-                style="object-fit: fill"
-              />
+              @if (item.images) {
+                <img
+                  class="w-100 h-100"
+                  [src]="item.images[0]"
+                  style="object-fit: fill"
+                  alt="picture of the recipe"
+                />
+              }
+
               <span class="" style="z-index: 999">{{ item.title }}</span>
             </div>
           }
