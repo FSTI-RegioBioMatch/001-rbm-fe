@@ -1,4 +1,37 @@
 <div class="d-flex gap-5 overflow-hidden">
+  <!--  Weitere Rezepte-->
+  <div class="w-100 additional-recipes">
+    <div class="text-header">
+      <span class="text">Weitere Rezepte</span>
+    </div>
+
+    <div class="search-result-card p-4">
+      <form [formGroup]="searchForm" class="input-field">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Suche</mat-label>
+          <input matInput formControlName="search" />
+        </mat-form-field>
+      </form>
+      <div
+        class="row row-cols-1 gap-4 justify-content-evenly overflow-y-auto"
+        style="padding: 21px; max-height: calc(100vh - 350px)"
+      >
+        @if (searchedRecipes.length === 0) {
+          <cdk-virtual-scroll-viewport itemSize="50">
+            <app-recipe-card
+              *cdkVirtualFor="let recipe of recipes"
+              [title]="recipe.title"
+            />
+          </cdk-virtual-scroll-viewport>
+        } @else {
+          @for (recipe of searchedRecipes; track recipe) {
+            <app-recipe-card [title]="recipe.title" />
+          }
+        }
+      </div>
+    </div>
+  </div>
+
   <!--  Menüpflege-->
   <div class="w-100">
     <div class="text-header">
@@ -37,33 +70,6 @@
           <input matInput />
         </mat-form-field>
       </form>
-    </div>
-  </div>
-
-  <!--  Weitere Rezepte-->
-  <div class="w-100 additional-recipes">
-    <div class="text-header">
-      <span class="text">Weitere Rezepte</span>
-    </div>
-
-    <div class="search-result-card p-4">
-      <div class="input-field">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Suche</mat-label>
-          <input matInput />
-        </mat-form-field>
-      </div>
-      <div
-        class="row row-cols-1 gap-4 justify-content-evenly"
-        style="padding: 21px"
-      >
-        <app-recipe-card />
-        <app-recipe-card />
-        <app-recipe-card />
-        <app-recipe-card />
-        <app-recipe-card />
-        <app-recipe-card />
-      </div>
     </div>
   </div>
 </div>
