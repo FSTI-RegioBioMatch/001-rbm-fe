@@ -27,6 +27,7 @@ import {
 } from '@angular/common/http';
 import { MatInput } from '@angular/material/input';
 import { MatDivider } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 import {
   MatDatepicker,
   MatDatepickerActions,
@@ -122,6 +123,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ToolbarComponent,
     SideMenuComponent,
     MapComponent,
+    MatDialogModule
   ],
   providers: [
     // TODO uncomment to enable Keycloak

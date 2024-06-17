@@ -1,0 +1,27 @@
+<div class="dialog">
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <div class="dialog-content">
+        <div class="column ingredients-column">
+            <h3>Ingredients</h3>
+            <div class="ingredient-list">
+                <table>
+                    <tbody>
+                        @for (item of data.meal.ingredients; track $index) {
+                        <tr class="table-row">
+                            <td class="amount">{{ item.quantity }}</td>
+                            <td class="name">{{ item.name }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="column">
+            <h3>Instructions</h3>
+            {{ data?.meal.instructions }}
+        </div>
+    </div>
+    <div>
+        <button mat-button mat-dialog-close>Schließen</button>
+    </div>
+</div>

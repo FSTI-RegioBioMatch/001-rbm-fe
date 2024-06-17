@@ -1,0 +1,76 @@
+.dialog {
+    overflow-y: hidden;
+}
+.dialog-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.column {
+    flex: 1;
+    padding: 0 20px;
+}
+
+.ingredients-column .ingredient-list {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9; /* Light grey background color */
+    border-radius: 8px; /* Rounded corners */
+
+}
+
+.table-row {
+    background-color: #f9f9f9; /* Light grey background color */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #ccc; /* Add border to the entire table */
+}
+
+.ingredient-list table {
+    width: 100%;
+    border-collapse: collapse; /* Ensure borders are not collapsed */
+}
+
+.ingredient-item {
+    border-bottom: 1px solid #ccc; /* Add border between rows */
+}
+
+.ingredient-item:last-child {
+    border-bottom: none; /* Remove bottom border for the last item */
+}
+
+.ingredient-item td {
+    padding: 8px;
+    border: none; /* Remove default borders */
+}
+
+.recipe-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+mat-dialog-content {
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+mat-dialog-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+h3 {
+    margin-top: 15px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+p {
+    text-align: justify;
+}
