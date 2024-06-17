@@ -22,6 +22,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import {
   provideHttpClient,
   withFetch,
+  withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { MatInput } from '@angular/material/input';
@@ -56,17 +57,18 @@ import {
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import { SideMenuComponent } from './shared/side-menu/side-menu.component';
 import { MapComponent } from './dashboard/map/map.component';
+import { currentCompanyInterceptor } from './shared/interceptors/current-company.interceptor';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'https://auth.regiobiomatch.de',
-        realm: 'regiobiomatch',
+        url: 'https://auth.staging.nearbuy-food.de',
+        realm: 'nearbuy',
         clientId: 'regiobiomatch-client',
       },
       initOptions: {
-        onLoad: 'check-sso',
+        onLoad: 'login-required',
         flow: 'standard',
       },
       loadUserProfileAtStartUp: true,
@@ -133,8 +135,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     },
     provideAnimationsAsync(),
     provideNativeDateAdapter(),
-    provideHttpClient(withInterceptorsFromDi()),
-    provideHttpClient(withFetch()),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withInterceptors([currentCompanyInterceptor]),
+      withFetch(),
+    ),
   ],
   bootstrap: [AppComponent],
   exports: [],

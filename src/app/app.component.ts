@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from './shared/services/user.service';
-import { CompanyService } from './shared/services/company.service';
-import { Router } from '@angular/router';
-import { KeycloakService } from 'keycloak-angular';
+import { OfferService } from './shared/offer.service';
+import { AddressType } from './shared/types/address.type';
+import { RequestService } from './shared/services/request.service';
+import { forkJoin, of, switchMap, tap } from 'rxjs';
+import { StoreService } from './shared/store/store.service';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,38 @@ export class AppComponent implements OnInit {
   title = 'RegioBioMatch';
 
   constructor(
-    public userService: UserService,
-    public keycloakService: KeycloakService,
+    private store: StoreService,
+    private requestService: RequestService,
+    private offerService: OfferService,
   ) {}
 
   ngOnInit(): void {
-    if (this.keycloakService.isLoggedIn()) {
-    }
-    this.userService.init();
+    this.store.initPersonMeInformation();
+
+    const observables = forkJoin({
+      companyContext: this.store.selectedCompanyContext$.pipe(
+        switchMap((company) => {
+          if (company) {
+            return this.requestService
+              .doGetRequest(company.addresses[0].self)
+              .pipe(
+                tap((data) => {
+                  console.log(123213123312, data as AddressType);
+                  this.offerService.setOffersBySearchRadius(
+                    5,
+                    data as AddressType,
+                  );
+                }),
+              );
+          } else {
+            return of(null);
+          }
+        }),
+      ),
+    });
+
+    observables.subscribe((data) => {
+      console.log(data);
+    });
   }
 }

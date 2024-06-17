@@ -131,9 +131,5 @@ export class CompanySettingsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
-  }
+  ngOnInit(): void {}
 }

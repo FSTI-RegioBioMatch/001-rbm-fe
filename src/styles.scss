@@ -17,6 +17,35 @@ $light-focused: rgba(white, 0.12);
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 20px;
+}
+
+
+
+.mat-button.mat-success,
+.mat-stroked-button.mat-success {
+  color: #ffffff;
+}
+.mat-button.mat-success:hover,
+.mat-stroked-button.mat-success:hover {
+  background-color: #f0fff3;
+}
+
+.mat-raised-button.mat-success,
+.mat-flat-button.mat-success,
+.mat-fab.mat-success,
+.mat-mini-fab.mat-success {
+  color: #ffffff;
+  background-color: #155724;
+}
+
+.mat-icon-button.mat-success {
+  color:#155724;
+}
+
+
+
 $rbm-palette-accent: (
   50:   #e6f8e5,
   100:  #c3edc0,
@@ -55,7 +84,7 @@ $rbm-palette-accent: (
 $rbm-palette-primary: (
   50: #e5f6eb,
   100: #bfe9ce,
-  200: #95dbaf,
+  200: #C3EDC0,
   300: #67cd8f,
   400: #40c278,
   500: #00b661,
@@ -85,7 +114,7 @@ $rbm-palette-primary: (
   )
 );
 
-$my-primary: mat.define-palette($rbm-palette-primary, 500, 300, 700);
+$my-primary: mat.define-palette($rbm-palette-primary, 200, 300, 700);
 $my-accent: mat.define-palette($rbm-palette-accent, A200, A100, A400);
 
 $my-theme: mat.define-light-theme((

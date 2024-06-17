@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 
 @Component({
@@ -8,22 +8,30 @@ import * as L from 'leaflet';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
+  @Input() lat!: number;
+  @Input() lng!: number;
+
   map!: L.Map;
-  markers: L.Marker[] = [
-    L.marker([49.14844742446603, 9.215238773312953]), // hn
-  ];
+  markers!: L.Marker[];
+
   constructor() {}
 
   ngOnInit() {
-    this.map = L.map('map').setView([49.14844742446603, 9.215238773312953], 20);
+    if (this.lat || this.lng) {
+      this.markers = [
+        L.marker([this.lat, this.lng]), // hn
+      ];
 
-    this.initializeMap();
+      this.map = L.map('map').setView([this.lat, this.lng], 20);
+
+      this.initializeMap();
+
+      this.addMarkers();
+      this.centerMap();
+    }
   }
 
-  ngAfterViewInit() {
-    this.addMarkers();
-    this.centerMap();
-  }
+  ngAfterViewInit() {}
 
   private initializeMap() {
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

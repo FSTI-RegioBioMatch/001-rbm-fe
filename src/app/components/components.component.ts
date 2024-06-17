@@ -27,13 +27,7 @@ export class ComponentsComponent implements OnInit {
     return this.form.get('name') as FormControl;
   }
 
-  onSubmit() {
-    console.log(this.form);
-  }
+  onSubmit() {}
 
-  ngOnInit(): void {
-    this.name.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
-  }
+  ngOnInit(): void {}
 }

@@ -1,22 +1,2 @@
 <app-toolbar />
-
-@if (!userService.loading && userService.userProfileWithActions) {
-  @if (userService.userProfileWithActions.requiredActions.length === 0) {}
-
-  <div class="d-flex" style="min-height: 100%">
-    @if (
-      userService.userProfileWithActions.requiredActions.length === 0 &&
-      !userService.isLockDashboard
-    ) {
-      <app-side-menu></app-side-menu>
-    }
-    <router-outlet></router-outlet>
-  </div>
-} @else {
-  @if (userService.loading) {
-    <!--    <mat-spinner />-->
-  }
-  @if (!keycloakService.isLoggedIn()) {
-    <router-outlet></router-outlet>
-  }
-}
+<router-outlet></router-outlet>

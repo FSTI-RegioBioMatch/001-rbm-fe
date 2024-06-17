@@ -1,28 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../services/user.service';
-import { MatFabButton } from '@angular/material/button';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
+import { RbmSelectComponent } from '../components/ui/rbm-select/rbm-select.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ChangeCompanyDialogComponent } from '../components/change-company-dialog/change-company-dialog.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss',
   standalone: true,
-  imports: [MatFabButton, RouterLink],
+  imports: [
+    MatFabButton,
+    RouterLink,
+    RbmSelectComponent,
+    MatIconButton,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+  ],
 })
 export class ToolbarComponent implements OnInit {
   constructor(
-    public userService: UserService,
     private route: Router,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {}
 
-  onClickLogout() {
-    this.userService.logout();
-  }
+  onClickOpenChangeCompanyDialog() {
+    const dialogRef = this.dialog.open(ChangeCompanyDialogComponent);
 
-  onClickAvatar() {
-    this.route.navigate(['/profile']);
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }
