@@ -21,8 +21,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --mdc-dialog-container-shape: 20px;
 }
 
-
-
 .mat-button.mat-success,
 .mat-stroked-button.mat-success {
   color: #ffffff;
@@ -43,8 +41,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-icon-button.mat-success {
   color:#155724;
 }
-
-
 
 $rbm-palette-accent: (
   50:   #e6f8e5,
@@ -79,8 +75,6 @@ $rbm-palette-accent: (
   )
 );
 
-
-// Define the $rbm-palette before using it
 $rbm-palette-primary: (
   50: #e5f6eb,
   100: #bfe9ce,
@@ -116,15 +110,22 @@ $rbm-palette-primary: (
 
 $my-primary: mat.define-palette($rbm-palette-primary, 200, 300, 700);
 $my-accent: mat.define-palette($rbm-palette-accent, A200, A100, A400);
+$my-warn: mat.define-palette(mat.$red-palette, 500);
 
 $my-theme: mat.define-light-theme((
   color: (
     primary: $my-primary,
     accent: $my-accent,
+    warn: $my-warn
   ),
   typography: mat.define-typography-config(),
+
   density: 0,
 ));
 
 @include mat.all-component-themes($my-theme);
 
+// Set the input field background color to #95DBAF
+.mat-form-field .mat-form-field-flex {
+  background-color: #95DBAF;
+}
