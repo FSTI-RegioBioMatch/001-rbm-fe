@@ -43,7 +43,9 @@ export class StoreService {
   );
   public selectedCompanyContext$ = this.selectedCompanyContext.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.selectedCompanyContextChangedListener();
+  }
 
   public setOfferOntoFood(offerOntoFood: OntofoodType[]) {
     this.offerOntoFoodSubject.next(offerOntoFood);
