@@ -80,13 +80,14 @@
     overflow: hidden; /* Prevent content overflow */
     text-overflow: ellipsis; /* Ellipsis for overflow text */
     white-space: nowrap; /* No wrapping */
+    overflow-y: auto;
 }
 
 .card-list .card mat-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    overflow: hidden; /* Prevent content overflow */
+    // overflow: hidden; /* Prevent content overflow */
 }
 
 .title-wrapper {

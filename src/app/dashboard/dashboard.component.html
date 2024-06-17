@@ -1,6 +1,90 @@
 <div class="container">
   <div class="card-list-container">
+    <!-- 
+    {{userType}} -->
     <div class="card-list">
+
+      @if (userType == 'Erzeuger' || userType == 'Veredler')
+      {
+
+      <div class="card-wrapper">
+        <h2>Beliebte Regionale Rezepte</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-wrapper">
+                <span>zur Vollansicht</span>
+                <button mat-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @for (item of searchData; track $index) {
+            <p (click)="openDetails(item)">{{item.title}}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="card-wrapper">
+        <h2>Auftragsübersicht</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-wrapper">
+                <span>zur Vollansicht</span>
+                <button mat-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Erz 1 - location - datum - status</p>
+            <p>Erz 2 - location - datum - status</p>
+            <p>Erz 3 - location - datum - status</p>
+            <p>Erz 4 - location - datum - status</p>
+            <p>Erz 5 - location - datum - status</p>
+            <p>Erz 6 - location - datum - status</p>
+            <p>Erz 7 - location - datum - status</p>
+            <p>Erz 8 - location - datum - status</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      }
+
+      @if (userType == 'Veredler')
+      {
+      <div class="card-wrapper">
+        <h2>Beliebte Regionale Erzeugnisse</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="title-wrapper">
+                <span>zur Vollansicht</span>
+                <button mat-button>
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>erz 1</p>
+            <p>erz 2</p>
+            <p>erz 3</p>
+            <p>erz 4</p>
+            <p>erz 5</p>
+            <p>erz 6</p>
+            <p>erz 7</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      }
+
+      @if (userType == 'User')
+      {
       <div class="card-wrapper">
         <h2>Meine Rezepte</h2>
         <mat-card class="card card-my-recepies">
@@ -15,16 +99,15 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <p>Name Rezept</p>
-            <p>Name Rezept</p>
-            <p>Name Rezept</p>
-            <p>Name Rezept</p>
+            @for (item of searchData; track $index) {
+            <p>{{item.title}}</p>
+            }
           </mat-card-content>
         </mat-card>
       </div>
 
       <div class="card-wrapper">
-        <h2>Meine Menüpkanung</h2>
+        <h2>Meine Menüplanung</h2>
         <mat-card class="card card-my-recepies">
           <mat-card-header>
             <mat-card-title>
@@ -44,6 +127,38 @@
           </mat-card-content>
         </mat-card>
       </div>
+
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-wrapper">
+        <h2>Produkte in meiner Region</h2>
+        <mat-card class="card card-my-recepies">
+          <mat-card-header>
+            <mat-card-title>Produkte finden</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>name</p>
+            <p>langer nam...</p>
+            <p>name</p>
+            <p>name</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      }
 
       <div class="card-wrapper">
         <h2>Mein Name des Marktplatzes</h2>
@@ -91,38 +206,10 @@
         </mat-card>
       </div>
 
-      <div class="card-wrapper">
-        <h2>Produkte in meiner Region</h2>
-        <mat-card class="card card-my-recepies">
-          <mat-card-header>
-            <mat-card-title>Produkte finden</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>name</p>
-            <p>langer nam...</p>
-            <p>name</p>
-            <p>name</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
-      <div class="card-wrapper">
-        <h2>Produkte in meiner Region</h2>
-        <mat-card class="card card-my-recepies">
-          <mat-card-header>
-            <mat-card-title>Produkte finden</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p>name</p>
-            <p>langer nam...</p>
-            <p>name</p>
-            <p>name</p>
-          </mat-card-content>
-        </mat-card>
-      </div>
-
     </div>
   </div>
+
+
   <div class="side-scroll-container">
     <h2>Rezeptempfehlungen für mich</h2>
     <br>
@@ -132,29 +219,15 @@
       </button>
       <div class="small-card-list">
 
-        <!-- Small gray cards -->
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
-        <div class="small-card"></div>
+        @for (item of searchData; track $index)
+        {
+        <div class="small-card">{{item.title}}</div>
+        }
+        @for (item of searchData; track $index)
+        {
+        <div class="small-card">{{item.title}}</div>
+        }
       </div>
-
     </div>
   </div>
 </div>

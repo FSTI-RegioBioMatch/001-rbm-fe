@@ -1,0 +1,38 @@
+<div class="dialog">
+    <h2 mat-dialog-title>{{ data.meal.title }}</h2>
+    @if (!loading) {
+    <div class="dialog-content">
+        <div class="column ingredients-column">
+            <h3>Ingredients</h3>
+            <div class="ingredient-list">
+                <table>
+                    <tbody>
+                        @for (item of data.meal.details.ingredients; track $index) {
+                        <tr class="table-row">
+                            <td class="amount">{{ item.amount }} {{ item.unit }}</td>
+                            <td class="name">{{ item.name }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="column">
+            <h3>Instructions</h3>
+            <ul>
+                @for (item of data?.meal?.details?.steps; track $index) {
+                <li>
+                    {{ item }}
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+    @else {
+    <mat-spinner></mat-spinner>
+    }
+    <div>
+        <button mat-button mat-dialog-close>Schließen</button>
+    </div>
+</div>
