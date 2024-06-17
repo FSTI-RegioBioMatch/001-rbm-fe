@@ -2,7 +2,7 @@
 FROM node:18 as build-stage
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm install --force
 COPY ./ /app/
 ARG configuration=production
 RUN npm run build -- --output-path=./dist --configuration $configuration
