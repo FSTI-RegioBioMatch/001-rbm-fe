@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
-import { OfferType } from './types/offer.type';
-import { OntofoodType } from './types/ontofood.type';
+import { environment } from '../../../environments/environment.development';
+import { OfferType } from '../types/offer.type';
+import { OntofoodType } from '../types/ontofood.type';
 import { forkJoin } from 'rxjs';
-import { RequestService } from './services/request.service';
+import { RequestService } from './request.service';
 import { GeoService } from './geo.service';
-import { AddressType } from './types/address.type';
-import { StoreService } from './store/store.service';
+import { AddressType } from '../types/address.type';
+import { StoreService } from '../store/store.service';
 
 @Injectable({
   providedIn: 'root',

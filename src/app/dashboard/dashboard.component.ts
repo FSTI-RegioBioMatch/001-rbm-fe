@@ -6,10 +6,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
-import { OfferService } from '../shared/offer.service';
+import { OfferService } from '../shared/services/offer.service';
 import { RecepieDetailsDialogComponent } from './recepie-details-dialog/recepie-details-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SupabaseService } from '../shared/services/supabase.service';
+import { PublicRecipeType } from '../shared/types/public-recipe.type';
+import { PublicRecipeService } from '../shared/services/public-recipe.service';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -28,8 +30,16 @@ import { SupabaseService } from '../shared/services/supabase.service';
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
-  randomRecipes: any[] = [];
-  constructor(private dialog: MatDialog, public offerService: OfferService, private supabaseService: SupabaseService) {}
+  randomRecipes: PublicRecipeType[] = [];
+  recipes: PublicRecipeType[] = [];
+  suggestedRecipes: PublicRecipeType[] = [];
+
+  constructor(
+    private dialog: MatDialog,
+    public offerService: OfferService,
+    private supabaseService: SupabaseService,
+    private publicRecipeService: PublicRecipeService,
+  ) {}
 
   ngOnInit(): void {
     this.getRecepies();
@@ -45,7 +55,7 @@ export class DashboardComponent implements OnInit {
 
   openDetails(meal: any) {
     this.dialog.open(RecepieDetailsDialogComponent, {
-      data: { meal }
+      data: { meal },
     });
   }
 
@@ -60,26 +70,37 @@ export class DashboardComponent implements OnInit {
       }
 
       if (data && data.length > 0) {
-        const randomRecipes = this.getRandom(data, 3);
-        console.log(randomRecipes);
-        this.randomRecipes = randomRecipes;
+        this.recipes = data as PublicRecipeType[];
+        this.suggestedRecipes = this.getRandom(data as PublicRecipeType[], 20);
+        this.randomRecipes = this.getRandom(data as PublicRecipeType[], 3);
+
+        this.publicRecipeService
+          .getImagesByImageFolderUUID(this.recipes[0].image_folder)
+          .then((links: string[]) => {
+            console.log('Links:', links);
+          });
       }
+
+      console.log('Recipies:', data);
     } catch (error) {
       console.error('Error fetching recipies:', error);
     }
   }
 
-  getRandom(arr: any[], n: number) {
+  getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
     const result = new Array(n);
     let len = arr.length;
     const taken = new Array(len);
     if (n > len)
-      throw new RangeError("getRandom: more elements taken than available");
+      throw new RangeError('getRandom: more elements taken than available');
     while (n--) {
       const x = Math.floor(Math.random() * len);
       result[n] = arr[x in taken ? taken[x] : x];
       taken[x] = --len in taken ? taken[len] : len;
     }
-    return result;
+
+    console.log('Random:', result);
+
+    return result as PublicRecipeType[];
   }
 }

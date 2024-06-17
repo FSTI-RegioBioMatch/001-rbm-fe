@@ -6,7 +6,7 @@ import {
   MatCardTitle,
 } from '@angular/material/card';
 import { AddressType } from '../../../shared/types/address.type';
-import { OfferService } from '../../../shared/offer.service';
+import { OfferService } from '../../../shared/services/offer.service';
 import { JsonPipe } from '@angular/common';
 
 @Component({
