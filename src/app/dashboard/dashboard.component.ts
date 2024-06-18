@@ -67,25 +67,6 @@ export class DashboardComponent implements OnInit {
       this.recipes = recipes;
       this.suggestedRecipes = this.getRandom(recipes, 20);
       this.randomRecipes = this.getRandom(recipes, 3);
-
-      const imageFolderUUIDs = this.suggestedRecipes.map(
-        (recipe) => recipe.image_folder,
-      );
-
-      this.publicRecipeService
-        .getImagesByImageFolderUUIDs(imageFolderUUIDs)
-        .subscribe((images) => {
-          console.log('Suggested:', images);
-          this.suggestedRecipes.forEach((recipe: PublicRecipeType) => {
-            images.find((image) => {
-              if (image.folderUUID === recipe.image_folder) {
-                recipe.images = image.images;
-              }
-            });
-          });
-
-          console.log(2314324234, this.suggestedRecipes);
-        });
     });
   }
 

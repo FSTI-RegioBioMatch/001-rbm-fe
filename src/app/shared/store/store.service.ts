@@ -8,6 +8,7 @@ import { CompanyType } from '../types/company.type';
 import { HttpClient } from '@angular/common/http';
 import { OntofoodType } from '../types/ontofood.type';
 import { OfferType } from '../types/offer.type';
+import { PublicRecipeType } from '../types/public-recipe.type';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,13 @@ export class StoreService {
     null,
   );
   public selectedCompanyContext$ = this.selectedCompanyContext.asObservable();
+
+  // current selected recipes to great menu plan
+  public selectedPublicRecipeSubject = new BehaviorSubject<PublicRecipeType[]>(
+    [],
+  );
+  public selectedPublicRecipe$ =
+    this.selectedPublicRecipeSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.selectedCompanyContextChangedListener();

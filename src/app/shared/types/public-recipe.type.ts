@@ -13,5 +13,5 @@ export type PublicRecipeType = {
   portions: number;
   created_at: string;
   image_folder: string;
-  images?: string[];
+  image_urls?: string[];
 };

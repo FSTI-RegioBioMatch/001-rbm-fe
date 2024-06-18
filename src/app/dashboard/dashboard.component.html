@@ -137,10 +137,10 @@
         <div class="small-card-list">
           @for (item of suggestedRecipes; track $index) {
             <div class="small-card">
-              @if (item.images) {
+              @if (item.image_urls) {
                 <img
                   class="w-100 h-100"
-                  [src]="item.images[0]"
+                  [src]="item.image_urls[0]"
                   style="object-fit: fill"
                   alt="picture of the recipe"
                 />

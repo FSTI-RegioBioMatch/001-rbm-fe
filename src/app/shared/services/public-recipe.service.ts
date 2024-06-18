@@ -4,6 +4,7 @@ import { SupabaseService } from './supabase.service';
 import { forkJoin, from, map, Observable } from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { PublicRecipeType } from '../types/public-recipe.type';
+import { ImageType } from '../types/image.type';
 
 @Injectable({
   providedIn: 'root',
@@ -71,9 +72,31 @@ export class PublicRecipeService {
     return forkJoin(observables).pipe(
       map((results) => {
         return results.map((images, index) => {
-          return { folderUUID: folderUUIDs[index], images };
+          const imageType: ImageType = {
+            folderUUID: folderUUIDs[index],
+            images,
+          };
+          return imageType;
         });
       }),
+    );
+  }
+
+  getRecipesPagination(
+    startIndex: number,
+    endIndex: number,
+  ): Observable<PublicRecipeType[]> {
+    return fromPromise(
+      this.supabaseService.supabaseClient
+        .from('recipes')
+        .select('*')
+        .range(startIndex, endIndex)
+        .then(({ data, error }) => {
+          if (error) {
+            throw error;
+          }
+          return data;
+        }),
     );
   }
 
