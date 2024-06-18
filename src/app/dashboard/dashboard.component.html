@@ -130,10 +130,10 @@
     <div class="side-scroll-container">
       <h2>Rezeptempfehlungen für mich</h2>
       <br />
-      <div class="small-card-list-container">
-        <button mat-button>
-          <mat-icon>list</mat-icon>
-        </button>
+      <div class="small-card-list-container" style="padding: 24px">
+        <div class="mb-2">
+          <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
+        </div>
         <div class="small-card-list">
           @for (item of suggestedRecipes; track $index) {
             <div class="small-card">
