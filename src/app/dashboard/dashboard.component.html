@@ -4,126 +4,94 @@
       <div class="card-list">
         <div class="card-wrapper">
           <h2>Meine Rezepte</h2>
-          <mat-card class="card card-my-recepies">
-            <mat-card-header>
-              <mat-card-title>
-                <div class="title-wrapper">
-                  <span>zur Vollansicht</span>
-                  <button mat-button>
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
+          <p-card header="zur Vollansicht" class="card card-my-recepies">
+            <div>
               @for (item of randomRecipes; track $index) {
                 <p (click)="openDetails(item)">
                   {{ item.title }}
                 </p>
               }
-            </mat-card-content>
-          </mat-card>
+            </div>
+          </p-card>
         </div>
 
         <div class="card-wrapper">
-          <h2>Meine Menüpkanung</h2>
-          <mat-card class="card card-my-recepies">
-            <mat-card-header>
-              <mat-card-title>
-                <div class="title-wrapper">
-                  <span>zur Vollansicht</span>
-                  <button mat-button>
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
+          <h2>Meine Menüplanung</h2>
+          <p-card class="card card-my-recepies">
+            <div class="title-wrapper">
+              <span>zur Vollansicht</span>
+              <p-button icon="">
+                <span class="material-symbols-outlined"> add </span>
+              </p-button>
+            </div>
+            <div>
               <p>KW</p>
               <p>KW</p>
               <p>KW</p>
               <p>KW</p>
-            </mat-card-content>
-          </mat-card>
+            </div>
+          </p-card>
         </div>
 
         <div class="card-wrapper">
           <h2>Mein Name des Marktplatzes</h2>
-          <mat-card class="card">
+          <p-card class="card">
             <app-map
               [lat]="offerService.address.lat"
               [lng]="offerService.address.lon"
               class="map-card"
             />
-          </mat-card>
+          </p-card>
         </div>
 
         <div class="card-wrapper">
           <h2>Community-Saisonkalender</h2>
-          <mat-card class="card card-my-recepies">
-            <mat-card-header>
-              <mat-card-title>zur Vollansicht</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
+          <p-card class="card card-my-recepies" header="zur Vollansicht">
+            <div>
               <div class="carousel-container">
-                <button
-                  mat-button
-                  class="carousel-button left"
-                  (click)="scrollLeft()"
-                >
-                  <mat-icon>chevron_left</mat-icon>
+                <button class="carousel-button left" (click)="scrollLeft()">
+                  icon
                 </button>
                 <div class="carousel-content" #carousel>
-                  <mat-button-toggle-group
-                    name="ingredients"
-                    aria-label="Ingredients"
-                    multiple
-                  >
-                    <mat-button-toggle value="januar">Jan</mat-button-toggle>
-                    <mat-button-toggle value="februar">Feb</mat-button-toggle>
-                    <mat-button-toggle value="märz">Mrz</mat-button-toggle>
-                    <mat-button-toggle value="april">Apr</mat-button-toggle>
-                    <mat-button-toggle value="mai">Mai</mat-button-toggle>
-                    <mat-button-toggle value="juni">Jun</mat-button-toggle>
-                    <mat-button-toggle value="juli">Jul</mat-button-toggle>
-                    <mat-button-toggle value="august">Aug</mat-button-toggle>
-                    <mat-button-toggle value="september">Sep</mat-button-toggle>
-                    <mat-button-toggle value="oktober">Okt</mat-button-toggle>
-                    <mat-button-toggle value="november">Nov</mat-button-toggle>
-                    <mat-button-toggle value="dezember">Dez</mat-button-toggle>
-                  </mat-button-toggle-group>
+                  <div>
+                    <p-button>Jan</p-button>
+                    <p-button>Feb</p-button>
+                    <p-button>Mrz</p-button>
+                    <p-button>Apr</p-button>
+                    <p-button>Mai</p-button>
+                    <p-button>Jun</p-button>
+                    <p-button>Jul</p-button>
+                    <p-button>Aug</p-button>
+                    <p-button>Sep</p-button>
+                    <p-button>Okt</p-button>
+                    <p-button>Nov</p-button>
+                    <p-button>Dez</p-button>
+                  </div>
                 </div>
-                <button
-                  mat-button
-                  class="carousel-button right"
-                  (click)="scrollRight()"
-                >
-                  <mat-icon>chevron_right</mat-icon>
+                <button class="carousel-button right" (click)="scrollRight()">
+                  icon
                 </button>
               </div>
 
               <p>Name Produkt</p>
               <p>Name Produkt</p>
               <p>Name Produkt</p>
-            </mat-card-content>
-          </mat-card>
+            </div>
+          </p-card>
         </div>
 
         <app-near-offers-card />
 
         <div class="card-wrapper">
           <h2>Produkte in meiner Region</h2>
-          <mat-card class="card card-my-recepies">
-            <mat-card-header>
-              <mat-card-title>Produkte finden</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
+          <p-card header="Produkte finden" class="card card-my-recepies">
+            <div>
               <p>name</p>
               <p>langer nam...</p>
               <p>name</p>
               <p>name</p>
-            </mat-card-content>
-          </mat-card>
+            </div>
+          </p-card>
         </div>
       </div>
     </div>

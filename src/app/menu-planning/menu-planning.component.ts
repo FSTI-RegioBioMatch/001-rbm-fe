@@ -1,51 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTab, MatTabGroup } from '@angular/material/tabs';
 import { ManageMenuComponent } from './components/manage-menu/manage-menu.component';
 import { StoreService } from '../shared/store/store.service';
-import { FormsModule } from '@angular/forms';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatOption } from '@angular/material/autocomplete';
-import { MatSelect } from '@angular/material/select';
-import moment from 'moment/moment';
 import {
-  ColumnMode,
-  NgxDatatableModule,
-  SelectionType,
-} from '@swimlane/ngx-datatable';
-import { PublicRecipeType } from '../shared/types/public-recipe.type';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatButton } from '@angular/material/button';
-import { MatDivider } from '@angular/material/divider';
-import { MatDialog } from '@angular/material/dialog';
-import { AddAdditionalRecipesModalComponent } from './components/add-additional-recipes-modal/add-additional-recipes-modal.component';
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import moment from 'moment/moment';
+import { RecipeType } from '../shared/types/recipe.type';
+import { MenuplanService } from '../shared/services/menuplan.service';
+import { MenuplanType } from '../shared/types/menuplan.type';
+import { RouterLink } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { JsonPipe } from '@angular/common';
+import { RecipeService } from '../shared/services/recipe.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-menu-planning',
   standalone: true,
   imports: [
-    MatTabGroup,
-    MatTab,
     ManageMenuComponent,
     FormsModule,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatSelect,
-    NgxDatatableModule,
-    MatCard,
-    MatCardContent,
-    MatButton,
-    MatDivider,
+    ReactiveFormsModule,
+    RouterLink,
+    TableModule,
+    JsonPipe,
+    InputTextModule,
   ],
   templateUrl: './menu-planning.component.html',
   styleUrl: './menu-planning.component.scss',
 })
 export class MenuPlanningComponent implements OnInit {
-  rows: PublicRecipeType[] = [];
+  rows: RecipeType[] = [];
   weekNumbers!: number[];
-  selected: PublicRecipeType[] = [];
+  selected: RecipeType[] = [];
+
+  menuPlanFormGroup: FormGroup;
 
   weekDays = [
     { day: 'Monday', viewDay: 'Montag' },
@@ -59,14 +52,57 @@ export class MenuPlanningComponent implements OnInit {
 
   constructor(
     private store: StoreService,
-    private matDialog: MatDialog,
-  ) {}
+    private menuplanService: MenuplanService,
+    private recipeService: RecipeService,
+  ) {
+    this.menuPlanFormGroup = new FormGroup({
+      menuName: new FormControl(''),
+      description: new FormControl(''),
+      weekDay: new FormControl(''),
+      executionWeekNumber: new FormControl(''),
+      place: new FormControl(''),
+      portions: new FormControl('', [
+        Validators.min(1),
+        Validators.max(9999),
+        Validators.pattern(/^\d+$/),
+      ]),
+    });
+  }
+
+  get menuName() {
+    return this.menuPlanFormGroup.get('menuName') as FormControl;
+  }
+
+  get description() {
+    return this.menuPlanFormGroup.get('description') as FormControl;
+  }
+
+  get weekDay() {
+    return this.menuPlanFormGroup.get('weekDay') as FormControl;
+  }
+
+  get executionWeekNumber() {
+    return this.menuPlanFormGroup.get('executionWeekNumber') as FormControl;
+  }
+
+  get place() {
+    return this.menuPlanFormGroup.get('place') as FormControl;
+  }
+
+  get portions() {
+    return this.menuPlanFormGroup.get('portions') as FormControl;
+  }
 
   ngOnInit(): void {
     this.weekNumbers = this.getWeekNumbersFromCurrentWeek();
 
-    this.store.selectedPublicRecipe$.subscribe((recipes) => {
-      console.log('stored recipes', recipes);
+    // this.store.selectedRecipes$.subscribe((recipes) => {
+    //   console.log('stored recipes', recipes);
+    //   this.rows = recipes;
+    // });
+
+    this.recipeService.getRecipesByCompanyContext().subscribe((recipes) => {
+      console.log('recipes', recipes);
       this.rows = recipes;
     });
   }
@@ -110,12 +146,29 @@ export class MenuPlanningComponent implements OnInit {
     console.log('Activate Event', event);
   }
 
-  openAddAdditionalRecipesModal() {
-    this.matDialog.open(AddAdditionalRecipesModalComponent, {
-      width: '800px',
+  openAddAdditionalRecipesModal() {}
+
+  onClickCreateMenuPlan() {
+    if (!this.menuPlanFormGroup.valid) {
+      console.log('Form is not valid');
+      return;
+    }
+
+    const menuPlan: MenuplanType = {
+      description: this.description.value,
+      menuName: this.menuName.value,
+      weekDay: this.weekDay.value,
+      executionWeekNumber: this.executionWeekNumber.value,
+      place: this.place.value,
+      portions: this.portions.value,
+      recipes: this.rows,
+    };
+
+    console.log(this.menuPlanFormGroup, menuPlan);
+
+    this.menuplanService.createMenuPlan(menuPlan).subscribe((response) => {
+      console.log('Menu plan created');
+      console.log('response', response);
     });
   }
-
-  protected readonly SelectionType = SelectionType;
-  protected readonly ColumnMode = ColumnMode;
 }

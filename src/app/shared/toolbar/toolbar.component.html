@@ -1,6 +1,6 @@
 <div class="toolbar">
   <div class="toolbar-container">
-    <div class="d-flex gap-3">
+    <div class="flex gap-3">
       <svg
         width="256"
         height="48"
@@ -28,29 +28,8 @@
           fill="#29784D"
         />
       </svg>
-
       <div>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button routerLink="/my-recipes" mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Meine Rezepte</span>
-          </button>
-          <button routerLink="/menu-planning" mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Menü Planung</span>
-          </button>
-          <button routerLink="/menu-planning" mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Mein Marktplatz</span>
-          </button>
-          <button routerLink="/menu-planning" mat-menu-item>
-            <mat-icon>dialpad</mat-icon>
-            <span>Bereich</span>
-          </button>
-        </mat-menu>
+        <img (click)="menu.toggle($event)" src="assets/icons/menu.png" alt="" />
       </div>
     </div>
 
@@ -58,7 +37,7 @@
       <span (click)="onClickOpenChangeCompanyDialog()">Betrieb wechseln</span>
     </div>
 
-    <div class="d-flex gap-4">
+    <div class="flex gap-4">
       <img src="assets/img/apps.svg" alt="" />
       <img src="assets/img/marketplace.png" alt="" />
       <img src="assets/img/profile-picture.svg" alt="" />
@@ -66,3 +45,10 @@
     </div>
   </div>
 </div>
+
+<p-menu #menu [model]="menuItems" [popup]="true">
+  <ng-template pTemplate="start"> </ng-template>
+  <!--  <ng-template pTemplate="item" let-item>-->
+  <!--    <span class="ml-2">{{ item.label }} 213</span>-->
+  <!--  </ng-template>-->
+</p-menu>

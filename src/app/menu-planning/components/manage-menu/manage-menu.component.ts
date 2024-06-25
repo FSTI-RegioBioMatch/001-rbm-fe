@@ -1,12 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import {
-  MatFormField,
-  MatFormFieldModule,
-  MatHint,
-  MatLabel,
-} from '@angular/material/form-field';
-import { RbmInputComponent } from '../../../shared/components/ui/rbm-input/rbm-input.component';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AddressType } from '../../../shared/types/address.type';
 import { StoreService } from '../../../shared/store/store.service';
@@ -17,47 +9,17 @@ import {
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
-import {
-  MatDatepicker,
-  MatDatepickerInput,
-  MatDatepickerModule,
-  MatDatepickerToggle,
-} from '@angular/material/datepicker';
-import { DatepickerWithWeeksComponent } from '../../../shared/components/datepicker-with-weeks/datepicker-with-weeks.component';
-import { MatOption, MatSelect } from '@angular/material/select';
 import moment from 'moment';
-import {
-  ColumnMode,
-  DatatableComponent,
-  NgxDatatableModule,
-} from '@swimlane/ngx-datatable';
-import { MatButton } from '@angular/material/button';
-import { debounce, debounceTime } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-manage-menu',
   standalone: true,
   imports: [
-    MatInput,
-    MatFormField,
-    MatLabel,
-    RbmInputComponent,
     ReactiveFormsModule,
     CdkVirtualScrollViewport,
     CdkVirtualForOf,
     CdkFixedSizeVirtualScroll,
-    MatDatepickerToggle,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatHint,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    DatepickerWithWeeksComponent,
-    MatSelect,
-    MatOption,
-    NgxDatatableModule,
-    MatButton,
   ],
   templateUrl: './manage-menu.component.html',
   styleUrl: './manage-menu.component.scss',
@@ -72,9 +34,7 @@ export class ManageMenuComponent implements OnInit, AfterViewInit {
 
   rows: PublicRecipeType[] = [];
   columns = [{ prop: 'img' }, { prop: 'title' }, { name: 'Type' }];
-  ColumnMode = ColumnMode;
   temp: PublicRecipeType[] = [];
-  @ViewChild(DatatableComponent) table!: DatatableComponent;
 
   weekDays = [
     { day: 'Monday', viewDay: 'Montag' },
@@ -135,23 +95,7 @@ export class ManageMenuComponent implements OnInit, AfterViewInit {
   onSearchValueChangedListener() {
     this.search.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
       console.log('value', value);
-      this.updateFilter(value);
     });
-  }
-
-  updateFilter(searchVal: string) {
-    const val = searchVal;
-
-    if (val === '') {
-      this.rows = this.recipes;
-    } else {
-      const temp = this.rows.filter((recipe) => {
-        return recipe.title.toLowerCase().includes(val.toLowerCase());
-      });
-      this.rows = temp;
-    }
-
-    this.table.offset = 0;
   }
 
   getWeekNumbersFromCurrentWeek(): number[] {

@@ -1,19 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/services/offer.service';
-import { RecepieDetailsDialogComponent } from './recepie-details-dialog/recepie-details-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { SupabaseService } from '../shared/services/supabase.service';
 import { PublicRecipeType } from '../shared/types/public-recipe.type';
 import { PublicRecipeService } from '../shared/services/public-recipe.service';
-import { forkJoin, switchMap } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -21,14 +15,11 @@ import { NgOptimizedImage } from '@angular/common';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
-    MatGridListModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatButtonToggleModule,
     MapComponent,
     NearOffersCardComponent,
     NgOptimizedImage,
+    CardModule,
+    Button,
   ],
 })
 export class DashboardComponent implements OnInit {
@@ -38,7 +29,6 @@ export class DashboardComponent implements OnInit {
   suggestedRecipes: PublicRecipeType[] = [];
 
   constructor(
-    private dialog: MatDialog,
     public offerService: OfferService,
     private supabaseService: SupabaseService,
     private publicRecipeService: PublicRecipeService,
@@ -57,9 +47,7 @@ export class DashboardComponent implements OnInit {
   }
 
   openDetails(meal: any) {
-    this.dialog.open(RecepieDetailsDialogComponent, {
-      data: { meal },
-    });
+    console.log('Meal:', meal);
   }
 
   getRecipes() {

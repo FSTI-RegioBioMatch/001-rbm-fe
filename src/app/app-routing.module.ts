@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ForkOrCreateRecipeComponent } from './fork-or-create-recipe/fork-or-create-recipe.component';
 import { MyProductsComponent } from './products/my-products/my-products.component';
-import { ComponentsComponent } from './components/components.component';
-import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MenuPlanningComponent } from './menu-planning/menu-planning.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
+import { MenuPlansComponent } from './menu-plans/menu-plans.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -15,20 +13,8 @@ const routes: Routes = [
     component: MyRecipesComponent,
   },
   {
-    path: 'fork-or-create-recipe/:id',
-    component: ForkOrCreateRecipeComponent,
-  },
-  {
     path: 'products/my-products',
     component: MyProductsComponent,
-  },
-  {
-    path: 'components',
-    component: ComponentsComponent,
-  },
-  {
-    path: 'settings/company',
-    component: CompanySettingsComponent,
   },
   {
     path: 'dashboard',
@@ -37,6 +23,10 @@ const routes: Routes = [
   {
     path: 'menu-planning',
     component: MenuPlanningComponent,
+  },
+  {
+    path: 'menu-planning/menu-plans',
+    component: MenuPlansComponent,
   },
 ];
 

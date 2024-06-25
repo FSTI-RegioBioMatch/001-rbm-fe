@@ -1,113 +1,67 @@
-<div class="p-5 d-flex mt-4 gap-4 menu-planning-container">
+<div class="grid">
   <div class="col-8">
-    <ngx-datatable
-      class="material"
-      [rows]="rows"
-      [columnMode]="ColumnMode.force"
-      [headerHeight]="50"
-      [footerHeight]="50"
-      [rowHeight]="200"
-      [limit]="5"
-      (select)="onRowSelected($event)"
-      (activate)="onActivate($event)"
-      [selectionType]="SelectionType.multiClick"
-      [selected]="selected"
-    >
-      <!-- Image URLs Column -->
-      <ngx-datatable-column name="">
-        <ng-template let-row="row" ngx-datatable-cell-template>
-          @if (row.image_urls && row.image_urls.length > 0) {
-            <img
-              [src]="row.image_urls[0]"
-              alt="{{ row.title }}"
-              style="object-fit: fill"
-            />
-          }
-        </ng-template>
-      </ngx-datatable-column>
+    <div class="grid">
+      <div class="col-6">
+        <p-table [value]="rows" selectionMode="multiple">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style=""></th>
+              <th style="">Name</th>
+              <th style=""></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-recipe let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="recipe" [pSelectableRowIndex]="rowIndex">
+              <td>
+                <img
+                  [src]="recipe.imageUrls[0]"
+                  style="max-height: 100px"
+                  alt=""
+                />
+              </td>
+              <td>{{ recipe.title }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="col-6">
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
 
-      <ngx-datatable-column name="Name" [width]="300">
-        <ng-template let-row="row" ngx-datatable-cell-template>
-          <strong>{{ row.title }}</strong>
-        </ng-template>
-      </ngx-datatable-column>
-    </ngx-datatable>
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+      </div>
+    </div>
   </div>
   <div class="col-4">
-    <mat-card>
-      <mat-card-content>
-        <form>
-          <div class="col-12">
-            <mat-form-field appearance="outline" class="" style="width: 100%">
-              <mat-label>Beschreibung</mat-label>
-              <textarea matInput placeholder=""> </textarea>
-            </mat-form-field>
-          </div>
-
-          <div class="col-12">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>Menüname <span class="">*</span></mat-label>
-              <input matInput />
-            </mat-form-field>
-          </div>
-
-          <div class="col-12">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>Nächste Ausführung</mat-label>
-              <mat-select>
-                @for (week of weekNumbers; track week) {
-                  <mat-option [value]="week">KW: {{ week }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div class="col-12">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>Wochentag</mat-label>
-              <mat-select>
-                @for (weekDay of weekDays; track weekDay) {
-                  <mat-option [value]="weekDay.day">{{
-                    weekDay.viewDay
-                  }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <div class="col-12">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>Ort</mat-label>
-              <input matInput />
-            </mat-form-field>
-          </div>
-
-          <div class="col-12">
-            <mat-form-field class="w-100" appearance="outline">
-              <mat-label>Portionen (pP)</mat-label>
-              <input matInput />
-            </mat-form-field>
-          </div>
-
-          <div class="d-flex gap-4 mb-4 justify-content-end">
-            <button
-              (click)="openAddAdditionalRecipesModal()"
-              mat-raised-button
-              color="primary"
-            >
-              Weitere Rezepte hinzufügen
-            </button>
-            <button mat-raised-button color="error">Abbrechen</button>
-            <button mat-raised-button color="primary">Speichern</button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+    <p-table [value]="rows" selectionMode="multiple">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style=""></th>
+          <th style="">Name</th>
+          <th style=""></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-recipe let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="recipe" [pSelectableRowIndex]="rowIndex">
+          <td>
+            <img [src]="recipe.imageUrls[0]" style="max-height: 100px" alt="" />
+          </td>
+          <td>{{ recipe.title }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 </div>
-
-<div class="justify-content-end">
-  <mat-divider></mat-divider>
-</div>
-
-<!--<app-manage-menu />-->
