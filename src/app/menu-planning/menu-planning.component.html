@@ -1,8 +1,67 @@
-<div class="h-100">
-  <mat-tab-group class="">
-    <mat-tab class="h-100" label="First">
-      <app-manage-menu />
-    </mat-tab>
-    <mat-tab label="Second"> Content 2 </mat-tab>
-  </mat-tab-group>
+<div class="grid">
+  <div class="col-8">
+    <div class="grid">
+      <div class="col-6">
+        <p-table [value]="rows" selectionMode="multiple">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style=""></th>
+              <th style="">Name</th>
+              <th style=""></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-recipe let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="recipe" [pSelectableRowIndex]="rowIndex">
+              <td>
+                <img
+                  [src]="recipe.imageUrls[0]"
+                  style="max-height: 100px"
+                  alt=""
+                />
+              </td>
+              <td>{{ recipe.title }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="col-6">
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+        <div class="flex flex-column gap-2">
+          <label for="username">Username</label>
+          <input pInputText id="username" aria-describedby="username-help" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-4">
+    <p-table [value]="rows" selectionMode="multiple">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style=""></th>
+          <th style="">Name</th>
+          <th style=""></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-recipe let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="recipe" [pSelectableRowIndex]="rowIndex">
+          <td>
+            <img [src]="recipe.imageUrls[0]" style="max-height: 100px" alt="" />
+          </td>
+          <td>{{ recipe.title }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

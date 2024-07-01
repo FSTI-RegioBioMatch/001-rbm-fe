@@ -1,13 +1,10 @@
-<mat-dialog-content>
-  <p>Wechsel den Kontext deiner Firma</p>
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline">
-      <mat-label>Meine Firmen</mat-label>
-      <select matNativeControl required formControlName="company">
-        @for (company of companyValues; track company) {
-          <option [value]="company.value">{{ company.viewValue }}</option>
-        }
-      </select>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+<p>Wechsel den Kontext deiner Firma</p>
+<form [formGroup]="form">
+  <p-dropdown
+    styleClass="w-100"
+    [options]="companyValues"
+    formControlName="company"
+    optionLabel="viewValue"
+    placeholder="Wähle deine Firma aus"
+  />
+</form>

@@ -1,18 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
-} from '@angular/material/card';
-import { AddressType } from '../../../shared/types/address.type';
-import { OfferService } from '../../../shared/offer.service';
+import { Component, OnInit } from '@angular/core';
+import { OfferService } from '../../../shared/services/offer.service';
 import { JsonPipe } from '@angular/common';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-near-offers-card',
   standalone: true,
-  imports: [MatCard, MatCardHeader, MatCardContent, MatCardTitle, JsonPipe],
+  imports: [JsonPipe, CardModule],
   templateUrl: './near-offers-card.component.html',
   styleUrl: './near-offers-card.component.scss',
 })

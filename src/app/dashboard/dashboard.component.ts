@@ -1,15 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MapComponent } from './map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
-import { OfferService } from '../shared/offer.service';
-import { RecepieDetailsDialogComponent } from './recepie-details-dialog/recepie-details-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { OfferService } from '../shared/services/offer.service';
 import { SupabaseService } from '../shared/services/supabase.service';
+import { PublicRecipeType } from '../shared/types/public-recipe.type';
+import { PublicRecipeService } from '../shared/services/public-recipe.service';
+import { NgOptimizedImage } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -17,22 +15,27 @@ import { SupabaseService } from '../shared/services/supabase.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   imports: [
-    MatGridListModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatButtonToggleModule,
     MapComponent,
     NearOffersCardComponent,
+    NgOptimizedImage,
+    CardModule,
+    Button,
   ],
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
-  randomRecipes: any[] = [];
-  constructor(private dialog: MatDialog, public offerService: OfferService, private supabaseService: SupabaseService) {}
+  randomRecipes: PublicRecipeType[] = [];
+  recipes: PublicRecipeType[] = [];
+  suggestedRecipes: PublicRecipeType[] = [];
+
+  constructor(
+    public offerService: OfferService,
+    private supabaseService: SupabaseService,
+    private publicRecipeService: PublicRecipeService,
+  ) {}
 
   ngOnInit(): void {
-    this.getRecepies();
+    this.getRecipes();
   }
 
   scrollLeft() {
@@ -44,42 +47,35 @@ export class DashboardComponent implements OnInit {
   }
 
   openDetails(meal: any) {
-    this.dialog.open(RecepieDetailsDialogComponent, {
-      data: { meal }
+    console.log('Meal:', meal);
+  }
+
+  getRecipes() {
+    this.publicRecipeService.getRecipes().subscribe((recipes) => {
+      this.recipes = recipes;
+      this.suggestedRecipes = this.getRandom(recipes, 20);
+      this.randomRecipes = this.getRandom(recipes, 3);
     });
   }
 
-  async getRecepies() {
-    try {
-      const { data, error } = await this.supabaseService.supabaseClient
-        .from('recipes')
-        .select('*');
-  
-      if (error) {
-        throw error;
-      }
-  
-      if (data && data.length > 0) {
-        const randomRecipes = this.getRandom(data, 3);
-        console.log(randomRecipes);
-        this.randomRecipes = randomRecipes;
-      }
-    } catch (error) {
-      console.error('Error fetching recipies:', error);
-    }
-  }
-  
-  getRandom(arr: any[], n: number) {
+  getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
     const result = new Array(n);
     let len = arr.length;
     const taken = new Array(len);
     if (n > len)
-      throw new RangeError("getRandom: more elements taken than available");
+      throw new RangeError('getRandom: more elements taken than available');
     while (n--) {
       const x = Math.floor(Math.random() * len);
       result[n] = arr[x in taken ? taken[x] : x];
       taken[x] = --len in taken ? taken[len] : len;
     }
-    return result;
+
+    console.log('Random:', result);
+
+    return result as PublicRecipeType[];
+  }
+
+  getFirstImagOfRecipe(recipe: PublicRecipeType): string {
+    return '';
   }
 }

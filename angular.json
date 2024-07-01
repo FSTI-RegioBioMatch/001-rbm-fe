@@ -37,8 +37,10 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/primeng/resources/themes/md-light-deeppurple/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css",
               "src/styles.scss",
-              "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []
@@ -83,7 +85,7 @@
               "buildTarget": "001-rbm-dashboard-fe:build:production"
             },
             "development": {
-              "buildTarget": "001-rbm-dashboard-fe:build:development",
+              "buildTarget": "001-rbm-dashboard-fe:build:development"
             }
           },
           "defaultConfiguration": "development"

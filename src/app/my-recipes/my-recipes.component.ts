@@ -1,45 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { RecipeSearchToolbarComponent } from './components/recipe-search-toolbar/recipe-search-toolbar.component';
-import { RecipeCardComponent } from './components/recipe-card/recipe-card.component';
-import { Card } from './types/card';
-import { MatDialog } from '@angular/material/dialog';
-import { RecipeInformationDialogComponent } from './components/recipe-infomation-dialog/recipe-information-dialog.component';
-import {
-  Meals,
-  MealTheMealDbType,
-} from '../community-recipes/types/meal-the-meal-db.type';
-import { TheMealDbService } from '../shared/services/the-meal-db.service';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { PublicRecipeService } from '../shared/services/public-recipe.service';
+import { StoreService } from '../shared/store/store.service';
+import { Router } from '@angular/router';
+import { PrivateRecipeTableComponent } from './components/private-recipe-table/private-recipe-table.component';
 
 @Component({
   selector: 'app-my-recipes',
+  standalone: true,
+  imports: [PrivateRecipeTableComponent],
   templateUrl: './my-recipes.component.html',
   styleUrl: './my-recipes.component.scss',
-  standalone: true,
-  imports: [RecipeSearchToolbarComponent, RecipeCardComponent],
-  providers: [],
 })
-export class MyRecipesComponent implements OnInit {
-  meals!: Meals;
-
+export class MyRecipesComponent implements OnInit, AfterViewInit {
   constructor(
-    public dialog: MatDialog,
-    private mealDbService: TheMealDbService,
+    private publicRecipeService: PublicRecipeService,
+    private store: StoreService,
+    private router: Router,
   ) {}
 
-  openRecipeDialog(meal: MealTheMealDbType) {
-    const dialogRef = this.dialog.open(RecipeInformationDialogComponent, {
-      width: '1300px',
-      height: 'auto',
-      data: {
-        meal: meal,
-        isCanFork: true,
-      },
-    });
-  }
+  ngAfterViewInit(): void {}
 
-  ngOnInit(): void {
-    this.mealDbService.get10RandomMeals().subscribe((meals) => {
-      this.meals = meals;
-    });
+  ngOnInit(): void {}
+
+  onClickCreateMenuPlan() {
+    console.log('Create Menu Plan');
+    // this.store.selectedPublicRecipeSubject.next(this.selected);
+    this.router.navigate(['/menu-planning']);
   }
 }

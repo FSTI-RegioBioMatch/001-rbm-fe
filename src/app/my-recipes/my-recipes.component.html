@@ -1,17 +1,4 @@
-@if (meals) {
-  <div class="container p-3">
-    <app-recipe-search-toolbar />
-
-    <div class="row">
-      @for (meal of meals.meals; track meal) {
-        <div class="col-xl-3 col-lg-6 col-sm-12 mt-4">
-          <app-recipe-card
-            (click)="openRecipeDialog(meal)"
-            [name]="meal.strMeal"
-            [img]="meal.strMealThumb || ''"
-          />
-        </div>
-      }
-    </div>
-  </div>
-}
+<div class="p-5 h-100">
+  <button (click)="onClickCreateMenuPlan()">Menüplan erstellen</button>
+  <app-private-recipe-table />
+</div>

@@ -1,48 +1,26 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatInput } from '@angular/material/input';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { RbmSelectComponent } from '../ui/rbm-select/rbm-select.component';
 import { CompanyType } from '../../types/company.type';
 import { StoreService } from '../../store/store.service';
 import { Router } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-change-company-dialog',
   standalone: true,
-  imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatInput,
-    FormsModule,
-    MatFormField,
-    MatDialogActions,
-    MatButton,
-    MatDialogClose,
-    MatLabel,
-    RbmSelectComponent,
-    ReactiveFormsModule,
-  ],
+  imports: [FormsModule, ReactiveFormsModule, DropdownModule],
   templateUrl: './change-company-dialog.component.html',
   styleUrl: './change-company-dialog.component.scss',
 })
 export class ChangeCompanyDialogComponent implements OnInit {
   companies: CompanyType[] = [];
   companyValues: { value: string; viewValue: string }[] = [];
+  selectedValue!: CompanyType;
   form: FormGroup;
 
   get company() {
@@ -50,8 +28,6 @@ export class ChangeCompanyDialogComponent implements OnInit {
   }
 
   constructor(
-    public dialogRef: MatDialogRef<ChangeCompanyDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private store: StoreService,
     private router: Router,
   ) {
@@ -72,21 +48,15 @@ export class ChangeCompanyDialogComponent implements OnInit {
       this.companies = companies;
     });
 
-    this.company.valueChanges.subscribe((value) => {
-      console.log('value', value);
-      const company = this.companies.find((company) => company.id === value);
+    this.company.valueChanges.subscribe((value: any) => {
+      const company = this.companies.find(
+        (company) => company.id === value.value,
+      );
+      console.log('company', company);
       if (company) {
-        console.log(123123123);
         this.store.updateSelectedCompanyContext(company);
         window.location.reload();
       }
-    });
-  }
-
-  reloadCurrentRoute() {
-    const currentUrl = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentUrl]);
     });
   }
 }
