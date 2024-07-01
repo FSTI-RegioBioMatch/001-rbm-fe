@@ -9,6 +9,7 @@ import { ComponentsComponent } from './components/components.component';
 import { CompanySettingsComponent } from './settings/company-settings/company-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MenuPlanningComponent } from './menu-planning/menu-planning.component';
+import { NewRecepieDialogComponent } from './new-recepie-dialog/new-recepie-dialog.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -48,6 +49,10 @@ const routes: Routes = [
     path: 'menu-planning',
     component: MenuPlanningComponent,
   },
+  {
+    path: 'dev',
+    component: NewRecepieDialogComponent
+  }
 ];
 
 @NgModule({
