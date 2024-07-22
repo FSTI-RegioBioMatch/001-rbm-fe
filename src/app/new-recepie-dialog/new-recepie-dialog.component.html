@@ -37,6 +37,9 @@
                                             style="margin-right: 8px; flex: 1;">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                        <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
+                                            class="p-button-rounded p-button-danger p-button-text"
+                                            style="margin-left: 8px;"></button>
                                     </div>
                                 </ng-template>
                                 <ng-template pTemplate="content">
@@ -51,6 +54,10 @@
                                                     placeholder="Menge" style="margin-right: 8px; flex: 1;">
                                                 <p-dropdown [options]="units" formControlName="unit"
                                                     placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                                <button pButton type="button" icon="pi pi-trash"
+                                                    (click)="removeAlternativeIngredient(i, j)"
+                                                    class="p-button-rounded p-button-danger p-button-text"
+                                                    style="margin-left: 8px;"></button>
                                             </div>
                                         </div>
                                         <div *ngIf="showNote[i]" style="margin-top: 8px;">
@@ -93,6 +100,9 @@
                                                 {{ i + 1 }}</div>
                                             <input pInputText type="text" formControlName="schritt"
                                                 placeholder="Schritt" style="width: 100%;">
+                                            <button pButton type="button" icon="pi pi-trash" (click)="removeStep(i)"
+                                                class="p-button-rounded p-button-danger p-button-text"
+                                                style="margin-left: 8px;"></button>
                                         </div>
                                     </div>
                                 </ng-template>

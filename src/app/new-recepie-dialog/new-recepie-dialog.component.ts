@@ -103,6 +103,10 @@ export class NewRecepieDialogComponent {
     this.steps.push(this.createStep());
   }
 
+  removeStep(index: number) {
+    this.steps.removeAt(index);
+  }
+
   createIngredient(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
@@ -118,6 +122,10 @@ export class NewRecepieDialogComponent {
     this.ingredients.push(this.createIngredient());
   }
 
+  removeIngredient(index: number) {
+    this.ingredients.removeAt(index);
+  }
+
   createAlternative(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
@@ -129,6 +137,11 @@ export class NewRecepieDialogComponent {
   addAlternativeIngredient(index: number) {
     const alternatives = this.getAlternatives(index);
     alternatives.push(this.createAlternative());
+  }
+
+  removeAlternativeIngredient(ingredientIndex: number, alternativeIndex: number) {
+    const alternatives = this.getAlternatives(ingredientIndex);
+    alternatives.removeAt(alternativeIndex);
   }
 
   getAlternatives(index: number): FormArray {
