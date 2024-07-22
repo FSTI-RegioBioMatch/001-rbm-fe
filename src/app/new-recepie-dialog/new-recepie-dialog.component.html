@@ -20,6 +20,12 @@
             <hr style="border: 0; height: 1px; background-color: #ccc;">
             <div style="display: flex; align-items: center; margin-top: 16px;">
                 <input pInputText type="text" placeholder="Name des Rezepts" style="margin-right: 8px;">
+                <div style="display: flex; flex-wrap: wrap; align-items: center;">
+                    <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
+                        <p-checkbox [binary]="true" [(ngModel)]="selectedDiets[option.value]"></p-checkbox>
+                        <label>{{option.label}}</label>
+                    </div>
+                </div>
             </div>
             <hr style="border: 0; height: 1px; background-color: #ccc; margin-top: 16px;">
             <form [formGroup]="form">
@@ -65,8 +71,8 @@
                                         <textarea pInputTextarea formControlName="note" placeholder="Notiz"
                                             style="width: 100%; resize: vertical;"></textarea>
                                     </div>
-                                    <button pButton type="button" icon="pi pi-plus"
-                                        label="Alternative Zutat hinzufügen" (click)="addAlternativeIngredient(i)"
+                                    <button pButton type="button" icon="pi pi-plus" label="Alternative Zutat hinzufügen"
+                                        (click)="addAlternativeIngredient(i)"
                                         style="margin-top: 8px; margin-right: 8px;"></button>
                                     <button pButton type="button" icon="pi pi-plus"
                                         [label]="showNote[i] ? 'Notiz entfernen' : 'Notiz hinzufügen'"

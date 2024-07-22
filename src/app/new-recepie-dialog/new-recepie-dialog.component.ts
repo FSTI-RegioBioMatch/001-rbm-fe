@@ -8,7 +8,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
-
+import { ChipModule } from 'primeng/chip';
+import { FormsModule } from '@angular/forms'; // Add this line
 @Component({
   selector: 'app-new-recepie-dialog',
   standalone: true,
@@ -23,7 +24,9 @@ import { CheckboxModule } from 'primeng/checkbox';
     InputTextModule,
     DropdownModule,
     FileUploadModule,
-    CheckboxModule
+    CheckboxModule,
+    ChipModule,
+    FormsModule
   ]
 })
 export class NewRecepieDialogComponent {
@@ -62,6 +65,16 @@ export class NewRecepieDialogComponent {
     { label: 'Winter', value: 'winter' },
     // Add more options as needed
   ];
+
+  dietOptions = [
+    { label: 'Vegan', value: 'vegan' },
+    { label: 'Vegetarian', value: 'vegetarian' },
+    { label: 'Gluten-Free', value: 'gluten-free' },
+    { label: 'Dairy-Free', value: 'dairy-free' },
+    // Add more options as needed
+  ];
+
+  selectedDiets: { [key: string]: boolean } = {};
 
   form: FormGroup;
   stepImages: { [key: number]: string[] } = {};  // Store image URLs for each step
@@ -169,6 +182,14 @@ export class NewRecepieDialogComponent {
     fileUpload.clear();
   }
 
+  toggleDiet(value: string) {
+    if (this.selectedDiets[value]) {
+      this.selectedDiets[value] = false;
+    } else {
+      this.selectedDiets = { [value]: true };
+    }
+  }
+
   saveRecipe() {
     const recipeData = this.form.value;
 
@@ -177,6 +198,9 @@ export class NewRecepieDialogComponent {
       ...step,
       images: this.stepImages[index] || []
     }));
+
+    // Adding selected diets to the recipe data
+    recipeData.diets = Object.keys(this.selectedDiets).filter(key => this.selectedDiets[key]);
 
     console.log(JSON.stringify(recipeData, null, 2));
   }
