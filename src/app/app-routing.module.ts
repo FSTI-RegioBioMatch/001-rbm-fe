@@ -32,7 +32,7 @@ const routes: Routes = [
   {
     path: 'menu-planning/menu-plans',
     component: MenuPlansComponent,
-  },
+  }
 ];
 
 @NgModule({

@@ -1,0 +1,163 @@
+<ng-container>
+    <p-card>
+        <ng-template pTemplate="header">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>Neues Rezept</div>
+                <div style="display: flex; align-items: center;">
+                    <div style="display: flex; align-items: center; margin-right: 8px;">
+                        <p-inputSwitch></p-inputSwitch>
+                        <label style="margin-left: 8px;">In Menüplanung übernehmen</label>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-right: 8px;">
+                        <p-inputSwitch></p-inputSwitch>
+                        <label style="margin-left: 8px;">als Community Rezept veröffentlichen</label>
+                    </div>
+                    <button pButton type="button" label="Speichern"></button>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="content">
+            <hr style="border: 0; height: 1px; background-color: #ccc;">
+            <div style="display: flex; align-items: center; margin-top: 16px;">
+                <input pInputText type="text" placeholder="Name des Rezepts" style="margin-right: 8px;">
+            </div>
+            <hr style="border: 0; height: 1px; background-color: #ccc; margin-top: 16px;">
+            <form [formGroup]="form">
+                <div style="margin-top: 16px;">
+                    <h3>Zutaten</h3>
+                    <div formArrayName="ingredients">
+                        <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i"
+                            style="margin-top: 16px;">
+                            <p-card>
+                                <ng-template pTemplate="header">
+                                    <div style="display: flex; align-items: center;">
+                                        <input pInputText type="text" formControlName="name"
+                                            placeholder="Name der Zutat" style="margin-right: 8px; flex: 1;">
+                                        <input pInputText type="text" formControlName="amount" placeholder="Menge"
+                                            style="margin-right: 8px; flex: 1;">
+                                        <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
+                                            [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="content">
+                                    <div formArrayName="alternatives">
+                                        <div *ngFor="let alternative of getAlternatives(i).controls; let j = index"
+                                            [formGroupName]="j" style="margin-top: 8px;">
+                                            <div style="display: flex; align-items: center;">
+                                                <input pInputText type="text" formControlName="name"
+                                                    placeholder="Name der alternativen Zutat"
+                                                    style="margin-right: 8px; flex: 1;">
+                                                <input pInputText type="text" formControlName="amount"
+                                                    placeholder="Menge" style="margin-right: 8px; flex: 1;">
+                                                <p-dropdown [options]="units" formControlName="unit"
+                                                    placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="showNote[i]" style="margin-top: 8px;">
+                                            <textarea pInputTextarea formControlName="note" placeholder="Notiz"
+                                                style="width: 100%; resize: vertical;"></textarea>
+                                        </div>
+                                        <button pButton type="button" icon="pi pi-plus"
+                                            label="Alternative Zutat hinzufügen" (click)="addAlternativeIngredient(i)"
+                                            style="margin-top: 8px; margin-right: 8px;"></button>
+                                        <button pButton type="button" icon="pi pi-plus"
+                                            [label]="showNote[i] ? 'Notiz entfernen' : 'Notiz hinzufügen'"
+                                            (click)="toggleNoteField(i)"
+                                            style="margin-top: 8px; margin-right: 8px;"></button>
+                                        <p-checkbox formControlName="optional" binary="true" label="Optional"
+                                            [ngStyle]="{'margin-left': '8px'}"></p-checkbox>
+                                    </div>
+                                </ng-template>
+                            </p-card>
+                        </div>
+                    </div>
+                    <button pButton type="button" icon="pi pi-plus" label="Zutat hinzufügen" (click)="addIngredient()"
+                        style="margin-top: 16px;"></button>
+                </div>
+                <hr style="border: 0; height: 1px; background-color: #ccc; margin-top: 16px;">
+                <div style="margin-top: 16px;">
+                    <h3>Zubereitung</h3>
+                    <div style="margin-top: 8px;">
+                        <p-inputSwitch></p-inputSwitch>
+                        <label style="margin-left: 8px;">Rezept benötigt Vorbereitungszeit</label>
+                    </div>
+                    <div formArrayName="steps">
+                        <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i"
+                            style="margin-top: 16px;">
+                            <p-card>
+                                <ng-template pTemplate="header">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; align-items: center;">
+                                            <div
+                                                style="background-color: gray; border-radius: 50%; padding: 8px; margin-right: 8px;">
+                                                {{ i + 1 }}</div>
+                                            <input pInputText type="text" formControlName="schritt"
+                                                placeholder="Schritt" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="content">
+                                    <div style="margin-bottom: 8px;">
+                                        <textarea pInputTextarea formControlName="anleitung" placeholder="Anleitung"
+                                            style="width: 100%; resize: vertical;"></textarea>
+                                    </div>
+                                    <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                                        <div *ngFor="let image of stepImages[i]"
+                                            style="display: inline-block; margin: 4px;">
+                                            <img [src]="image" alt="Image preview" style="width: 100px; height: 100px;">
+                                        </div>
+                                        <p-fileUpload #fileUpload name="image[]" url="./upload"
+                                            (onSelect)="handleFileUpload($event, i, fileUpload)" multiple mode="basic"
+                                            accept="image/*"
+                                            [ngStyle]="{ 'margin-top': '8px', 'width': '100px', 'height': '100px', 'margin-left': '8px' }"></p-fileUpload>
+                                    </div>
+                                </ng-template>
+                            </p-card>
+                        </div>
+                    </div>
+                    <button pButton type="button" icon="pi pi-plus" label="Schritt hinzufügen" (click)="addStep()"
+                        style="margin-top: 16px;"></button>
+                </div>
+                <div style="display: flex; margin-top: 16px;">
+                    <div style="flex: 1; margin-right: 16px;">
+                        <div
+                            style="width: 100%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; height: 100%;">
+                            Bild Platzhalter</div>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Energie in kcal</label>
+                            <input pInputText type="text" formControlName="energie" placeholder="Energie in kcal"
+                                [ngStyle]="{'flex': '1'}">
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Portionen</label>
+                            <input pInputText type="text" formControlName="portionen" placeholder="Portionen"
+                                [ngStyle]="{'flex': '1'}">
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Besonderheiten</label>
+                            <input pInputText type="text" formControlName="besonderheiten" placeholder="Besonderheiten"
+                                [ngStyle]="{'flex': '1'}">
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Essensgäste</label>
+                            <p-dropdown [options]="guestsOptions" formControlName="essensgaeste"
+                                placeholder="Essensgäste" [ngStyle]="{'flex': '1'}"></p-dropdown>
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Allergene</label>
+                            <p-dropdown [options]="allergeneOptions" formControlName="allergene" placeholder="Allergene"
+                                [ngStyle]="{'flex': '1'}"></p-dropdown>
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <label style="flex: 1;">Saison</label>
+                            <p-dropdown [options]="saisonOptions" formControlName="saison" placeholder="Saison"
+                                [ngStyle]="{'flex': '1'}"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </ng-template>
+    </p-card>
+</ng-container>
