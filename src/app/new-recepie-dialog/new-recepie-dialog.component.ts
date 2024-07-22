@@ -113,8 +113,8 @@ export class NewRecepieDialogComponent {
       amount: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       unit: ['', Validators.required],
       optional: [false],
-      alternatives: this.fb.array([]), // Array to hold alternative ingredients
-      note: [''] // Note field
+      note: [''], // Note field
+      alternatives: this.fb.array([]) // Array to hold alternative ingredients
     });
   }
 
@@ -167,5 +167,17 @@ export class NewRecepieDialogComponent {
     }
 
     fileUpload.clear();
+  }
+
+  saveRecipe() {
+    const recipeData = this.form.value;
+
+    // Adding step images to the recipe data
+    recipeData.steps = recipeData.steps.map((step: any, index: number) => ({
+      ...step,
+      images: this.stepImages[index] || []
+    }));
+
+    console.log(JSON.stringify(recipeData, null, 2));
   }
 }

@@ -12,7 +12,7 @@
                         <p-inputSwitch></p-inputSwitch>
                         <label style="margin-left: 8px;">als Community Rezept veröffentlichen</label>
                     </div>
-                    <button pButton type="button" label="Speichern"></button>
+                    <button pButton type="button" label="Speichern" (click)="saveRecipe()"></button>
                 </div>
             </div>
         </ng-template>
@@ -60,20 +60,20 @@
                                                     style="margin-left: 8px;"></button>
                                             </div>
                                         </div>
-                                        <div *ngIf="showNote[i]" style="margin-top: 8px;">
-                                            <textarea pInputTextarea formControlName="note" placeholder="Notiz"
-                                                style="width: 100%; resize: vertical;"></textarea>
-                                        </div>
-                                        <button pButton type="button" icon="pi pi-plus"
-                                            label="Alternative Zutat hinzufügen" (click)="addAlternativeIngredient(i)"
-                                            style="margin-top: 8px; margin-right: 8px;"></button>
-                                        <button pButton type="button" icon="pi pi-plus"
-                                            [label]="showNote[i] ? 'Notiz entfernen' : 'Notiz hinzufügen'"
-                                            (click)="toggleNoteField(i)"
-                                            style="margin-top: 8px; margin-right: 8px;"></button>
-                                        <p-checkbox formControlName="optional" binary="true" label="Optional"
-                                            [ngStyle]="{'margin-left': '8px'}"></p-checkbox>
                                     </div>
+                                    <div *ngIf="showNote[i]" style="margin-top: 8px;">
+                                        <textarea pInputTextarea formControlName="note" placeholder="Notiz"
+                                            style="width: 100%; resize: vertical;"></textarea>
+                                    </div>
+                                    <button pButton type="button" icon="pi pi-plus"
+                                        label="Alternative Zutat hinzufügen" (click)="addAlternativeIngredient(i)"
+                                        style="margin-top: 8px; margin-right: 8px;"></button>
+                                    <button pButton type="button" icon="pi pi-plus"
+                                        [label]="showNote[i] ? 'Notiz entfernen' : 'Notiz hinzufügen'"
+                                        (click)="toggleNoteField(i)"
+                                        style="margin-top: 8px; margin-right: 8px;"></button>
+                                    <p-checkbox formControlName="optional" binary="true" label="Optional"
+                                        [ngStyle]="{'margin-left': '8px'}"></p-checkbox>
                                 </ng-template>
                             </p-card>
                         </div>
