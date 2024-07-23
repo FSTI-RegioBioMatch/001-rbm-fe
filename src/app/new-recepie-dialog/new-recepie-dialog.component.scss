@@ -1,0 +1,15 @@
+.diet-option-chip {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    cursor: pointer;
+  }
+  .diet-option-chip label {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+  
