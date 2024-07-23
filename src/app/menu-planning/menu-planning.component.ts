@@ -17,6 +17,10 @@ import { TableModule } from 'primeng/table';
 import { JsonPipe } from '@angular/common';
 import { RecipeService } from '../shared/services/recipe.service';
 import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-menu-planning',
@@ -29,14 +33,19 @@ import { InputTextModule } from 'primeng/inputtext';
     TableModule,
     JsonPipe,
     InputTextModule,
+    FloatLabelModule,
+    DropdownModule,
+    InputTextareaModule,
+    Button,
   ],
   templateUrl: './menu-planning.component.html',
   styleUrl: './menu-planning.component.scss',
 })
 export class MenuPlanningComponent implements OnInit {
-  rows: RecipeType[] = [];
   weekNumbers!: number[];
-  selected: RecipeType[] = [];
+  menuPlanRecipes: RecipeType[] = [];
+  additionaleRecipesRow: RecipeType[] = [];
+  additionalSelectedRecipes: RecipeType[] = [];
 
   menuPlanFormGroup: FormGroup;
 
@@ -103,7 +112,7 @@ export class MenuPlanningComponent implements OnInit {
 
     this.recipeService.getRecipesByCompanyContext().subscribe((recipes) => {
       console.log('recipes', recipes);
-      this.rows = recipes;
+      this.additionaleRecipesRow = recipes;
     });
   }
 
@@ -136,18 +145,6 @@ export class MenuPlanningComponent implements OnInit {
     return weekNumbers;
   }
 
-  onRowSelected({ selected }: any) {
-    console.log(selected);
-    this.selected.splice(0, this.selected.length);
-    this.selected.push(...selected);
-  }
-
-  onActivate(event: any) {
-    console.log('Activate Event', event);
-  }
-
-  openAddAdditionalRecipesModal() {}
-
   onClickCreateMenuPlan() {
     if (!this.menuPlanFormGroup.valid) {
       console.log('Form is not valid');
@@ -157,11 +154,11 @@ export class MenuPlanningComponent implements OnInit {
     const menuPlan: MenuplanType = {
       description: this.description.value,
       menuName: this.menuName.value,
-      weekDay: this.weekDay.value,
+      weekDay: this.weekDay.value.day,
       executionWeekNumber: this.executionWeekNumber.value,
       place: this.place.value,
       portions: this.portions.value,
-      recipes: this.rows,
+      recipes: this.menuPlanRecipes,
     };
 
     console.log(this.menuPlanFormGroup, menuPlan);
@@ -170,5 +167,17 @@ export class MenuPlanningComponent implements OnInit {
       console.log('Menu plan created');
       console.log('response', response);
     });
+  }
+
+  onClickAddToMenuPlan() {
+    console.log(123123, this.additionalSelectedRecipes);
+    this.menuPlanRecipes.push(...this.additionalSelectedRecipes);
+    console.log(this.menuPlanRecipes);
+  }
+
+  onClickRemoveFromMenuPlan(recipe: RecipeType) {
+    this.menuPlanRecipes = this.menuPlanRecipes.filter(
+      (r) => r.id !== recipe.id,
+    );
   }
 }

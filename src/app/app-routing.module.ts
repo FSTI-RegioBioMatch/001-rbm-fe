@@ -4,7 +4,10 @@ import { MyProductsComponent } from './products/my-products/my-products.componen
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MenuPlanningComponent } from './menu-planning/menu-planning.component';
 import { MyRecipesComponent } from './my-recipes/my-recipes.component';
-import { MenuPlansComponent } from './menu-plans/menu-plans.component';
+import { MenuPlansComponent } from './menu-planning/menu-plans/menu-plans.component';
+import { ShoppingListComponent } from './menu-planning/shopping-list/shopping-list.component';
+import { ShoppingListDetailedComponent } from './menu-planning/shopping-list/shopping-list-detailed/shopping-list-detailed.component';
+import { OfferScanComponent } from './menu-planning/shopping-list/offer-scan/offer-scan.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -27,6 +30,18 @@ const routes: Routes = [
   {
     path: 'menu-planning/menu-plans',
     component: MenuPlansComponent,
+  },
+  {
+    path: 'menu-planning/shopping-list',
+    component: ShoppingListComponent,
+  },
+  {
+    path: 'menu-planning/shopping-list/:id',
+    component: ShoppingListDetailedComponent,
+  },
+  {
+    path: 'menu-planning/shopping-list/:id/offer-scan/:scanId',
+    component: OfferScanComponent,
   },
 ];
 

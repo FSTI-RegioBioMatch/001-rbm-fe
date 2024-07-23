@@ -55,6 +55,14 @@ export class StoreService {
   public selectedRecipesSubject = new BehaviorSubject<RecipeType[]>([]);
   public selectedRecipes$ = this.selectedRecipesSubject.asObservable();
 
+  public selectedCompanyLatLonSubject = new BehaviorSubject<{
+    lat: number;
+    lon: number;
+  } | null>(null);
+
+  public selectedCompanyLatLon$ =
+    this.selectedCompanyLatLonSubject.asObservable();
+
   constructor(private http: HttpClient) {
     this.selectedCompanyContextChangedListener();
   }

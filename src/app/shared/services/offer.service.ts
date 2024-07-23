@@ -32,7 +32,12 @@ export class OfferService {
   }
 
   setOffersBySearchRadius(searchRadiusInKM: number, address: AddressType) {
+    if (!address) {
+      return;
+    }
+
     this.address = address;
+
     const boundingBox = this.geoService.getBoundingBox(
       searchRadiusInKM,
       address.lat,

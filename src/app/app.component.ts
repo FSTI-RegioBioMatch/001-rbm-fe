@@ -31,6 +31,10 @@ export class AppComponent implements OnInit {
               .pipe(
                 tap((data) => {
                   console.log(123213123312, data as AddressType);
+                  this.store.selectedCompanyLatLonSubject.next({
+                    lat: (data as AddressType).lat,
+                    lon: (data as AddressType).lon,
+                  });
                   this.offerService.setOffersBySearchRadius(
                     5,
                     data as AddressType,

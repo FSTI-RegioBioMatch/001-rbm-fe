@@ -1,0 +1,72 @@
+@if (!scanInProgress) {
+  <div class="container p-8 h-screen">
+    <p-table
+      [value]="shoppingList.ingredients"
+      [tableStyle]="{ 'min-width': '50rem', height: '15rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Komponente</th>
+          <th>Menü</th>
+          <th>Menge</th>
+          <th>Marktplatz</th>
+          <th>Betrieb</th>
+          <th>Regionalität</th>
+          <th>Stückpreis</th>
+          <th>Gesamtpreis</th>
+          <th>Zum Marktplatz</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-ingredientItem let-rowIndex="rowIndex">
+        @if (compareWithMatchingProductsByName(ingredientItem.name)) {
+          <tr class="cursor-pointer hover:bg-black-alpha-10">
+            <td>{{ ingredientItem.name }}</td>
+            <td>wip</td>
+            <td>{{ ingredientItem.amount }} {{ ingredientItem.unit }}</td>
+            <td>
+              <p-badge value="Nearbuy"></p-badge>
+            </td>
+            <td>
+              <p-dropdown
+                [options]="matchedIngredientCompanies(ingredientItem.name)"
+                optionLabel="name"
+                (onChange)="onDropDownCompanyChange($event, rowIndex)"
+              />
+            </td>
+            <td>
+              <p-dropdown [options]="regionalityInKm" />
+            </td>
+            <td>
+              <div>
+                <span>Preis: </span>
+                {{ findCompanyProductPrice(rowIndex, ingredientItem.name) }}
+              </div>
+              <div><p-button label="Preis anfragen"></p-button></div>
+            </td>
+            <td>wip</td>
+            <td>wip</td>
+            <td><img src="assets/icons/trashcan.png" /></td>
+          </tr>
+        } @else {
+          <tr class="cursor-pointer hover:bg-black-alpha-10">
+            <td>{{ ingredientItem.name }}</td>
+            <td>wip</td>
+            <td>{{ ingredientItem.amount }} {{ ingredientItem.unit }}</td>
+            <td>
+              <p-badge value="Nearbuy"></p-badge>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><img src="assets/icons/trashcan.png" /></td>
+          </tr>
+        }
+      </ng-template>
+    </p-table>
+  </div>
+} @else {
+  <div>loading</div>
+}
