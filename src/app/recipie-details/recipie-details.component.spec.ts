@@ -8,10 +8,9 @@ describe('RecipieDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecipieDetailsComponent]
-    })
-    .compileComponents();
-    
+      imports: [RecipieDetailsComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(RecipieDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

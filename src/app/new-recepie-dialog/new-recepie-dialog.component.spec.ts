@@ -8,10 +8,9 @@ describe('NewRecepieDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewRecepieDialogComponent]
-    })
-    .compileComponents();
-    
+      imports: [NewRecepieDialogComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(NewRecepieDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

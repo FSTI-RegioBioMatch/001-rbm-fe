@@ -8,6 +8,7 @@ import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import { ShoppingListComponent } from './menu-planning/shopping-list/shopping-list.component';
 import { ShoppingListDetailedComponent } from './menu-planning/shopping-list/shopping-list-detailed/shopping-list-detailed.component';
 import { OfferScanComponent } from './menu-planning/shopping-list/offer-scan/offer-scan.component';
+import { MenuPlansComponent } from './menu-planning/menu-plans/menu-plans.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -29,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'dev',
-    component: NewRecepieDialogComponent
+    component: NewRecepieDialogComponent,
   },
   {
     path: 'menu-planning/menu-plans',

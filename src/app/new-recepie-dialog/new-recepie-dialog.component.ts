@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms'; // Add this line
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -9,7 +16,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
-import { FormsModule } from '@angular/forms'; // Add this line
+
 @Component({
   selector: 'app-new-recepie-dialog',
   standalone: true,
@@ -26,8 +33,8 @@ import { FormsModule } from '@angular/forms'; // Add this line
     FileUploadModule,
     CheckboxModule,
     ChipModule,
-    FormsModule
-  ]
+    FormsModule,
+  ],
 })
 export class NewRecepieDialogComponent {
   units = [
@@ -77,23 +84,19 @@ export class NewRecepieDialogComponent {
   selectedDiets: { [key: string]: boolean } = {};
 
   form: FormGroup;
-  stepImages: { [key: number]: string[] } = {};  // Store image URLs for each step
-  showNote: { [key: number]: boolean } = {};  // Track visibility of note fields
+  stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
+  showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      steps: this.fb.array([
-        this.createStep()
-      ]),
-      ingredients: this.fb.array([
-        this.createIngredient()
-      ]),
+      steps: this.fb.array([this.createStep()]),
+      ingredients: this.fb.array([this.createIngredient()]),
       energie: [''],
       portionen: [''],
       besonderheiten: [''],
       essensgaeste: [''],
       allergene: [''],
-      saison: ['']
+      saison: [''],
     });
   }
 
@@ -108,7 +111,7 @@ export class NewRecepieDialogComponent {
   createStep(): FormGroup {
     return this.fb.group({
       schritt: ['', Validators.required],
-      anleitung: ['', Validators.required]
+      anleitung: ['', Validators.required],
     });
   }
 
@@ -123,11 +126,11 @@ export class NewRecepieDialogComponent {
   createIngredient(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       unit: ['', Validators.required],
       optional: [false],
       note: [''], // Note field
-      alternatives: this.fb.array([]) // Array to hold alternative ingredients
+      alternatives: this.fb.array([]), // Array to hold alternative ingredients
     });
   }
 
@@ -142,8 +145,8 @@ export class NewRecepieDialogComponent {
   createAlternative(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
-      unit: ['', Validators.required]
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      unit: ['', Validators.required],
     });
   }
 
@@ -152,7 +155,10 @@ export class NewRecepieDialogComponent {
     alternatives.push(this.createAlternative());
   }
 
-  removeAlternativeIngredient(ingredientIndex: number, alternativeIndex: number) {
+  removeAlternativeIngredient(
+    ingredientIndex: number,
+    alternativeIndex: number,
+  ) {
     const alternatives = this.getAlternatives(ingredientIndex);
     alternatives.removeAt(alternativeIndex);
   }
@@ -196,11 +202,13 @@ export class NewRecepieDialogComponent {
     // Adding step images to the recipe data
     recipeData.steps = recipeData.steps.map((step: any, index: number) => ({
       ...step,
-      images: this.stepImages[index] || []
+      images: this.stepImages[index] || [],
     }));
 
     // Adding selected diets to the recipe data
-    recipeData.diets = Object.keys(this.selectedDiets).filter(key => this.selectedDiets[key]);
+    recipeData.diets = Object.keys(this.selectedDiets).filter(
+      (key) => this.selectedDiets[key],
+    );
 
     console.log(JSON.stringify(recipeData, null, 2));
   }

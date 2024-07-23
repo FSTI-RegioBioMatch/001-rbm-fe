@@ -8,10 +8,9 @@ describe('EditRecipieComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditRecipieComponent]
-    })
-    .compileComponents();
-    
+      imports: [EditRecipieComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(EditRecipieComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

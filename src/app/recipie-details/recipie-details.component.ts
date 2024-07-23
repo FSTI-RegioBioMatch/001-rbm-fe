@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './recipie-details.component.html',
-  styleUrl: './recipie-details.component.scss'
+  styleUrl: './recipie-details.component.scss',
 })
-export class RecipieDetailsComponent {
-
-}
+export class RecipieDetailsComponent {}
