@@ -135,10 +135,24 @@
                         style="margin-top: 16px;"></button>
                 </div>
                 <div style="display: flex; margin-top: 16px;">
-                    <div style="flex: 1; margin-right: 16px;">
-                        <div
+                    <div style="flex: 1; margin-right: 16px; position: relative;">
+                        <div *ngIf="!recipeImage"
                             style="width: 100%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; height: 100%;">
-                            Bild Platzhalter</div>
+                            <i class="pi pi-image" style="font-size: 48px; color: #ccc;"></i>
+                        </div>
+                        <div *ngIf="recipeImage"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                            <img [src]="recipeImage" alt="Recipe Image"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <p-fileUpload #recipeFileUpload name="recipeImage" url="./upload"
+                            (onSelect)="handleRecipeImageUpload($event)" mode="basic" accept="image/*"
+                            [ngStyle]="{ 'position': 'absolute', 'bottom': '8px', 'right': '8px' }"
+                            *ngIf="!recipeImage">
+                        </p-fileUpload>
+                        <button *ngIf="recipeImage" pButton type="button" icon="pi pi-times"
+                            class="p-button-rounded p-button-danger"
+                            style="position: absolute; bottom: 8px; right: 8px;" (click)="removeRecipeImage()"></button>
                     </div>
                     <div style="flex: 1; display: flex; flex-direction: column;">
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">

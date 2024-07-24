@@ -6,7 +6,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms'; // Add this line
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
@@ -82,6 +82,7 @@ export class NewRecepieDialogComponent {
   ];
 
   selectedDiets: { [key: string]: boolean } = {};
+  recipeImage: string | null = null;
 
   form: FormGroup;
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
@@ -188,6 +189,21 @@ export class NewRecepieDialogComponent {
     fileUpload.clear();
   }
 
+  handleRecipeImageUpload(event: any) {
+    const file = event.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.recipeImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeRecipeImage() {
+    this.recipeImage = null;
+  }
+
   toggleDiet(value: string) {
     if (this.selectedDiets[value]) {
       this.selectedDiets[value] = false;
@@ -209,6 +225,9 @@ export class NewRecepieDialogComponent {
     recipeData.diets = Object.keys(this.selectedDiets).filter(
       (key) => this.selectedDiets[key],
     );
+
+    // Adding the recipe image to the recipe data
+    recipeData.recipeImage = this.recipeImage;
 
     console.log(JSON.stringify(recipeData, null, 2));
   }
