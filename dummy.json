@@ -1,16 +1,4 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-@Component({
-  selector: 'app-recipie-details',
-  standalone: true,
-  templateUrl: './recipie-details.component.html',
-  styleUrls: ['./recipie-details.component.scss'],
-  imports: [
-    CommonModule,
-  ],
-})
-export class RecipieDetailsComponent {
-  data = {
+{
     "steps": [
       {
         "schritt": "step 1",
@@ -78,5 +66,4 @@ export class RecipieDetailsComponent {
       "vegan"
     ],
     "recipeImage": "data:image/png;base64,i"
-  };
-}
+  }

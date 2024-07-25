@@ -1,25 +1,13 @@
 <ng-container>
     <p-card>
-        <ng-template pTemplate="header">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <div>Neues Rezept</div>
-                <div style="display: flex; align-items: center;">
-                    <div style="display: flex; align-items: center; margin-right: 8px;">
-                        <p-inputSwitch></p-inputSwitch>
-                        <label style="margin-left: 8px;">In Menüplanung übernehmen</label>
-                    </div>
-                    <div style="display: flex; align-items: center; margin-right: 8px;">
-                        <p-inputSwitch></p-inputSwitch>
-                        <label style="margin-left: 8px;">als Community Rezept veröffentlichen</label>
-                    </div>
-                    <button pButton type="button" label="Speichern" (click)="saveRecipe()"></button>
-                </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div>Neues Rezept</div>
+            <div style="display: flex; align-items: center;">
+                <button pButton type="button" label="Speichern" (click)="saveRecipe()"></button>
             </div>
-        </ng-template>
+        </div>
         <ng-template pTemplate="content">
-            <hr style="border: 0; height: 1px; background-color: #ccc;">
             <div style="display: flex; align-items: center; margin-top: 16px;">
-                <input pInputText type="text" placeholder="Name des Rezepts" style="margin-right: 8px;">
                 <div style="display: flex; flex-wrap: wrap; align-items: center;">
                     <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
                         <p-checkbox [binary]="true" [(ngModel)]="selectedDiets[option.value]"></p-checkbox>
@@ -29,6 +17,16 @@
             </div>
             <hr style="border: 0; height: 1px; background-color: #ccc; margin-top: 16px;">
             <form [formGroup]="form">
+                <input pInputText type="text" formControlName="recipeName" placeholder="Name des Rezepts"
+                    style="margin-right: 8px;">
+                <div style="display: flex; align-items: center; margin-right: 8px;">
+                    <p-inputSwitch></p-inputSwitch>
+                    <label style="margin-left: 8px;">In Menüplanung übernehmen</label>
+                </div>
+                <div style="display: flex; align-items: center; margin-right: 8px;">
+                    <p-inputSwitch></p-inputSwitch>
+                    <label style="margin-left: 8px;">als Community Rezept veröffentlichen</label>
+                </div>
                 <div style="margin-top: 16px;">
                     <h3>Zutaten</h3>
                     <div formArrayName="ingredients">
@@ -187,6 +185,8 @@
                         </div>
                     </div>
                 </div>
+                <textarea pInputTextarea formControlName="recipeDescription" placeholder="description"
+                    style="width: 100%; resize: vertical;"></textarea>
             </form>
         </ng-template>
     </p-card>

@@ -9,6 +9,7 @@ import { ShoppingListComponent } from './menu-planning/shopping-list/shopping-li
 import { ShoppingListDetailedComponent } from './menu-planning/shopping-list/shopping-list-detailed/shopping-list-detailed.component';
 import { OfferScanComponent } from './menu-planning/shopping-list/offer-scan/offer-scan.component';
 import { MenuPlansComponent } from './menu-planning/menu-plans/menu-plans.component';
+import { RecipieDetailsComponent } from './recipie-details/recipie-details.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -29,7 +30,7 @@ const routes: Routes = [
     component: MenuPlanningComponent,
   },
   {
-    path: 'dev',
+    path: 'add-recipe',
     component: NewRecepieDialogComponent,
   },
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
     path: 'menu-planning/shopping-list/:id/offer-scan/:scanId',
     component: OfferScanComponent,
   },
+  {
+    path: 'recipe-details/:id',
+    component: RecipieDetailsComponent,
+  }
 ];
 
 @NgModule({

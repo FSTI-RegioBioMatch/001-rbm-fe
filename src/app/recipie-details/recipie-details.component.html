@@ -1,1 +1,54 @@
-<p>recipie-details works!</p>
+<h1>Borscht</h1>
+
+<div>
+  <p>Traditional</p>
+  <p>Gluten-free</p>
+  <p>Vegan</p>
+</div>
+
+<div>
+  <button>menu</button>
+  <button>close</button>
+</div>
+
+<div>
+  <img [src]="data.recipeImage" alt="Recipe Image" />
+  <div>
+    <h2>Values</h2>
+    <ul>
+      <li>Energy: {{ data.energie }}</li>
+      <li>Portions per serving: {{ data.portionen }}</li>
+      <li>Challenge/specialty: {{ data.besonderheiten }}</li>
+      <li>Demographic: {{ data.essensgaeste }}</li>
+      <li>Allergens: {{ data.allergene }}</li>
+      <li>Season: {{ data.saison }}</li>
+    </ul>
+  </div>
+</div>
+
+<div>
+  <h2>Description</h2>
+  <p>Borscht is a traditional Ukrainian soup known for its vibrant color and rich, hearty flavor. Here's a basic recipe for Ukrainian Borscht along with its ingredients:</p>
+</div>
+
+<div>
+  <h3>Ingredients</h3>
+  <ul>
+    <li *ngFor="let ingredient of data.ingredients">
+      {{ ingredient.amount }} {{ ingredient.unit }} - {{ ingredient.name }} ({{ ingredient.note }})
+      <ul>
+        <li *ngFor="let alt of ingredient.alternatives">{{ alt.amount }} {{ alt.unit }} - {{ alt.name }}</li>
+      </ul>
+    </li>
+  </ul>
+  <h3>Instructions</h3>
+  <ul>
+    <li *ngFor="let step of data.steps">
+      <h4>{{ step.schritt }}</h4>
+      <p>{{ step.anleitung }}</p>
+      <div *ngIf="step.images.length > 0">
+        <img *ngFor="let image of step.images" [src]="image" alt="Step Image" />
+      </div>
+    </li>
+  </ul>
+</div>

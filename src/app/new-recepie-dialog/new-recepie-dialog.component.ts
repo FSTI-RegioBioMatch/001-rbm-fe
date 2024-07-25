@@ -90,6 +90,10 @@ export class NewRecepieDialogComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
+      recipeName: ['', Validators.required],
+      recipeDescription: [''],
+      includeInMenuPlanning: [false],
+      publishAsCommunityRecipe: [false],
       steps: this.fb.array([this.createStep()]),
       ingredients: this.fb.array([this.createIngredient()]),
       energie: [''],
