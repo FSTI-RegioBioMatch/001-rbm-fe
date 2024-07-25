@@ -16,6 +16,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
+import { RecipeService } from '../shared/services/recipe.service';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -88,7 +89,7 @@ export class NewRecepieDialogComponent {
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private recipeService: RecipeService) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
       recipeDescription: [''],
@@ -234,5 +235,8 @@ export class NewRecepieDialogComponent {
     recipeData.recipeImage = this.recipeImage;
 
     console.log(JSON.stringify(recipeData, null, 2));
+    this.recipeService.saveRecipe(recipeData).subscribe((response) => {
+      console.log(response);
+    });
   }
 }

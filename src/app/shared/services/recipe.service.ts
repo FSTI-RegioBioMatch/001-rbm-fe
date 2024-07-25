@@ -12,4 +12,7 @@ export class RecipeService {
   getRecipesByCompanyContext() {
     return this.http.get<RecipeType[]>(`${environment.API_CORE}/recipes`);
   }
+  saveRecipe(recipe: any) {
+    return this.http.post<any>(`${environment.API_CORE}/new-recipes`, recipe); //WIP NEW RECIPE MODEL
+  }
 }

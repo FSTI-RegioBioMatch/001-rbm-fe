@@ -1,69 +1,63 @@
 {
-    "steps": [
-      {
-        "schritt": "step 1",
-        "anleitung": "mach ganz viel",
-        "images": [
-          "data:image/png;base64,i",
-          "data:image/jpeg;base64,i"
-        ]
-      },
-      {
-        "schritt": "zweiter step",
-        "anleitung": "schneiden",
-        "images": [
-          "data:image/png;base64,i"
-        ]
-      },
-      {
-        "schritt": "braten",
-        "anleitung": "MACH HEISS YOOO",
-        "images": []
-      }
-    ],
-    "ingredients": [
-      {
-        "name": "zutat 1",
-        "amount": "1",
-        "unit": "l",
-        "optional": false,
-        "note": "zutat 1 notiz",
-        "alternatives": [
-          {
-            "name": "zutat1-alt1",
-            "amount": "11",
-            "unit": "g"
-          },
-          {
-            "name": "zutat1-alt2",
-            "amount": "12",
-            "unit": "kg"
-          }
-        ]
-      },
-      {
-        "name": "zutat 2",
-        "amount": "2",
-        "unit": "l",
-        "optional": false,
-        "note": "",
-        "alternatives": [
-          {
-            "name": "z2a1",
-            "amount": "21",
-            "unit": "l"
-          }
-        ]
-      }
-    ],
-    "energie": "eincal",
-    "portionen": "90",
-    "besonderheiten": "ich nicht :(",
-    "essensgaeste": "children",
-    "allergene": "dairy",
-    "saison": "autumn",
-    "diets": [
-      "vegan"
-    ],
-    "recipeImage": "data:image/png;base64,i"
-  }
+  "recipeName": "uuuuu",
+  "recipeDescription": "buu",
+  "includeInMenuPlanning": false,
+  "publishAsCommunityRecipe": false,
+  "steps": [
+    {
+      "schritt": "lkugo",
+      "anleitung": "jhvv",
+      "images": [
+      "",
+        ""
+      ]
+    },
+    {
+      "schritt": "bgg",
+      "anleitung": "juu",
+      "images": [
+       ""
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "name": "",
+      "amount": "",
+      "unit": "",
+      "optional": true,
+      "note": "",
+      "alternatives": [
+        {
+          "name": "",
+          "amount": "",
+          "unit": ""
+        }
+      ]
+    },
+    {
+      "name": "",
+      "amount": "",
+      "unit": "kg",
+      "optional": false,
+      "note": "",
+      "alternatives": [
+        {
+          "name": "",
+          "amount": "",
+          "unit": ""
+        }
+      ]
+    }
+  ],
+  "energie": "j",
+  "portionen": "g",
+  "besonderheiten": "i",
+  "essensgaeste": "children",
+  "allergene": "nuts",
+  "saison": "autumn",
+  "diets": [
+    "vegetarian"
+  ],
+  "recipeImage": ""
+}

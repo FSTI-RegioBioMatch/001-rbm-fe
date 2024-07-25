@@ -74,6 +74,8 @@ export class RecipieDetailsComponent {
     "essensgaeste": "children",
     "allergene": "dairy",
     "saison": "autumn",
+    "recipeName": "name",
+    "recipeDescription": "desc",
     "diets": [
       "vegan"
     ],
