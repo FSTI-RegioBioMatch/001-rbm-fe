@@ -8,6 +8,9 @@ import { RequestService } from './request.service';
 import { GeoService } from './geo.service';
 import { AddressType } from '../types/address.type';
 import { StoreService } from '../store/store.service';
+import { map } from 'rxjs/operators';
+import { tap, switchMap, finalize} from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,17 +18,36 @@ import { StoreService } from '../store/store.service';
 export class OfferService {
   constructor(
     private http: HttpClient,
-    private requestService: RequestService,
     private geoService: GeoService,
-    private store: StoreService,
+    public store: StoreService,
   ) {}
 
-  loaded = false;
+  private loadedSubject = new BehaviorSubject<boolean>(false);
+  loaded$ = this.loadedSubject.asObservable();
   private ontoFoodTypes: OntofoodType[] = [];
   public displayedFoodTypes: OntofoodType[] = [];
-  public address!: AddressType;
+  public address: AddressType = {
+    id: '',
+    city: '',
+    lat: 0,
+    lon: 0,
+    street: '',
+    name: '',
+    suffix: '',
+    zipcode: '',
+    type: '',
+    links: {
+      self: '',
+      update: '',
+      remove: '',
+      company: ''
+    }
+  };
+  private offersSubject = new BehaviorSubject<OfferType[]>([]);
+  offers$ = this.offersSubject.asObservable();
 
-  getOffers(lon1: number, lat1: number, lon2: number, lat2: number) {
+  private getOffers(lon1: number, lat1: number, lon2: number, lat2: number) :
+    Observable<OfferType[]> {
     return this.http.get<OfferType[]>(
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`,
     );
@@ -33,46 +55,72 @@ export class OfferService {
 
   setOffersBySearchRadius(searchRadiusInKM: number, address: AddressType) {
     if (!address) {
+      console.error('Address is not provided');
       return;
     }
 
     this.address = address;
+    console.log('Setting search with address:', address);
+    this.loadedSubject.next(false);
 
     const boundingBox = this.geoService.getBoundingBox(
       searchRadiusInKM,
       address.lat,
       address.lon,
     );
+    
     console.log(boundingBox);
+    
     this.getOffers(
       boundingBox.lonMin,
       boundingBox.latMin,
       boundingBox.lonMax,
       boundingBox.latMax,
-    ).subscribe((data) => {
-      this.store.setOffers(data);
-      const observables = data.map((offer) =>
-        this.requestService.doGetRequest(offer.links.category),
+    ).pipe(
+      tap(offers => this.store.setOffers(offers)),
+      switchMap((offers: OfferType[]) => {
+      console.log('Offers received from API:', offers);
+      const observables = offers.map((offer) =>
+        this.http.get<OntofoodType>(offer.links.category)
       );
 
-      forkJoin(observables).subscribe((responses) => {
-        responses.forEach((response) => {
-          const ontoFoodType = response as OntofoodType;
-          // Only push if label does not exist in ontoFoodTypes
-          if (
-            !this.ontoFoodTypes.some(
-              (type) => type.label === ontoFoodType.label,
-            )
-          ) {
-            this.ontoFoodTypes.push(ontoFoodType);
-          }
-        });
-        console.log(this.ontoFoodTypes);
-        this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
-        console.log(this.displayedFoodTypes);
-        this.loaded = true;
-        this.store.setOfferOntoFood(this.displayedFoodTypes);
-      });
+      return forkJoin(observables).pipe(
+        tap((responses: OntofoodType[]) => {
+          this.ontoFoodTypes = [];
+          responses.forEach((response, index) => {
+            const ontoFoodType = response;
+            // Only push if label does not exist in ontoFoodTypes
+            if (!this.ontoFoodTypes.some(
+                (type) => type.label === ontoFoodType.label,
+              )
+            ) {this.ontoFoodTypes.push(ontoFoodType);
+            }
+            // Attach additional data to the offer
+            offers[index].ontoFoodType = ontoFoodType;
+          });
+          this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
+          this.store.setOfferOntoFood(this.displayedFoodTypes);
+          console.log('Final offers with additional data:', offers);
+          this.offersSubject.next(offers);
+        })
+      );
+    }),
+    finalize(() => this.loadedSubject.next(true))
+  ).subscribe({
+    next: () => {},
+      error: (error) => {
+        console.error('Error fetching offers:', error);
+        this.loadedSubject.next(true);
+      }
     });
   }
+  
+  getOffersObservable(): Observable<OfferType[]> {
+    return this.store.offers$;
+  }
+
+  get loaded(): boolean {
+    return this.loadedSubject.value;
+  }
+
 }

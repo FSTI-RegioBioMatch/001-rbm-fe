@@ -8,6 +8,8 @@ import { PublicRecipeService } from '../shared/services/public-recipe.service';
 import { NgOptimizedImage } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { Button } from 'primeng/button';
+import { AddressType } from '../shared/types/address.type';
+import { OfferType } from '../shared/types/offer.type';
 
 @Component({
   selector: 'app-new-dashboard',
@@ -27,6 +29,8 @@ export class DashboardComponent implements OnInit {
   randomRecipes: PublicRecipeType[] = [];
   recipes: PublicRecipeType[] = [];
   suggestedRecipes: PublicRecipeType[] = [];
+  offers: OfferType[] = [];
+  loaded = false;
 
   constructor(
     public offerService: OfferService,
@@ -36,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRecipes();
+    this.getOffers()
   }
 
   scrollLeft() {
@@ -58,6 +63,40 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  getOffers(){
+    const address: AddressType = { 
+        id: "addr-123456",
+        city: "Berlin",
+        lat: 52.520008,
+        links: {
+          self: "https://api.example.com/addresses/addr-123456",
+          update: "https://api.example.com/addresses/addr-123456/update",
+          remove: "https://api.example.com/addresses/addr-123456/remove",
+          company: "https://api.example.com/companies/comp-789012"
+        },
+        lon: 13.404954,
+        street: "Unter den Linden",
+        name: "Brandenburg Gate",
+        suffix: "Mitte",
+        zipcode: "10117",
+        type: "landmark" }; // Example address
+    const searchRadiusInKM = 10; // Example search radius
+
+    console.log('Initiating search with radius:', searchRadiusInKM, 'and address:', address);
+    this.offerService.setOffersBySearchRadius(searchRadiusInKM, address);
+
+    this.offerService.offers$.subscribe(offers => {
+      console.log('Received offers:', offers);
+      this.offers = offers;
+    });
+
+    this.offerService.loaded$.subscribe(loaded => {
+      this.loaded = loaded;
+    });
+
+  }
+
+  
   getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
     const result = new Array(n);
     let len = arr.length;
