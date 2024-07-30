@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { RecipeType } from '../types/recipe.type';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 import { StoreService } from '../store/store.service';
 
 @Injectable({
@@ -31,8 +31,8 @@ export class RecipeService {
   getRecipesByCompanyId(page: number, size: number, sort: string): Observable<Page<RecipeType>> {
     return this.storeService.selectedCompanyContext$.pipe(
       switchMap(company => {
-        if (!company) {
-          throw new Error('No company selected');
+        if (!company || !company.id) {
+          return throwError('No company selected or company ID is missing');
         }
         let params = new HttpParams()
           .set('companyId', company.id)
@@ -41,6 +41,10 @@ export class RecipeService {
           .set('sort', sort);
 
         return this.http.get<Page<RecipeType>>(`${environment.API_CORE}/new-recipes`, { params });
+      }),
+      catchError(error => {
+        console.error('Error fetching recipes by company ID:', error);
+        return throwError(error);
       })
     );
   }
@@ -49,14 +53,31 @@ export class RecipeService {
     return this.http.get<RecipeType[]>(`${environment.API_CORE}/recipes`);
   }
 
+  /**
+   * Saves a new recipe with the currently selected company ID.
+   * 
+   * @param recipe - The recipe data to be saved.
+   * @returns An Observable of the saved recipe.
+   * 
+   * Example usage:
+   * 
+   * this.recipeService.saveRecipe(recipe)
+   *   .subscribe(savedRecipe => {
+   *     console.log('Saved Recipe:', savedRecipe);
+   *   });
+   */
   saveRecipe(recipe: any): Observable<any> {
     return this.storeService.selectedCompanyContext$.pipe(
       switchMap(company => {
-        if (!company) {
-          throw new Error('No company selected');
+        if (!company || !company.id) {
+          return throwError('No company selected or company ID is missing');
         }
         recipe.companyId = company.id;
         return this.http.post<any>(`${environment.API_CORE}/new-recipes`, recipe);
+      }),
+      catchError(error => {
+        console.error('Error saving recipe:', error);
+        return throwError(error);
       })
     );
   }
