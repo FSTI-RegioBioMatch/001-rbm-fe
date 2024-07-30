@@ -1,4 +1,4 @@
-<h1>{{data.recipeName}}</h1>
+<h1>{{recipe?.recipeName}}</h1>
 
 <div>
   <p>Traditional</p>
@@ -12,42 +12,42 @@
 </div>
 
 <div>
-  <img [src]="data.recipeImage" alt="Recipe Image" />
+  <img [src]="recipe?.recipeImage" alt="Recipe Image" />
   <div>
     <h2>Values</h2>
     <ul>
-      <li>Energy: {{ data.energie }}</li>
-      <li>Portions per serving: {{ data.portionen }}</li>
-      <li>Challenge/specialty: {{ data.besonderheiten }}</li>
-      <li>Demographic: {{ data.essensgaeste }}</li>
-      <li>Allergens: {{ data.allergene }}</li>
-      <li>Season: {{ data.saison }}</li>
+      <li>Energy: {{ recipe?.energie }}</li>
+      <li>Portions per serving: {{ recipe?.portionen }}</li>
+      <li>Challenge/specialty: {{ recipe?.besonderheiten }}</li>
+      <li>Demographic: {{ recipe?.essensgaeste }}</li>
+      <li>Allergens: {{ recipe?.allergene }}</li>
+      <li>Season: {{ recipe?.saison }}</li>
     </ul>
   </div>
 </div>
 
 <div>
   <h2>Description</h2>
-  <p>{{data.recipeDescription}}</p>
+  <p>{{recipe?.recipeDescription}}</p>
 </div>
 
 <div>
   <h3>Ingredients</h3>
   <ul>
-    <li *ngFor="let ingredient of data.ingredients">
-      {{ ingredient.amount }} {{ ingredient.unit }} - {{ ingredient.name }} ({{ ingredient.note }})
+    <li *ngFor="let ingredient of recipe?.ingredients">
+      {{ ingredient?.amount }} {{ ingredient?.unit }} - {{ ingredient?.name }} ({{ ingredient?.note }})
       <ul>
-        <li *ngFor="let alt of ingredient.alternatives">{{ alt.amount }} {{ alt.unit }} - {{ alt.name }}</li>
+        <li *ngFor="let alt of ingredient?.alternatives">{{ alt?.amount }} {{ alt?.unit }} - {{ alt?.name }}</li>
       </ul>
     </li>
   </ul>
   <h3>Instructions</h3>
   <ul>
-    <li *ngFor="let step of data.steps">
-      <h4>{{ step.schritt }}</h4>
-      <p>{{ step.anleitung }}</p>
-      <div *ngIf="step.images.length > 0">
-        <img *ngFor="let image of step.images" [src]="image" alt="Step Image" />
+    <li *ngFor="let step of recipe?.steps">
+      <h4>{{ step?.schritt }}</h4>
+      <p>{{ step?.anleitung }}</p>
+      <div *ngIf="step?.images?.length > 0">
+        <img *ngFor="let image of step?.images" [src]="image" alt="Step Image" />
       </div>
     </li>
   </ul>

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RecipeService } from '../shared/services/recipe.service';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-recipie-details',
   standalone: true,
@@ -10,75 +12,34 @@ import { CommonModule } from '@angular/common';
   ],
 })
 export class RecipieDetailsComponent {
-  data = {
-    "steps": [
-      {
-        "schritt": "step 1",
-        "anleitung": "mach ganz viel",
-        "images": [
-          "data:image/png;base64,i",
-          "data:image/jpeg;base64,i"
-        ]
-      },
-      {
-        "schritt": "zweiter step",
-        "anleitung": "schneiden",
-        "images": [
-          "data:image/png;base64,i"
-        ]
-      },
-      {
-        "schritt": "braten",
-        "anleitung": "MACH HEISS YOOO",
-        "images": []
-      }
-    ],
-    "ingredients": [
-      {
-        "name": "zutat 1",
-        "amount": "1",
-        "unit": "l",
-        "optional": false,
-        "note": "zutat 1 notiz",
-        "alternatives": [
-          {
-            "name": "zutat1-alt1",
-            "amount": "11",
-            "unit": "g"
-          },
-          {
-            "name": "zutat1-alt2",
-            "amount": "12",
-            "unit": "kg"
+  recipe: any | null = null;
+  recipeId: string = '';
+
+  constructor(private recipeService: RecipeService, private route: ActivatedRoute, private router: Router) {}
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.recipeId = params.get('id') ?? '';
+      this.fetchRecipe();
+    });
+  }
+
+  fetchRecipe(): void {
+    let a = 2;
+    if (this.recipeId) {
+      this.recipeService.getRecipeById(this.recipeId).subscribe(
+        (data: any) => {
+          this.recipe = data;
+          console.log('Recipe fetched', this.recipe);
+          if (!this.recipe) {
+            this.router.navigate(['/my-recipes']);
           }
-        ]
-      },
-      {
-        "name": "zutat 2",
-        "amount": "2",
-        "unit": "l",
-        "optional": false,
-        "note": "",
-        "alternatives": [
-          {
-            "name": "z2a1",
-            "amount": "21",
-            "unit": "l"
-          }
-        ]
-      }
-    ],
-    "energie": "eincal",
-    "portionen": "90",
-    "besonderheiten": "ich nicht :(",
-    "essensgaeste": "children",
-    "allergene": "dairy",
-    "saison": "autumn",
-    "recipeName": "name",
-    "recipeDescription": "desc",
-    "diets": [
-      "vegan"
-    ],
-    "recipeImage": "data:image/png;base64,i"
-  };
+        },
+        (error) => {
+          this.router.navigate(['/my-recipes']);
+          console.error('Error fetching recipe', error);
+        }
+      );
+    }
+  }
 }
