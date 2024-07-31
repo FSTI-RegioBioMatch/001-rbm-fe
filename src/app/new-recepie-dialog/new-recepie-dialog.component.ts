@@ -234,6 +234,7 @@ export class NewRecepieDialogComponent {
     // Adding the recipe image to the recipe data
     recipeData.recipeImage = this.recipeImage;
 
+    recipeData.nearbuyId = '1234'; // Replace with actual nearbuy ID
     console.log(JSON.stringify(recipeData, null, 2));
     this.recipeService.saveRecipe(recipeData).subscribe((response) => {
       console.log(response);

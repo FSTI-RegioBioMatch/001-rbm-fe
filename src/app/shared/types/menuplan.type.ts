@@ -1,13 +1,13 @@
-import { RecipeType } from './recipe.type';
+import { RecipeType } from "./recipe.type";
 
 export interface MenuplanType {
-  id?: string;
-  companyId?: string;
-  description: string;
-  menuName: string;
-  weekDay: string;
-  executionWeekNumber: number;
-  place: string;
+  name: string;
+  nachsteAusfuhrung: string;
+  wochentag: string;
+  wiederholung: string;
+  ort: string;
   portions: number;
-  recipes: RecipeType[];
+  portionsVegetarisch: number;
+  portionsVegan: number;
+  recipes: any[];
 }

@@ -1,17 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ManageMenuComponent } from './components/manage-menu/manage-menu.component';
 import { StoreService } from '../shared/store/store.service';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import moment from 'moment/moment';
-import { RecipeType } from '../shared/types/recipe.type';
 import { MenuplanService } from '../shared/services/menuplan.service';
-import { MenuplanType } from '../shared/types/menuplan.type';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { JsonPipe } from '@angular/common';
@@ -20,7 +12,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Button } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-menu-planning',
@@ -36,27 +30,35 @@ import { Button } from 'primeng/button';
     FloatLabelModule,
     DropdownModule,
     InputTextareaModule,
-    Button,
+    CommonModule,
+    ButtonModule,
   ],
   templateUrl: './menu-planning.component.html',
-  styleUrl: './menu-planning.component.scss',
+  styleUrls: ['./menu-planning.component.scss'],
 })
 export class MenuPlanningComponent implements OnInit {
-  weekNumbers!: number[];
-  menuPlanRecipes: RecipeType[] = [];
-  additionaleRecipesRow: RecipeType[] = [];
-  additionalSelectedRecipes: RecipeType[] = [];
-
-  menuPlanFormGroup: FormGroup;
+  myRecipes: any[] = []; //contains found recipes
+  filteredRecipes: any[] = []; //contains filtered recipes for search
+  menuPlan: any[] = []; //stores selected recipes
+  menuPlanForm: FormGroup; //form for creating a new menu plan
+  searchQuery: string = '';
 
   weekDays = [
-    { day: 'Monday', viewDay: 'Montag' },
-    { day: 'Tuesday', viewDay: 'Dienstag' },
-    { day: 'Wednesday', viewDay: 'Mittwoch' },
-    { day: 'Thursday', viewDay: 'Donnerstag' },
-    { day: 'Friday', viewDay: 'Freitag' },
-    { day: 'Saturday', viewDay: 'Samstag' },
-    { day: 'Sunday', viewDay: 'Sonntag' },
+    { label: 'Montag', value: 'Montag' },
+    { label: 'Dienstag', value: 'Dienstag' },
+    { label: 'Mittwoch', value: 'Mittwoch' },
+    { label: 'Donnerstag', value: 'Donnerstag' },
+    { label: 'Freitag', value: 'Freitag' },
+    { label: 'Samstag', value: 'Samstag' },
+    { label: 'Sonntag', value: 'Sonntag' },
+  ];
+
+  nextExecutionOptions: any[] = [];
+  repeatOptions = [
+    { label: 'Täglich', value: 'Täglich' },
+    { label: 'Wöchentlich', value: 'Wöchentlich' },
+    { label: 'Monatlich', value: 'Monatlich' },
+    { label: 'Jährlich', value: 'Jährlich' },
   ];
 
   constructor(
@@ -64,120 +66,83 @@ export class MenuPlanningComponent implements OnInit {
     private menuplanService: MenuplanService,
     private recipeService: RecipeService,
   ) {
-    this.menuPlanFormGroup = new FormGroup({
-      menuName: new FormControl(''),
+    this.menuPlanForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      nachsteAusfuhrung: new FormControl('', Validators.required),
+      wochentag: new FormControl('', Validators.required),
+      wiederholung: new FormControl('', Validators.required),
+      ort: new FormControl('', Validators.required),
+      portions: new FormControl('', Validators.required),
+      portionsVegetarisch: new FormControl(''),
+      portionsVegan: new FormControl(''),
       description: new FormControl(''),
-      weekDay: new FormControl(''),
-      executionWeekNumber: new FormControl(''),
-      place: new FormControl(''),
-      portions: new FormControl('', [
-        Validators.min(1),
-        Validators.max(9999),
-        Validators.pattern(/^\d+$/),
-      ]),
     });
-  }
-
-  get menuName() {
-    return this.menuPlanFormGroup.get('menuName') as FormControl;
-  }
-
-  get description() {
-    return this.menuPlanFormGroup.get('description') as FormControl;
-  }
-
-  get weekDay() {
-    return this.menuPlanFormGroup.get('weekDay') as FormControl;
-  }
-
-  get executionWeekNumber() {
-    return this.menuPlanFormGroup.get('executionWeekNumber') as FormControl;
-  }
-
-  get place() {
-    return this.menuPlanFormGroup.get('place') as FormControl;
-  }
-
-  get portions() {
-    return this.menuPlanFormGroup.get('portions') as FormControl;
   }
 
   ngOnInit(): void {
-    this.weekNumbers = this.getWeekNumbersFromCurrentWeek();
+    this.calculateNextExecutionOptions();
 
-    // this.store.selectedRecipes$.subscribe((recipes) => {
-    //   console.log('stored recipes', recipes);
-    //   this.rows = recipes;
-    // });
-
-    this.recipeService.getRecipesByCompanyContext().subscribe((recipes) => {
-      console.log('recipes', recipes);
-      this.additionaleRecipesRow = recipes;
-    });
+    this.store.selectedCompanyContext$
+      .pipe(
+        filter(company => company !== null),
+        switchMap(company =>
+          this.recipeService.getRecipesByCompanyId(0, 10, 'recipeName,asc')
+        )
+      )
+      .subscribe(
+        page => {
+          this.myRecipes = page.content;
+          this.filteredRecipes = this.myRecipes;
+          console.log('recipes', this.myRecipes);
+        },
+        error => {
+          console.error('Error fetching recipes:', error);
+        }
+      );
   }
 
-  getWeekNumbersFromCurrentWeek(): number[] {
-    const currentWeek = moment().isoWeek();
-    const currentYear = moment().year();
-    const lastWeekOfYear = moment().endOf('year').subtract(2, 'day').isoWeek();
-    console.log(564456, moment().endOf('year').subtract(2, 'day').isoWeek());
-    // const lastWeekOfYear = 53;
-    const weekNumbers: number[] = [];
+  calculateNextExecutionOptions(): void {
+    const today = moment();
+    const currentWeek = today.isoWeek();
+    const currentYear = today.year();
 
-    console.log('currentWeek', currentWeek);
-    console.log('currentYear', currentYear);
-    console.log('lastWeekOfYear', lastWeekOfYear);
+    for (let i = 0; i < 52; i++) {
+      const week = currentWeek + i;
+      const weekYear = week > 52 ? currentYear + 1 : currentYear;
+      const displayWeek = week > 52 ? week - 52 : week;
 
-    for (let week = currentWeek; week <= lastWeekOfYear; week++) {
-      weekNumbers.push(week);
+      const weekLabel = `KW${displayWeek} ${weekYear}`;
+      this.nextExecutionOptions.push({ label: weekLabel, value: weekLabel });
     }
-
-    // Handle the case where the year has 53 weeks and the last week overlaps with week 1 of the next year
-    if (
-      lastWeekOfYear === 53 &&
-      moment(`${currentYear}-12-31`).isoWeek() === 1
-    ) {
-      weekNumbers.push(1);
-    }
-
-    console.log('weekNumbers', weekNumbers);
-
-    return weekNumbers;
   }
 
-  onClickCreateMenuPlan() {
-    if (!this.menuPlanFormGroup.valid) {
-      console.log('Form is not valid');
+  filterRecipes(): void {
+    this.filteredRecipes = this.myRecipes.filter(recipe =>
+      recipe.recipeName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  addRecipeToMenuPlan(recipe: any): void {
+    if (this.menuPlan.includes(recipe)) {
       return;
     }
+    this.menuPlan.push(recipe);
+    console.log('menuPlan', this.menuPlan);
+  }
 
-    const menuPlan: MenuplanType = {
-      description: this.description.value,
-      menuName: this.menuName.value,
-      weekDay: this.weekDay.value.day,
-      executionWeekNumber: this.executionWeekNumber.value,
-      place: this.place.value,
-      portions: this.portions.value,
-      recipes: this.menuPlanRecipes,
+  removeRecipeFromMenuPlan(recipe: any): void {
+    const index = this.menuPlan.indexOf(recipe);
+    if (index > -1) {
+      this.menuPlan.splice(index, 1);
+      console.log('menuPlan', this.menuPlan);
+    }
+  }
+
+  saveMenuPlan(): void {
+    const menuPlanData = {
+      ...this.menuPlanForm.value,
+      recipes: this.menuPlan
     };
-
-    console.log(this.menuPlanFormGroup, menuPlan);
-
-    this.menuplanService.createMenuPlan(menuPlan).subscribe((response) => {
-      console.log('Menu plan created');
-      console.log('response', response);
-    });
-  }
-
-  onClickAddToMenuPlan() {
-    console.log(123123, this.additionalSelectedRecipes);
-    this.menuPlanRecipes.push(...this.additionalSelectedRecipes);
-    console.log(this.menuPlanRecipes);
-  }
-
-  onClickRemoveFromMenuPlan(recipe: RecipeType) {
-    this.menuPlanRecipes = this.menuPlanRecipes.filter(
-      (r) => r.id !== recipe.id,
-    );
+    console.log('Menu Plan Data:', menuPlanData);
   }
 }

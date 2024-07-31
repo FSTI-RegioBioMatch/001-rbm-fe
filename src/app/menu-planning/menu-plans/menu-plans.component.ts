@@ -42,7 +42,7 @@ export class MenuPlansComponent implements OnInit {
     const ingreadients: Ingredient[] = [];
 
     menuPlan.recipes.map((recipe) => {
-      return recipe.ingredients.map((ingredient) => {
+      return recipe.ingredients.map((ingredient: Ingredient) => {
         ingreadients.push(ingredient);
       });
     });

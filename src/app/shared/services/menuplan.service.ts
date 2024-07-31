@@ -11,13 +11,6 @@ export class MenuplanService {
 
   createMenuPlan(menuPlan: MenuplanType) {
     return this.http.post<MenuplanType>(`${environment.API_CORE}/menuplan`, {
-      menuName: menuPlan.menuName,
-      description: menuPlan.description,
-      weekDay: menuPlan.weekDay,
-      executionWeekNumber: menuPlan.executionWeekNumber,
-      place: menuPlan.place,
-      portions: menuPlan.portions,
-      recipes: menuPlan.recipes,
     });
   }
 
