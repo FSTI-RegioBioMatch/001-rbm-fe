@@ -14,6 +14,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import { filter, switchMap } from 'rxjs';
 
 @Component({
@@ -32,6 +36,7 @@ import { filter, switchMap } from 'rxjs';
     InputTextareaModule,
     CommonModule,
     ButtonModule,
+    FullCalendarModule
   ],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
@@ -42,6 +47,8 @@ export class MenuPlanningComponent implements OnInit {
   menuPlan: any[] = []; //stores selected recipes
   menuPlanForm: FormGroup; //form for creating a new menu plan
   searchQuery: string = '';
+  events: any[] = []; // stores calendar events
+  calendarOptions: any; // stores calendar options
 
   weekDays = [
     { label: 'Montag', value: 'Montag' },
@@ -81,6 +88,7 @@ export class MenuPlanningComponent implements OnInit {
 
   ngOnInit(): void {
     this.calculateNextExecutionOptions();
+    this.setupCalendarOptions();
 
     this.store.selectedCompanyContext$
       .pipe(
@@ -144,5 +152,24 @@ export class MenuPlanningComponent implements OnInit {
       recipes: this.menuPlan
     };
     console.log('Menu Plan Data:', menuPlanData);
+  }
+
+  setupCalendarOptions(): void {
+    this.calendarOptions = {
+      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      editable: true,
+      droppable: true,
+      events: this.events,
+      eventRender: (info: any) => {
+        if (info.view.type === 'dayGridMonth') {
+          info.el.querySelector('.fc-title').innerHTML += ` <br> (${moment(info.event.start).isoWeek()})`;
+        }
+      }
+    };
   }
 }

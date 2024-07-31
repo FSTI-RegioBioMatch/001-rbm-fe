@@ -1,6 +1,7 @@
 .container {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .menu-plan-form {
@@ -79,4 +80,9 @@ input, p-dropdown {
 .p-dropdown, .p-inputtext {
   width: 100%;
   box-sizing: border-box;
+}
+
+.p-schedule {
+  width: 100%;
+  margin-top: 20px;
 }
