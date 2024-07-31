@@ -1,4 +1,4 @@
-@if (offerService.loaded) {
+@if (loaded) {
   <div class="container">
     <div class="card-list-container">
       <div class="card-list">
@@ -34,13 +34,14 @@
         </div>
 
         <div class="card-wrapper">
-          <h2>Mein Name des Marktplatzes</h2>
+          <h2>Meine Region</h2>
           <p-card class="card">
             <app-map
-              [lat]="offerService.address.lat"
-              [lng]="offerService.address.lon"
-              class="map-card"
-            />
+            [lat]="offerService.address.lat"
+            [lng]="offerService.address.lon"
+            [offers]="offers"
+            class="map-card"
+            ></app-map>
           </p-card>
         </div>
 

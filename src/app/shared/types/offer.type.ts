@@ -1,3 +1,4 @@
+import { OntofoodType } from './ontofood.type';
 export type OfferType = {
   resultType: string;
   company: {
@@ -25,4 +26,5 @@ export type OfferType = {
     address: string;
     category: string;
   };
+  ontoFoodType?: OntofoodType;
 };
