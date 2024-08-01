@@ -47,3 +47,9 @@ p {
   height: 340px; /* Set your desired height */
   overflow: hidden; /* Prevent content overflow */
 }
+
+.card-wrapper {
+  .card-my-recepies {
+    cursor: pointer;
+  }
+}
