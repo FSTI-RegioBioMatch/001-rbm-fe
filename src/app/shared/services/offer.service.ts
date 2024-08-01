@@ -123,4 +123,8 @@ export class OfferService {
     return this.loadedSubject.value;
   }
 
+  trackByFn(index: number, item: any): any {
+    return item.id || index; // Use item.id if available, otherwise use the index
+  }
+
 }

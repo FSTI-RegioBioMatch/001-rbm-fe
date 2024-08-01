@@ -86,7 +86,8 @@ export class MapComponent implements OnChanges, AfterViewInit {
           const popupContent = `
             <b>${offer.company.name}</b><br>
             ${offer.company.label}<br>
-            Product: ${offer.product.totalAmount} ${offer.product.unit}<br>
+            Product: ${offer.ontoFoodType?.label}<br>
+            Amount: ${offer.product.totalAmount} ${offer.product.unit}<br>
             From: ${offer.product.dateStart}<br>
             To: ${offer.product.dateEnd}
           `;
