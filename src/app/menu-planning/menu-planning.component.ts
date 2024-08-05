@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ManageMenuComponent } from './components/manage-menu/manage-menu.component';
 import { StoreService } from '../shared/store/store.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,10 +14,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { RRule, Frequency, Weekday } from 'rrule';
 import { filter, switchMap } from 'rxjs';
 
 @Component({
@@ -42,30 +43,32 @@ import { filter, switchMap } from 'rxjs';
   styleUrls: ['./menu-planning.component.scss'],
 })
 export class MenuPlanningComponent implements OnInit {
-  myRecipes: any[] = []; //contains found recipes
-  filteredRecipes: any[] = []; //contains filtered recipes for search
-  menuPlan: any[] = []; //stores selected recipes
-  menuPlanForm: FormGroup; //form for creating a new menu plan
+  @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
+
+  myRecipes: any[] = []; // contains found recipes
+  filteredRecipes: any[] = []; // contains filtered recipes for search
+  menuPlan: any[] = []; // stores selected recipes
+  menuPlanForm: FormGroup; // form for creating a new menu plan
   searchQuery: string = '';
   events: any[] = []; // stores calendar events
   calendarOptions: any; // stores calendar options
 
   weekDays = [
-    { label: 'Montag', value: 'Montag' },
-    { label: 'Dienstag', value: 'Dienstag' },
-    { label: 'Mittwoch', value: 'Mittwoch' },
-    { label: 'Donnerstag', value: 'Donnerstag' },
-    { label: 'Freitag', value: 'Freitag' },
-    { label: 'Samstag', value: 'Samstag' },
-    { label: 'Sonntag', value: 'Sonntag' },
+    { label: 'Montag', value: 0 }, // changed to numeric values
+    { label: 'Dienstag', value: 1 },
+    { label: 'Mittwoch', value: 2 },
+    { label: 'Donnerstag', value: 3 },
+    { label: 'Freitag', value: 4 },
+    { label: 'Samstag', value: 5 },
+    { label: 'Sonntag', value: 6 },
   ];
 
   nextExecutionOptions: any[] = [];
   repeatOptions = [
-    { label: 'Täglich', value: 'Täglich' },
-    { label: 'Wöchentlich', value: 'Wöchentlich' },
-    { label: 'Monatlich', value: 'Monatlich' },
-    { label: 'Jährlich', value: 'Jährlich' },
+    { label: 'Täglich', value: 'DAILY' },
+    { label: 'Wöchentlich', value: 'WEEKLY' },
+    { label: 'Monatlich', value: 'MONTHLY' },
+    { label: 'Jährlich', value: 'YEARLY' },
   ];
 
   constructor(
@@ -152,6 +155,13 @@ export class MenuPlanningComponent implements OnInit {
       recipes: this.menuPlan
     };
     console.log('Menu Plan Data:', menuPlanData);
+
+    // Add menu plan events to the calendar
+    this.addEventsToCalendar(menuPlanData);
+    console.log('Events:', this.events);
+
+    // Force calendar to update
+    this.updateCalendar();
   }
 
   setupCalendarOptions(): void {
@@ -171,5 +181,45 @@ export class MenuPlanningComponent implements OnInit {
         }
       }
     };
+  }
+
+  addEventsToCalendar(menuPlanData: any): void {
+    const { nachsteAusfuhrung, wochentag, wiederholung, name } = menuPlanData;
+    const startDate = this.getStartDate(nachsteAusfuhrung, wochentag);
+
+    const frequency = Frequency[wiederholung as keyof typeof Frequency];
+    const weekday = new Weekday(wochentag);
+
+    const rrule = new RRule({
+      freq: frequency,
+      dtstart: startDate,
+      byweekday: [weekday],
+      interval: 1,
+      until: moment().add(10, 'years').toDate() // Extend the events indefinitely by setting a far future date
+    });
+
+    this.events.push({
+      title: name,
+      rrule: rrule.toString(),
+      allDay: true
+    });
+  }
+
+  getStartDate(nextExecution: string, weekDay: number): Date {
+    const matchExecution = nextExecution.match(/KW(\d+)/);
+    const matchYear = nextExecution.match(/(\d{4})$/);
+    
+    const weekNumber = matchExecution ? parseInt(matchExecution[1], 10) : 1;
+    const year = matchYear ? parseInt(matchYear[1], 10) : new Date().getFullYear();
+    
+    const startOfWeek = moment().year(year).week(weekNumber).startOf('isoWeek');
+    return startOfWeek.add(weekDay, 'days').toDate();
+  }
+
+  updateCalendar(): void {
+    if (this.calendarComponent && this.calendarComponent.getApi()) {
+      console.log('Refetching events');
+      this.calendarComponent.getApi().refetchEvents();
+    }
   }
 }
