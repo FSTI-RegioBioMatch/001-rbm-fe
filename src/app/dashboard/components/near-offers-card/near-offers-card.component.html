@@ -1,11 +1,9 @@
 <div class="card-wrapper">
   <h2>Erzeugnisse in meiner Region</h2>
   <p-card class="card card-my-recepies">
-    <div>
       <ng-container *ngFor="let offer of offers; trackBy: trackByFn">
         <p (click)="showDetails(offer)">{{ offer.ontoFoodType?.label }}</p>
       </ng-container>
-    </div>
   </p-card>
 </div>
 

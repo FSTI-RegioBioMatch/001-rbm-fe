@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { OfferService } from '../../../shared/services/offer.service';
 import { JsonPipe, NgIf, NgFor } from '@angular/common';
 import { CardModule } from 'primeng/card';

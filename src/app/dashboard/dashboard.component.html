@@ -83,43 +83,34 @@
 
         <app-near-offers-card />
 
-        <div class="card-wrapper">
-          <h2>Produkte in meiner Region</h2>
-          <p-card header="Produkte finden" class="card card-my-recepies">
-            <div>
-              <p>name</p>
-              <p>langer nam...</p>
-              <p>name</p>
-              <p>name</p>
-            </div>
-          </p-card>
-        </div>
+        <app-search />
+        
       </div>
     </div>
+      
     <div class="side-scroll-container">
-      <h2>Rezeptempfehlungen für mich</h2>
-      <br />
-      <div class="small-card-list-container" style="padding: 24px">
-        <div class="mb-2">
-          <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
-        </div>
-        <div class="small-card-list">
-          @for (item of suggestedRecipes; track $index) {
-            <div class="small-card">
-              @if (item.image_urls) {
-                <img
-                  class="w-100 h-100"
-                  [src]="item.image_urls[0]"
-                  style="object-fit: fill"
-                  alt="picture of the recipe"
-                />
-              }
-
-              <span class="" style="z-index: 999">{{ item.title }}</span>
-            </div>
-          }
+        <h2>Rezeptempfehlungen für mich</h2>
+        <br />
+        <div class="small-card-list-container" style="padding: 24px">
+          <div class="mb-2">
+            <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
+          </div>
+          <div class="small-card-list">
+            <ng-container *ngFor="let item of suggestedRecipes; trackBy: trackByFn">
+              <div class="small-card">
+                <ng-container *ngIf="item.image_urls">
+                  <img
+                    class="w-100 h-100"
+                    [src]="item.image_urls[0]"
+                    style="object-fit: fill"
+                    alt="picture of the recipe"
+                  />
+                </ng-container>
+                <span class="" style="z-index: 999">{{ item.title }}</span>
+              </div>
+            </ng-container>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+</div>
 }
