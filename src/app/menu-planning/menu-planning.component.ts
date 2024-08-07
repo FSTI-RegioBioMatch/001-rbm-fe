@@ -12,19 +12,19 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { DialogModule } from 'primeng/dialog';  // Import DialogModule
-import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
+import { DialogModule } from 'primeng/dialog';  // Import DialogModule
+import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import { RRule, Frequency } from 'rrule';
 import { filter, switchMap } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';  // Import uuid
-import { EventHoveringArg, EventApi } from '@fullcalendar/core'; // Import necessary types
+import { v4 as uuidv4 } from 'uuid';
+import { EventHoveringArg, EventApi } from '@fullcalendar/core';
 
 @Component({
   selector: 'app-menu-planning',
@@ -42,9 +42,9 @@ import { EventHoveringArg, EventApi } from '@fullcalendar/core'; // Import neces
     InputTextareaModule,
     CommonModule,
     ButtonModule,
+    FullCalendarModule,
     DialogModule,  // Add DialogModule
-    TooltipModule,  // Add TooltipModule
-    FullCalendarModule
+    TooltipModule  // Add TooltipModule
   ],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
@@ -52,18 +52,18 @@ import { EventHoveringArg, EventApi } from '@fullcalendar/core'; // Import neces
 export class MenuPlanningComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
 
-  myRecipes: any[] = []; // contains found recipes
-  filteredRecipes: any[] = []; // contains filtered recipes for search
-  menuPlan: any[] = []; // stores selected recipes
-  menuPlanForm: FormGroup; // form for creating a new menu plan
+  myRecipes: any[] = [];
+  filteredRecipes: any[] = [];
+  menuPlan: any[] = [];
+  menuPlanForm: FormGroup;
   searchQuery: string = '';
-  events: any[] = []; // stores calendar events
-  calendarOptions: any; // stores calendar options
+  events: any[] = [];
+  calendarOptions: any;
   displayEventDialog: boolean = false;
   selectedEvent: any;
 
   weekDays = [
-    { label: 'Montag', value: 1 }, // Changed to match moment.js ISO day format (1 is Monday)
+    { label: 'Montag', value: 1 },
     { label: 'Dienstag', value: 2 },
     { label: 'Mittwoch', value: 3 },
     { label: 'Donnerstag', value: 4 },
@@ -173,7 +173,7 @@ export class MenuPlanningComponent implements OnInit {
   }
 
   addEventsToCalendar(menuPlanData: any): void {
-    const menuUuid = uuidv4(); // Generate a UUID for the menu
+    const menuUuid = uuidv4();
     const nextExecution = menuPlanData.nachsteAusfuhrung;
     const weekNumber = parseInt(nextExecution.split(' ')[0].replace('KW', ''), 10);
     const year = parseInt(nextExecution.split(' ')[1], 10);
@@ -183,59 +183,64 @@ export class MenuPlanningComponent implements OnInit {
 
     let rule: RRule;
     switch (repeatFrequency) {
-      case 'DAILY':
-        rule = new RRule({
-          freq: Frequency.DAILY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate()
-        });
-        break;
-      case 'WEEKLY':
-        rule = new RRule({
-          freq: Frequency.WEEKLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate()
-        });
-        break;
-      case 'MONTHLY':
-        rule = new RRule({
-          freq: Frequency.MONTHLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate()
-        });
-        break;
-      case 'YEARLY':
-        rule = new RRule({
-          freq: Frequency.YEARLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate()
-        });
-        break;
-      default:
-        return;
+        case 'DAILY':
+            rule = new RRule({
+                freq: Frequency.DAILY,
+                dtstart: startDate.toDate(),
+                until: moment().year(year).endOf('year').toDate()
+            });
+            break;
+        case 'WEEKLY':
+            rule = new RRule({
+                freq: Frequency.WEEKLY,
+                dtstart: startDate.toDate(),
+                until: moment().year(year).endOf('year').toDate()
+            });
+            break;
+        case 'MONTHLY':
+            rule = new RRule({
+                freq: Frequency.MONTHLY,
+                dtstart: startDate.toDate(),
+                until: moment().year(year).endOf('year').toDate(),
+                byweekday: [startDate.day() - 1], // Correctly set the weekday
+                bysetpos: [Math.ceil(startDate.date() / 7)] // Ensure correct week within the month
+            });
+            break;
+        case 'YEARLY':
+            rule = new RRule({
+                freq: Frequency.YEARLY,
+                dtstart: startDate.toDate(),
+                until: moment().year(year).endOf('year').toDate()
+            });
+            break;
+        default:
+            return;
     }
 
     const dates = rule.all();
     dates.forEach(date => {
-      this.events.push({
-        id: menuUuid,
-        title: menuPlanData.name,
-        start: moment(date).startOf('day').toISOString(), // Ensure the date is in ISO format and set to start of day
-        allDay: true, // Make it a full-day event
-        extendedProps: {
-          description: menuPlanData.description,
-          location: menuPlanData.ort,
-          portions: menuPlanData.portions,
-          portionsVegetarisch: menuPlanData.portionsVegetarisch,
-          portionsVegan: menuPlanData.portionsVegan,
-          recipes: menuPlanData.recipes
-        }
-      });
+        this.events.push({
+            id: uuidv4(), // Unique identifier for each event instance
+            menuId: menuUuid, // Identifier for the entire menu plan
+            title: menuPlanData.name,
+            start: moment(date).startOf('day').toISOString(),
+            allDay: true,
+            extendedProps: {
+                description: menuPlanData.description,
+                location: menuPlanData.ort,
+                portions: menuPlanData.portions,
+                portionsVegetarisch: menuPlanData.portionsVegetarisch,
+                portionsVegan: menuPlanData.portionsVegan,
+                recipes: menuPlanData.recipes,
+                menuId: menuUuid
+            }
+        });
     });
 
-    // Update the calendar options to reflect the new events
     this.calendarOptions.events = [...this.events];
-  }
+}
+
+
 
   setupCalendarOptions(): void {
     this.calendarOptions = {
@@ -267,9 +272,23 @@ export class MenuPlanningComponent implements OnInit {
     };
   }
 
+  deleteSingleEvent(event: EventApi): void {
+    this.events = this.events.filter(e => e.id !== event.id);
+    this.calendarOptions.events = [...this.events];
+    this.updateCalendar();
+    this.displayEventDialog = false;
+  }
+
+  deleteAllEvents(menuId: string): void {
+    this.events = this.events.filter(e => e.extendedProps.menuId !== menuId);
+    this.calendarOptions.events = [...this.events];
+    this.updateCalendar();
+    this.displayEventDialog = false;
+  }
+
   updateCalendar(): void {
     if (this.calendarComponent && this.calendarComponent.getApi()) {
-      console.log('Refetching events');
+      console.log('Refetching events', this.events);
       this.calendarComponent.getApi().refetchEvents();
     }
   }

@@ -81,5 +81,9 @@
     <p><strong>Portions:</strong> {{ selectedEvent.extendedProps.portions }}</p>
     <p><strong>Vegetarian Portions:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
     <p><strong>Vegan Portions:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
+    <p-button label="Delete This Event" icon="pi pi-trash" class="p-button-danger"
+      (click)="deleteSingleEvent(selectedEvent)"></p-button>
+    <p-button label="Delete All Events" icon="pi pi-trash" class="p-button-danger"
+      (click)="deleteAllEvents(selectedEvent.extendedProps.menuId)"></p-button>
   </div>
 </p-dialog>
