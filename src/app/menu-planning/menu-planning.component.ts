@@ -15,16 +15,17 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
-import { DialogModule } from 'primeng/dialog';  // Import DialogModule
-import { TooltipModule } from 'primeng/tooltip'; // Import TooltipModule
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
-import { RRule, Frequency } from 'rrule';
+import { RRule, Frequency, Weekday } from 'rrule';
 import { filter, switchMap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { EventHoveringArg, EventApi } from '@fullcalendar/core';
+import deLocale from '@fullcalendar/core/locales/de';
 
 @Component({
   selector: 'app-menu-planning',
@@ -43,8 +44,8 @@ import { EventHoveringArg, EventApi } from '@fullcalendar/core';
     CommonModule,
     ButtonModule,
     FullCalendarModule,
-    DialogModule,  // Add DialogModule
-    TooltipModule  // Add TooltipModule
+    DialogModule,
+    TooltipModule
   ],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
@@ -178,7 +179,7 @@ export class MenuPlanningComponent implements OnInit {
     const weekNumber = parseInt(nextExecution.split(' ')[0].replace('KW', ''), 10);
     const year = parseInt(nextExecution.split(' ')[1], 10);
 
-    const startDate = moment().year(year).isoWeek(weekNumber).isoWeekday(menuPlanData.wochentag);
+    const startDate = moment().year(year).isoWeek(weekNumber).isoWeekday(menuPlanData.wochentag); // Adjust weekday
     const repeatFrequency = menuPlanData.wiederholung;
 
     let rule: RRule;
@@ -202,7 +203,7 @@ export class MenuPlanningComponent implements OnInit {
                 freq: Frequency.MONTHLY,
                 dtstart: startDate.toDate(),
                 until: moment().year(year).endOf('year').toDate(),
-                byweekday: [startDate.day() - 1], // Correctly set the weekday
+                byweekday: [new Weekday(startDate.day() - 1)], // Ensure correct weekday
                 bysetpos: [Math.ceil(startDate.date() / 7)] // Ensure correct week within the month
             });
             break;
@@ -226,21 +227,20 @@ export class MenuPlanningComponent implements OnInit {
             start: moment(date).startOf('day').toISOString(),
             allDay: true,
             extendedProps: {
-                description: menuPlanData.description,
-                location: menuPlanData.ort,
-                portions: menuPlanData.portions,
-                portionsVegetarisch: menuPlanData.portionsVegetarisch,
-                portionsVegan: menuPlanData.portionsVegan,
-                recipes: menuPlanData.recipes,
-                menuId: menuUuid
+                description: menuPlanData['description'],
+                location: menuPlanData['ort'],
+                portions: menuPlanData['portions'],
+                portionsVegetarisch: menuPlanData['portionsVegetarisch'],
+                portionsVegan: menuPlanData['portionsVegan'],
+                recipes: menuPlanData['recipes'],
+                menuId: menuUuid,
+                repeatFrequency: menuPlanData['wiederholung'] // Add repeat frequency to event details
             }
         });
     });
 
     this.calendarOptions.events = [...this.events];
-}
-
-
+  }
 
   setupCalendarOptions(): void {
     this.calendarOptions = {
@@ -250,21 +250,11 @@ export class MenuPlanningComponent implements OnInit {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
+      firstDay: 1, // Set the first day of the week to Monday
       editable: true,
       droppable: true,
       events: this.events,
-      eventMouseEnter: (info: EventHoveringArg) => {
-        info.el.setAttribute('pTooltip', `
-          <strong>${info.event.title}</strong><br>
-          <em>${info.event.extendedProps['description']}</em><br>
-          Location: ${info.event.extendedProps['location']}<br>
-          Portions: ${info.event.extendedProps['portions']}<br>
-          Vegetarian Portions: ${info.event.extendedProps['portionsVegetarisch']}<br>
-          Vegan Portions: ${info.event.extendedProps['portionsVegan']}<br>
-        `);
-        info.el.setAttribute('tooltipPosition', 'top');
-        info.el.setAttribute('tooltipEvent', 'hover');
-      },
+      locale: deLocale,
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;

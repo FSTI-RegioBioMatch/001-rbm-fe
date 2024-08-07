@@ -76,14 +76,19 @@
 <p-dialog [(visible)]="displayEventDialog" modal="modal" [style]="{width: '50vw'}" header="Event Details">
   <div *ngIf="selectedEvent">
     <h3>{{ selectedEvent.title }}</h3>
-    <p><strong>Description:</strong> {{ selectedEvent.extendedProps.description }}</p>
-    <p><strong>Location:</strong> {{ selectedEvent.extendedProps.location }}</p>
-    <p><strong>Portions:</strong> {{ selectedEvent.extendedProps.portions }}</p>
-    <p><strong>Vegetarian Portions:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
-    <p><strong>Vegan Portions:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
-    <p-button label="Delete This Event" icon="pi pi-trash" class="p-button-danger"
-      (click)="deleteSingleEvent(selectedEvent)"></p-button>
-    <p-button label="Delete All Events" icon="pi pi-trash" class="p-button-danger"
-      (click)="deleteAllEvents(selectedEvent.extendedProps.menuId)"></p-button>
+    <div class="dialog-content">
+      <p><strong>Beschreibung:</strong> {{ selectedEvent.extendedProps.description }}</p>
+      <p><strong>Ort:</strong> {{ selectedEvent.extendedProps.location }}</p>
+      <p><strong>Portionen:</strong> {{ selectedEvent.extendedProps.portions }}</p>
+      <p><strong>Vegetarische Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
+      <p><strong>Vegane Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
+      <p><strong>Wiederholung:</strong> {{ selectedEvent.extendedProps.repeatFrequency }}</p>
+    </div>
+    <div class="dialog-actions">
+      <p-button label="Dieses Event löschen" icon="pi pi-trash" class="p-button-danger"
+        (click)="deleteSingleEvent(selectedEvent)"></p-button>
+      <p-button label="Alle Events löschen" icon="pi pi-trash" class="p-button-danger"
+        (click)="deleteAllEvents(selectedEvent.extendedProps.menuId)"></p-button>
+    </div>
   </div>
 </p-dialog>
