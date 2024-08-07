@@ -72,4 +72,14 @@
     </div>
   </div>
 </div>
-<full-calendar #calendar [events]="events" [options]="calendarOptions"></full-calendar>
+<full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<p-dialog [(visible)]="displayEventDialog" modal="modal" [style]="{width: '50vw'}" header="Event Details">
+  <div *ngIf="selectedEvent">
+    <h3>{{ selectedEvent.title }}</h3>
+    <p><strong>Description:</strong> {{ selectedEvent.extendedProps.description }}</p>
+    <p><strong>Location:</strong> {{ selectedEvent.extendedProps.location }}</p>
+    <p><strong>Portions:</strong> {{ selectedEvent.extendedProps.portions }}</p>
+    <p><strong>Vegetarian Portions:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
+    <p><strong>Vegan Portions:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
+  </div>
+</p-dialog>
