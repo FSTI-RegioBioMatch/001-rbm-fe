@@ -1,0 +1,2507 @@
+{
+    "menuplanparent": {
+        "name": "11",
+        "nachsteAusfuhrung": "KW32 2024",
+        "wochentag": 2,
+        "wiederholung": "WEEKLY",
+        "ort": "1",
+        "portions": 1,
+        "portionsVegetarisch": 1,
+        "portionsVegan": 1,
+        "description": "1",
+        "recipes": [
+            {
+                "id": "66b371df4fdfef4c69562634",
+                "recipeName": "5th recipe",
+                "recipeDescription": "blablabla",
+                "includeInMenuPlanning": false,
+                "publishAsCommunityRecipe": false,
+                "steps": [
+                    {
+                        "schritt": "step 1",
+                        "anleitung": "mach",
+                        "images": []
+                    }
+                ],
+                "ingredients": [
+                    {
+                        "name": "name 1",
+                        "amount": "1",
+                        "unit": "g",
+                        "optional": false,
+                        "note": "",
+                        "alternatives": [
+                            {
+                                "name": "alt 1",
+                                "amount": "1",
+                                "unit": "g"
+                            }
+                        ],
+                        "nearbuyId": null
+                    },
+                    {
+                        "name": "name 2",
+                        "amount": "2",
+                        "unit": "kg",
+                        "optional": true,
+                        "note": "",
+                        "alternatives": [
+                            {
+                                "name": "alt 2",
+                                "amount": "2",
+                                "unit": "l"
+                            }
+                        ],
+                        "nearbuyId": null
+                    }
+                ],
+                "energie": "ee",
+                "portionen": "1",
+                "besonderheiten": "10",
+                "essensgaeste": "children",
+                "allergene": "dairy",
+                "saison": "winter",
+                "diets": [
+                    "dairy-free"
+                ],
+                "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+            },
+            {
+                "id": "66aa2c980c7eb545c181aa6a",
+                "recipeName": "geiles rezept",
+                "recipeDescription": "waeae",
+                "includeInMenuPlanning": false,
+                "publishAsCommunityRecipe": false,
+                "steps": [
+                    {
+                        "schritt": "e",
+                        "anleitung": "ea",
+                        "images": []
+                    }
+                ],
+                "ingredients": [
+                    {
+                        "name": "eeee",
+                        "amount": "2",
+                        "unit": "kg",
+                        "optional": false,
+                        "note": "",
+                        "alternatives": [],
+                        "nearbuyId": null
+                    }
+                ],
+                "energie": "",
+                "portionen": "",
+                "besonderheiten": "",
+                "essensgaeste": "",
+                "allergene": "",
+                "saison": "",
+                "diets": [
+                    "vegan"
+                ],
+                "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+            }
+        ]
+    },
+    "menuplan": [
+        {
+            "id": "3da59a90-732d-4400-867f-d1baa83aab1c",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-08-05T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "1eb72d80-7eae-4144-a1ab-a64a5b4a3dfe",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-08-12T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "91e73545-3608-4c63-9184-52ef610eb520",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-08-19T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "bf28f179-ab02-4d26-9f6f-8a51ff39eef1",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-08-26T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "cb1dd259-dde9-4789-b10b-8d464202e197",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-09-02T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "9c1faa57-dee6-4299-9ce7-a63acc8bd16b",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-09-09T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "bc1da665-f8c5-462b-adcf-32853f7c95bb",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-09-16T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "480586f9-253c-4ca3-8aed-b279dc752966",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-09-23T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "63b5e70d-be33-424a-bf57-0e7bb4e04a2c",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-09-30T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "90e0dec9-fc58-46b2-9ab3-e6af4ae49d02",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-10-07T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "f3e34598-68ed-4378-8c85-74612e4704cd",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-10-14T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "d4f58267-8ab8-4dd4-b288-1d83f79f12e4",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-10-21T22:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "f6ce2fb2-8f32-4a55-8b1e-78a6521f5835",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-10-28T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "2b5eb7ff-34a7-4ac4-a25c-164c2d8c93a7",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-11-04T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "19a9c4ef-e034-4dc5-98d6-5a1cdc43d170",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-11-11T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "eb3db017-d6f0-458b-a52b-86b30fd63d0c",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-11-18T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "9d0808cc-43e7-49f9-b15f-688acca8bcce",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-11-25T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "24ec1896-1243-4474-b565-fe9614b57c6f",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-12-02T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "8f4b7447-4bd4-47bf-8c04-e044559c5394",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-12-09T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "aa4cb5e1-ec3f-4f11-a29f-0ee78cd94060",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-12-16T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "86350587-1550-43b8-a070-ae433711a2c0",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-12-23T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        },
+        {
+            "id": "8dcc7492-c4f8-4268-a04d-0c65adb5cd48",
+            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+            "title": "11",
+            "start": "2024-12-30T23:00:00.000Z",
+            "allDay": true,
+            "extendedProps": {
+                "description": "1",
+                "location": "1",
+                "portions": 1,
+                "portionsVegetarisch": 1,
+                "portionsVegan": 1,
+                "recipes": [
+                    {
+                        "id": "66b371df4fdfef4c69562634",
+                        "recipeName": "5th recipe",
+                        "recipeDescription": "blablabla",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "step 1",
+                                "anleitung": "mach",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "name 1",
+                                "amount": "1",
+                                "unit": "g",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 1",
+                                        "amount": "1",
+                                        "unit": "g"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            },
+                            {
+                                "name": "name 2",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": true,
+                                "note": "",
+                                "alternatives": [
+                                    {
+                                        "name": "alt 2",
+                                        "amount": "2",
+                                        "unit": "l"
+                                    }
+                                ],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "ee",
+                        "portionen": "1",
+                        "besonderheiten": "10",
+                        "essensgaeste": "children",
+                        "allergene": "dairy",
+                        "saison": "winter",
+                        "diets": [
+                            "dairy-free"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    },
+                    {
+                        "id": "66aa2c980c7eb545c181aa6a",
+                        "recipeName": "geiles rezept",
+                        "recipeDescription": "waeae",
+                        "includeInMenuPlanning": false,
+                        "publishAsCommunityRecipe": false,
+                        "steps": [
+                            {
+                                "schritt": "e",
+                                "anleitung": "ea",
+                                "images": []
+                            }
+                        ],
+                        "ingredients": [
+                            {
+                                "name": "eeee",
+                                "amount": "2",
+                                "unit": "kg",
+                                "optional": false,
+                                "note": "",
+                                "alternatives": [],
+                                "nearbuyId": null
+                            }
+                        ],
+                        "energie": "",
+                        "portionen": "",
+                        "besonderheiten": "",
+                        "essensgaeste": "",
+                        "allergene": "",
+                        "saison": "",
+                        "diets": [
+                            "vegan"
+                        ],
+                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
+                    }
+                ],
+                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
+                "repeatFrequency": "WEEKLY"
+            }
+        }
+    ],
+    "menuUuid": "45f31eba-d564-42a5-b9da-00d2b4b22ae2"
+}
