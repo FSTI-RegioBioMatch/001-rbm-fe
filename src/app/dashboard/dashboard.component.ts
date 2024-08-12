@@ -24,6 +24,8 @@ import { DialogModule } from 'primeng/dialog';
     MapComponent,
     NearOffersCardComponent,
     NgOptimizedImage,
+    NgFor, 
+    NgIf,
     SearchComponent,
     CardModule,
     ButtonModule,

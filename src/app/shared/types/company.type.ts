@@ -8,7 +8,11 @@ export interface CompanyType {
   fax: string;
   description: string;
   visibility: string;
-  address: string;
+  address: {
+    lat: number;
+    lon: number;
+    city: string;
+  };
   addresses: { self: string; type: string }[];
   taxId: string;
   mobile: string;
@@ -20,6 +24,13 @@ export interface CompanyType {
     remove: string;
     logo: string;
     verification: string;
+    category: string;
   };
   tenant: string;
+  product: {
+    dateStart: string;
+    dateEnd: string;
+    unit: string;
+    totalAmount: number;
+  };
 }

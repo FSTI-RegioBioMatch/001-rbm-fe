@@ -1,13 +1,18 @@
   <div class="card-wrapper">
-    <h2> Erzeuger und Veredler Suche </h2>
+    <h2> Suche in meiner Region </h2>
     <p-card class="card card-my-recepies">
-        <input type="text" placeholder="Suche..." (input)="onSearch($event)" />
+        <input type="text" placeholder="Suche..." (input)="onSearch($event)" style="width: 100%" />
       <div>
-        <div *ngIf="searchTerm">
-        <ng-container *ngFor="let offer of filteredOffers; trackBy: trackByFn">
-          <p (click)="showDetails(offer)">{{ offer.ontoFoodType?.label }}</p>
-        </ng-container>
-        </div>
+        <div>
+            <h3>Unternehmen</h3>
+            <ng-container *ngFor="let company of filteredCompanies; trackBy: trackByFn">
+              <p (click)="showDetailsCompany(company)">{{ company.name }}</p>
+            </ng-container>
+            <h3>Angebote</h3>
+            <ng-container *ngFor="let offer of filteredOffers; trackBy: trackByFn">
+              <p (click)="showDetailsOffer(offer)">{{ offer.ontoFoodType?.label }}</p>
+            </ng-container>
+          </div>
       </div>
     </p-card>
   </div>
@@ -16,6 +21,16 @@
     <ng-template pTemplate="header">
       Details
     </ng-template>
+    <ng-container pTemplate="content" *ngIf="selectedCompany">
+        <button (click)="logToConsole('Company clicked: ' + selectedCompany.name)">Log Company</button>
+        <p><strong>Company Name:</strong> {{ selectedCompany.name }}</p>
+        <p><strong>Label:</strong> {{ selectedCompany.links }}</p>
+        <p><strong>Address:</strong> {{ selectedCompany.address.city }}</p>
+        <p><strong>Product:</strong> {{ selectedCompany.product.totalAmount }} {{ selectedCompany.product.unit }}</p>
+        <p><strong>From:</strong> {{ selectedCompany.product.dateStart }}</p>
+        <p><strong>To:</strong> {{ selectedCompany.product.dateEnd }}</p>
+        <p><strong>Link:</strong> <a [href]="selectedCompany.web" target="_blank">{{ selectedCompany.web}}</a></p>
+      </ng-container>
     <ng-container  *ngIf="selectedOffer">
         <p><strong>Company Name:</strong> {{ selectedOffer.company.name }}</p>
         <p><strong>Label:</strong> {{ selectedOffer.company.label }}</p>

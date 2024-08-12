@@ -7,6 +7,8 @@ import { OfferType } from '../../../shared/types/offer.type';
 import { DialogModule } from 'primeng/dialog';
 import { Subscription } from 'rxjs';
 import { CardModule } from 'primeng/card';
+import { CompanyService } from '../../../shared/services/company.service';
+import { CompanyType } from '../../../shared/types/company.type';
 
 @Component({
   selector: 'app-search',
@@ -19,18 +21,28 @@ export class SearchComponent {
   searchTerm: string = '';
   @Output() searchTermChange = new EventEmitter<string>();
   filteredOffers: OfferType[] = [];
+  filteredCompanies: CompanyType[] = [];
   selectedOffer: OfferType | null = null;
+  selectedCompany: CompanyType | null = null;
   displayDialog: boolean = false;
   offers: OfferType[] = [];
+  companies: CompanyType[] = [];
   private subscription: Subscription = new Subscription();
 
-  constructor(public offerService: OfferService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private companyService: CompanyService,
+    private offerService: OfferService, 
+    private cdr: ChangeDetectorRef) {}
   
   ngOnInit(): void {
     this.subscription.add(
+      this.companyService.companies$.subscribe((companies) => {
+        this.companies = companies;
+      })
+    );
+    this.subscription.add(
       this.offerService.offers$.subscribe((offers) => {
         this.offers = offers;
-        this.filteredOffers = offers;
       })
     );
   }
@@ -46,15 +58,26 @@ export class SearchComponent {
   }
 
   onSearchTermChange(searchTerm: string): void {
-    console.log('Search Term', searchTerm);
+    this.filteredCompanies = this.companies.filter((company) =>
+      company.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     this.filteredOffers = this.offers.filter((offer) =>
       offer.ontoFoodType?.label.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 
-  showDetails(offer: OfferType): void {
+  showDetailsCompany(company: CompanyType): void {
+    console.log('Details:', company);
+    this.selectedCompany = company;
+    this.selectedOffer = null;
+    this.displayDialog = true;
+    this.cdr.detectChanges();
+  }
+
+  showDetailsOffer(offer: OfferType): void {
     console.log('Details:', offer);
     this.selectedOffer = offer;
+    this.selectedCompany = null;
     this.displayDialog = true;
     this.cdr.detectChanges();
   }
