@@ -44,7 +44,9 @@
               "node_modules/leaflet/dist/leaflet.css",
               "node_modules/primeicons/primeicons.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/global.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -1,6 +1,13 @@
+<div class="einkaufsliste-actions">
+    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"></button>
+    <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"></button>
+</div>
+
+
 <p-table [value]="menuPlans" class="p-datatable-gridlines">
     <ng-template pTemplate="header">
         <tr>
+            <th><input type="checkbox" (change)="toggleSelectAll($event)" /></th>
             <th>Menüs</th>
             <th>Nächste Ausführung</th>
             <th>Wochentag</th>
@@ -13,6 +20,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-menuPlan>
         <tr>
+            <td><input type="checkbox" [(ngModel)]="menuPlan.selected" /></td>
             <td>{{ menuPlan.name }}</td>
             <td>{{ menuPlan.nextExecution }}</td>
             <td>{{ menuPlan.weekday }}</td>
@@ -30,14 +38,64 @@
             </td>
         </tr>
         <tr *ngIf="expandedMenuPlanId === menuPlan.id">
-            <td colspan="8">
+            <td colspan="9">
                 <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
-                    <h5>{{ recipe.name }}</h5>
+                    <h5>{{ recipe.recipeName }}</h5>
                     <div *ngFor="let ingredient of recipe.ingredients" class="ingredient-item">
                         <span>{{ ingredient.amount }} {{ ingredient.unit }} of {{ ingredient.name }}</span>
-                        <p-dropdown [options]="processingOptions" placeholder="Select processing"></p-dropdown>
+                        <p-dropdown [options]="processingOptions" [(ngModel)]="ingredient.processing"
+                            placeholder="Select processing">
+                        </p-dropdown>
                         <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
                     </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<h3>Einkaufsliste</h3>
+<p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Name</th>
+            <th>Menge (Gesamt)</th>
+            <th>Menge (Einzel)</th>
+            <th>Einheit</th> <!-- Keep the header for unit display -->
+            <th>Verarbeitung</th>
+            <th>Rrezept</th>
+            <th>Aktionen</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-groupName>
+        <tr>
+            <td colspan="7"><strong>{{ groupName }}</strong></td>
+        </tr>
+        <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
+            <td></td>
+            <td>
+                <strong>{{ item.totalAmount }} {{ item.unit }}</strong> <!-- Display the total with the unit -->
+            </td>
+            <td>
+                <div *ngFor="let process of getProcessingTypes(item)">
+                    <input pInputText type="number" [value]="item.processingBreakdown[process]"
+                        (change)="updateAmount(item, process, $event)" />
+                    <!-- <span>{{ item.unit }}</span>Display the unit next to the input field -->
+                </div>
+            </td>
+
+            <td>
+                <strong>{{ item.unit }}</strong> <!-- Display the unit directly without a dropdown -->
+            </td>
+            <td>
+                <div *ngFor="let process of getProcessingTypes(item)">
+                    <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
+                </div>
+            </td>
+            <td>{{ item.sourceRecipes.join(', ') }}</td>
+            <td>
+                <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
+                    <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
                 </div>
             </td>
         </tr>
