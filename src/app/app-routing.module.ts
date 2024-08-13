@@ -10,6 +10,7 @@ import { ShoppingListDetailedComponent } from './menu-planning/shopping-list/sho
 import { OfferScanComponent } from './menu-planning/shopping-list/offer-scan/offer-scan.component';
 import { MenuPlansComponent } from './menu-planning/menu-plans/menu-plans.component';
 import { RecipieDetailsComponent } from './recipie-details/recipie-details.component';
+import { MyMenusComponent } from './menu-planning/my-menus/my-menus.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path: 'menu-planning/menu-plans',
     component: MenuPlansComponent,
+  },
+  {
+    path: 'menu-planning/my-menus',
+    component: MyMenusComponent,
   },
   {
     path: 'menu-planning/shopping-list',

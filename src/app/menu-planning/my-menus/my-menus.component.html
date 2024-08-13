@@ -1,0 +1,45 @@
+<p-table [value]="menuPlans" class="p-datatable-gridlines">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Menüs</th>
+            <th>Nächste Ausführung</th>
+            <th>Wochentag</th>
+            <th>Ort</th>
+            <th>Portionen</th>
+            <th>Wiederholung</th>
+            <th>Einkaufen?</th>
+            <th>Komponenten</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-menuPlan>
+        <tr>
+            <td>{{ menuPlan.name }}</td>
+            <td>{{ menuPlan.nextExecution }}</td>
+            <td>{{ menuPlan.weekday }}</td>
+            <td>{{ menuPlan.location }}</td>
+            <td>{{ menuPlan.portions }}</td>
+            <td>{{ menuPlan.repeatFrequency }}</td>
+            <td>
+                <button pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
+            </td>
+            <td>
+                <button pButton icon="pi pi-chevron-down" (click)="toggleExpandMenuPlan(menuPlan.id)"
+                    *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
+                <button pButton icon="pi pi-chevron-up" (click)="toggleExpandMenuPlan(menuPlan.id)"
+                    *ngIf="expandedMenuPlanId === menuPlan.id"></button>
+            </td>
+        </tr>
+        <tr *ngIf="expandedMenuPlanId === menuPlan.id">
+            <td colspan="8">
+                <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
+                    <h5>{{ recipe.name }}</h5>
+                    <div *ngFor="let ingredient of recipe.ingredients" class="ingredient-item">
+                        <span>{{ ingredient.amount }} {{ ingredient.unit }} of {{ ingredient.name }}</span>
+                        <p-dropdown [options]="processingOptions" placeholder="Select processing"></p-dropdown>
+                        <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

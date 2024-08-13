@@ -1,0 +1,37 @@
+.p-datatable-gridlines {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+  
+    th, td {
+      padding: 8px 16px;
+      text-align: left;
+      vertical-align: middle;
+    }
+  
+    th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+      border-bottom: 2px solid #e1e1e1;
+    }
+  
+    td {
+      border-bottom: 1px solid #e1e1e1;
+    }
+  
+    .ingredient-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+  
+    .p-dropdown {
+      width: 150px;
+    }
+  
+    .p-button {
+      margin-left: 10px;
+    }
+  }
+  
