@@ -1,15 +1,450 @@
+::ng-deep .new-recipe-card .p-card {
+  border-radius: 14px;
+  box-shadow: 0 0 120px 0 rgba(0, 0, 0, 0.258);
+}
+
+/* headercard */
+
+::ng-deep .p-card-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #dadada;
+}
+
+.new-recipe_title {
+  font-size: 34px;
+  font-weight: 800;
+  margin: 0;
+}
+
+// save button
+
+.new-recipe_savebtn{
+  background-color: #C3EDC0;
+  border-radius: 20px;
+  color: black;
+}
+
+::ng-deep .p-card-body {
+  padding: 0px;
+}
+
+// cardcontent
+
+.new-recipe-card_col1 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 24px;
+  border-bottom: 1px solid #dadada;
+}
+
+.new-recipe-card_col1 .right {
+  display: flex;
+  width: 50%;
+  padding-left: 20px;
+}
+
+.grid-4-column {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
 .diet-option-chip {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    margin-right: 8px;
-    margin-bottom: 8px;
-    border: 1px solid #ccc;
-    border-radius: 16px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 14px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border: none;
+  border-radius: 100px;
+  height: min-content;
+  background-color: #E9FFC2;
+  cursor: pointer;
+  position: relative;
+}
+
+::ng-deep .diet-option-chip_checkbox {
+  .p-checkbox-box {
+    border-radius: 4px;
+    border: 2px solid #29784D;
+    background-color: #E9FFC2;
   }
-  .diet-option-chip label {
-    margin-left: 8px;
-    cursor: pointer;
+
+  .p-checkbox-box.p-highlight {
+    background-color: #29784D;
+    border-color: #29784D;
+  }
+
+  .p-checkbox-icon {
+    color: rgb(255, 255, 255);
+  }
+}
+
+.diet-option-chip label {
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+
+.new-recipe-card_col1 .left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 50%;
+}
+
+.new-recipe-card_col1 .left .options {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  width: 50%;
+}
+
+::ng-deep .new-recipe-card_col1 .left .options {
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
+    background-color: #bfcab8;
+  }
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background: #E2EDDB;
+  }
+}
+
+.new-recipe-card_col1 .left .options .item {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.new-recipe-card_col1 .left input {
+  border-radius: 10px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+}
+
+.new-recipe-card_col1 .left input:enabled:focus {
+  box-shadow: none;
+}
+
+
+
+// overview sector
+.img_preview_con {
+  flex: 1;
+  margin-right: 16px;
+  position: relative;
+  margin-right: 50px;
+}
+
+.img_preview {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border-radius: 16px;
+  background-color: #E2EDDB;
+}
+
+::ng-deep .img_preview_con .p-fileupload-choose {
+  background-color: #C3EDC0;
+  color: black;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.128);
+  width: 40px;
+  height: 40px;
+}
+
+::ng-deep .img_preview_con .p-fileupload-choose:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.336);
+}
+
+
+::ng-deep .new-recipe-card-overview_data {
+  input {
+    border-radius: 5px;
+    padding: 14px;
+    background-color: #E2EDDB;
+    color: #29784d;
+    border: none;
+    outline-style: none;
+    outline-width: 0;
+    margin-left: 25px;
+  }
+  input:enabled:focus {
+    box-shadow: none;
+  }
+
+  input::placeholder {
+    color: #29784d;
+  }
+
+  .p-dropdown {
+    border-radius: 5px;
+    width: 100%;
+    margin: 0;
+    background-color: #E2EDDB;
+    color: #29784d;
+    border: none;
+    outline-style: none;
+    outline-width: 0;
+  }
+
+  .p-dropdown .p-dropdown-label {
+    color: #29784d;
+  }
+
+  .p-dropdown:focus-visible {
+    box-shadow: none;
+    outline-style: none;
+  }
+
+  .p-dropdown.p-focus {
+    background-color: #E2EDDB;
+    color: #29784d;
+    border: none;
+    outline-style: none;
+    outline-width: 0;
+    box-shadow: none;
+  }
+
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    background-color: #E2EDDB;
+  }
+
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus {
+    color: rgba(0, 0, 0, 0.87);
+    background: #E2EDDB;
+  }
+
+  .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+    color: #000000;
   }
   
+}
+
+// description sector
+.new-recipe-card_description {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 24px;
+  border-bottom: 1px solid #dadada;
+}
+
+.new-recipe-card_description textarea {
+  border-radius: 10px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  min-height: 140px;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.new-recipe-card-iibox {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 24px;
+  border-bottom: 1px solid #dadada;
+}
+
+.new-recipe-card-iibox .left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 50%;
+}
+
+.new-recipe-card-iibox .right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 50%;
+}
+
+::ng-deep .new-recipe-card-iibox .p-checkbox-box {
+  background-color: white;
+}
+
+.box-wrapper {
+  border: 2px solid #29784D;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.add_ingredient_btn {
+  width: fit-content;
+}
+
+.add_instruction_img_btn {
+  width: fit-content;
+  width: 70px;
+  height: 40px;
+}
+
+.new-recipe-card-iibox .ingredient-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+::ng-deep .new-recipe-card-iibox .ingredient-item p-fileupload {
+
+  .p-fileupload {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    padding: 0;
+  }
+  .p-button {
+    background-color: #c3edc0;
+    color: #29784d;
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+    margin: 0;
+  }
+}
+
+.new-recipe-card-iibox .right .counter {
+  min-width: 40px;
+  min-height: 40px;
+  background-color: rgb(212, 212, 212);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  margin-right: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+/* inputs */
+
+input {
+  border-radius: 5px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+}
+input:enabled:focus {
+  box-shadow: none;
+}
+
+input::placeholder {
+  color: #29784d;
+}
+
+::ng-deep .p-dropdown {
+  border-radius: 5px;
+  width: 100%;
+  margin: 0;
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+}
+
+// dropdown
+
+::ng-deep .p-dropdown .p-dropdown-label {
+  color: #29784d;
+}
+
+::ng-deep .p-dropdown:focus-visible {
+  box-shadow: none;
+  outline-style: none;
+}
+
+::ng-deep .p-dropdown.p-focus {
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  box-shadow: none;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #E2EDDB;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus {
+  color: rgba(0, 0, 0, 0.87);
+  background: #E2EDDB;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #000000;
+}
+
+//textarea
+
+textarea {
+  border-radius: 10px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  min-height: 140px;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+// checkboy
+::ng-deep .p-checkbox-box {
+  border-radius: 4px;
+  border: 2px solid #29784D;
+  background-color: #E9FFC2;
+}
+
+::ng-deep .p-checkbox-box.p-highlight {
+  background-color: #29784D;
+  border-color: #29784D;
+}
+
+::ng-deep .p-checkbox-icon {
+  color: rgb(255, 255, 255);
+}
+
+// btn
+button {
+  border-radius: 14px;
+  padding: 9px;
+  background-color: #C3EDC0;
+  color: #29784D;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  cursor: pointer;
+}
