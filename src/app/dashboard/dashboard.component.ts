@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
 import { MapComponent } from './map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/services/offer.service';
@@ -10,8 +11,9 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { AddressType } from '../shared/types/address.type';
 import { OfferType } from '../shared/types/offer.type';
-import { NgModule } from '@angular/core';
+import { SearchComponent } from './components/search/search.component';
 import { DialogModule } from 'primeng/dialog';
+
 
 @Component({
   selector: 'app-new-dashboard',
@@ -22,6 +24,9 @@ import { DialogModule } from 'primeng/dialog';
     MapComponent,
     NearOffersCardComponent,
     NgOptimizedImage,
+    NgFor, 
+    NgIf,
+    SearchComponent,
     CardModule,
     ButtonModule,
     DialogModule,
@@ -119,4 +124,13 @@ export class DashboardComponent implements OnInit {
   getFirstImagOfRecipe(recipe: PublicRecipeType): string {
     return '';
   }
+
+  logToConsole(message: string): void {
+    console.log(message);
+  }
+
+  trackByFn(index: number, item: any): any {
+    return item.id; // or item.someUniqueIdentifier
+  }
+
 }

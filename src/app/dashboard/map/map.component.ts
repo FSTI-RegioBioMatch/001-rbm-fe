@@ -36,18 +36,15 @@ export class MapComponent implements OnChanges, AfterViewInit {
   }
   
   private updateMapCenter() {
-    if (this.lat !== undefined && this.lng !== undefined && this.map) {
+    if (this.map) {
       this.map.setView([this.lat, this.lng], this.map.getZoom());
-      this.addCustomMarker(); // Update custom marker position
+      this.addCustomMarker();
     }
   }
 
   private initializeMap() {
     console.log('Initializing map with lat:', this.lat, 'lng:', this.lng);
     if (this.lat && this.lng) {
-      if (this.map) {
-        this.map.remove();
-      }
       this.map = L.map('map').setView([this.lat, this.lng], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -55,9 +52,6 @@ export class MapComponent implements OnChanges, AfterViewInit {
 
       this.addCustomMarker();
       this.updateMarkers();
-      
-    } else {
-      console.error('Latitude and Longitude are not provided for map initialization');
     }
   }
 
@@ -106,9 +100,7 @@ export class MapComponent implements OnChanges, AfterViewInit {
 
   private centerMap() {
     if (this.markers.length > 0) {
-      const bounds = L.latLngBounds(
-        this.markers.map((marker) => marker.getLatLng())
-      );
+      const bounds = L.latLngBounds(this.markers.map(marker => marker.getLatLng()));
       this.map.fitBounds(bounds);
     }
   }

@@ -1,25 +1,43 @@
 export interface CompanyType {
   id: string;
   name: string;
-  legalstatus: string;
-  phone: string;
-  email: string;
-  web: string;
-  fax: string;
-  description: string;
-  visibility: string;
-  address: string;
+  company: {
+    id: string;
+    label: string;
+    name: string;
+    verified: boolean;
+  };
+  address: {
+    city: string;
+    lat: number;
+    lon: number;
+  } | null;
   addresses: { self: string; type: string }[];
-  taxId: string;
-  mobile: string;
-  labelName: string;
-  verified: boolean;
   links: {
     self: string;
-    update: string;
-    remove: string;
-    logo: string;
-    verification: string;
+    address: string | null;
+    category: string | null;
+    company: string;
+    offer: string | null;
+    request: string | null;
   };
-  tenant: string;
+  ontoFoodType: {
+    company: boolean;
+    label: string;
+    links: {
+      self: string;
+    };
+    subcategories: string[];
+    supercategories: string[];
+    market: boolean;
+  };
+  product: {
+    dateStart: string;
+    dateEnd: string;
+    isPermanent: boolean;
+    totalAmount: number;
+    unit: string;
+  };
+  resultType: string;
+  roles: string[];
 }
