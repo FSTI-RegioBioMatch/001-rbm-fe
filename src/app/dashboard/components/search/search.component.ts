@@ -28,6 +28,7 @@ export class SearchComponent {
   offers: OfferType[] = [];
   companies: CompanyType[] = [];
   private subscription: Subscription = new Subscription();
+  loaded = false;
 
   constructor(
     private companyService: CompanyService,
@@ -35,6 +36,8 @@ export class SearchComponent {
     private cdr: ChangeDetectorRef) {}
   
   ngOnInit(): void {
+    this.getCompanies();
+    
     this.subscription.add(
       this.companyService.companies$.subscribe((companies) => {
         this.companies = companies;
@@ -51,6 +54,31 @@ export class SearchComponent {
     this.subscription.unsubscribe();
   }
 
+  getCompanies() {
+    const address = {
+      lat: 52.520008,
+      lon: 13.404954,
+      city: "Berlin"
+    }; // Example address
+    const searchRadiusInKM = 50; // Example search radius
+
+    console.log('Initiating company search with radius:', searchRadiusInKM, 'and address:', address);
+    this.companyService.setCompaniesBySearchCriteria({
+      radius: searchRadiusInKM,
+      lat: address.lat,
+      lon: address.lon
+    });
+    
+    this.companyService.companies$.subscribe(companies => {
+      console.log('Received companies:', companies);
+      this.companies = companies;
+    });
+
+    this.companyService.loaded$.subscribe(loaded => {
+      this.loaded = loaded;
+    });
+  } 
+  
   onSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.searchTerm = inputElement.value;
@@ -59,10 +87,10 @@ export class SearchComponent {
 
   onSearchTermChange(searchTerm: string): void {
     this.filteredCompanies = this.companies.filter((company) =>
-      company.name.toLowerCase().includes(searchTerm.toLowerCase())
+      company.company?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     this.filteredOffers = this.offers.filter((offer) =>
-      offer.ontoFoodType?.label.toLowerCase().includes(searchTerm.toLowerCase())
+      offer.ontoFoodType?.label?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 

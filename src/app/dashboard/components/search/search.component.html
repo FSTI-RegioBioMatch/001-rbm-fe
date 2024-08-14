@@ -1,3 +1,4 @@
+@if (loaded) {
   <div class="card-wrapper">
     <h2> Suche in meiner Region </h2>
     <p-card class="card card-my-recepies">
@@ -6,7 +7,7 @@
         <div>
             <h3>Unternehmen</h3>
             <ng-container *ngFor="let company of filteredCompanies; trackBy: trackByFn">
-              <p (click)="showDetailsCompany(company)">{{ company.name }}</p>
+              <p (click)="showDetailsCompany(company)">{{ company.company.name }}</p>
             </ng-container>
             <h3>Angebote</h3>
             <ng-container *ngFor="let offer of filteredOffers; trackBy: trackByFn">
@@ -21,17 +22,17 @@
     <ng-template pTemplate="header">
       Details
     </ng-template>
-    <ng-container pTemplate="content" *ngIf="selectedCompany">
-        <button (click)="logToConsole('Company clicked: ' + selectedCompany.name)">Log Company</button>
-        <p><strong>Company Name:</strong> {{ selectedCompany.name }}</p>
-        <p><strong>Label:</strong> {{ selectedCompany.links }}</p>
-        <p><strong>Address:</strong> {{ selectedCompany.address.city }}</p>
-        <p><strong>Product:</strong> {{ selectedCompany.product.totalAmount }} {{ selectedCompany.product.unit }}</p>
-        <p><strong>From:</strong> {{ selectedCompany.product.dateStart }}</p>
-        <p><strong>To:</strong> {{ selectedCompany.product.dateEnd }}</p>
-        <p><strong>Link:</strong> <a [href]="selectedCompany.web" target="_blank">{{ selectedCompany.web}}</a></p>
+    <ng-template pTemplate="content">
+      <ng-container *ngIf="selectedCompany">
+        <p><strong>Company Name:</strong> {{ selectedCompany.company.name }}</p>
+        <p><strong>Label:</strong> {{ selectedCompany.company.label }}</p>
+        <p><strong>Address:</strong> {{ selectedCompany.address?.city || 'N/A' }}</p>
+        <p><strong>Product:</strong> {{ selectedCompany.product.totalAmount || 'N/A' }} {{ selectedCompany.product.unit || '' }}</p>
+        <p><strong>From:</strong> {{ selectedCompany.product.dateStart || 'N/A' }}</p>
+        <p><strong>To:</strong> {{ selectedCompany.product.dateEnd || 'N/A' }}</p>
+        <p><strong>Link:</strong> <a [href]="selectedCompany.links.company" target="_blank">{{ selectedCompany.links.company }}</a></p>
       </ng-container>
-    <ng-container  *ngIf="selectedOffer">
+      <ng-container  *ngIf="selectedOffer">
         <p><strong>Company Name:</strong> {{ selectedOffer.company.name }}</p>
         <p><strong>Label:</strong> {{ selectedOffer.company.label }}</p>
         <p><strong>Address:</strong> {{ selectedOffer.address.city }}</p>
@@ -41,5 +42,6 @@
         <p><strong>To:</strong> {{ selectedOffer.product.dateEnd }}</p>
         <p><strong>Link:</strong> <a [href]="selectedOffer.links.company" target="_blank">{{ selectedOffer.links.company }}</a></p>
       </ng-container>
+    </ng-template>
   </p-dialog>
-  
+} 

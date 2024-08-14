@@ -16,8 +16,20 @@ export class CompanyService {
 
   constructor(private http: HttpClient) {}
 
-  private getCompanies(params: HttpParams): Observable<CompanyType[]> {
-    return this.http.get<CompanyType[]>(`${environment.NEARBUY_API}/companies?limit=500&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`, { params });
+  private getCompanies(dynamicParams: HttpParams): Observable<CompanyType[]> {
+    console.log('start search');
+    let params = new HttpParams()
+      .set('limit', '500')
+      .set('showOnlyFavourites', 'false')
+      .set('showOwnData', 'false')
+      .set('format', 'SEARCH_RESULT');
+
+    // Merge additional dynamic parameters
+    dynamicParams.keys().forEach(key => {
+      params = params.set(key, dynamicParams.get(key)!);
+    });
+
+    return this.http.get<CompanyType[]>(`${environment.NEARBUY_API}/companies`, { params });
   }
 
   setCompaniesBySearchCriteria(searchCriteria: any) {
