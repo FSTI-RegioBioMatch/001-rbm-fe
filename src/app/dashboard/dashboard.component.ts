@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
-import { MapComponent } from './map/map.component';
+import { MapComponent } from './components/map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/services/offer.service';
 import { SupabaseService } from '../shared/services/supabase.service';

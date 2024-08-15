@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 import { Icon, IconOptions } from 'leaflet';
-import { OfferType } from '../../shared/types/offer.type';
+import { OfferType } from '../../../shared/types/offer.type';
 
 @Component({
   selector: 'app-map',
