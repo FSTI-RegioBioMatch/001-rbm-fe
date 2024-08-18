@@ -1,0 +1,47 @@
+@if (loaded) {
+  <div class="card-wrapper">
+    <h2> Suche in meiner Region </h2>
+    <p-card class="card card-my-recepies">
+        <input type="text" placeholder="Suche..." (input)="onSearch($event)" style="width: 100%" />
+      <div>
+        <div>
+            <h3>Unternehmen</h3>
+            <ng-container *ngFor="let company of filteredCompanies; trackBy: trackByFn">
+              <p (click)="showDetailsCompany(company)">{{ company.company.name }}</p>
+            </ng-container>
+            <h3>Angebote</h3>
+            <ng-container *ngFor="let offer of filteredOffers; trackBy: trackByFn">
+              <p (click)="showDetailsOffer(offer)">{{ offer.ontoFoodType?.label }}</p>
+            </ng-container>
+          </div>
+      </div>
+    </p-card>
+  </div>
+  
+  <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+    <ng-template pTemplate="header">
+      Details
+    </ng-template>
+    <ng-template pTemplate="content">
+      <ng-container *ngIf="selectedCompany">
+        <p><strong>Company Name:</strong> {{ selectedCompany.company.name }}</p>
+        <p><strong>Label:</strong> {{ selectedCompany.company.label }}</p>
+        <p><strong>Address:</strong> {{ selectedCompany.address?.city || 'N/A' }}</p>
+        <p><strong>Product:</strong> {{ selectedCompany.product.totalAmount || 'N/A' }} {{ selectedCompany.product.unit || '' }}</p>
+        <p><strong>From:</strong> {{ selectedCompany.product.dateStart || 'N/A' }}</p>
+        <p><strong>To:</strong> {{ selectedCompany.product.dateEnd || 'N/A' }}</p>
+        <p><strong>Link:</strong> <a [href]="selectedCompany.links.company" target="_blank">{{ selectedCompany.links.company }}</a></p>
+      </ng-container>
+      <ng-container  *ngIf="selectedOffer">
+        <p><strong>Company Name:</strong> {{ selectedOffer.company.name }}</p>
+        <p><strong>Label:</strong> {{ selectedOffer.company.label }}</p>
+        <p><strong>Address:</strong> {{ selectedOffer.address.city }}</p>
+        <p><strong>Product:</strong> {{ selectedOffer.ontoFoodType?.label }}</p>
+        <p><strong>Amount:</strong> {{ selectedOffer.product.totalAmount }} {{ selectedOffer.product.unit }}</p>
+        <p><strong>From:</strong> {{ selectedOffer.product.dateStart }}</p>
+        <p><strong>To:</strong> {{ selectedOffer.product.dateEnd }}</p>
+        <p><strong>Link:</strong> <a [href]="selectedOffer.links.company" target="_blank">{{ selectedOffer.links.company }}</a></p>
+      </ng-container>
+    </ng-template>
+  </p-dialog>
+} 

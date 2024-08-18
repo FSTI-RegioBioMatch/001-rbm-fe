@@ -13,7 +13,7 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
-import { MapComponent } from './dashboard/map/map.component';
+import { MapComponent } from './dashboard/components/map/map.component';
 import { currentCompanyInterceptor } from './shared/interceptors/current-company.interceptor';
 import { DialogService } from 'primeng/dynamicdialog';
 
