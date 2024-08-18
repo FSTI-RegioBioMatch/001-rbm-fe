@@ -1,0 +1,195 @@
+{
+    "menuPlans": [
+        {
+            "id": "492a6ad0-aca6-4e29-a6cf-854527dc9bb7",
+            "name": "testmenu",
+            "recipes": [
+                {
+                    "id": "66b9fe1110224135a6378216",
+                    "name": "noch besseres rezept"
+                },
+                {
+                    "id": "66b4ba90154e304cd46e426d",
+                    "name": "gulasch"
+                },
+                {
+                    "id": "66b08ef351f01351c4e0b589",
+                    "name": "test 123"
+                }
+            ]
+        },
+        {
+            "id": "d76678dd-50b9-40d0-9bde-0eb6ab63d19f",
+            "name": "super menu",
+            "recipes": [
+                {
+                    "id": "66b371df4fdfef4c69562634",
+                    "name": "5th recipe"
+                },
+                {
+                    "id": "66aa2c980c7eb545c181aa6a",
+                    "name": "geiles rezept"
+                },
+                {
+                    "id": "66b4ba90154e304cd46e426d",
+                    "name": "gulasch"
+                }
+            ]
+        },
+        {
+            "id": "6aad19d6-d8e4-4f20-af27-b361a9f562a0",
+            "name": "cocc menu",
+            "recipes": [
+                {
+                    "id": "66bb93267850472ca77c2ad7",
+                    "name": "cocc recept"
+                }
+            ]
+        }
+    ],
+    "groupedShoppingList": {
+        "paprika": [
+            {
+                "name": "paprika",
+                "unit": "l",
+                "totalAmount": 1,
+                "sourceRecipes": [
+                    "noch besseres rezept"
+                ],
+                "category": "volume",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 1
+                }
+            },
+            {
+                "name": "paprika",
+                "unit": "g",
+                "totalAmount": 20,
+                "sourceRecipes": [
+                    "gulasch",
+                    "gulasch"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 20
+                }
+            }
+        ],
+        "salat": [
+            {
+                "name": "salat",
+                "unit": "g",
+                "totalAmount": 20,
+                "sourceRecipes": [
+                    "gulasch",
+                    "gulasch"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 20
+                }
+            }
+        ],
+        "schweinefleisch": [
+            {
+                "name": "schweinefleisch",
+                "unit": "l",
+                "totalAmount": 20,
+                "sourceRecipes": [
+                    "gulasch",
+                    "gulasch"
+                ],
+                "category": "volume",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 20
+                }
+            }
+        ],
+        "cocc": [
+            {
+                "name": "cocc",
+                "unit": "ml",
+                "totalAmount": 25138,
+                "sourceRecipes": [
+                    "gulasch",
+                    "gulasch",
+                    "cocc recept"
+                ],
+                "category": "volume",
+                "convertible": true,
+                "processingBreakdown": {
+                    "geschält": 69,
+                    "ganz": 69,
+                    "n/a": 25000
+                }
+            }
+        ],
+        "beste zutat^_1": [
+            {
+                "name": "beste zutat^_1",
+                "unit": "g",
+                "totalAmount": 10,
+                "sourceRecipes": [
+                    "test 123"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 10
+                }
+            }
+        ],
+        "name 1": [
+            {
+                "name": "name 1",
+                "unit": "g",
+                "totalAmount": 1,
+                "sourceRecipes": [
+                    "5th recipe"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 1
+                }
+            }
+        ],
+        "name 2": [
+            {
+                "name": "name 2",
+                "unit": "kg",
+                "totalAmount": 2,
+                "sourceRecipes": [
+                    "5th recipe"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 2
+                }
+            }
+        ],
+        "eeee": [
+            {
+                "name": "eeee",
+                "unit": "kg",
+                "totalAmount": 2,
+                "sourceRecipes": [
+                    "geiles rezept"
+                ],
+                "category": "mass",
+                "convertible": true,
+                "processingBreakdown": {
+                    "n/a": 2
+                }
+            }
+        ]
+    },
+    "createdAt": "2024-08-14T14:11:06.499Z",
+    "createdBy": "admin",
+    "updatedAt": "2024-08-14T14:11:06.499Z"
+}
