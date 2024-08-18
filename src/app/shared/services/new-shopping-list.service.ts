@@ -46,7 +46,7 @@ export class NewShoppingListService {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
-        let params = new HttpParams().set('companyId', company.id);
+        const params = new HttpParams().set('companyId', company.id);
         return this.http.get<any>(`${this.apiUrl}/${shoppingListId}`, { params });
       }),
       catchError(error => {
@@ -55,6 +55,7 @@ export class NewShoppingListService {
       })
     );
   }
+  
 
   /**
    * Retrieves all shopping lists with the currently selected company ID.

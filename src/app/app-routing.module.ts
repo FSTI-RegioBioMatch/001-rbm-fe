@@ -11,6 +11,9 @@ import { OfferScanComponent } from './menu-planning/shopping-list/offer-scan/off
 import { MenuPlansComponent } from './menu-planning/menu-plans/menu-plans.component';
 import { RecipieDetailsComponent } from './recipie-details/recipie-details.component';
 import { MyMenusComponent } from './menu-planning/my-menus/my-menus.component';
+import { ShoppingListOverviewComponent } from './shopping-list-overview/shopping-list-overview.component';
+import { ShoppingListDetailsComponent } from './shopping-list-details/shopping-list-details.component';
+import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -42,17 +45,22 @@ const routes: Routes = [
     path: 'menu-planning/my-menus',
     component: MyMenusComponent,
   },
+  // {
+  //   path: 'menu-planning/shopping-list',
+  //   component: ShoppingListComponent,
+  // },
   {
     path: 'menu-planning/shopping-list',
-    component: ShoppingListComponent,
+    component: ShoppingListOverviewComponent,
   },
+  { path: 'shopping-list-detail/:id', component: ShoppingListDetailsComponent },
   {
     path: 'menu-planning/shopping-list/:id',
     component: ShoppingListDetailedComponent,
   },
   {
     path: 'menu-planning/shopping-list/:id/offer-scan/:scanId',
-    component: OfferScanComponent,
+    component: NewOfferScanComponent,
   },
   {
     path: 'recipe-details/:id',

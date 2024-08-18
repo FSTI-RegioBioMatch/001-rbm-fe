@@ -1,0 +1,48 @@
+<div class="shopping-list-details p-m-3 p-shadow-3 p-p-4">
+    <h1>Shopping List Details</h1>
+
+    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
+    <p-message *ngIf="errorMessage" severity="error" text="{{ errorMessage }}"></p-message>
+
+    <div *ngIf="!loading && shoppingList">
+        <h2>{{ shoppingList.name }}</h2>
+        <p>Date Created: {{ shoppingList.createdAt | date:'shortDate' }}</p>
+
+        <h3>Ingredients</h3>
+        <p-accordion>
+            <p-accordionTab *ngFor="let ingredientName of ingredientNames" header="{{ ingredientName }}">
+                <div *ngFor="let ingredient of shoppingList.groupedShoppingList[ingredientName]"
+                    class="p-grid p-align-center">
+                    <div class="p-col-8">
+                        <p><strong>Name:</strong> {{ ingredient.name }}</p>
+                        <p><strong>Total Amount:</strong> {{ ingredient.totalAmount }} {{ ingredient.unit }}</p>
+                        <p><strong>Category:</strong> {{ ingredient.category }}</p>
+                        <p *ngIf="ingredient.convertible"><strong>Convertible:</strong> Yes</p>
+                        <p *ngIf="!ingredient.convertible"><strong>Convertible:</strong> No</p>
+                        <p><strong>Source Recipes:</strong> {{ ingredient.sourceRecipes.join(', ') }}</p>
+                    </div>
+                    <div class="p-col-4">
+                        <ng-container *ngIf="getOfferForIngredient(ingredient.name).length > 0; else noOffers">
+                            <h4>Offers:</h4>
+                            <ul>
+                                <li *ngFor="let offer of getOfferForIngredient(ingredient.name)">
+                                    <p>
+                                        <strong>{{ offer.company.name }}</strong> -
+                                        {{ offer.product.name }}:
+                                        {{ offer.offerDetail.pricePerUnit }} per unit
+                                    </p>
+                                </li>
+                            </ul>
+                        </ng-container>
+                        <ng-template #noOffers>
+                            <p>No offers available</p>
+                        </ng-template>
+                    </div>
+                </div>
+            </p-accordionTab>
+        </p-accordion>
+
+        <p-button label="Search for Offers" icon="pi pi-search" (click)="onClickGoToOffer()"></p-button>
+    </div>
+</div>
