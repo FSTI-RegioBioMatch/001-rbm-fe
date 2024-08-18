@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
+import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
 
 interface Ingredient {
   name: string;
@@ -70,7 +71,8 @@ export class MyMenusComponent implements OnInit {
   constructor(
     private menuPlanService: NewMenuplanService,
     private recipeService: RecipeService,
-    private store: StoreService
+    private store: StoreService,
+    private shoppingListService: NewShoppingListService
   ) {}
 
   ngOnInit(): void {
@@ -383,7 +385,15 @@ export class MyMenusComponent implements OnInit {
         updatedAt: new Date()
     };
 
-    console.log('Gespeicherte Einkaufsliste:', shoppingListObject);
-}
+    // Send to the backend via the service
+    this.shoppingListService.saveShoppingList(shoppingListObject).subscribe(
+      response => {
+        console.log('Shopping list saved successfully:', response);
+      },
+      error => {
+        console.error('Error saving shopping list:', error);
+      }
+    );
+  }
 
 }
