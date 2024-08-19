@@ -28,9 +28,9 @@
                     </div>
 
                     <div class="right">
-                        <div class="grid-4-column">
+                        <div class="grid-4-column" formGroupName="selectedDiets">
                             <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
-                                <p-checkbox class="diet-option-chip_checkbox" [binary]="true" [(ngModel)]="selectedDiets[option.value]"></p-checkbox>
+                                <p-checkbox class="diet-option-chip_checkbox" [binary]="true" [formControlName]="option.value"></p-checkbox>
                                 <label>{{option.label}}</label>
                             </div>
                         </div>
@@ -106,18 +106,14 @@
                             <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i"
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
-                                    <div>
-                                        <div style="display: flex; align-items: center;">
+                                    <div class="ingredient-con">
                                             <input pInputText type="text" formControlName="name"
-                                                placeholder="Name der Zutat" style="margin-right: 8px; flex: 1;">
-                                            <input pInputText type="text" formControlName="amount" placeholder="Menge"
-                                                style="margin-right: 8px; flex: 1;">
+                                                placeholder="Name der Zutat">
+                                            <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                             <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                                 [ngStyle]="{'flex': '1'}"></p-dropdown>
                                             <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
-                                                class="p-button-rounded p-button-danger p-button-text"
-                                                style="margin-left: 8px;"></button>
-                                        </div>
+                                                class="p-button-rounded p-button-danger p-button-text"></button>
                                     </div>
                                     <div>
                                         <div formArrayName="alternatives">

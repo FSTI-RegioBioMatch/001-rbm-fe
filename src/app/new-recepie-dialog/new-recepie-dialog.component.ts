@@ -37,7 +37,10 @@ import { RecipeService } from '../shared/services/recipe.service';
     FormsModule,
   ],
 })
+
+
 export class NewRecepieDialogComponent {
+
   units = [
     { label: 'Grams', value: 'g' },
     { label: 'Kilograms', value: 'kg' },
@@ -103,6 +106,12 @@ export class NewRecepieDialogComponent {
       essensgaeste: [''],
       allergene: [''],
       saison: [''],
+      selectedDiets: this.fb.group( // FormGroup mit mehreren FormControls
+        this.dietOptions.reduce((acc, option) => {
+          acc[option.value] = [false];
+          return acc;
+        }, {} as { [key: string]: any })
+      ),
     });
   }
 
@@ -213,7 +222,7 @@ export class NewRecepieDialogComponent {
     if (this.selectedDiets[value]) {
       this.selectedDiets[value] = false;
     } else {
-      this.selectedDiets = { [value]: true };
+      this.selectedDiets[value] = true;
     }
   }
 

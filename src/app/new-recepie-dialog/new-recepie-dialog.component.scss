@@ -335,6 +335,19 @@
   margin-right: 8px;
 }
 
+.ingredient-con {
+  display: flex;
+  flex-wrap: wrap; /* Ermöglicht das Umbruchverhalten */
+  justify-content: space-between; /* Optional: Abstand zwischen den Elementen */
+  gap: 8px;
+
+  input {
+    flex: 0 0 33.33%; /* Jedes Element nimmt 33.33% der Breite ein */
+    box-sizing: border-box; /* Stellt sicher, dass Padding und Border in der Breite enthalten sind */
+    padding: 10px; /* Optional: Abstand innerhalb der Elemente */
+  }
+}
+
 
 
 

@@ -7,68 +7,92 @@
 
 <div class="container">
   <div class="menu-plan-form">
-    <div class="menu-plan-list">
-      <div *ngFor="let recipe of menuPlan" class="recipe-item">
-        <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-          class="recipe-image">
-        <div class="recipe-name">{{ recipe.recipeName }}</div>
-        <p-button (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
-      </div>
+    <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
+        <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
+          <p>Keine Rezepte hinzugefügt</p>
+        </div>
+        <div *ngFor="let recipe of menuPlan" class="recipe-item">
+          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
+            class="recipe-image">
+          <div class="recipe-name">
+            <p>{{ recipe.recipeName }}</p>
+          </div>
+          <p-button class="remove-button" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
+        </div>
     </div>
 
     <form [formGroup]="menuPlanForm" class="form-grid">
-      <div class="form-field">
-        <label for="name">Name</label>
-        <input id="name" type="text" formControlName="name" pInputText />
+      <div class="date-config">
+        <div class="form-field">
+          <label for="nachsteAusfuhrung">Nächste Ausführung</label>
+          <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
+            [options]="nextExecutionOptions"></p-dropdown>
+        </div>
+        <div class="form-field">
+          <label for="wochentag">Wochentag</label>
+          <p-dropdown id="wochentag" formControlName="wochentag" [options]="weekDays"></p-dropdown>
+        </div>
+        <div class="form-field">
+          <label for="wiederholung">Wiederholung</label>
+          <p-dropdown id="wiederholung" formControlName="wiederholung" [options]="repeatOptions"></p-dropdown>
+        </div>
       </div>
-      <div class="form-field">
-        <label for="nachsteAusfuhrung">Nächste Ausführung</label>
-        <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
-          [options]="nextExecutionOptions"></p-dropdown>
+      <br>
+      <div>
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" pInputText placeholder="Name"/>
+        </div>
+        <div class="form-field">
+          <label for="ort">Ort</label>
+          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort"/>
+        </div>
+        <div class="form-field description-field">
+          <label for="description">Beschreibung</label>
+          <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"></textarea>
+        </div>
       </div>
-      <div class="form-field">
-        <label for="wochentag">Wochentag</label>
-        <p-dropdown id="wochentag" formControlName="wochentag" [options]="weekDays"></p-dropdown>
-      </div>
-      <div class="form-field">
-        <label for="wiederholung">Wiederholung</label>
-        <p-dropdown id="wiederholung" formControlName="wiederholung" [options]="repeatOptions"></p-dropdown>
-      </div>
-      <div class="form-field">
-        <label for="ort">Ort</label>
-        <input id="ort" type="text" formControlName="ort" pInputText />
-      </div>
-      <div class="form-field">
-        <label for="portions">Portions</label>
-        <input id="portions" type="number" formControlName="portions" pInputText />
-      </div>
-      <div class="form-field">
-        <label for="portionsVegetarisch">Portions Vegetarisch</label>
-        <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText />
-      </div>
-      <div class="form-field">
-        <label for="portionsVegan">Portions Vegan</label>
-        <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText />
-      </div>
-      <div class="form-field description-field">
-        <label for="description">Beschreibung</label>
-        <textarea id="description" formControlName="description" pInputTextarea></textarea>
-      </div>
+      <div>
+        <div class="form-field">
+          <label for="portions">Portions</label>
+          <div class="input-wrapper">
+            <input id="portions" type="number" formControlName="portions" pInputText placeholder="0" />
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+        
+        <div class="form-field">
+          <label for="portionsVegetarisch">Vegetarisch</label>
+          <div class="input-wrapper">
+            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText placeholder="0"/>
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="portionsVegan">Vegan</label>
+          <div class="input-wrapper">
+            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0"/>
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+        </div>
       <div class="form-field">
         <p-button (click)="saveMenuPlan()">Speichern</p-button>
       </div>
     </form>
   </div>
 
-  <div class="recipe-list">
+  <div class="recipe-list-all">
     <div class="search-bar">
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
-    <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
-      <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-        class="recipe-image">
-      <div class="recipe-name">{{ recipe.recipeName }}</div>
-      <p-button (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+    <div class="recipe-list-add">
+      <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
+        <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
+          class="recipe-image">
+        <div class="recipe-name">{{ recipe.recipeName }}</div>
+        <p-button class="add-button" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+      </div>
     </div>
   </div>
 </div>

@@ -64,6 +64,16 @@ export class MenuPlanningComponent implements OnInit {
   displayEventDialog: boolean = false;
   selectedEvent: any;
 
+  onWheel(event: WheelEvent) {
+    const container = event.currentTarget as HTMLElement;
+    if (event.deltaY > 0) {
+      container.scrollLeft += 100;
+    } else {
+      container.scrollLeft -= 100;
+    }
+    event.preventDefault();
+  }
+
   weekDays = [
     { label: 'Montag', value: 1 },
     { label: 'Dienstag', value: 2 },
