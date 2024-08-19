@@ -74,8 +74,9 @@
         <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
             <td></td>
             <td>
-                <strong>{{ item.totalAmount }} {{ item.unit }}</strong> <!-- Display the total with the unit -->
+                <strong>{{ item.totalInLargestUnit }}</strong> <!-- Display the total amount in the largest unit -->
             </td>
+
             <td>
                 <div *ngFor="let process of getProcessingTypes(item)">
                     <input pInputText type="number" [value]="item.processingBreakdown[process]"
