@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -17,6 +17,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { RecipeService } from '../shared/services/recipe.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -39,8 +40,8 @@ import { RecipeService } from '../shared/services/recipe.service';
 })
 
 
-export class NewRecepieDialogComponent {
-
+export class NewRecepieDialogComponent implements OnInit {
+  ingredientOptions: { label: string, value: string }[] = [];
   units = [
     { label: 'Grams', value: 'g' },
     { label: 'Kilograms', value: 'kg' },
@@ -92,7 +93,7 @@ export class NewRecepieDialogComponent {
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
-  constructor(private fb: FormBuilder, private recipeService: RecipeService) {
+  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
       recipeDescription: [''],
@@ -113,6 +114,23 @@ export class NewRecepieDialogComponent {
         }, {} as { [key: string]: any })
       ),
     });
+  }
+  ngOnInit() {
+    this.fetchIngredientOptions();
+  }
+  fetchIngredientOptions() {
+    const url = 'https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/ontofood';
+    this.http.get<{ [key: string]: string }>(url).subscribe(
+      (data) => {
+        this.ingredientOptions = Object.keys(data).map(key => ({
+          label: data[key], // Display value
+          value: key, // Saved value
+        }));
+      },
+      (error) => {
+        console.error('Error fetching ingredient data:', error);
+      }
+    );
   }
 
   get steps(): FormArray {
