@@ -115,7 +115,7 @@
                                         <p-dropdown [options]="ingredientOptions" formControlName="name"
                                             placeholder="Name der Zutat" [showClear]="true" filter="true"
                                             filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
-                                            [virtualScroll]="true" [itemSize]="38" [lazy]="true"
+                                            [virtualScroll]="true" [itemSize]="50" [lazy]="true"
                                             (onLazyLoad)="loadMore($event)">
                                         </p-dropdown>
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">

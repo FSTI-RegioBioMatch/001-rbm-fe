@@ -1,3 +1,11 @@
+<div class="flex gap-2">
+    <p-button routerLink="/menu-planning">Menüplanung</p-button>
+    <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
+    <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+    <p-button>Angebotsliste</p-button>
+    <br><br>
+</div>
+
 <div class="einkaufsliste-actions">
     <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"></button>
     <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"></button>
@@ -63,7 +71,7 @@
             <th>Menge (Einzel)</th>
             <th>Einheit</th> <!-- Keep the header for unit display -->
             <th>Verarbeitung</th>
-            <th>Rrezept</th>
+            <th>Rezept</th>
             <th>Aktionen</th>
         </tr>
     </ng-template>
@@ -81,7 +89,10 @@
                 <div *ngFor="let process of getProcessingTypes(item)">
                     <input pInputText type="number" [value]="item.processingBreakdown[process]"
                         (change)="updateAmount(item, process, $event)" />
-                    <!-- <span>{{ item.unit }}</span>Display the unit next to the input field -->
+                    <!-- Error message specific to this input field -->
+                    <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
+                        {{ item.errorMessages[process] }}
+                    </div>
                 </div>
             </td>
 

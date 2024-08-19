@@ -34,4 +34,12 @@
       margin-left: 10px;
     }
   }
-  
+  .invalid-input {
+    border-color: red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}

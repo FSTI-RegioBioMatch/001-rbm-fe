@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
 import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
+import { RouterLink } from '@angular/router';
 
 interface Ingredient {
   name: string;
@@ -36,6 +37,7 @@ interface EnhancedIngredient {
   convertible: boolean; // Whether the unit was convertible
   processingBreakdown: { [processing: string]: number }; // Breakdown of amounts by processing method
   totalInLargestUnit?: string;
+  errorMessages?: { [processing: string]: string };
 }
 
 
@@ -43,6 +45,7 @@ interface EnhancedIngredient {
   selector: 'app-my-menus',
   standalone: true,
   imports: [
+    RouterLink,
     CommonModule,
     FormsModule,
     TableModule,
@@ -246,21 +249,75 @@ export class MyMenusComponent implements OnInit {
 
   updateAmount(item: EnhancedIngredient, process: string, event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    const newValue = parseFloat(inputElement.value);
+    const inputValue = inputElement.value.trim(); // Trim whitespace
+    const newValue = parseFloat(inputValue);
+    const originalValue = item.processingBreakdown[process];
 
-    if (!isNaN(newValue) && item.processingBreakdown[process] !== undefined) {
-        // Update the amount for the specific processing type
-        item.processingBreakdown[process] = newValue;
-
-        // Recalculate the total amount for this ingredient
-        item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
-
-        // Recalculate the total in the largest unit
-        item.totalInLargestUnit = this.calculateTotalInLargestUnit(item.totalAmount, item.unit);
+    // Initialize the errorMessages object if it doesn't exist
+    if (!item.errorMessages) {
+        item.errorMessages = {};
     }
+
+    // Handle empty input
+    if (inputValue === '') {
+        item.errorMessages[process] = `Input cannot be empty. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle NaN (not a number)
+    if (isNaN(newValue)) {
+        item.errorMessages[process] = `Invalid input. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle non-positive numbers
+    if (newValue <= 0) {
+        item.errorMessages[process] = `Value must be greater than zero for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle absurdly large values
+    if (newValue > 10000) { // Example absurd number threshold, can be adjusted as needed
+        item.errorMessages[process] = `Value too large for ${item.name}. Please enter a smaller number.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // If input is valid, update the amount for the specific processing type
+    item.processingBreakdown[process] = newValue;
+
+    // Recalculate the total amount for this ingredient
+    item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
+
+    // Recalculate the total in the largest unit
+    item.totalInLargestUnit = this.calculateTotalInLargestUnit(item.totalAmount, item.unit);
+
+    // Remove any previous error states or messages
+    inputElement.classList.remove('invalid-input');
+    delete item.errorMessages[process]; // Clear the error message for this process if valid
 }
 
 
+
+
+
+
+errorMessage: string | null = null;
+
+showErrorMessage(message: string): void {
+    this.errorMessage = message;
+}
+
+hideErrorMessage(): void {
+    this.errorMessage = null;
+}
 
 
   deleteIngredient(group: string, process: string, index: number): void {

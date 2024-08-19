@@ -6,7 +6,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { switchMap, filter } from 'rxjs/operators';
-import { Router } from '@angular/router'; // Import Router
+import { Router, RouterLink } from '@angular/router'; // Import Router
 import { NewShoppingListService } from '../shared/services/new-shopping-list.service';
 import { StoreService } from '../shared/store/store.service';
 
@@ -19,7 +19,8 @@ import { StoreService } from '../shared/store/store.service';
     TableModule,
     CalendarModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    RouterLink
   ],
   templateUrl: './shopping-list-overview.component.html',
   styleUrls: ['./shopping-list-overview.component.scss']
@@ -33,7 +34,7 @@ export class ShoppingListOverviewComponent implements OnInit {
   constructor(
     private shoppingListService: NewShoppingListService,
     private storeService: StoreService,
-    private router: Router // Inject Router
+    private router: Router
   ) {
     this.searchForm = new FormGroup({
       name: new FormControl(''),

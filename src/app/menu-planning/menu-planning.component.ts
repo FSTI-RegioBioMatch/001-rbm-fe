@@ -314,9 +314,43 @@ export class MenuPlanningComponent implements OnInit {
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;
-      }
+      },
+      eventDrop: this.handleEventDrop.bind(this)
     };
   }
+  handleEventDrop(eventDropInfo: any): void {
+    const updatedEvent = eventDropInfo.event;
+    const menuId = updatedEvent.extendedProps.menuId;
+
+    // Create the data object with updated event details
+    const updatedEventData = {
+        id: updatedEvent.id,
+        title: updatedEvent.title,
+        start: updatedEvent.start?.toISOString(),
+        allDay: updatedEvent.allDay,
+        description: updatedEvent.extendedProps.description,
+        location: updatedEvent.extendedProps.location,
+        portions: updatedEvent.extendedProps.portions,
+        portionsVegetarisch: updatedEvent.extendedProps.portionsVegetarisch,
+        portionsVegan: updatedEvent.extendedProps.portionsVegan,
+        repeatFrequency: updatedEvent.extendedProps.repeatFrequency,
+        menuId: menuId, // Include the menuId to ensure the event is correctly associated
+    };
+
+    // Call the backend to update the event details
+    this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
+        (response) => {
+            console.log('Event updated successfully:', response);
+            this.updateCalendar(); // Refresh the calendar view
+        },
+        (error) => {
+            console.error('Error updating event:', error);
+            // Optionally, revert the event to its original position in case of error
+            eventDropInfo.revert();
+        }
+    );
+}
+
 
   // deleteSingleEvent(event: EventApi): void {
   //   this.events = this.events.filter(e => e.id !== event.id);
