@@ -114,7 +114,9 @@
                                     <div class="ingredient-con">
                                         <p-dropdown [options]="ingredientOptions" formControlName="name"
                                             placeholder="Name der Zutat" [showClear]="true" filter="true"
-                                            optionLabel="label" optionValue="value">
+                                            filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
+                                            [virtualScroll]="true" [itemSize]="38" [lazy]="true"
+                                            (onLazyLoad)="loadMore($event)">
                                         </p-dropdown>
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"

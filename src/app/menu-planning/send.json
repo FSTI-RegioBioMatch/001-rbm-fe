@@ -1,0 +1,255 @@
+{
+    "id": "90e31539-b0a9-4158-a36a-1ce5de00412a",
+    "name": "super menu",
+    "nextExecution": "KW33 2024",
+    "weekday": 1,
+    "repeatFrequency": "WEEKLY",
+    "location": "In der hose",
+    "portions": 100,
+    "portionsVegetarisch": 100,
+    "portionsVegan": 100,
+    "description": "111",
+    "recipes": [
+        {
+            "id": "66b371df4fdfef4c69562634",
+            "name": "5th recipe"
+        },
+        {
+            "id": "66aa2c980c7eb545c181aa6a",
+            "name": "geiles rezept"
+        }
+    ],
+    "events": [
+        {
+            "id": "f5b9db11-0765-48b6-b50f-9183962e4089",
+            "start": "2024-08-11T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "4a58d189-80e4-4510-b867-968dd96f7960",
+            "start": "2024-08-18T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "3f104c97-ef41-4d98-8965-57340d6e7ace",
+            "start": "2024-08-25T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "6f05abb8-42ad-4b55-b110-561d47f8b79a",
+            "start": "2024-09-01T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "9cf680f9-79a4-4cbc-ab99-9bffe8b51b8a",
+            "start": "2024-09-08T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "dc42f885-1668-471d-9a15-c1594984d9e7",
+            "start": "2024-09-15T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "d0496250-a253-4122-b1c9-99c1efeb51ae",
+            "start": "2024-09-22T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "024397eb-76f4-448d-a66c-ada78a5d4a2f",
+            "start": "2024-09-29T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "1e88c5ea-7687-480b-bc9f-c50b358d95a2",
+            "start": "2024-10-06T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "6792ed25-1470-4a02-a52b-b533ecd6c2bf",
+            "start": "2024-10-13T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "9ea34b3e-bf91-4357-b66d-f4e3fcf1ff56",
+            "start": "2024-10-20T22:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "acd44c1e-b940-490f-aae5-afe5fe52ab6b",
+            "start": "2024-10-27T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "4aca382b-3810-4617-a972-918ea3517912",
+            "start": "2024-11-03T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "d7b547f8-9305-450c-ae2b-d4cba8b16ba7",
+            "start": "2024-11-10T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "f990df8e-f3ed-4f39-b907-b019b52604c6",
+            "start": "2024-11-17T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "e729451d-3466-4a11-ba0b-4b8d9c659ac6",
+            "start": "2024-11-24T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "84f840f6-fded-410e-bcf1-6693d52f309a",
+            "start": "2024-12-01T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "3c63ea46-95ee-4056-8a21-760180255e41",
+            "start": "2024-12-08T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "ab7a4f4f-fe28-44f4-8bea-6d9e82fcdf84",
+            "start": "2024-12-15T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "3710e4b3-751a-4466-b08f-75c4af54bbf1",
+            "start": "2024-12-22T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        },
+        {
+            "id": "1ed8bf0f-7cab-4b40-be16-0cd53061f792",
+            "start": "2024-12-29T23:00:00.000Z",
+            "allDay": true,
+            "description": "111",
+            "location": "In der hose",
+            "portions": 100,
+            "portionsVegetarisch": 100,
+            "portionsVegan": 100,
+            "repeatFrequency": "WEEKLY"
+        }
+    ]
+}

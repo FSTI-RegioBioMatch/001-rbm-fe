@@ -42,6 +42,8 @@ import { HttpClient } from '@angular/common/http';
 
 export class NewRecepieDialogComponent implements OnInit {
   ingredientOptions: { label: string, value: string }[] = [];
+  allIngredients: { label: string, value: string }[] = [];
+  pageSize = 50; // Number of items to load at once
   units = [
     { label: 'Grams', value: 'g' },
     { label: 'Kilograms', value: 'kg' },
@@ -122,15 +124,23 @@ export class NewRecepieDialogComponent implements OnInit {
     const url = 'https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/ontofood';
     this.http.get<{ [key: string]: string }>(url).subscribe(
       (data) => {
-        this.ingredientOptions = Object.keys(data).map(key => ({
-          label: data[key], // Display value
-          value: key, // Saved value
+        this.allIngredients = Object.keys(data).map(key => ({
+          label: data[key],
+          value: key,
         }));
+        // Load the first batch
+        this.ingredientOptions = this.allIngredients.slice(0, this.pageSize);
       },
       (error) => {
         console.error('Error fetching ingredient data:', error);
       }
     );
+  }
+
+  loadMore(event: any) {
+    const loadedItems = this.ingredientOptions.length;
+    const moreItems = this.allIngredients.slice(loadedItems, loadedItems + this.pageSize);
+    this.ingredientOptions = [...this.ingredientOptions, ...moreItems];
   }
 
   get steps(): FormArray {
