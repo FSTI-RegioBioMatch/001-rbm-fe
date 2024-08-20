@@ -12,6 +12,8 @@ import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
+import { DialogModule } from 'primeng/dialog';
+import { NewRecepieDialogComponent } from '../new-recepie-dialog/new-recepie-dialog.component';
 
 @Component({
   selector: 'app-my-recipes',
@@ -26,12 +28,15 @@ import { CalendarModule } from 'primeng/calendar';
     ProgressSpinnerModule,
     InputTextModule,
     CalendarModule,
-    RouterModule
+    RouterModule,
+    DialogModule,
+    NewRecepieDialogComponent
   ],
   templateUrl: './my-recipes.component.html',
   styleUrls: ['./my-recipes.component.scss'],
 })
 export class MyRecipesComponent implements OnInit, AfterViewInit {
+  displayAddRecipeDialog: boolean = false;
   recipes: any[] = [];
   totalElements: number = 0;
   currentPage: number = 0;
@@ -190,5 +195,12 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
     const start = this.currentPage * this.pageSize + 1;
     const end = Math.min((this.currentPage + 1) * this.pageSize, this.totalElements);
     return `${start} - ${end} of ${this.totalElements}`;
+  }
+  openAddRecipeDialog(): void {
+    this.displayAddRecipeDialog = true;
+  }
+
+  onCloseAddRecipeDialog(): void {
+    this.displayAddRecipeDialog = false;
   }
 }

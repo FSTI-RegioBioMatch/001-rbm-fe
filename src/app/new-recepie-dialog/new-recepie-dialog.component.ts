@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -41,6 +41,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 export class NewRecepieDialogComponent implements OnInit {
+  @Output() closeDialog = new EventEmitter<void>();
   ingredientOptions: { label: string, value: string }[] = [];
   allIngredients: { label: string, value: string }[] = [];
   pageSize = 50; // Number of items to load at once

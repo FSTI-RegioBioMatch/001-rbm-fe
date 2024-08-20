@@ -1,4 +1,14 @@
 <div class="container-fluid p-5 h-100">
+  <p-button label="Add New Recipe" icon="pi pi-plus" (click)="openAddRecipeDialog()"></p-button>
+
+  <p-dialog [(visible)]="displayAddRecipeDialog" modal="true" [style]="{width: '80vw', height: '80vh'}"
+    [contentStyle]="{overflow: 'auto'}" [resizable]="true" [draggable]="true" [maximizable]="true" [blockScroll]="true"
+    [closeOnEscape]="true" [dismissableMask]="true" [focusOnShow]="true">
+
+    <app-new-recepie-dialog (closeDialog)="onCloseAddRecipeDialog()"></app-new-recepie-dialog>
+
+  </p-dialog>
+
   <div class="row mb-3 justify-content-end">
     <div class="col-auto">
       <button pButton label="Create Menu Plan" icon="pi pi-plus" (click)="onClickCreateMenuPlan()"

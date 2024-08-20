@@ -34,10 +34,6 @@ const routes: Routes = [
     component: MenuPlanningComponent,
   },
   {
-    path: 'add-recipe',
-    component: NewRecepieDialogComponent,
-  },
-  {
     path: 'menu-planning/menu-plans',
     component: MenuPlansComponent,
   },
