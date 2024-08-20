@@ -28,18 +28,33 @@ export class RecipeService {
    *     console.log('Total Elements:', page.totalElements);
    *   });
    */
-  getRecipesByCompanyId(page: number, size: number, sort: string): Observable<Page<RecipeType>> {
+  getRecipesByCompanyId(
+    page: number,
+    size: number,
+    sort: string,
+    searchName?: string,
+    saisons?: string[]
+  ): Observable<Page<RecipeType>> {
     return this.storeService.selectedCompanyContext$.pipe(
       switchMap(company => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
+  
         let params = new HttpParams()
           .set('companyId', company.id)
           .set('page', page.toString())
           .set('size', size.toString())
           .set('sort', sort);
-
+  
+        if (searchName) {
+          params = params.set('name', searchName);
+        }
+  
+        if (saisons && saisons.length > 0) {
+          params = params.set('saisons', saisons.join(','));
+        }
+  
         return this.http.get<Page<RecipeType>>(`${environment.API_CORE}/new-recipes`, { params });
       }),
       catchError(error => {
@@ -48,6 +63,7 @@ export class RecipeService {
       })
     );
   }
+  
 
   getRecipesByCompanyContext() {
     return this.http.get<RecipeType[]>(`${environment.API_CORE}/recipes`);

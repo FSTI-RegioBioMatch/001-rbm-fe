@@ -8,17 +8,17 @@
 <div class="container">
   <div class="menu-plan-form">
     <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
-        <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
-          <p>Keine Rezepte hinzugefügt</p>
+      <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
+        <p>Keine Rezepte hinzugefügt</p>
+      </div>
+      <div *ngFor="let recipe of menuPlan" class="recipe-item">
+        <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
+          class="recipe-image">
+        <div class="recipe-name">
+          <p>{{ recipe.recipeName }}</p>
         </div>
-        <div *ngFor="let recipe of menuPlan" class="recipe-item">
-          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-            class="recipe-image">
-          <div class="recipe-name">
-            <p>{{ recipe.recipeName }}</p>
-          </div>
-          <p-button class="remove-button" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
-        </div>
+        <p-button class="remove-button" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
+      </div>
     </div>
 
     <form [formGroup]="menuPlanForm" class="form-grid">
@@ -41,11 +41,11 @@
       <div>
         <div class="form-field">
           <label for="name">Name</label>
-          <input id="name" type="text" formControlName="name" pInputText placeholder="Name"/>
+          <input id="name" type="text" formControlName="name" pInputText placeholder="Name" />
         </div>
         <div class="form-field">
           <label for="ort">Ort</label>
-          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort"/>
+          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort" />
         </div>
         <div class="form-field description-field">
           <label for="description">Beschreibung</label>
@@ -60,22 +60,23 @@
             <span class="suffix">Personen</span>
           </div>
         </div>
-        
+
         <div class="form-field">
           <label for="portionsVegetarisch">Vegetarisch</label>
           <div class="input-wrapper">
-            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText placeholder="0"/>
+            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
+              placeholder="0" />
             <span class="suffix">Personen</span>
           </div>
         </div>
         <div class="form-field">
           <label for="portionsVegan">Vegan</label>
           <div class="input-wrapper">
-            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0"/>
+            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0" />
             <span class="suffix">Personen</span>
           </div>
         </div>
-        </div>
+      </div>
       <div class="form-field">
         <p-button (click)="saveMenuPlan()">Speichern</p-button>
       </div>
@@ -86,7 +87,7 @@
     <div class="search-bar">
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
-    <div class="recipe-list-add">
+    <div class="recipe-list-add" #recipeList>
       <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">

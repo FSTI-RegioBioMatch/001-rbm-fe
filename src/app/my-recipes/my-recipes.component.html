@@ -1,4 +1,76 @@
-<div class="p-5 h-100">
-  <button (click)="onClickCreateMenuPlan()">Menüplan erstellen</button>
-  <app-private-recipe-table />
+<div class="container-fluid p-5 h-100">
+  <div class="row mb-3 justify-content-end">
+    <div class="col-auto">
+      <button pButton label="Create Menu Plan" icon="pi pi-plus" (click)="onClickCreateMenuPlan()"
+        class="p-button-success"></button>
+    </div>
+  </div>
+
+  <div class="filters mb-3 row gx-3 align-items-center">
+    <div class="col-md-3 col-sm-6 filter-item">
+      <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchName" (input)="onSearchChange()"
+        class="form-control" />
+    </div>
+
+    <div class="col-md-2 col-sm-6 filter-item">
+      <label for="sort" class="me-2">Sort by:</label>
+      <p-dropdown id="sort" [options]="sortOptions" [(ngModel)]="selectedSortOption" (onChange)="onSortChange()"
+        class="form-control"></p-dropdown>
+    </div>
+
+    <div class="col-md-3 col-sm-6 filter-item">
+      <label for="fromDate" class="me-2">From:</label>
+      <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy-mm-dd" (onSelect)="onDateRangeChange()"
+        showIcon="true" placeholder="Select From Date" class="form-control"></p-calendar>
+    </div>
+
+    <div class="col-md-3 col-sm-6 filter-item">
+      <label for="toDate" class="me-2">To:</label>
+      <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy-mm-dd" (onSelect)="onDateRangeChange()"
+        showIcon="true" placeholder="Select To Date" class="form-control"></p-calendar>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4" *ngFor="let recipe of recipes">
+        <div class="card recipe-card h-100" (click)="viewRecipe(recipe.id)">
+          <img [src]="recipe.recipeImage || 'placeholder-image-url.png'" class="card-img-top" alt="Recipe Image">
+          <div class="card-body text-center d-flex flex-column justify-content-between">
+            <h5 class="card-title">{{ recipe.recipeName }}</h5>
+            <p-dropdown appendTo="body" [options]="actionOptions" [(ngModel)]="selectedAction"
+              (onChange)="onActionSelect($event, recipe.id)" class="action-dropdown">
+              <ng-template pTemplate="selectedItem">
+                <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noRecipes>
+      <div class="alert alert-info text-center" role="alert">
+        No recipes found.
+      </div>
+    </ng-template>
+
+    <div class="pagination-info text-end mt-3">
+      {{ getFromToRange() }}
+    </div>
+
+    <p-paginator [rows]="pageSize" [totalRecords]="totalElements" [rowsPerPageOptions]="pageSizes"
+      (onPageChange)="onPageChange($event)"></p-paginator>
+
+    <div class="pagination-controls text-end mt-3">
+      <button pButton label="Previous" icon="pi pi-chevron-left" class="p-button-secondary me-2" (click)="onPrevPage()"
+        [disabled]="currentPage === 0"></button>
+      <button pButton label="Next" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
+        (click)="onNextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements"></button>
+    </div>
+  </div>
 </div>

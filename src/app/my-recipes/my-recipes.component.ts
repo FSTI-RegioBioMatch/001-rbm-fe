@@ -1,20 +1,61 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RecipeService } from '../shared/services/recipe.service';
 import { StoreService } from '../shared/store/store.service';
-import { PrivateRecipeTableComponent } from './components/private-recipe-table/private-recipe-table.component';
 import { filter, switchMap } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-my-recipes',
   standalone: true,
-  imports: [PrivateRecipeTableComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    DropdownModule,
+    PaginatorModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    InputTextModule,
+    CalendarModule,
+    RouterModule
+  ],
   templateUrl: './my-recipes.component.html',
-  styleUrl: './my-recipes.component.scss',
+  styleUrls: ['./my-recipes.component.scss'],
 })
 export class MyRecipesComponent implements OnInit, AfterViewInit {
   recipes: any[] = [];
   totalElements: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  pageSizes: number[] = [5, 10, 20, 50];
+  loading: boolean = false;
+  errorMessage: string = '';
+
+  searchName: string = '';
+  sortOptions: any[] = [
+    { label: 'A-Z', value: 'recipeName,asc' },
+    { label: 'Z-A', value: 'recipeName,desc' }
+  ];
+  selectedSortOption: string = this.sortOptions[0].value;
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
+
+  actionOptions = [
+    { label: 'Details', value: 'details' },
+    { label: 'Edit', value: 'edit' },
+    { label: 'Delete', value: 'delete' }
+  ];
+
+  selectedAction: string | null = null;
 
   constructor(
     private store: StoreService,
@@ -25,29 +66,129 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
+    this.loadRecipes();
+  }
+
+  loadRecipes(): void {
+    this.loading = true;
+    const seasons = this.getSeasonsFromDateRange(this.fromDate, this.toDate);
     this.store.selectedCompanyContext$
       .pipe(
-        filter(company => company !== null), // Ensure a non-null value is emitted
+        filter(company => company !== null && company.id !== undefined),
         switchMap(company =>
-          this.recipeService.getRecipesByCompanyId(0, 10, 'recipeName,asc')
+          this.recipeService.getRecipesByCompanyId(
+            this.currentPage,
+            this.pageSize,
+            this.selectedSortOption,
+            this.searchName,
+            seasons
+          )
         )
       )
       .subscribe(
         page => {
           this.recipes = page.content;
           this.totalElements = page.totalElements;
-          console.log('Recipes:', this.recipes);
-          console.log('Total Elements:', this.totalElements);
+          this.loading = false;
         },
         error => {
+          this.errorMessage = 'Failed to load recipes. Please try again later.';
           console.error('Error fetching recipes:', error);
+          this.loading = false;
         }
       );
   }
 
+  getSeasonsFromDateRange(fromDate: Date | null, toDate: Date | null): string[] {
+    if (!fromDate || !toDate) {
+      return [];
+    }
+
+    const seasons = [];
+    const startMonth = fromDate.getMonth() + 1;
+    const endMonth = toDate.getMonth() + 1;
+
+    if ((startMonth <= 2 || startMonth === 12) || (endMonth <= 2 || endMonth === 12)) {
+      seasons.push('Winter');
+    }
+    if ((startMonth <= 5 && startMonth >= 3) || (endMonth <= 5 && endMonth >= 3)) {
+      seasons.push('Spring');
+    }
+    if ((startMonth <= 8 && startMonth >= 6) || (endMonth <= 8 && endMonth >= 6)) {
+      seasons.push('Summer');
+    }
+    if ((startMonth <= 11 && startMonth >= 9) || (endMonth <= 11 && endMonth >= 9)) {
+      seasons.push('Autumn');
+    }
+
+    return seasons;
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event.page;
+    this.pageSize = event.rows;
+    this.loadRecipes();
+  }
+
+  onSearchChange(): void {
+    this.currentPage = 0;
+    this.loadRecipes();
+  }
+
+  onDateRangeChange(): void {
+    this.currentPage = 0;
+    this.loadRecipes();
+  }
+
+  onSortChange(): void {
+    this.currentPage = 0;
+    this.loadRecipes();
+  }
+
+  onNextPage(): void {
+    if ((this.currentPage + 1) * this.pageSize < this.totalElements) {
+      this.currentPage++;
+      this.loadRecipes();
+    }
+  }
+
+  onPrevPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadRecipes();
+    }
+  }
+
   onClickCreateMenuPlan() {
-    console.log('Create Menu Plan');
-    // this.store.selectedPublicRecipeSubject.next(this.selected);
     this.router.navigate(['/menu-planning']);
+  }
+
+  viewRecipe(recipeId: string) {
+    this.router.navigate(['/recipe', recipeId]);
+  }
+
+  onActionSelect(event: any, recipeId: string) {
+    switch (event.value) {
+      case 'details':
+        this.viewRecipe(recipeId);
+        break;
+      case 'edit':
+        this.router.navigate(['/recipe/edit', recipeId]);
+        break;
+      case 'delete':
+        this.deleteRecipe(recipeId);
+        break;
+    }
+  }
+
+  deleteRecipe(recipeId: string) {
+    // Implement the delete logic with a confirmation prompt
+    console.log('Deleting recipe:', recipeId);
+  }
+
+  getFromToRange(): string {
+    const start = this.currentPage * this.pageSize + 1;
+    const end = Math.min((this.currentPage + 1) * this.pageSize, this.totalElements);
+    return `${start} - ${end} of ${this.totalElements}`;
   }
 }
