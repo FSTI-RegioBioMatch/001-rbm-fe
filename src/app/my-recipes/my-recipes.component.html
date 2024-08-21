@@ -52,12 +52,6 @@
           <img [src]="recipe.recipeImage || 'placeholder-image-url.png'" class="card-img-top" alt="Recipe Image">
           <div class="card-body text-center d-flex flex-column justify-content-between">
             <h5 class="card-title">{{ recipe.recipeName }}</h5>
-            <p-dropdown appendTo="body" [options]="actionOptions" [(ngModel)]="selectedAction"
-              (onChange)="onActionSelect($event, recipe.id)" class="action-dropdown">
-              <ng-template pTemplate="selectedItem">
-                <i class="pi pi-ellipsis-h" aria-hidden="true"></i>
-              </ng-template>
-            </p-dropdown>
           </div>
         </div>
       </div>

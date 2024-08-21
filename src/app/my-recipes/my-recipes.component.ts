@@ -172,27 +172,10 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
   }
 
   viewRecipe(recipeId: string) {
-    this.router.navigate(['/recipe', recipeId]);
+    this.router.navigate(['/recipe-details', recipeId]);
   }
 
-  onActionSelect(event: any, recipeId: string) {
-    switch (event.value) {
-      case 'details':
-        this.viewRecipe(recipeId);
-        break;
-      case 'edit':
-        this.router.navigate(['/recipe/edit', recipeId]);
-        break;
-      case 'delete':
-        this.deleteRecipe(recipeId);
-        break;
-    }
-  }
 
-  deleteRecipe(recipeId: string) {
-    // Implement the delete logic with a confirmation prompt
-    console.log('Deleting recipe:', recipeId);
-  }
 
   getFromToRange(): string {
     const start = this.currentPage * this.pageSize + 1;
