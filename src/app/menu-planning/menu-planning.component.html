@@ -6,6 +6,7 @@
 </div>
 
 <div class="container">
+  <p-toast></p-toast>
   <div class="menu-plan-form">
     <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
       <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
@@ -78,7 +79,7 @@
         </div>
       </div>
       <div class="form-field">
-        <p-button (click)="saveMenuPlan()">Speichern</p-button>
+        <p-button (click)="saveMenuPlan()" [disabled]="menuPlanForm.invalid || loading">Speichern</p-button>
       </div>
     </form>
   </div>
@@ -88,6 +89,9 @@
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
     <div class="recipe-list-add" #recipeList>
+      <div *ngIf="!recipesLoaded" class="text-center">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
       <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">
@@ -97,7 +101,10 @@
     </div>
   </div>
 </div>
-<full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<div *ngIf="!calendarLoaded" class="text-center">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+<full-calendar *ngIf="calendarLoaded" #calendar [options]="calendarOptions"></full-calendar>
 <p-dialog [(visible)]="displayEventDialog" modal="modal" [style]="{width: '50vw'}" header="Event Details">
   <div *ngIf="selectedEvent">
     <h3>{{ selectedEvent.title }}</h3>

@@ -1,12 +1,12 @@
 <ng-container>
     <p-card class="new-recipe-card">
         <ng-template pTemplate="header" class="new-recipe-card_header">
-            <div>
+            <!-- <div>
                 <p class="new-recipe_title">Neues Rezept</p>
-            </div>
+            </div> -->
             <div style="display: flex; align-items: center;">
                 <button pButton class="new-recipe_savebtn" icon="pi pi-check" type="button" label="Speichern"
-                    (click)="saveRecipe()"></button>
+                    [disabled]="loading || form.invalid" (click)="saveRecipe()"></button>
             </div>
         </ng-template>
         <ng-template pTemplate="content">
@@ -217,7 +217,7 @@
                     </div>
                 </div>
 
-
+                <p-toast></p-toast>
             </form>
         </ng-template>
     </p-card>

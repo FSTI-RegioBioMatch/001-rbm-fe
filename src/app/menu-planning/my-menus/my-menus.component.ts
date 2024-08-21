@@ -13,6 +13,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
 import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
 import { RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinner, ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface Ingredient {
   name: string;
@@ -51,8 +54,11 @@ interface EnhancedIngredient {
     TableModule,
     ButtonModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule,
+    ProgressSpinnerModule
   ],
+  providers: [MessageService],
   templateUrl: './my-menus.component.html',
   styleUrl: './my-menus.component.scss'
 })
@@ -62,6 +68,8 @@ export class MyMenusComponent implements OnInit {
   recipesWithIngredients: { [key: string]: Recipe[] } = {};
   selectedMenuPlans: any[] = [];
   groupedShoppingList: { [name: string]: EnhancedIngredient[] } = {}; // Grouped by ingredient name
+
+  loading = false;
 
   processingOptions = [
     { label: 'Ganz', value: 'ganz' },
@@ -75,10 +83,12 @@ export class MyMenusComponent implements OnInit {
     private menuPlanService: NewMenuplanService,
     private recipeService: RecipeService,
     private store: StoreService,
-    private shoppingListService: NewShoppingListService
+    private shoppingListService: NewShoppingListService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -90,8 +100,11 @@ export class MyMenusComponent implements OnInit {
           this.menuPlans.forEach(menuPlan => {
             this.loadRecipesWithIngredients(menuPlan.id);
           });
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading menu plans' });
           console.error('Error loading menu plans', error);
         }
       });
@@ -112,6 +125,7 @@ export class MyMenusComponent implements OnInit {
       const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
         this.recipeService.getRecipeById(recipe.id).pipe(
           catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error fetching recipe ${recipe.id}` });
             console.error(`Error fetching recipe ${recipe.id}:`, error);
             return of(null); // Handle errors gracefully
           })
@@ -121,8 +135,11 @@ export class MyMenusComponent implements OnInit {
       forkJoin(recipeRequests).subscribe({
         next: (recipes: (Recipe | null)[]) => {
           this.recipesWithIngredients[menuPlanId] = recipes.filter((recipe): recipe is Recipe => recipe !== null);
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading recipes with ingredients' });
           console.error('Error loading recipes with ingredients:', error);
         }
       });
@@ -305,21 +322,6 @@ export class MyMenusComponent implements OnInit {
 }
 
 
-
-
-
-
-errorMessage: string | null = null;
-
-showErrorMessage(message: string): void {
-    this.errorMessage = message;
-}
-
-hideErrorMessage(): void {
-    this.errorMessage = null;
-}
-
-
   deleteIngredient(group: string, process: string, index: number): void {
     const ingredient = this.groupedShoppingList[group][index];
     
@@ -445,9 +447,11 @@ hideErrorMessage(): void {
     // Send to the backend via the service
     this.shoppingListService.saveShoppingList(shoppingListObject).subscribe(
       response => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Shopping list saved successfully' });
         console.log('Shopping list saved successfully:', response);
       },
       error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save shopping list' });
         console.error('Error saving shopping list:', error);
       }
     );

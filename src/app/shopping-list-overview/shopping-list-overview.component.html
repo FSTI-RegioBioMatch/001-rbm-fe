@@ -5,6 +5,8 @@
     <p-button>Angebotsliste</p-button>
 </div>
 
+<p-toast></p-toast>
+
 <div class="shopping-list-overview">
     <h1>Shopping List Overview</h1>
 
@@ -28,7 +30,9 @@
             </div>
         </div>
     </form>
-
+    <div *ngIf="loading" class="text-center">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
     <p-table [value]="filteredShoppingLists">
         <ng-template pTemplate="header">
             <tr>

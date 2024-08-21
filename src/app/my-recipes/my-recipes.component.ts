@@ -14,6 +14,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
 import { NewRecepieDialogComponent } from '../new-recepie-dialog/new-recepie-dialog.component';
+import { MessageService } from 'primeng/api';
+import { Toast, ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-my-recipes',
@@ -30,8 +32,10 @@ import { NewRecepieDialogComponent } from '../new-recepie-dialog/new-recepie-dia
     CalendarModule,
     RouterModule,
     DialogModule,
-    NewRecepieDialogComponent
+    NewRecepieDialogComponent,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './my-recipes.component.html',
   styleUrls: ['./my-recipes.component.scss'],
 })
@@ -43,8 +47,6 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
   pageSize: number = 10;
   pageSizes: number[] = [5, 10, 20, 50];
   loading: boolean = false;
-  errorMessage: string = '';
-
   searchName: string = '';
   sortOptions: any[] = [
     { label: 'A-Z', value: 'recipeName,asc' },
@@ -65,7 +67,8 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
   constructor(
     private store: StoreService,
     private router: Router,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private messageService: MessageService
   ) {}
 
   ngAfterViewInit(): void {}
@@ -97,7 +100,7 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
           this.loading = false;
         },
         error => {
-          this.errorMessage = 'Failed to load recipes. Please try again later.';
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch recipes.' });
           console.error('Error fetching recipes:', error);
           this.loading = false;
         }

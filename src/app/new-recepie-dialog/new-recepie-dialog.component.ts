@@ -18,6 +18,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { RecipeService } from '../shared/services/recipe.service';
 import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -36,7 +38,9 @@ import { HttpClient } from '@angular/common/http';
     CheckboxModule,
     ChipModule,
     FormsModule,
+    ToastModule
   ],
+  providers: [MessageService],
 })
 
 
@@ -45,6 +49,7 @@ export class NewRecepieDialogComponent implements OnInit {
   ingredientOptions: { label: string, value: string }[] = [];
   allIngredients: { label: string, value: string }[] = [];
   pageSize = 50; // Number of items to load at once
+  loading = false;
   units = [
     { label: 'Grams', value: 'g' },
     { label: 'Kilograms', value: 'kg' },
@@ -96,7 +101,7 @@ export class NewRecepieDialogComponent implements OnInit {
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
-  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient, private messageService: MessageService) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
       recipeDescription: [''],
@@ -133,6 +138,7 @@ export class NewRecepieDialogComponent implements OnInit {
         this.ingredientOptions = this.allIngredients.slice(0, this.pageSize);
       },
       (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch ingredient data.' });
         console.error('Error fetching ingredient data:', error);
       }
     );
@@ -256,26 +262,37 @@ export class NewRecepieDialogComponent implements OnInit {
   }
 
   saveRecipe() {
-    const recipeData = this.form.value;
+    if (this.form.invalid) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all required fields.' });
+      return;
+    }
 
-    // Adding step images to the recipe data
+    this.loading = true;
+    this.form.disable(); // Disable the form
+
+    const recipeData = this.form.value;
     recipeData.steps = recipeData.steps.map((step: any, index: number) => ({
       ...step,
       images: this.stepImages[index] || [],
     }));
-
-    // Adding selected diets to the recipe data
-    recipeData.diets = Object.keys(this.selectedDiets).filter(
-      (key) => this.selectedDiets[key],
-    );
-
-    // Adding the recipe image to the recipe data
+    recipeData.diets = Object.keys(this.selectedDiets).filter((key) => this.selectedDiets[key]);
     recipeData.recipeImage = this.recipeImage;
-
     recipeData.nearbuyId = '1234'; // Replace with actual nearbuy ID
-    console.log(JSON.stringify(recipeData, null, 2));
-    this.recipeService.saveRecipe(recipeData).subscribe((response) => {
-      console.log(response);
-    });
+
+    this.recipeService.saveRecipe(recipeData).subscribe(
+      (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Recipe saved successfully!' });
+        this.loading = false;
+        this.form.reset(); // Reset the form
+        this.form.enable(); // Re-enable the form
+        //this.closeDialog.emit(); // Close the dialog if needed
+      },
+      (error) => {
+        console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save the recipe.' });
+        this.loading = false;
+        this.form.enable(); // Re-enable the form
+      }
+    );
   }
 }

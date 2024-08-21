@@ -27,6 +27,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { EventHoveringArg, EventApi } from '@fullcalendar/core';
 import deLocale from '@fullcalendar/core/locales/de';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
+import { MessageService } from 'primeng/api';
+import { Toast, ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-menu-planning',
@@ -46,8 +49,10 @@ import { NewMenuplanService } from '../shared/services/new-menuplan.service';
     ButtonModule,
     FullCalendarModule,
     DialogModule,
-    TooltipModule
+    ToastModule,
+    ProgressSpinnerModule
   ],
+  providers: [MessageService],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
 })
@@ -70,10 +75,14 @@ export class MenuPlanningComponent implements OnInit {
   loading: boolean = false;
   allLoaded: boolean = false; // to track if all recipes are loaded
 
+  calendarLoaded = false
+  recipesLoaded = false
+
   constructor(
     private store: StoreService,
     private menuplanService: NewMenuplanService,
     private recipeService: RecipeService,
+    private messageService: MessageService
   ) {
     this.menuPlanForm = new FormGroup({
       name: new FormControl('', Validators.required),
@@ -117,10 +126,21 @@ export class MenuPlanningComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.recipesLoaded = false
+    this.calendarLoaded = false
     this.calculateNextExecutionOptions();
     this.setupCalendarOptions();
-    this.loadRecipes();
+    this.store.selectedCompanyContext$
+      .pipe(
+        filter(company => company !== null),
+      )
+      .subscribe(() => {
+
+        this.loadRecipes(); 
+        this.loadAllEvents();
+      });
   }
+  
 
   loadRecipes(reset: boolean = false): void {
     if (this.loading || this.allLoaded) return;
@@ -151,6 +171,7 @@ export class MenuPlanningComponent implements OnInit {
           } else {
             this.filteredRecipes = [...this.filteredRecipes, ...page.content];
           }
+          this.recipesLoaded = true
           
           this.totalElements = page.totalElements;
           this.currentPage++;
@@ -162,8 +183,10 @@ export class MenuPlanningComponent implements OnInit {
           }
         },
         error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching recipes' });
           console.error('Error fetching recipes:', error);
           this.loading = false;
+          this.recipesLoaded = true
         }
       );  
   }
@@ -205,6 +228,8 @@ export class MenuPlanningComponent implements OnInit {
   }
 
   saveMenuPlan(): void {
+    this.loading = true;
+    this.menuPlanForm.disable();
     const menuPlanData = {
       ...this.menuPlanForm.value,
       recipes: this.menuPlan,
@@ -249,9 +274,16 @@ export class MenuPlanningComponent implements OnInit {
     this.menuplanService.saveMenuPlan(menuPlanDataObject).subscribe(
       (response) => {
         console.log('Menu Plan saved successfully:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
+        this.menuPlanForm.reset();
+        this.menuPlanForm.enable();
         this.updateCalendar();
+        this.loading = false;
       },
       (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error saving Menu Plan' });
+        this.menuPlanForm.enable();
+        this.loading = false;
         console.error('Error saving Menu Plan:', error);
       }
     );
@@ -365,9 +397,11 @@ export class MenuPlanningComponent implements OnInit {
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
         (response) => {
             console.log('Event updated successfully:', response);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
             this.updateCalendar();
         },
         (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating event' });
             console.error('Error updating event:', error);
             eventDropInfo.revert();
         }
@@ -382,10 +416,13 @@ export class MenuPlanningComponent implements OnInit {
     this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
       () => {
         console.log(`Event ${eventId} deleted successfully`);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
         this.updateCalendar();
         this.displayEventDialog = false;
       },
       error => {
+
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
         console.error('Error deleting event:', error);
       }
     );
@@ -399,8 +436,10 @@ export class MenuPlanningComponent implements OnInit {
         console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
         this.updateCalendar();
         this.displayEventDialog = false;
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
       },
       error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
         console.error('Error deleting Menu Plan:', error);
       }
     );
@@ -437,8 +476,11 @@ export class MenuPlanningComponent implements OnInit {
           });
         });
         this.calendarOptions.events = [...this.events];
+        this.calendarLoaded = true
       },
       (error) => {
+        this.calendarLoaded = true
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching menu plans' });
         console.error('Error fetching menu plans:', error);
       }
     );

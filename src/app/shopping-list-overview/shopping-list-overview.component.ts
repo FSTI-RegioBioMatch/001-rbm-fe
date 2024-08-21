@@ -9,6 +9,9 @@ import { switchMap, filter } from 'rxjs/operators';
 import { Router, RouterLink } from '@angular/router'; // Import Router
 import { NewShoppingListService } from '../shared/services/new-shopping-list.service';
 import { StoreService } from '../shared/store/store.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinner, ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-shopping-list-overview',
@@ -20,8 +23,11 @@ import { StoreService } from '../shared/store/store.service';
     CalendarModule,
     InputTextModule,
     ButtonModule,
-    RouterLink
+    RouterLink,
+    ToastModule,
+    ProgressSpinnerModule
   ],
+  providers:[MessageService],
   templateUrl: './shopping-list-overview.component.html',
   styleUrls: ['./shopping-list-overview.component.scss']
 })
@@ -30,11 +36,12 @@ export class ShoppingListOverviewComponent implements OnInit {
   searchForm: FormGroup;
   shoppingLists: any[] = [];
   filteredShoppingLists: any[] = [];
-
+  loading = false;
   constructor(
     private shoppingListService: NewShoppingListService,
     private storeService: StoreService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
     this.searchForm = new FormGroup({
       name: new FormControl(''),
@@ -45,6 +52,7 @@ export class ShoppingListOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     this.storeService.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -54,8 +62,11 @@ export class ShoppingListOverviewComponent implements OnInit {
         next: (lists) => {
           this.shoppingLists = lists || [];
           this.filteredShoppingLists = this.shoppingLists;
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading shopping lists' });
           console.error('Error loading shopping lists:', error);
         }
       });
