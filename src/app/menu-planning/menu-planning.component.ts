@@ -27,9 +27,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { EventHoveringArg, EventApi } from '@fullcalendar/core';
 import deLocale from '@fullcalendar/core/locales/de';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
-import { MessageService } from 'primeng/api';
-import { Toast, ToastModule } from 'primeng/toast';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-menu-planning',
@@ -50,11 +51,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FullCalendarModule,
     DialogModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
+
 })
 export class MenuPlanningComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
@@ -82,6 +85,7 @@ export class MenuPlanningComponent implements OnInit {
     private store: StoreService,
     private menuplanService: NewMenuplanService,
     private recipeService: RecipeService,
+    private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {
     this.menuPlanForm = new FormGroup({
@@ -408,42 +412,57 @@ export class MenuPlanningComponent implements OnInit {
     );
   }
 
+  confirmDelete(message: string, onAccept: () => void): void {
+    this.confirmationService.confirm({
+      message: message,
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: onAccept,
+      reject: () => {},
+    });
+  }
+  
+
   deleteSingleEvent(event: EventApi): void {
-    const eventId = event.id;
-    const menuId = event.extendedProps['menuId'];
-    this.events = this.events.filter(e => e.id !== eventId);
-    this.calendarOptions.events = [...this.events];
-    this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
-      () => {
-        console.log(`Event ${eventId} deleted successfully`);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
-        this.updateCalendar();
-        this.displayEventDialog = false;
-      },
-      error => {
-
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
-        console.error('Error deleting event:', error);
-      }
-    );
+    this.confirmDelete("Are you sure you want to delete this event?", () => {
+      const eventId = event.id;
+      const menuId = event.extendedProps['menuId'];
+      this.events = this.events.filter(e => e.id !== eventId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
+        () => {
+          console.log(`Event ${eventId} deleted successfully`);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
+          this.updateCalendar();
+          this.displayEventDialog = false;
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
+          console.error('Error deleting event:', error);
+        }
+      );
+    });
   }
-
+  
   deleteAllEvents(menuId: string): void {
-    this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
-    this.calendarOptions.events = [...this.events];
-    this.menuplanService.deleteMenuPlan(menuId).subscribe(
-      () => {
-        console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
-        this.updateCalendar();
-        this.displayEventDialog = false;
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
-      },
-      error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
-        console.error('Error deleting Menu Plan:', error);
-      }
-    );
+    this.confirmDelete("Are you sure you want to delete all events in this menu plan? Doing so will also delete the menu plan.", () => {
+      this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteMenuPlan(menuId).subscribe(
+        () => {
+          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
+          this.updateCalendar();
+          this.displayEventDialog = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
+          console.error('Error deleting Menu Plan:', error);
+        }
+      );
+    });
   }
+  
 
   updateCalendar(): void {
     if (this.calendarComponent && this.calendarComponent.getApi()) {
