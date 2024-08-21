@@ -20,6 +20,7 @@ import { RecipeService } from '../shared/services/recipe.service';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -101,7 +102,7 @@ export class NewRecepieDialogComponent implements OnInit {
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
-  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient, private messageService: MessageService) {
+  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient, private messageService: MessageService,private nearbuyTestService: NearbuyTestService) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
       recipeDescription: [''],
@@ -126,20 +127,19 @@ export class NewRecepieDialogComponent implements OnInit {
   ngOnInit() {
     this.fetchIngredientOptions();
   }
+
   fetchIngredientOptions() {
-    const url = 'https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/ontofood';
-    this.http.get<{ [key: string]: string }>(url).subscribe(
-      (data) => {
-        this.allIngredients = Object.keys(data).map(key => ({
-          label: data[key],
-          value: key,
+    this.nearbuyTestService.getData().subscribe(
+      data => {
+        this.ingredientOptions = data.map(item => ({
+          label: item.label,
+          value: item.label
         }));
-        // Load the first batch
-        this.ingredientOptions = this.allIngredients.slice(0, this.pageSize);
+        console.log('Data fetched and mapped successfully:', this.ingredientOptions);
       },
-      (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch ingredient data.' });
-        console.error('Error fetching ingredient data:', error);
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch and map data.' });
+        console.error('Error fetching and mapping data:', error);
       }
     );
   }
