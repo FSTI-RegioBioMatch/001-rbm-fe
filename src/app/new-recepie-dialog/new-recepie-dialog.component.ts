@@ -135,6 +135,8 @@ export class NewRecepieDialogComponent implements OnInit {
           label: item.displayLabel, // Show this in the dropdown
           value: item.value // Store this for saving to the DB
         }));
+        this.ingredientOptions = this.ingredientOptions.sort((a, b) => a.label.localeCompare(b.label));
+
         console.log('Data fetched and mapped successfully:', this.ingredientOptions);
       },
       error => {
@@ -142,7 +144,7 @@ export class NewRecepieDialogComponent implements OnInit {
         console.error('Error fetching and mapping data:', error);
       }
     );
-  }
+  }  
 
   loadMore(event: any) {
     const loadedItems = this.ingredientOptions.length;
