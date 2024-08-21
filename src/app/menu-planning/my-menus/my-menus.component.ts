@@ -15,7 +15,7 @@ import { NewShoppingListService } from '../../shared/services/new-shopping-list.
 import { RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { ProgressSpinner, ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface Ingredient {
   name: string;
@@ -120,7 +120,6 @@ export class MyMenusComponent implements OnInit {
 
   loadRecipesWithIngredients(menuPlanId: string): void {
     const menuPlan = this.menuPlans.find(plan => plan.id === menuPlanId);
-
     if (menuPlan) {
       const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
         this.recipeService.getRecipeById(recipe.id).pipe(
@@ -131,7 +130,6 @@ export class MyMenusComponent implements OnInit {
           })
         )
       );
-
       forkJoin(recipeRequests).subscribe({
         next: (recipes: (Recipe | null)[]) => {
           this.recipesWithIngredients[menuPlanId] = recipes.filter((recipe): recipe is Recipe => recipe !== null);
