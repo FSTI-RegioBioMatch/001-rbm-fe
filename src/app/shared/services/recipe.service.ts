@@ -86,21 +86,22 @@ export class RecipeService {
     );
   }
 
+  // getRecipeById(id: string): Observable<RecipeType> {
+  //   return this.storeService.selectedCompanyContext$.pipe(
+  //     switchMap(company => {
+  //       if (!company || !company.id) {
+  //         return throwError('No company selected or company ID is missing');
+  //       }
+  //       return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}`);
+  //     }),
+  //     catchError(error => {
+  //       console.error('Error fetching recipe by ID:', error);
+  //       return throwError(error);
+  //     })
+  //   );
+  // }
   getRecipeById(id: string): Observable<RecipeType> {
-    return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
-        if (!company || !company.id) {
-          return throwError('No company selected or company ID is missing');
-        }
-        return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}`, {
-          headers: { 'Current-Company': company.id },
-        });
-      }),
-      catchError(error => {
-        console.error('Error fetching recipe by ID:', error);
-        return throwError(error);
-      })
-    );
+    return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}`);
   }
 
   updateRecipeById(id: string, recipe: Partial<RecipeType>): Observable<RecipeType> {
