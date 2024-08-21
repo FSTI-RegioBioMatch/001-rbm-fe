@@ -40,10 +40,19 @@ export class NearbuyTestService {
   private mapAndCombineData(mainData: any[], localizeData: any): any[] {
     return mainData.map(item => {
       const localizedLabel = localizeData[item.label]; // Find localized label by matching the main data label
-      return {
-        ...item,
-        label: localizedLabel || item.label // Use localized label if found, otherwise use original
-      };
+      if (localizedLabel) {
+        return {
+          originalLabel: item.label, // Keep the original label for saving
+          displayLabel: localizedLabel, // Display the localized label
+          value: item.label // Use the original label as the value for saving
+        };
+      } else {
+        return {
+          originalLabel: item.label, // The original label
+          displayLabel: item.label, // Display the original label
+          value: item.label // Use the original label as the value for saving
+        };
+      }
     });
   }
 

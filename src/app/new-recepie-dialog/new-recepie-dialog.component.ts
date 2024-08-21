@@ -132,8 +132,8 @@ export class NewRecepieDialogComponent implements OnInit {
     this.nearbuyTestService.getData().subscribe(
       data => {
         this.ingredientOptions = data.map(item => ({
-          label: item.label,
-          value: item.label
+          label: item.displayLabel, // Show this in the dropdown
+          value: item.value // Store this for saving to the DB
         }));
         console.log('Data fetched and mapped successfully:', this.ingredientOptions);
       },
