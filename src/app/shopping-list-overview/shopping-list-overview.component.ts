@@ -11,7 +11,8 @@ import { NewShoppingListService } from '../shared/services/new-shopping-list.ser
 import { StoreService } from '../shared/store/store.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { ProgressSpinner, ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AddressService } from '../shared/services/adress.service';
 
 @Component({
   selector: 'app-shopping-list-overview',
@@ -27,7 +28,7 @@ import { ProgressSpinner, ProgressSpinnerModule } from 'primeng/progressspinner'
     ToastModule,
     ProgressSpinnerModule
   ],
-  providers:[MessageService],
+  providers: [MessageService],
   templateUrl: './shopping-list-overview.component.html',
   styleUrls: ['./shopping-list-overview.component.scss']
 })
@@ -37,11 +38,13 @@ export class ShoppingListOverviewComponent implements OnInit {
   shoppingLists: any[] = [];
   filteredShoppingLists: any[] = [];
   loading = false;
+
   constructor(
     private shoppingListService: NewShoppingListService,
     private storeService: StoreService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private addressService: AddressService // Inject the new service
   ) {
     this.searchForm = new FormGroup({
       name: new FormControl(''),
@@ -53,10 +56,16 @@ export class ShoppingListOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+  
     this.storeService.selectedCompanyContext$
       .pipe(
-        filter(company => company !== null),
-        switchMap(company => this.shoppingListService.getAllShoppingLists())
+        filter(company => company !== null),  // Ensure company context is available
+        switchMap(company => {  
+          // Now that we have the company context and ID, fetch and set offers
+          return this.addressService.fetchCompanyContextAndSetOffers().pipe(
+            switchMap(() => this.shoppingListService.getAllShoppingLists()) // Fetch all shopping lists
+          );
+        })
       )
       .subscribe({
         next: (lists) => {
@@ -70,9 +79,10 @@ export class ShoppingListOverviewComponent implements OnInit {
           console.error('Error loading shopping lists:', error);
         }
       });
-
+  
     this.searchForm.valueChanges.subscribe(() => this.filterShoppingLists());
   }
+  
 
   filterShoppingLists(): void {
     const { name, recipe, menuPlan, date } = this.searchForm.value;
