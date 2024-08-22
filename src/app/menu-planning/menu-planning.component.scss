@@ -14,9 +14,15 @@
 
 .menu-plan-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: scroll;
+  height: 300px;
+  max-height: 350px;
   width: 100%;
+  padding: 16px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .recipe-list {
@@ -25,23 +31,144 @@
   flex: 1;
   overflow-y: auto;
   max-height: 800px; /* Adjust based on the actual need */
+  align-items: center;
 }
 
+.recipe-list-all {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  max-height: 800px;
+  padding-left: 10%;
+}
+
+.recipe-list-add {
+  display: flex;
+  flex-wrap: wrap; /* Ermöglicht das Umbruchverhalten */
+  flex: 1;
+  height: 100%;
+
+  /* Jedes Kind-Element */
+  & > * {
+    flex: 0 0 50%; /* Jedes Element nimmt 50% der Breite ein */
+    box-sizing: border-box; /* Stellt sicher, dass Padding und Border in der Breite enthalten sind */
+  }
+}
+
+.recipe-item.placeholder {
+  width: 300px;
+  height: 200px;
+  background-color: #e4eddc;
+  border-radius: 8px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
 .recipe-item {
+  flex: 0 0 auto;
   margin: 10px;
   text-align: center;
-  width: 150px; /* Adjust based on the actual need */
+  width: 80%;
+  height: 200px;
+  max-width: 300px;
+  border-radius: 8px;
+  border: 1px solid #ececec;
+  position: relative;
+  box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.128);
+  transition-duration: 0.2s;
+}
+
+.recipe-item:hover {
+  box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.336);
+  transition-duration: 0.1s;
+  transform: scale(1.02);
 }
 
 .recipe-image {
   width: 100%;
-  height: 100px;
+  height: 100%;
   object-fit: cover;
+  border-radius: 8px;
 }
 
 .recipe-name {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgb(255,255,255);
+  background: linear-gradient(177deg, rgba(255,255,255,0) 22%, rgba(0,0,0,0.6103233529740021) 86%);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: last baseline;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.recipe-name p {
+  color: white;
+  font-size: 1.2em;
   font-weight: bold;
-  margin-top: 5px;
+  margin: 0;
+}
+
+::ng-deep .remove-button .p-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #C3EDC0;
+  color: black;
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.128);
+  border: none;
+  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+::ng-deep .remove-button .p-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.336);
+}
+
+
+::ng-deep .add-button .p-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 24px;
+  font-weight: bold;
+  background-color: #C3EDC0;
+  color: black;
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.128);
+  border: none;
+  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+::ng-deep .add-button .p-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 22px 0px rgba(37, 37, 37, 0.336);
 }
 
 .form-grid {
@@ -64,25 +191,70 @@
   grid-column: span 2;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.search-bar {
+::ng-deep .search-bar {
   margin: 10px 0;
-}
-
-input, p-dropdown {
   width: 100%;
-}
-
-.p-dropdown, .p-inputtext {
-  width: 100%;
-  box-sizing: border-box;
+  
+  input {
+    width: 90%;
+  }
 }
 
 .p-schedule {
   width: 100%;
   margin-top: 20px;
+}
+
+
+.date-config {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 500px;
+  white-space: nowrap;
+}
+
+::ng-deep .date-config .form-field {
+  min-width: 33.3%;
+  
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  input {
+    width: 100%;
+  }
+
+  .suffix {
+    position: absolute;
+    right: 90px;
+    pointer-events: none;
+    color: #29784d;
+  }
+}
+
+::ng-deep textarea {
+  resize: vertical;
+}
+
+::ng-deep full-calendar {
+  td, th, table {
+    border-color: #e5eddd !important;
+  }
+
+  a {
+    color: #29784d;
+  }
+
+  .fc-event-main {
+    background-color: #cbecc4;
+    color: black  !important;
+    border: none !important;
+  }
 }

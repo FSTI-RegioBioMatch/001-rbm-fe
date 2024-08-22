@@ -1,54 +1,107 @@
-<h1>{{recipe?.recipeName}}</h1>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
 
-<div>
-  <p>Traditional</p>
-  <p>Gluten-free</p>
-  <p>Vegan</p>
-</div>
+<ng-container *ngIf="!loading">
+  <p-card class="recipe-detail-card">
+    <ng-template pTemplate="header" class="recipe-detail-card_header">
 
-<div>
-  <button>menu</button>
-  <button>close</button>
-</div>
-
-<div>
-  <img [src]="recipe?.recipeImage" alt="Recipe Image" />
-  <div>
-    <h2>Values</h2>
-    <ul>
-      <li>Energy: {{ recipe?.energie }}</li>
-      <li>Portions per serving: {{ recipe?.portionen }}</li>
-      <li>Challenge/specialty: {{ recipe?.besonderheiten }}</li>
-      <li>Demographic: {{ recipe?.essensgaeste }}</li>
-      <li>Allergens: {{ recipe?.allergene }}</li>
-      <li>Season: {{ recipe?.saison }}</li>
-    </ul>
-  </div>
-</div>
-
-<div>
-  <h2>Description</h2>
-  <p>{{recipe?.recipeDescription}}</p>
-</div>
-
-<div>
-  <h3>Ingredients</h3>
-  <ul>
-    <li *ngFor="let ingredient of recipe?.ingredients">
-      {{ ingredient?.amount }} {{ ingredient?.unit }} - {{ ingredient?.name }} ({{ ingredient?.note }})
-      <ul>
-        <li *ngFor="let alt of ingredient?.alternatives">{{ alt?.amount }} {{ alt?.unit }} - {{ alt?.name }}</li>
-      </ul>
-    </li>
-  </ul>
-  <h3>Instructions</h3>
-  <ul>
-    <li *ngFor="let step of recipe?.steps">
-      <h4>{{ step?.schritt }}</h4>
-      <p>{{ step?.anleitung }}</p>
-      <div *ngIf="step?.images?.length > 0">
-        <img *ngFor="let image of step?.images" [src]="image" alt="Step Image" />
+      <div style="display: flex; align-items: center;">
+        <h2 *ngIf="!editMode">{{ recipe?.recipeName }}</h2>
+        <input *ngIf="editMode" [(ngModel)]="recipe.recipeName" />
       </div>
-    </li>
-  </ul>
-</div>
+      <button (click)="toggleEditMode()">{{ editMode ? 'Bearbeiten beenden' : 'Bearbeiten' }}</button>
+      <button (click)="confirmDelete()">Löschen</button>
+      <button (click)="saveRecipe()">Änderungen Speichern</button>
+    </ng-template>
+    <ng-template pTemplate="content">
+
+      <div class="recipe-detail-card_col1">
+        <div class="left">
+          <img *ngIf="recipe?.recipeImage" [src]="recipe?.recipeImage" alt="Recipe Image" class="recipe-detail-image">
+        </div>
+
+        <div class="right">
+          <div style="margin-bottom: 8px;">
+            <label>Energie in kcal:</label>
+            <p *ngIf="!editMode">{{ recipe?.energie }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.energie" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label>Portionen:</label>
+            <p *ngIf="!editMode">{{ recipe?.portionen }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.portionen" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label>Besonderheiten:</label>
+            <p *ngIf="!editMode">{{ recipe?.besonderheiten }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.besonderheiten" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label>Essensgäste:</label>
+            <p *ngIf="!editMode">{{ recipe?.essensgaeste }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.essensgaeste" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label>Allergene:</label>
+            <p *ngIf="!editMode">{{ recipe?.allergene }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.allergene" />
+          </div>
+          <div style="margin-bottom: 8px;">
+            <label>Saison:</label>
+            <p *ngIf="!editMode">{{ recipe?.saison }}</p>
+            <input *ngIf="editMode" [(ngModel)]="recipe.saison" />
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-detail-description">
+        <h3>Beschreibung</h3>
+        <p *ngIf="!editMode">{{ recipe?.recipeDescription }}</p>
+        <textarea *ngIf="editMode" [(ngModel)]="recipe.recipeDescription"></textarea>
+      </div>
+
+      <div class="recipe-detail-ingredients">
+        <h3>Zutaten</h3>
+        <ul>
+          <li *ngFor="let ingredient of recipe?.ingredients">
+            <span *ngIf="!editMode">{{ ingredient?.amount }} {{ ingredient?.unit }} {{ ingredient?.name }}</span>
+            <input *ngIf="editMode" [(ngModel)]="ingredient.amount" placeholder="Amount" />
+            <input *ngIf="editMode" [(ngModel)]="ingredient.unit" placeholder="Unit" />
+            <input *ngIf="editMode" [(ngModel)]="ingredient.name" placeholder="Name" />
+            <span *ngIf="ingredient?.optional">(Optional)</span>
+            <ul *ngIf="ingredient?.alternatives.length > 0">
+              <li *ngFor="let alt of ingredient?.alternatives">
+                Alternativ: <span *ngIf="!editMode">{{ alt?.amount }} {{ alt?.unit }} {{ alt?.name }}</span>
+                <input *ngIf="editMode" [(ngModel)]="alt.amount" placeholder="Amount" />
+                <input *ngIf="editMode" [(ngModel)]="alt.unit" placeholder="Unit" />
+                <input *ngIf="editMode" [(ngModel)]="alt.name" placeholder="Name" />
+              </li>
+            </ul>
+            <p *ngIf="ingredient?.note && !editMode">{{ ingredient?.note }}</p>
+            <textarea *ngIf="ingredient?.note && editMode" [(ngModel)]="ingredient.note"></textarea>
+          </li>
+        </ul>
+      </div>
+
+      <div class="recipe-detail-steps">
+        <h3>Zubereitung</h3>
+        <ol>
+          <li *ngFor="let step of recipe?.steps; let i = index">
+            <h4>Schritt {{ i + 1 }}: <span *ngIf="!editMode">{{ step?.schritt }}</span></h4>
+            <input *ngIf="editMode" [(ngModel)]="step.schritt" placeholder="Schritt" />
+            <p *ngIf="!editMode">{{ step?.anleitung }}</p>
+            <textarea *ngIf="editMode" [(ngModel)]="step.anleitung"></textarea>
+            <div *ngIf="step?.images && step?.images.length > 0" class="step-images">
+              <img *ngFor="let image of step?.images" [src]="image" alt="Step Image">
+            </div>
+          </li>
+        </ol>
+      </div>
+
+    </ng-template>
+  </p-card>
+</ng-container>
+
+<ng-container *ngIf="loading">
+  <p-progressSpinner></p-progressSpinner>
+</ng-container>

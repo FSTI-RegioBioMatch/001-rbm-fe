@@ -11,6 +11,11 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
+import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
+import { RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface Ingredient {
   name: string;
@@ -34,6 +39,8 @@ interface EnhancedIngredient {
   category: 'mass' | 'volume' | 'others';
   convertible: boolean; // Whether the unit was convertible
   processingBreakdown: { [processing: string]: number }; // Breakdown of amounts by processing method
+  totalInLargestUnit?: string;
+  errorMessages?: { [processing: string]: string };
 }
 
 
@@ -41,13 +48,17 @@ interface EnhancedIngredient {
   selector: 'app-my-menus',
   standalone: true,
   imports: [
+    RouterLink,
     CommonModule,
     FormsModule,
     TableModule,
     ButtonModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule,
+    ProgressSpinnerModule
   ],
+  providers: [MessageService],
   templateUrl: './my-menus.component.html',
   styleUrl: './my-menus.component.scss'
 })
@@ -57,6 +68,8 @@ export class MyMenusComponent implements OnInit {
   recipesWithIngredients: { [key: string]: Recipe[] } = {};
   selectedMenuPlans: any[] = [];
   groupedShoppingList: { [name: string]: EnhancedIngredient[] } = {}; // Grouped by ingredient name
+
+  loading = false;
 
   processingOptions = [
     { label: 'Ganz', value: 'ganz' },
@@ -69,10 +82,13 @@ export class MyMenusComponent implements OnInit {
   constructor(
     private menuPlanService: NewMenuplanService,
     private recipeService: RecipeService,
-    private store: StoreService
+    private store: StoreService,
+    private shoppingListService: NewShoppingListService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -84,8 +100,11 @@ export class MyMenusComponent implements OnInit {
           this.menuPlans.forEach(menuPlan => {
             this.loadRecipesWithIngredients(menuPlan.id);
           });
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading menu plans' });
           console.error('Error loading menu plans', error);
         }
       });
@@ -101,22 +120,24 @@ export class MyMenusComponent implements OnInit {
 
   loadRecipesWithIngredients(menuPlanId: string): void {
     const menuPlan = this.menuPlans.find(plan => plan.id === menuPlanId);
-
     if (menuPlan) {
       const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
         this.recipeService.getRecipeById(recipe.id).pipe(
           catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error fetching recipe ${recipe.id}` });
             console.error(`Error fetching recipe ${recipe.id}:`, error);
             return of(null); // Handle errors gracefully
           })
         )
       );
-
       forkJoin(recipeRequests).subscribe({
         next: (recipes: (Recipe | null)[]) => {
           this.recipesWithIngredients[menuPlanId] = recipes.filter((recipe): recipe is Recipe => recipe !== null);
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading recipes with ingredients' });
           console.error('Error loading recipes with ingredients:', error);
         }
       });
@@ -132,94 +153,171 @@ export class MyMenusComponent implements OnInit {
     const selectedMenuPlans = this.menuPlans.filter(plan => plan.selected);
     this.selectedMenuPlans = selectedMenuPlans;
     const shoppingListMap: { [key: string]: EnhancedIngredient[] } = {};
-
+  
     selectedMenuPlans.forEach(menuPlan => {
-        const recipes = this.recipesWithIngredients[menuPlan.id];
-        if (recipes) {
-            recipes.forEach(recipe => {
-                recipe.ingredients.forEach((ingredient: Ingredient) => {
-                    const key = ingredient.name;
-                    let amount = parseFloat(ingredient.amount as string);
-                    const processing = ingredient.processing || 'n/a';
-                    const unit = ingredient.unit;
-
-                    // Check if this ingredient already exists in the shopping list map
-                    if (shoppingListMap[key]) {
-                        let foundCompatibleUnit = false;
-
-                        // Look for an existing ingredient with a compatible unit
-                        shoppingListMap[key].forEach(existingIngredient => {
-                            if (this.isValidUnit(unit) && this.isValidUnit(existingIngredient.unit)) {
-                                try {
-                                    const normalizedAmount = convert(amount).from(unit as Unit).to(existingIngredient.unit as Unit);
-
-                                    if (existingIngredient.processingBreakdown[processing]) {
-                                        existingIngredient.processingBreakdown[processing] += normalizedAmount;
-                                    } else {
-                                        existingIngredient.processingBreakdown[processing] = normalizedAmount;
-                                    }
-                                    existingIngredient.totalAmount += normalizedAmount;
-                                    existingIngredient.sourceRecipes.push(recipe.recipeName);
-                                    foundCompatibleUnit = true;
-                                } catch (error) {
-                                    // Incompatible units, do nothing
-                                }
-                            }
-                        });
-
-                        if (!foundCompatibleUnit) {
-                            // If no compatible unit is found, create a new entry for this unit
-                            shoppingListMap[key].push({
-                                name: ingredient.name,
-                                unit: unit,
-                                totalAmount: amount,
-                                sourceRecipes: [recipe.recipeName],
-                                category: this.getCategory(unit),
-                                convertible: this.isValidUnit(unit),
-                                processingBreakdown: {
-                                    [processing]: amount
-                                }
-                            });
-                        }
+      const recipes = this.recipesWithIngredients[menuPlan.id];
+      if (recipes) {
+        recipes.forEach(recipe => {
+          recipe.ingredients.forEach((ingredient: Ingredient) => {
+            const key = ingredient.name;
+            let amount = parseFloat(ingredient.amount as string);
+            const processing = ingredient.processing || 'n/a';
+            const unit = ingredient.unit;
+  
+            if (shoppingListMap[key]) {
+              let foundCompatibleUnit = false;
+  
+              shoppingListMap[key].forEach(existingIngredient => {
+                if (this.isValidUnit(unit) && this.isValidUnit(existingIngredient.unit)) {
+                  try {
+                    const normalizedAmount = convert(amount).from(unit as Unit).to(existingIngredient.unit as Unit);
+  
+                    if (existingIngredient.processingBreakdown[processing]) {
+                      existingIngredient.processingBreakdown[processing] += normalizedAmount;
                     } else {
-                        shoppingListMap[key] = [{
-                            name: ingredient.name,
-                            unit: unit,
-                            totalAmount: amount,
-                            sourceRecipes: [recipe.recipeName],
-                            category: this.getCategory(unit),
-                            convertible: this.isValidUnit(unit),
-                            processingBreakdown: {
-                                [processing]: amount
-                            }
-                        }];
+                      existingIngredient.processingBreakdown[processing] = normalizedAmount;
                     }
+                    existingIngredient.totalAmount += normalizedAmount;
+                    existingIngredient.sourceRecipes.push(recipe.recipeName);
+                    foundCompatibleUnit = true;
+                  } catch (error) {
+                    // Incompatible units, do nothing
+                  }
+                }
+              });
+  
+              if (!foundCompatibleUnit) {
+                shoppingListMap[key].push({
+                  name: ingredient.name,
+                  unit: unit,
+                  totalAmount: amount,
+                  sourceRecipes: [recipe.recipeName],
+                  category: this.getCategory(unit),
+                  convertible: this.isValidUnit(unit),
+                  processingBreakdown: {
+                    [processing]: amount
+                  },
+                  totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit) // Calculate and store the total in the largest unit
                 });
-            });
-        }
+              }
+            } else {
+              shoppingListMap[key] = [{
+                name: ingredient.name,
+                unit: unit,
+                totalAmount: amount,
+                sourceRecipes: [recipe.recipeName],
+                category: this.getCategory(unit),
+                convertible: this.isValidUnit(unit),
+                processingBreakdown: {
+                  [processing]: amount
+                },
+                totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit) // Calculate and store the total in the largest unit
+              }];
+            }
+          });
+        });
+      }
     });
-
-    // Group by ingredient name
+  
     this.groupedShoppingList = {};
     Object.entries(shoppingListMap).forEach(([name, ingredients]) => {
-        this.groupedShoppingList[name] = ingredients;
+      this.groupedShoppingList[name] = ingredients.map(ingredient => {
+        // Recalculate the total in the largest unit after all amounts are summed
+        ingredient.totalInLargestUnit = this.calculateTotalInLargestUnit(ingredient.totalAmount, ingredient.unit);
+        return ingredient;
+      });
     });
-
+  
     console.log('Grouped Einkaufsliste:', this.groupedShoppingList);
-}  
+  }
+  
+  calculateTotalInLargestUnit(totalAmount: number, unit: string): string {
+    const germanUnits = {
+      volume: ['ml', 'l'],  // Preferred volume units in German
+      mass: ['g', 'kg'],    // Preferred mass units in German
+      others: [],           // Add an empty array for 'others'
+    };
+  
+    try {
+      const category = this.getCategory(unit);
+      const possibilities = germanUnits[category] || convert().from(unit as Unit).possibilities();
+  
+      const largestUnit = possibilities.reduce((prev, curr) => {
+        try {
+          const converted = convert(totalAmount).from(unit as Unit).to(curr as Unit);
+          return converted >= 1 ? curr : prev;
+        } catch (error) {
+          return prev;
+        }
+      }, unit);
+  
+      const convertedAmount = convert(totalAmount).from(unit as Unit).to(largestUnit as Unit);
+      return `${convertedAmount.toFixed(2)} ${largestUnit}`;
+    } catch (error) {
+      return `${totalAmount} ${unit}`; // Fallback in case of error
+    }
+  }
+  
+  
+
+
 
   updateAmount(item: EnhancedIngredient, process: string, event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    const newValue = parseFloat(inputElement.value);
+    const inputValue = inputElement.value.trim(); // Trim whitespace
+    const newValue = parseFloat(inputValue);
+    const originalValue = item.processingBreakdown[process];
 
-    if (!isNaN(newValue) && item.processingBreakdown[process] !== undefined) {
-        // Update the amount for the specific processing type
-        item.processingBreakdown[process] = newValue;
-        // Recalculate the total amount for this ingredient
-        item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
+    // Initialize the errorMessages object if it doesn't exist
+    if (!item.errorMessages) {
+        item.errorMessages = {};
     }
-  }
 
+    // Handle empty input
+    if (inputValue === '') {
+        item.errorMessages[process] = `Input cannot be empty. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle NaN (not a number)
+    if (isNaN(newValue)) {
+        item.errorMessages[process] = `Invalid input. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle non-positive numbers
+    if (newValue <= 0) {
+        item.errorMessages[process] = `Value must be greater than zero for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle absurdly large values
+    if (newValue > 10000) { // Example absurd number threshold, can be adjusted as needed
+        item.errorMessages[process] = `Value too large for ${item.name}. Please enter a smaller number.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // If input is valid, update the amount for the specific processing type
+    item.processingBreakdown[process] = newValue;
+
+    // Recalculate the total amount for this ingredient
+    item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
+
+    // Recalculate the total in the largest unit
+    item.totalInLargestUnit = this.calculateTotalInLargestUnit(item.totalAmount, item.unit);
+
+    // Remove any previous error states or messages
+    inputElement.classList.remove('invalid-input');
+    delete item.errorMessages[process]; // Clear the error message for this process if valid
+}
 
 
   deleteIngredient(group: string, process: string, index: number): void {
@@ -314,51 +412,6 @@ export class MyMenusComponent implements OnInit {
     return Object.keys(item.processingBreakdown);
   }
 
-  updateUnit(item: EnhancedIngredient, newUnit: Unit): void {
-    if (item.unit !== newUnit && this.isValidUnit(newUnit)) {
-        // Convert all amounts in the processing breakdown to the new unit
-        const conversionFactor = convert(1).from(item.unit as Unit).to(newUnit);
-
-        // Update the processing breakdown with the new unit
-        item.processingBreakdown = Object.fromEntries(
-            Object.entries(item.processingBreakdown).map(([process, amt]) => [process, amt * conversionFactor])
-        );
-
-        // Update the unit
-        item.unit = newUnit;
-
-        // Update the amount to the new unit's total
-        item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
-
-        // Check if there are other items in the same group with the same new unit
-        const groupName = item.name;
-        const sameUnitItems = this.groupedShoppingList[groupName].filter(otherItem => otherItem.unit === newUnit && otherItem !== item);
-
-        if (sameUnitItems.length > 0) {
-            sameUnitItems.forEach(sameUnitItem => {
-                // Merge the processing breakdowns
-                Object.entries(sameUnitItem.processingBreakdown).forEach(([process, amt]) => {
-                    if (item.processingBreakdown[process]) {
-                        item.processingBreakdown[process] += amt;
-                    } else {
-                        item.processingBreakdown[process] = amt;
-                    }
-                });
-
-                // Update the total amount
-                item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
-
-                // Remove the merged item
-                const index = this.groupedShoppingList[groupName].indexOf(sameUnitItem);
-                if (index > -1) {
-                    this.groupedShoppingList[groupName].splice(index, 1);
-                }
-            });
-        }
-    }
-}
-
-
 
   getUnitOptions(currentUnit: string): { label: string, value: string }[] {
     const categories = ['mass', 'volume'];
@@ -372,14 +425,34 @@ export class MyMenusComponent implements OnInit {
     return options;
   }
   saveShoppingList(): void {
+    const simplifiedMenuPlans = this.selectedMenuPlans.map((plan: any) => ({
+        id: plan.id,
+        name: plan.name,
+        recipes: plan.recipes.map((recipe: any) => ({
+            id: recipe.id,
+            name: recipe.name
+        }))
+    }));
+
     const shoppingListObject = {
-        menuPlans: this.selectedMenuPlans,
+        menuPlans: simplifiedMenuPlans,
         groupedShoppingList: this.groupedShoppingList,
         createdAt: new Date(),
         createdBy: 'admin', // Replace with actual user
         updatedAt: new Date()
     };
 
-    console.log('Gespeicherte Einkaufsliste:', shoppingListObject);
+    // Send to the backend via the service
+    this.shoppingListService.saveShoppingList(shoppingListObject).subscribe(
+      response => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Shopping list saved successfully' });
+        console.log('Shopping list saved successfully:', response);
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save shopping list' });
+        console.error('Error saving shopping list:', error);
+      }
+    );
   }
+
 }

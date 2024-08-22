@@ -1,0 +1,46 @@
+<div class="container p-8 h-screen">
+    <h1>Offer Scan Results</h1>
+    <div *ngIf="scanInProgress">Scanning offers...</div>
+
+    <div *ngIf="!scanInProgress">
+        <p-table [value]="shoppingList.ingredients" [tableStyle]="{ 'min-width': '50rem', height: '15rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Component</th>
+                    <th>Menu</th>
+                    <th>Amount</th>
+                    <th>Marketplace</th>
+                    <th>Company</th>
+                    <th>Regionality</th>
+                    <th>Price Per Unit</th>
+                    <th>Total Price</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-ingredientItem let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{ ingredientItem.name }}</td>
+                    <td>{{ ingredientItem.menu }}</td>
+                    <td>{{ ingredientItem.amount }} {{ ingredientItem.unit }}</td>
+                    <td>
+                        <p-badge value="Nearbuy"></p-badge>
+                    </td>
+                    <td>
+                        <p-dropdown [options]="matchedIngredientCompanies(ingredientItem.name)" optionLabel="name"
+                            (onChange)="onDropDownCompanyChange($event, rowIndex)"></p-dropdown>
+                    </td>
+                    <td>
+                        <p-dropdown [options]="regionalityInKm"></p-dropdown>
+                    </td>
+                    <td>{{ findCompanyProductPrice(rowIndex, ingredientItem.name) }}</td>
+                    <td>
+                        {{
+                        parseFloat(findCompanyProductPrice(rowIndex, ingredientItem.name)) * ingredientItem.amount
+                        ? parseFloat(findCompanyProductPrice(rowIndex, ingredientItem.name)) * ingredientItem.amount
+                        : ''
+                        }}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

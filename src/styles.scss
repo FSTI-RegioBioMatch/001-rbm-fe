@@ -4,3 +4,143 @@
 .p-datatable-wrapper {
   min-height: calc(100vh - 300px);
 }
+
+
+.box-wrapper {
+  border: 2px solid #29784D;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+
+//RegioBioMatch default scrollbar
+
+.rbm_scrollbar::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px;
+}
+
+.rbm_scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px; 
+}
+
+.rbm_scrollbar::-webkit-scrollbar-thumb {
+  background: #29784D; /* Farbe des Scrollbar-Griffs */
+  border-radius: 10px; /* Eckenradius des Scrollbar-Griffs */
+}
+
+.rbm_scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Farbe des Scrollbar-Griffs bei Hover */
+}
+
+.rbm_scrollbar::-webkit-scrollbar-corner {
+  background: #f1f1f1; /* Hintergrund der Ecke zwischen horizontaler und vertikaler Scrollbar */
+}
+
+
+
+/* inputs */
+
+input {
+  border-radius: 5px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+}
+input:enabled:focus {
+  box-shadow: none;
+}
+
+input::placeholder {
+  color: #29784d;
+}
+
+.p-dropdown {
+  border-radius: 5px;
+  width: 100%;
+  margin: 0;
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+}
+
+// dropdown
+
+.p-dropdown .p-dropdown-label {
+  color: #29784d;
+}
+
+.p-dropdown:focus-visible {
+  box-shadow: none;
+  outline-style: none;
+}
+
+.p-dropdown.p-focus {
+  background-color: #E2EDDB;
+  color: #29784d;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  box-shadow: none;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  background-color: #E2EDDB;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item:not(.p-highlight):not(.p-disabled).p-focus {
+  color: rgba(0, 0, 0, 0.87);
+  background: #E2EDDB;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #000000;
+}
+
+//textarea
+
+textarea {
+  border-radius: 10px;
+  padding: 14px;
+  background-color: #E2EDDB;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  min-height: 140px;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+// checkboy
+::ng-deep .p-checkbox-box {
+  border-radius: 4px;
+  border: 2px solid #29784D;
+  background-color: #E9FFC2;
+}
+
+::ng-deep .p-checkbox-box.p-highlight {
+  background-color: #29784D;
+  border-color: #29784D;
+}
+
+::ng-deep .p-checkbox-icon {
+  color: rgb(255, 255, 255);
+}
+
+// btn
+button {
+  border-radius: 14px;
+  padding: 9px;
+  background-color: #C3EDC0;
+  color: #29784D;
+  border: none;
+  outline-style: none;
+  outline-width: 0;
+  cursor: pointer;
+}

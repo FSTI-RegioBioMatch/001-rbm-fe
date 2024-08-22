@@ -7,6 +7,7 @@ export interface ProductType {
   isPermanent: boolean;
   category: Category;
   offerDetail: OfferDetail;
+  company?: string;
 }
 
 export interface Category {

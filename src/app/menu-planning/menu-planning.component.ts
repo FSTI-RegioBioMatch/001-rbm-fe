@@ -27,6 +27,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { EventHoveringArg, EventApi } from '@fullcalendar/core';
 import deLocale from '@fullcalendar/core/locales/de';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-menu-planning',
@@ -46,10 +50,14 @@ import { NewMenuplanService } from '../shared/services/new-menuplan.service';
     ButtonModule,
     FullCalendarModule,
     DialogModule,
-    TooltipModule
+    ToastModule,
+    ProgressSpinnerModule,
+    ConfirmDialogModule
   ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
   styleUrls: ['./menu-planning.component.scss'],
+
 })
 export class MenuPlanningComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
@@ -63,6 +71,45 @@ export class MenuPlanningComponent implements OnInit {
   calendarOptions: any;
   displayEventDialog: boolean = false;
   selectedEvent: any;
+
+  currentPage: number = 0;
+  pageSize: number = 20;
+  totalElements: number = 0;
+  loading: boolean = false;
+  allLoaded: boolean = false; // to track if all recipes are loaded
+
+  calendarLoaded = false
+  recipesLoaded = false
+
+  constructor(
+    private store: StoreService,
+    private menuplanService: NewMenuplanService,
+    private recipeService: RecipeService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {
+    this.menuPlanForm = new FormGroup({
+      name: new FormControl('', Validators.required),
+      nachsteAusfuhrung: new FormControl('', Validators.required),
+      wochentag: new FormControl('', Validators.required),
+      wiederholung: new FormControl('', Validators.required),
+      ort: new FormControl('', Validators.required),
+      portions: new FormControl('', Validators.required),
+      portionsVegetarisch: new FormControl(''),
+      portionsVegan: new FormControl(''),
+      description: new FormControl(''),
+    });
+  }
+  
+  onWheel(event: WheelEvent) {
+    const container = event.currentTarget as HTMLElement;
+    if (event.deltaY > 0) {
+      container.scrollLeft += 100;
+    } else {
+      container.scrollLeft -= 100;
+    }
+    event.preventDefault();
+  }
 
   weekDays = [
     { label: 'Montag', value: 1 },
@@ -82,46 +129,70 @@ export class MenuPlanningComponent implements OnInit {
     { label: 'Jährlich', value: 'YEARLY' },
   ];
 
-  constructor(
-    private store: StoreService,
-    private menuplanService: NewMenuplanService,
-    private recipeService: RecipeService,
-  ) {
-    this.menuPlanForm = new FormGroup({
-      name: new FormControl('', Validators.required),
-      nachsteAusfuhrung: new FormControl('', Validators.required),
-      wochentag: new FormControl('', Validators.required),
-      wiederholung: new FormControl('', Validators.required),
-      ort: new FormControl('', Validators.required),
-      portions: new FormControl('', Validators.required),
-      portionsVegetarisch: new FormControl(''),
-      portionsVegan: new FormControl(''),
-      description: new FormControl(''),
-    });
-  }
-
   ngOnInit(): void {
+    this.recipesLoaded = false
+    this.calendarLoaded = false
     this.calculateNextExecutionOptions();
     this.setupCalendarOptions();
+    this.store.selectedCompanyContext$
+      .pipe(
+        filter(company => company !== null),
+      )
+      .subscribe(() => {
 
+        this.loadRecipes(); 
+        this.loadAllEvents();
+      });
+  }
+  
+
+  loadRecipes(reset: boolean = false): void {
+    if (this.loading || this.allLoaded) return;
+    this.loading = true;
+  
+    if (reset) {
+      this.currentPage = 0;
+      this.filteredRecipes = [];
+    }
+  
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
         switchMap(company =>
-          this.recipeService.getRecipesByCompanyId(0, 10, 'recipeName,asc')
+          this.recipeService.getRecipesByCompanyId(
+            this.currentPage,
+            this.pageSize,
+            'recipeName,asc',
+            this.searchQuery
+          )
         )
       )
       .subscribe(
         page => {
-          this.myRecipes = page.content;
-          this.filteredRecipes = this.myRecipes;
-          console.log('recipes', this.myRecipes);
-          this.updateCalendar();
+          // Append or reset the filtered recipes based on the reset flag
+          if (reset) {
+            this.filteredRecipes = [...page.content];
+          } else {
+            this.filteredRecipes = [...this.filteredRecipes, ...page.content];
+          }
+          this.recipesLoaded = true
+          
+          this.totalElements = page.totalElements;
+          this.currentPage++;
+          this.loading = false;
+  
+          // Check if all pages are loaded
+          if (this.filteredRecipes.length >= this.totalElements) {
+            this.allLoaded = true;
+          }
         },
         error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching recipes' });
           console.error('Error fetching recipes:', error);
+          this.loading = false;
+          this.recipesLoaded = true
         }
-      );
+      );  
   }
 
   calculateNextExecutionOptions(): void {
@@ -140,9 +211,10 @@ export class MenuPlanningComponent implements OnInit {
   }
 
   filterRecipes(): void {
-    this.filteredRecipes = this.myRecipes.filter(recipe =>
-      recipe.recipeName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+    this.loading = false;
+    this.allLoaded = false;
+    this.currentPage = 0;
+    this.loadRecipes(true); // Reset and load the filtered recipes
   }
 
   addRecipeToMenuPlan(recipe: any): void {
@@ -150,30 +222,29 @@ export class MenuPlanningComponent implements OnInit {
       return;
     }
     this.menuPlan.push(recipe);
-    console.log('menuPlan', this.menuPlan);
   }
 
   removeRecipeFromMenuPlan(recipe: any): void {
     const index = this.menuPlan.indexOf(recipe);
     if (index > -1) {
       this.menuPlan.splice(index, 1);
-      console.log('menuPlan', this.menuPlan);
     }
   }
 
   saveMenuPlan(): void {
+    this.loading = true;
+    this.menuPlanForm.disable();
     const menuPlanData = {
       ...this.menuPlanForm.value,
       recipes: this.menuPlan,
     };
-    console.log('Menu Plan Data:', menuPlanData);
-  
+
     // Generate a new UUID for the menu plan
     const menuUuid = uuidv4();
-  
+
     // Add events to the calendar
     this.addEventsToCalendar(menuPlanData, menuUuid);
-  
+
     // Creating the menuPlanDataObject with the generated ID and events
     const menuPlanDataObject = {
       id: menuUuid,
@@ -202,33 +273,34 @@ export class MenuPlanningComponent implements OnInit {
         repeatFrequency: event.extendedProps.repeatFrequency,
       })),
     };
-  
-    console.log('Menu Plan Data Object:', menuPlanDataObject);
-  
+
     // Send to backend
     this.menuplanService.saveMenuPlan(menuPlanDataObject).subscribe(
       (response) => {
         console.log('Menu Plan saved successfully:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
+        this.menuPlanForm.reset();
+        this.menuPlanForm.enable();
         this.updateCalendar();
+        this.loading = false;
       },
       (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error saving Menu Plan' });
+        this.menuPlanForm.enable();
+        this.loading = false;
         console.error('Error saving Menu Plan:', error);
       }
     );
-  
-    // Force calendar to update
-
   }
-  
 
   addEventsToCalendar(menuPlanData: any, menuUuid: string): void {
     const nextExecution = menuPlanData.nachsteAusfuhrung;
     const weekNumber = parseInt(nextExecution.split(' ')[0].replace('KW', ''), 10);
     const year = parseInt(nextExecution.split(' ')[1], 10);
-  
-    const startDate = moment().year(year).isoWeek(weekNumber).isoWeekday(menuPlanData.wochentag); // Adjust weekday
+
+    const startDate = moment().year(year).isoWeek(weekNumber).isoWeekday(menuPlanData.wochentag);
     const repeatFrequency = menuPlanData.wiederholung;
-  
+
     let rule: RRule;
     switch (repeatFrequency) {
       case 'DAILY':
@@ -250,8 +322,8 @@ export class MenuPlanningComponent implements OnInit {
           freq: Frequency.MONTHLY,
           dtstart: startDate.toDate(),
           until: moment().year(year).endOf('year').toDate(),
-          byweekday: [new Weekday(startDate.day() - 1)], // Ensure correct weekday
-          bysetpos: [Math.ceil(startDate.date() / 7)], // Ensure correct week within the month
+          byweekday: [new Weekday(startDate.day() - 1)],
+          bysetpos: [Math.ceil(startDate.date() / 7)],
         });
         break;
       case 'YEARLY':
@@ -264,11 +336,11 @@ export class MenuPlanningComponent implements OnInit {
       default:
         return;
     }
-  
+
     const dates = rule.all();
     dates.forEach((date) => {
       this.events.push({
-        id: uuidv4(), // Unique identifier for each event instance
+        id: uuidv4(),
         title: menuPlanData.name,
         start: moment(date).startOf('day').toISOString(),
         allDay: true,
@@ -279,14 +351,13 @@ export class MenuPlanningComponent implements OnInit {
           portionsVegetarisch: menuPlanData.portionsVegetarisch,
           portionsVegan: menuPlanData.portionsVegan,
           repeatFrequency: menuPlanData.wiederholung,
-          menuId: menuUuid, // Set menuId explicitly here
+          menuId: menuUuid,
         },
       });
     });
-  
+
     this.calendarOptions.events = [...this.events];
   }
-  
 
   setupCalendarOptions(): void {
     this.calendarOptions = {
@@ -296,7 +367,7 @@ export class MenuPlanningComponent implements OnInit {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      firstDay: 1, // Set the first day of the week to Monday
+      firstDay: 1,
       editable: true,
       droppable: true,
       events: this.events,
@@ -304,59 +375,97 @@ export class MenuPlanningComponent implements OnInit {
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;
-      }
+      },
+      eventDrop: this.handleEventDrop.bind(this)
     };
   }
 
-  // deleteSingleEvent(event: EventApi): void {
-  //   this.events = this.events.filter(e => e.id !== event.id);
-  //   this.calendarOptions.events = [...this.events];
-  //   this.updateCalendar();
-  //   this.displayEventDialog = false;
-  // }
+  handleEventDrop(eventDropInfo: any): void {
+    const updatedEvent = eventDropInfo.event;
+    const menuId = updatedEvent.extendedProps.menuId;
+
+    const updatedEventData = {
+        id: updatedEvent.id,
+        title: updatedEvent.title,
+        start: updatedEvent.start?.toISOString(),
+        allDay: updatedEvent.allDay,
+        description: updatedEvent.extendedProps.description,
+        location: updatedEvent.extendedProps.location,
+        portions: updatedEvent.extendedProps.portions,
+        portionsVegetarisch: updatedEvent.extendedProps.portionsVegetarisch,
+        portionsVegan: updatedEvent.extendedProps.portionsVegan,
+        repeatFrequency: updatedEvent.extendedProps.repeatFrequency,
+        menuId: menuId,
+    };
+
+    this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
+        (response) => {
+            console.log('Event updated successfully:', response);
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
+            this.updateCalendar();
+        },
+        (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating event' });
+            console.error('Error updating event:', error);
+            eventDropInfo.revert();
+        }
+    );
+  }
+
+  confirmDelete(message: string, onAccept: () => void): void {
+    this.confirmationService.confirm({
+      message: message,
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: onAccept,
+      reject: () => {},
+    });
+  }
+  
 
   deleteSingleEvent(event: EventApi): void {
-    const eventId = event.id;
-    const menuId = event.extendedProps['menuId'];
-    this.events = this.events.filter(e => e.id !== eventId);
-    this.calendarOptions.events = [...this.events];
-    this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
-      () => {
-        console.log(`Event ${eventId} deleted successfully`);
-        this.updateCalendar();
-        this.displayEventDialog = false;
-      },
-      error => {
-        console.error('Error deleting event:', error);
-      }
-    );
+    this.confirmDelete("Are you sure you want to delete this event?", () => {
+      const eventId = event.id;
+      const menuId = event.extendedProps['menuId'];
+      this.events = this.events.filter(e => e.id !== eventId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
+        () => {
+          console.log(`Event ${eventId} deleted successfully`);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
+          this.updateCalendar();
+          this.displayEventDialog = false;
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
+          console.error('Error deleting event:', error);
+        }
+      );
+    });
   }
-
-  // deleteAllEvents(menuId: string): void {
-  //   this.events = this.events.filter(e => e.extendedProps.menuId !== menuId);
-  //   this.calendarOptions.events = [...this.events];
-  //   this.updateCalendar();
-  //   this.displayEventDialog = false;
-  // }
-
+  
   deleteAllEvents(menuId: string): void {
-    this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
-    this.calendarOptions.events = [...this.events];
-    this.menuplanService.deleteMenuPlan(menuId).subscribe(
-      () => {
-        console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
-        this.updateCalendar();
-        this.displayEventDialog = false;
-      },
-      error => {
-        console.error('Error deleting Menu Plan:', error);
-      }
-    );
+    this.confirmDelete("Are you sure you want to delete all events in this menu plan? Doing so will also delete the menu plan.", () => {
+      this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteMenuPlan(menuId).subscribe(
+        () => {
+          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
+          this.updateCalendar();
+          this.displayEventDialog = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
+          console.error('Error deleting Menu Plan:', error);
+        }
+      );
+    });
   }
+  
 
   updateCalendar(): void {
     if (this.calendarComponent && this.calendarComponent.getApi()) {
-      console.log('Refetching events', this.events);
       this.loadAllEvents();
       this.calendarComponent.getApi().refetchEvents();
     }
@@ -386,12 +495,13 @@ export class MenuPlanningComponent implements OnInit {
           });
         });
         this.calendarOptions.events = [...this.events];
-        console.log('Events:', this.events);
+        this.calendarLoaded = true
       },
       (error) => {
+        this.calendarLoaded = true
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching menu plans' });
         console.error('Error fetching menu plans:', error);
       }
     );
   }
-  
 }
