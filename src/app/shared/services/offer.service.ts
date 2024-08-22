@@ -60,7 +60,6 @@ export class OfferService {
     }
 
     this.address = address;
-    console.log('Setting search with address:', address);
     this.loadedSubject.next(false);
 
     const boundingBox = this.geoService.getBoundingBox(
@@ -68,8 +67,6 @@ export class OfferService {
       address.lat,
       address.lon,
     );
-    
-    console.log(boundingBox);
     
     this.getOffers(
       boundingBox.lonMin,
@@ -79,7 +76,6 @@ export class OfferService {
     ).pipe(
       tap(offers => this.store.setOffers(offers)),
       switchMap((offers: OfferType[]) => {
-      console.log('Offers received from API:', offers);
       const observables = offers.map((offer) =>
         this.http.get<OntofoodType>(offer.links.category)
       );
@@ -100,7 +96,6 @@ export class OfferService {
           });
           this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
           this.store.setOfferOntoFood(this.displayedFoodTypes);
-          console.log('Final offers with additional data:', offers);
           this.offersSubject.next(offers);
         })
       );
@@ -125,6 +120,10 @@ export class OfferService {
 
   trackByFn(index: number, item: any): any {
     return item.id || index; // Use item.id if available, otherwise use the index
+  }
+
+  getAddress(addressUrl: string): Observable<AddressType> {
+    return this.http.get<AddressType>(addressUrl);
   }
 
 }

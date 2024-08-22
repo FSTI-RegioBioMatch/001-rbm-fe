@@ -34,7 +34,6 @@ export class NearOffersCardComponent implements OnInit {
   }
 
   showDetails(offer: OfferType): void {
-    console.log('Details:', offer);
     this.selectedOffer = offer;
     this.displayDialog = true;
     this.cdr.detectChanges(); // Manually trigger change detection
@@ -47,5 +46,4 @@ export class NearOffersCardComponent implements OnInit {
   logToConsole(message: string): void {
     console.log(message);
   }
-
 }

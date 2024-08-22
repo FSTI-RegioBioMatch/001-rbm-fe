@@ -25,9 +25,7 @@ export class MapComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('Changes detected:', changes);
     if (changes['offers'] && !changes['offers'].firstChange) {
-      console.log('Offers changed in MapComponent:', this.offers);
       this.updateMarkers();
     }
     if ((changes['lat'] || changes['lng']) && this.map) {
@@ -43,7 +41,6 @@ export class MapComponent implements OnChanges, AfterViewInit {
   }
 
   private initializeMap() {
-    console.log('Initializing map with lat:', this.lat, 'lng:', this.lng);
     if (this.lat && this.lng) {
       this.map = L.map('map').setView([this.lat, this.lng], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -56,7 +53,6 @@ export class MapComponent implements OnChanges, AfterViewInit {
   }
 
   private updateMarkers() {
-    console.log('Updating markers. Number of offers:', this.offers.length);
     if (!this.map) {
       console.error('Map is not initialized');
       return;
@@ -74,7 +70,6 @@ export class MapComponent implements OnChanges, AfterViewInit {
     // Add new markers for each offer
     if (this.offers && this.offers.length > 0) {
       this.offers.forEach((offer, index) => {
-        console.log(`Processing offer ${index}:`, offer);
         if (offer.address && offer.address.lat && offer.address.lon) {
           const marker = L.marker([offer.address.lat, offer.address.lon]).addTo(this.map);
           const popupContent = `
@@ -87,7 +82,6 @@ export class MapComponent implements OnChanges, AfterViewInit {
           `;
           marker.bindPopup(popupContent);
           this.markers.push(marker);
-          console.log(`Added marker for offer ${index} at:`, offer.address.lat, offer.address.lon);
         } else {
           console.warn(`Offer ${index} has invalid coordinates:`, offer.address);
         }
@@ -125,6 +119,5 @@ export class MapComponent implements OnChanges, AfterViewInit {
     const customIcon = this.createCustomIcon('assets/leaflet/OwnLoc_marker.png');
     this.customMarker = L.marker([this.lat, this.lng], { icon: customIcon }).addTo(this.map);
     this.customMarker.bindPopup('<b>Mein Standort</b>').openPopup();
-    console.log('Added custom marker for my location at:', this.lat, this.lng);
   }
 }

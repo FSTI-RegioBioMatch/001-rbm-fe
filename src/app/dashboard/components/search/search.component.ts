@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 import { CardModule } from 'primeng/card';
 import { CompanyService } from '../../../shared/services/company.service';
 import { CompanyType } from '../../../shared/types/company.type';
+import { StoreService } from '../../../shared/store/store.service'; 
+import { AddressType } from '../../../shared/types/address.type';
 
 @Component({
   selector: 'app-search',
@@ -33,7 +35,9 @@ export class SearchComponent {
   constructor(
     private companyService: CompanyService,
     private offerService: OfferService, 
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef,
+    private store: StoreService // Inject StoreService
+  ) {}
   
   ngOnInit(): void {
     this.getCompanies();
@@ -54,25 +58,26 @@ export class SearchComponent {
     this.subscription.unsubscribe();
   }
 
-  getCompanies() {
-    const address = {
-      lat: 52.520008,
-      lon: 13.404954,
-      city: "Berlin"
-    }; // Example address
-    const searchRadiusInKM = 50; // Example search radius
 
-    console.log('Initiating company search with radius:', searchRadiusInKM, 'and address:', address);
-    this.companyService.setCompaniesBySearchCriteria({
-      radius: searchRadiusInKM,
-      lat: address.lat,
-      lon: address.lon
-    });
-    
+  getCompanies() {
+    this.subscription.add(
+      this.store.selectedCompanyContext$.subscribe(company => {
+        if (company && company.addresses && company.addresses.length > 0) {
+          const addressUrl = company.addresses[0].self; // Use the first address
+          this.companyService.getAddress(addressUrl).subscribe((address: AddressType) => {
+            const searchRadiusInKM = 50; // Adjust the search radius as needed
+            this.companyService.setCompaniesBySearchCriteria(searchRadiusInKM, address);
+          });
+        }
+      })
+    );
+  
+    this.subscription.add(
     this.companyService.companies$.subscribe(companies => {
-      console.log('Received companies:', companies);
       this.companies = companies;
-    });
+    })
+  );
+
 
     this.companyService.loaded$.subscribe(loaded => {
       this.loaded = loaded;
@@ -86,16 +91,20 @@ export class SearchComponent {
   }
 
   onSearchTermChange(searchTerm: string): void {
-    this.filteredCompanies = this.companies.filter((company) =>
-      company.company?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    this.filteredOffers = this.offers.filter((offer) =>
-      offer.ontoFoodType?.label?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    if (searchTerm.trim() === '') {
+      this.filteredCompanies = [];
+      this.filteredOffers = [];
+    } else {
+      this.filteredCompanies = this.companies.filter((company) =>
+        company.company?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      this.filteredOffers = this.offers.filter((offer) =>
+        offer.ontoFoodType?.label?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
   }
 
   showDetailsCompany(company: CompanyType): void {
-    console.log('Details:', company);
     this.selectedCompany = company;
     this.selectedOffer = null;
     this.displayDialog = true;
@@ -103,7 +112,6 @@ export class SearchComponent {
   }
 
   showDetailsOffer(offer: OfferType): void {
-    console.log('Details:', offer);
     this.selectedOffer = offer;
     this.selectedCompany = null;
     this.displayDialog = true;

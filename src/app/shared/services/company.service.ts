@@ -4,6 +4,8 @@ import { environment } from '../../../environments/environment.development';
 import { CompanyType } from '../types/company.type';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
+import { AddressType } from '../types/address.type';
+import { GeoService } from './geo.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +15,30 @@ export class CompanyService {
   loaded$ = this.loadedSubject.asObservable();
   private companiesSubject = new BehaviorSubject<CompanyType[]>([]);
   companies$ = this.companiesSubject.asObservable();
+  public address: AddressType = {
+    id: '',
+    city: '',
+    lat: 0,
+    lon: 0,
+    street: '',
+    name: '',
+    suffix: '',
+    zipcode: '',
+    type: '',
+    links: {
+      self: '',
+      update: '',
+      remove: '',
+      company: ''
+    }
+  };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private geoService: GeoService,
+  ) {}
 
   private getCompanies(dynamicParams: HttpParams): Observable<CompanyType[]> {
-    console.log('start search');
     let params = new HttpParams()
       .set('limit', '500')
       .set('showOnlyFavourites', 'false')
@@ -32,16 +53,26 @@ export class CompanyService {
     return this.http.get<CompanyType[]>(`${environment.NEARBUY_API}/companies`, { params });
   }
 
-  setCompaniesBySearchCriteria(searchCriteria: any) {
+  setCompaniesBySearchCriteria(searchRadiusInKM: number, address: AddressType) {
+    if (!address) {
+      console.error('Address is not provided');
+      return;
+    }
+
+    this.address = address;
     this.loadedSubject.next(false);
 
-    let params = new HttpParams();
+    const boundingBox = this.geoService.getBoundingBox(
+      searchRadiusInKM,
+      address.lat,
+      address.lon,
+    );
 
-    Object.keys(searchCriteria).forEach(key => {
-      if (searchCriteria[key]) {
-        params = params.set(key, searchCriteria[key]);
-      }
-    });
+    let params = new HttpParams()
+      .set('lat1', boundingBox.latMin.toString())
+      .set('lon1', boundingBox.lonMin.toString())
+      .set('lat2', boundingBox.latMax.toString())
+      .set('lon2', boundingBox.lonMax.toString());
 
     this.getCompanies(params).pipe(
       tap(companies => this.companiesSubject.next(companies)),
@@ -53,9 +84,8 @@ export class CompanyService {
         this.loadedSubject.next(true);
       }
     });
-    console.log('companies received from API:', this.companiesSubject);
   }
-
+  
   getCompaniesObservable(): Observable<CompanyType[]> {
     return this.companies$;
   }
@@ -66,5 +96,9 @@ export class CompanyService {
 
   trackByFn(index: number, item: any): any {
     return item.id || index; // Use item.id if available, otherwise use the index
+  }
+
+  getAddress(addressUrl: string): Observable<AddressType> {
+    return this.http.get<AddressType>(addressUrl);
   }
 }
