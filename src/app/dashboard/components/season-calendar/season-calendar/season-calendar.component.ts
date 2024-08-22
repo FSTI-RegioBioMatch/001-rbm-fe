@@ -126,4 +126,8 @@ export class SeasonCalendarComponent  implements OnInit, OnDestroy{
   logToConsole(message: string): void {
     console.log(message);
   }
+
+  clearFilteredProducts(): void {
+    this.filteredProducts = [];
+  }
 }
