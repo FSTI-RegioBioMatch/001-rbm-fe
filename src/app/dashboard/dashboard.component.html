@@ -45,41 +45,7 @@
           </p-card>
         </div>
 
-        <div class="card-wrapper">
-          <h2>Community-Saisonkalender</h2>
-          <p-card class="card card-my-recepies" header="zur Vollansicht">
-            <div>
-              <div class="carousel-container">
-                <button class="carousel-button left" (click)="scrollLeft()">
-                  icon
-                </button>
-                <div class="carousel-content" #carousel>
-                  <div>
-                    <p-button>Jan</p-button>
-                    <p-button>Feb</p-button>
-                    <p-button>Mrz</p-button>
-                    <p-button>Apr</p-button>
-                    <p-button>Mai</p-button>
-                    <p-button>Jun</p-button>
-                    <p-button>Jul</p-button>
-                    <p-button>Aug</p-button>
-                    <p-button>Sep</p-button>
-                    <p-button>Okt</p-button>
-                    <p-button>Nov</p-button>
-                    <p-button>Dez</p-button>
-                  </div>
-                </div>
-                <button class="carousel-button right" (click)="scrollRight()">
-                  icon
-                </button>
-              </div>
-
-              <p>Name Produkt</p>
-              <p>Name Produkt</p>
-              <p>Name Produkt</p>
-            </div>
-          </p-card>
-        </div>
+        <app-season-calendar />
 
         <app-near-offers-card />
         

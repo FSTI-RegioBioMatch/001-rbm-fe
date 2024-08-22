@@ -1,4 +1,5 @@
 export interface ProductType {
+  label: string;
   dateStart: string;
   dateEnd: string;
   unit: string;
