@@ -1,0 +1,52 @@
+<p-toast position="top-right"></p-toast>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-container">
+    <h2 class="form-title">Register</h2>
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" formControlName="name" type="text" placeholder="Enter name"
+            [ngClass]="{'is-invalid': isFieldInvalid('name')}">
+        <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
+            Name is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" formControlName="email" type="email" placeholder="Enter email"
+            [ngClass]="{'is-invalid': isFieldInvalid('email')}">
+        <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
+            Enter a valid email.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" formControlName="password" type="password" placeholder="Enter password"
+            [ngClass]="{'is-invalid': isFieldInvalid('password')}">
+        <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
+            Password is required (min. 6 characters).
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Enter phone number"
+            [ngClass]="{'is-invalid': isFieldInvalid('phoneNumber')}">
+        <div *ngIf="isFieldInvalid('phoneNumber')" class="invalid-feedback">
+            Phone number is required.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="age">Age</label>
+        <input id="age" formControlName="age" type="number" placeholder="Enter age"
+            [ngClass]="{'is-invalid': isFieldInvalid('age')}">
+        <div *ngIf="isFieldInvalid('age')" class="invalid-feedback">
+            You must be at least 18 years old.
+        </div>
+    </div>
+
+    <button [disabled]="registerForm.invalid" type="submit" class="submit-button">Register</button>
+</form>

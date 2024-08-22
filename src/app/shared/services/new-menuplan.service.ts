@@ -121,4 +121,28 @@ export class NewMenuplanService {
       })
     );
   }
+  /**
+ * Updates an event in a menu plan by IDs with the currently selected company ID.
+ * 
+ * @param menuPlanId - The ID of the menu plan.
+ * @param eventId - The ID of the event to update.
+ * @param eventData - The updated event data.
+ * @returns An Observable of the response.
+ */
+updateEventInMenuPlan(menuPlanId: string, eventId: string, eventData: any): Observable<any> {
+  return this.storeService.selectedCompanyContext$.pipe(
+      switchMap(company => {
+          if (!company || !company.id) {
+              return throwError('No company selected or company ID is missing');
+          }
+          let params = new HttpParams().set('companyId', company.id);
+          return this.http.put<any>(`${this.apiUrl}/${menuPlanId}/events/${eventId}`, eventData, { params });
+      }),
+      catchError(error => {
+          console.error('Error updating event in menu plan:', error);
+          return throwError(error);
+      })
+  );
+}
+
 }

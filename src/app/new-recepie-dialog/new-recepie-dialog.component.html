@@ -1,14 +1,17 @@
 <ng-container>
     <p-card class="new-recipe-card">
         <ng-template pTemplate="header" class="new-recipe-card_header">
-            <div><p class="new-recipe_title">Neues Rezept</p></div>
+            <!-- <div>
+                <p class="new-recipe_title">Neues Rezept</p>
+            </div> -->
             <div style="display: flex; align-items: center;">
-                <button pButton class="new-recipe_savebtn" icon="pi pi-check" type="button" label="Speichern" (click)="saveRecipe()"></button>
+                <button pButton class="new-recipe_savebtn" icon="pi pi-check" type="button" label="Speichern"
+                    [disabled]="loading || form.invalid" (click)="saveRecipe()"></button>
             </div>
         </ng-template>
         <ng-template pTemplate="content">
-           
-            
+
+
             <form [formGroup]="form">
                 <div class="new-recipe-card_col1">
 
@@ -29,19 +32,21 @@
 
                     <div class="right">
                         <div class="grid-4-column" formGroupName="selectedDiets">
-                            <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
-                                <p-checkbox class="diet-option-chip_checkbox" [binary]="true" [formControlName]="option.value"></p-checkbox>
+                            <div *ngFor="let option of dietOptions" class="diet-option-chip"
+                                (click)="toggleDiet(option.value)">
+                                <p-checkbox class="diet-option-chip_checkbox" [binary]="true"
+                                    [formControlName]="option.value"></p-checkbox>
                                 <label>{{option.label}}</label>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
 
 
 
                 <div class="new-recipe-card_col1 new-recipe-card-overview-sector">
-                    
+
                     <div class="img_preview_con">
                         <div *ngIf="!recipeImage" class="img_preview">
                             <i class="pi pi-image" style="font-size: 48px; color: #29784D;"></i>
@@ -59,7 +64,7 @@
                         <button *ngIf="recipeImage" pButton type="button" icon="pi pi-times"
                             class="img_button p-button-rounded p-button-danger" (click)="removeRecipeImage()"></button>
                     </div>
-                    
+
                     <div class="new-recipe-card-overview_data" style="flex: 1; display: flex; flex-direction: column;">
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Energie in kcal</label>
@@ -107,24 +112,34 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
                                     <div class="ingredient-con">
-                                            <input pInputText type="text" formControlName="name"
-                                                placeholder="Name der Zutat">
-                                            <input pInputText type="text" formControlName="amount" placeholder="Menge">
-                                            <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
-                                                [ngStyle]="{'flex': '1'}"></p-dropdown>
-                                            <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
-                                                class="p-button-rounded p-button-danger p-button-text"></button>
+                                        <p-dropdown [options]="ingredientOptions" formControlName="name"
+                                            placeholder="Name der Zutat" [showClear]="true" filter="true"
+                                            filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
+                                            [virtualScroll]="true" [itemSize]="50" [lazy]="true"
+                                            (onLazyLoad)="loadMore($event)">
+                                        </p-dropdown>
+                                        <input pInputText type="text" formControlName="amount" placeholder="Menge">
+                                        <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
+                                            [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                        <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
+                                            class="p-button-rounded p-button-danger p-button-text"></button>
                                     </div>
                                     <div>
                                         <div formArrayName="alternatives">
                                             <div *ngFor="let alternative of getAlternatives(i).controls; let j = index"
                                                 [formGroupName]="j" style="margin-top: 8px;">
                                                 <div style="display: flex; align-items: center;">
-                                                    <input pInputText type="text" formControlName="name"
-                                                        placeholder="Name der alternativen Zutat"
-                                                        style="margin-right: 8px; flex: 1;">
+
+                                                    <p-dropdown [options]="ingredientOptions" formControlName="name"
+                                                        placeholder="Name der alternativen Zutat" [showClear]="true"
+                                                        filter="true" filterPlaceholder="Suche nach Zutat"
+                                                        optionLabel="label" optionValue="value" [virtualScroll]="true"
+                                                        [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)">
+                                                    </p-dropdown>
+
+
                                                     <input pInputText type="text" formControlName="amount"
-                                                        placeholder="Menge" style="margin-right: 8px; flex: 1;">
+                                                        placeholder="Menge">
                                                     <p-dropdown [options]="units" formControlName="unit"
                                                         placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
                                                     <button pButton type="button" icon="pi pi-trash"
@@ -138,8 +153,8 @@
                                             <textarea pInputTextarea formControlName="note" placeholder="Notiz"
                                                 style="width: 100%; resize: vertical;"></textarea>
                                         </div>
-                                        <button pButton type="button" icon="pi pi-plus" label="Alternative Zutat hinzufügen"
-                                            (click)="addAlternativeIngredient(i)"
+                                        <button pButton type="button" icon="pi pi-plus"
+                                            label="Alternative Zutat hinzufügen" (click)="addAlternativeIngredient(i)"
                                             style="margin-top: 8px; margin-right: 8px;"></button>
                                         <button pButton type="button" icon="pi pi-plus"
                                             [label]="showNote[i] ? 'Notiz entfernen' : 'Notiz hinzufügen'"
@@ -151,8 +166,8 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="add_ingredient_btn" pButton type="button" icon="pi pi-plus" label="Zutat hinzufügen" (click)="addIngredient()"
-                            style="margin-top: 16px;"></button>
+                        <button class="add_ingredient_btn" pButton type="button" icon="pi pi-plus"
+                            label="Zutat hinzufügen" (click)="addIngredient()" style="margin-top: 16px;"></button>
                     </div>
                     <hr style="border: 0; height: 1px; background-color: #ccc; margin-top: 16px;">
                     <div class="right">
@@ -166,7 +181,8 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper ingredient-item">
                                     <div>
-                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div
+                                            style="display: flex; justify-content: space-between; align-items: center;">
                                             <div style="display: flex; align-items: center;">
                                                 <div class="counter">{{ i + 1 }}</div>
                                                 <input pInputText type="text" formControlName="schritt"
@@ -185,23 +201,23 @@
                                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                                             <div *ngFor="let image of stepImages[i]"
                                                 style="display: inline-block; margin: 4px;">
-                                                <img [src]="image" alt="Image preview" style="width: 100px; height: 100px;">
+                                                <img [src]="image" alt="Image preview"
+                                                    style="width: 100px; height: 100px;">
                                             </div>
                                             <p-fileUpload #fileUpload name="image[]" url="./upload"
-                                                (onSelect)="handleFileUpload($event, i, fileUpload)" multiple mode="basic"
-                                                accept="image/*"
-                                                chooseIcon="pi pi-images"></p-fileUpload>
+                                                (onSelect)="handleFileUpload($event, i, fileUpload)" multiple
+                                                mode="basic" accept="image/*" chooseIcon="pi pi-images"></p-fileUpload>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus" label="Schritt hinzufügen" (click)="addStep()"
-                            style="margin-top: 16px;"></button>
+                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus"
+                            label="Schritt hinzufügen" (click)="addStep()" style="margin-top: 16px;"></button>
                     </div>
                 </div>
 
-               
+                <p-toast></p-toast>
             </form>
         </ng-template>
     </p-card>

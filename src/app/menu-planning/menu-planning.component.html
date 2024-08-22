@@ -4,21 +4,22 @@
   <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
   <p-button>Angebotsliste</p-button>
 </div>
-
+<p-confirmDialog></p-confirmDialog>
 <div class="container">
+  <p-toast></p-toast>
   <div class="menu-plan-form">
     <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
-        <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
-          <p>Keine Rezepte hinzugefügt</p>
+      <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
+        <p>Keine Rezepte hinzugefügt</p>
+      </div>
+      <div *ngFor="let recipe of menuPlan" class="recipe-item">
+        <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
+          class="recipe-image">
+        <div class="recipe-name">
+          <p>{{ recipe.recipeName }}</p>
         </div>
-        <div *ngFor="let recipe of menuPlan" class="recipe-item">
-          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-            class="recipe-image">
-          <div class="recipe-name">
-            <p>{{ recipe.recipeName }}</p>
-          </div>
-          <p-button class="remove-button rbm-standard-pbtn-round" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
-        </div>
+        <p-button class="remove-button" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
+      </div>
     </div>
 
     <form [formGroup]="menuPlanForm" class="form-grid">
@@ -38,21 +39,21 @@
         </div>
       </div>
       <br>
-      
+      <div>
         <div class="form-field">
           <label for="name">Name</label>
-          <input id="name" type="text" formControlName="name" pInputText placeholder="Name"/>
+          <input id="name" type="text" formControlName="name" pInputText placeholder="Name" />
         </div>
         <div class="form-field">
           <label for="ort">Ort</label>
-          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort"/>
+          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort" />
         </div>
         <div class="form-field description-field">
           <label for="description">Beschreibung</label>
           <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"></textarea>
         </div>
-      
- 
+      </div>
+      <div>
         <div class="form-field">
           <label for="portions">Portions</label>
           <div class="input-wrapper">
@@ -60,24 +61,25 @@
             <span class="suffix">Personen</span>
           </div>
         </div>
-        
+
         <div class="form-field">
           <label for="portionsVegetarisch">Vegetarisch</label>
           <div class="input-wrapper">
-            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText placeholder="0"/>
+            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
+              placeholder="0" />
             <span class="suffix">Personen</span>
           </div>
         </div>
         <div class="form-field">
           <label for="portionsVegan">Vegan</label>
           <div class="input-wrapper">
-            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0"/>
+            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0" />
             <span class="suffix">Personen</span>
           </div>
         </div>
-      <br>
+      </div>
       <div class="form-field">
-        <p-button (click)="saveMenuPlan()">Speichern</p-button>
+        <p-button (click)="saveMenuPlan()" [disabled]="menuPlanForm.invalid || loading">Speichern</p-button>
       </div>
     </form>
   </div>
@@ -86,17 +88,23 @@
     <div class="search-bar">
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
-    <div class="recipe-list-add rbm_scrollbar">
+    <div class="recipe-list-add" #recipeList>
+      <div *ngIf="!recipesLoaded" class="text-center">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
       <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">
         <div class="recipe-name">{{ recipe.recipeName }}</div>
-        <p-button class="add-button rbm-standard-pbtn-round" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+        <p-button class="add-button" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
       </div>
     </div>
   </div>
 </div>
-<full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<div *ngIf="!calendarLoaded" class="text-center">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+<full-calendar *ngIf="calendarLoaded" #calendar [options]="calendarOptions"></full-calendar>
 <p-dialog [(visible)]="displayEventDialog" modal="modal" [style]="{width: '50vw'}" header="Event Details">
   <div *ngIf="selectedEvent">
     <h3>{{ selectedEvent.title }}</h3>

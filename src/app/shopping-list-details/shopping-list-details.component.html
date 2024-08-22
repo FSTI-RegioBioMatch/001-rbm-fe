@@ -28,9 +28,9 @@
                             <ul>
                                 <li *ngFor="let offer of getOfferForIngredient(ingredient.name)">
                                     <p>
-                                        <strong>{{ offer.company.name }}</strong> -
-                                        {{ offer.product.name }}:
-                                        {{ offer.offerDetail.pricePerUnit }} per unit
+                                        <strong>{{ offer?.company?.name }}</strong> -
+                                        {{ offer?.product.name }}:
+                                        {{ offer?.offerDetail?.pricePerUnit }} per unit
                                     </p>
                                 </li>
                             </ul>

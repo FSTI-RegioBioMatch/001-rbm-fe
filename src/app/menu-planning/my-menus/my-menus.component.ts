@@ -12,6 +12,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
 import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
+import { RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 interface Ingredient {
   name: string;
@@ -36,6 +40,7 @@ interface EnhancedIngredient {
   convertible: boolean; // Whether the unit was convertible
   processingBreakdown: { [processing: string]: number }; // Breakdown of amounts by processing method
   totalInLargestUnit?: string;
+  errorMessages?: { [processing: string]: string };
 }
 
 
@@ -43,13 +48,17 @@ interface EnhancedIngredient {
   selector: 'app-my-menus',
   standalone: true,
   imports: [
+    RouterLink,
     CommonModule,
     FormsModule,
     TableModule,
     ButtonModule,
     DropdownModule,
-    TooltipModule
+    TooltipModule,
+    ToastModule,
+    ProgressSpinnerModule
   ],
+  providers: [MessageService],
   templateUrl: './my-menus.component.html',
   styleUrl: './my-menus.component.scss'
 })
@@ -59,6 +68,8 @@ export class MyMenusComponent implements OnInit {
   recipesWithIngredients: { [key: string]: Recipe[] } = {};
   selectedMenuPlans: any[] = [];
   groupedShoppingList: { [name: string]: EnhancedIngredient[] } = {}; // Grouped by ingredient name
+
+  loading = false;
 
   processingOptions = [
     { label: 'Ganz', value: 'ganz' },
@@ -72,10 +83,12 @@ export class MyMenusComponent implements OnInit {
     private menuPlanService: NewMenuplanService,
     private recipeService: RecipeService,
     private store: StoreService,
-    private shoppingListService: NewShoppingListService
+    private shoppingListService: NewShoppingListService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
+    this.loading = true;
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -87,8 +100,11 @@ export class MyMenusComponent implements OnInit {
           this.menuPlans.forEach(menuPlan => {
             this.loadRecipesWithIngredients(menuPlan.id);
           });
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading menu plans' });
           console.error('Error loading menu plans', error);
         }
       });
@@ -104,22 +120,24 @@ export class MyMenusComponent implements OnInit {
 
   loadRecipesWithIngredients(menuPlanId: string): void {
     const menuPlan = this.menuPlans.find(plan => plan.id === menuPlanId);
-
     if (menuPlan) {
       const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
         this.recipeService.getRecipeById(recipe.id).pipe(
           catchError(error => {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Error fetching recipe ${recipe.id}` });
             console.error(`Error fetching recipe ${recipe.id}:`, error);
             return of(null); // Handle errors gracefully
           })
         )
       );
-
       forkJoin(recipeRequests).subscribe({
         next: (recipes: (Recipe | null)[]) => {
           this.recipesWithIngredients[menuPlanId] = recipes.filter((recipe): recipe is Recipe => recipe !== null);
+          this.loading = false;
         },
         error: (error) => {
+          this.loading = false;
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading recipes with ingredients' });
           console.error('Error loading recipes with ingredients:', error);
         }
       });
@@ -246,21 +264,60 @@ export class MyMenusComponent implements OnInit {
 
   updateAmount(item: EnhancedIngredient, process: string, event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    const newValue = parseFloat(inputElement.value);
+    const inputValue = inputElement.value.trim(); // Trim whitespace
+    const newValue = parseFloat(inputValue);
+    const originalValue = item.processingBreakdown[process];
 
-    if (!isNaN(newValue) && item.processingBreakdown[process] !== undefined) {
-        // Update the amount for the specific processing type
-        item.processingBreakdown[process] = newValue;
-
-        // Recalculate the total amount for this ingredient
-        item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
-
-        // Recalculate the total in the largest unit
-        item.totalInLargestUnit = this.calculateTotalInLargestUnit(item.totalAmount, item.unit);
+    // Initialize the errorMessages object if it doesn't exist
+    if (!item.errorMessages) {
+        item.errorMessages = {};
     }
+
+    // Handle empty input
+    if (inputValue === '') {
+        item.errorMessages[process] = `Input cannot be empty. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle NaN (not a number)
+    if (isNaN(newValue)) {
+        item.errorMessages[process] = `Invalid input. Please enter a valid number for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle non-positive numbers
+    if (newValue <= 0) {
+        item.errorMessages[process] = `Value must be greater than zero for ${item.name}.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // Handle absurdly large values
+    if (newValue > 10000) { // Example absurd number threshold, can be adjusted as needed
+        item.errorMessages[process] = `Value too large for ${item.name}. Please enter a smaller number.`;
+        inputElement.classList.add('invalid-input');
+        inputElement.value = originalValue.toString();
+        return;
+    }
+
+    // If input is valid, update the amount for the specific processing type
+    item.processingBreakdown[process] = newValue;
+
+    // Recalculate the total amount for this ingredient
+    item.totalAmount = Object.values(item.processingBreakdown).reduce((sum, amt) => sum + amt, 0);
+
+    // Recalculate the total in the largest unit
+    item.totalInLargestUnit = this.calculateTotalInLargestUnit(item.totalAmount, item.unit);
+
+    // Remove any previous error states or messages
+    inputElement.classList.remove('invalid-input');
+    delete item.errorMessages[process]; // Clear the error message for this process if valid
 }
-
-
 
 
   deleteIngredient(group: string, process: string, index: number): void {
@@ -388,9 +445,11 @@ export class MyMenusComponent implements OnInit {
     // Send to the backend via the service
     this.shoppingListService.saveShoppingList(shoppingListObject).subscribe(
       response => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Shopping list saved successfully' });
         console.log('Shopping list saved successfully:', response);
       },
       error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save shopping list' });
         console.error('Error saving shopping list:', error);
       }
     );

@@ -1,2507 +1,1662 @@
 {
-    "menuplanparent": {
-        "name": "11",
-        "nachsteAusfuhrung": "KW32 2024",
-        "wochentag": 2,
-        "wiederholung": "WEEKLY",
-        "ort": "1",
-        "portions": 1,
-        "portionsVegetarisch": 1,
-        "portionsVegan": 1,
-        "description": "1",
-        "recipes": [
-            {
-                "id": "66b371df4fdfef4c69562634",
-                "recipeName": "5th recipe",
-                "recipeDescription": "blablabla",
-                "includeInMenuPlanning": false,
-                "publishAsCommunityRecipe": false,
-                "steps": [
-                    {
-                        "schritt": "step 1",
-                        "anleitung": "mach",
-                        "images": []
-                    }
-                ],
-                "ingredients": [
-                    {
-                        "name": "name 1",
-                        "amount": "1",
-                        "unit": "g",
-                        "optional": false,
-                        "note": "",
-                        "alternatives": [
-                            {
-                                "name": "alt 1",
-                                "amount": "1",
-                                "unit": "g"
-                            }
-                        ],
-                        "nearbuyId": null
-                    },
-                    {
-                        "name": "name 2",
-                        "amount": "2",
-                        "unit": "kg",
-                        "optional": true,
-                        "note": "",
-                        "alternatives": [
-                            {
-                                "name": "alt 2",
-                                "amount": "2",
-                                "unit": "l"
-                            }
-                        ],
-                        "nearbuyId": null
-                    }
-                ],
-                "energie": "ee",
-                "portionen": "1",
-                "besonderheiten": "10",
-                "essensgaeste": "children",
-                "allergene": "dairy",
-                "saison": "winter",
-                "diets": [
-                    "dairy-free"
-                ],
-                "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-            },
-            {
-                "id": "66aa2c980c7eb545c181aa6a",
-                "recipeName": "geiles rezept",
-                "recipeDescription": "waeae",
-                "includeInMenuPlanning": false,
-                "publishAsCommunityRecipe": false,
-                "steps": [
-                    {
-                        "schritt": "e",
-                        "anleitung": "ea",
-                        "images": []
-                    }
-                ],
-                "ingredients": [
-                    {
-                        "name": "eeee",
-                        "amount": "2",
-                        "unit": "kg",
-                        "optional": false,
-                        "note": "",
-                        "alternatives": [],
-                        "nearbuyId": null
-                    }
-                ],
-                "energie": "",
-                "portionen": "",
-                "besonderheiten": "",
-                "essensgaeste": "",
-                "allergene": "",
-                "saison": "",
-                "diets": [
-                    "vegan"
-                ],
-                "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-            }
-        ]
-    },
-    "menuplan": [
-        {
-            "id": "3da59a90-732d-4400-867f-d1baa83aab1c",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-08-05T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "1eb72d80-7eae-4144-a1ab-a64a5b4a3dfe",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-08-12T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "91e73545-3608-4c63-9184-52ef610eb520",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-08-19T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "bf28f179-ab02-4d26-9f6f-8a51ff39eef1",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-08-26T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "cb1dd259-dde9-4789-b10b-8d464202e197",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-09-02T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "9c1faa57-dee6-4299-9ce7-a63acc8bd16b",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-09-09T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "bc1da665-f8c5-462b-adcf-32853f7c95bb",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-09-16T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "480586f9-253c-4ca3-8aed-b279dc752966",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-09-23T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "63b5e70d-be33-424a-bf57-0e7bb4e04a2c",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-09-30T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "90e0dec9-fc58-46b2-9ab3-e6af4ae49d02",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-10-07T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "f3e34598-68ed-4378-8c85-74612e4704cd",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-10-14T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "d4f58267-8ab8-4dd4-b288-1d83f79f12e4",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-10-21T22:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "f6ce2fb2-8f32-4a55-8b1e-78a6521f5835",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-10-28T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "2b5eb7ff-34a7-4ac4-a25c-164c2d8c93a7",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-11-04T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "19a9c4ef-e034-4dc5-98d6-5a1cdc43d170",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-11-11T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "eb3db017-d6f0-458b-a52b-86b30fd63d0c",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-11-18T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "9d0808cc-43e7-49f9-b15f-688acca8bcce",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-11-25T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "24ec1896-1243-4474-b565-fe9614b57c6f",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-12-02T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "8f4b7447-4bd4-47bf-8c04-e044559c5394",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-12-09T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "aa4cb5e1-ec3f-4f11-a29f-0ee78cd94060",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-12-16T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "86350587-1550-43b8-a070-ae433711a2c0",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-12-23T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        },
-        {
-            "id": "8dcc7492-c4f8-4268-a04d-0c65adb5cd48",
-            "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-            "title": "11",
-            "start": "2024-12-30T23:00:00.000Z",
-            "allDay": true,
-            "extendedProps": {
-                "description": "1",
-                "location": "1",
-                "portions": 1,
-                "portionsVegetarisch": 1,
-                "portionsVegan": 1,
-                "recipes": [
-                    {
-                        "id": "66b371df4fdfef4c69562634",
-                        "recipeName": "5th recipe",
-                        "recipeDescription": "blablabla",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "step 1",
-                                "anleitung": "mach",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "name 1",
-                                "amount": "1",
-                                "unit": "g",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 1",
-                                        "amount": "1",
-                                        "unit": "g"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            },
-                            {
-                                "name": "name 2",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": true,
-                                "note": "",
-                                "alternatives": [
-                                    {
-                                        "name": "alt 2",
-                                        "amount": "2",
-                                        "unit": "l"
-                                    }
-                                ],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "ee",
-                        "portionen": "1",
-                        "besonderheiten": "10",
-                        "essensgaeste": "children",
-                        "allergene": "dairy",
-                        "saison": "winter",
-                        "diets": [
-                            "dairy-free"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    },
-                    {
-                        "id": "66aa2c980c7eb545c181aa6a",
-                        "recipeName": "geiles rezept",
-                        "recipeDescription": "waeae",
-                        "includeInMenuPlanning": false,
-                        "publishAsCommunityRecipe": false,
-                        "steps": [
-                            {
-                                "schritt": "e",
-                                "anleitung": "ea",
-                                "images": []
-                            }
-                        ],
-                        "ingredients": [
-                            {
-                                "name": "eeee",
-                                "amount": "2",
-                                "unit": "kg",
-                                "optional": false,
-                                "note": "",
-                                "alternatives": [],
-                                "nearbuyId": null
-                            }
-                        ],
-                        "energie": "",
-                        "portionen": "",
-                        "besonderheiten": "",
-                        "essensgaeste": "",
-                        "allergene": "",
-                        "saison": "",
-                        "diets": [
-                            "vegan"
-                        ],
-                        "companyId": "d28665a3-4634-402e-98cd-24c937a8f079"
-                    }
-                ],
-                "menuId": "45f31eba-d564-42a5-b9da-00d2b4b22ae2",
-                "repeatFrequency": "WEEKLY"
-            }
-        }
-    ],
-    "menuUuid": "45f31eba-d564-42a5-b9da-00d2b4b22ae2"
-}
+    "\"Unserhof\", Trierweiler und Pforte": "\"Unserhof\", Trierweiler und Pforte",
+    "3er Schnitt vom Kalb": "3er Schnitt vom Kalb",
+    "3er Schnitt vom Schwein": "3er Schnitt vom Schwein",
+    "4er Schnitt vom Kalb": "4er Schnitt vom Kalb",
+    "4er Schnitt vom Schwein": "4er Schnitt vom Schwein",
+    "ALMONDS": "Mandel",
+    "AMARANTH": "Amarant",
+    "APPLES": "Äpfel",
+    "APRICOTS": "Aprikosen",
+    "ARTICHOKE": "Artischocke",
+    "ASPARAGUS": "Spargel",
+    "AUFSTRICH": "Aufstriche",
+    "AUFSTRICHE": "Aufstriche",
+    "AUFSTRICHE,_DIPS_UND_EINGEMACHTES": "Honig, Aufstriche und Eingemachtes",
+    "AUFSTRICHE_UND_DIPS": "Aufstriche und Dips",
+    "AVOCADOS": "Avocado",
+    "Aalfilet": "Aalfilet",
+    "Ackerbohnen": "Ackerbohnen",
+    "Adzukibohnen": "Adzukibohnen",
+    "Ahle Wurst": "Ahle Wurst",
+    "Ahornsirup": "Ahornsirup",
+    "Alblinsen": "Alblinsen",
+    "Amarant": "Amarant",
+    "Amarantkeimlinge": "Amarantkeimlinge",
+    "Amarantmehl": "Amarantmehl",
+    "Amarantsprossen": "Amarantsprossen",
+    "Amarantöl": "Amarantöl",
+    "Amaretto": "Amaretto",
+    "Ananas": "Ananas",
+    "Andere Aufstriche": "Andere Aufstriche",
+    "Andere Bohnen": "Andere Bohnen",
+    "Andere Erbsen": "Andere Erbsen",
+    "Andere Getreideprodukte": "Andere Getreideprodukte",
+    "Andere Kirschen": "Andere Kirschen",
+    "Andere Kräuter": "Andere Kräuter",
+    "Andere Leber": "Andere Leber",
+    "Andere Linsen": "Andere Linsen",
+    "Andere Nudeln": "Andere Nudeln",
+    "Andere Pflanzendrinks": "Andere Pflanzendrinks",
+    "Andere Pseudogetreideflocken": "Andere Pseudogetreideflocken",
+    "Andere Speiserüben": "Andere Speiserüben",
+    "Andere Wurst": "Andere Wurst",
+    "Anderer Kohl": "Anderer Kohl",
+    "Anderer Obstessig": "Anderer Obstessig",
+    "Anderer Obstsaft": "Anderer Obstsaft",
+    "Anderer Saft": "Anderer Saft",
+    "Anderer Speiseessig": "Anderer Speiseessig",
+    "Anderes Beerenobst": "Anderes Beerenobst",
+    "Anderes Brot": "Anderes Brot",
+    "Anderes Kernobst": "Anderes Kernobst",
+    "Anderes Obst": "Anderes Obst",
+    "Anderes Speiseöl": "Anderes Speiseöl",
+    "Anderes Steinobst": "Anderes Steinobst",
+    "Anis": "Anis",
+    "Apfeldicksaft": "Apfeldicksaft",
+    "Apfelessig": "Apfelessig",
+    "Apfelmus": "Apfelmus",
+    "Apfelperlwein": "Apfelperlwein",
+    "Apfelsaft": "Apfelsaft",
+    "Apfelschaumwein": "Apfelschaumwein",
+    "Apfelstillwein": "Apfelstillwein",
+    "Apfelwein": "Apfelwein",
+    "Aprikosenjoghurt": "Aprikosenjoghurt",
+    "Aprikosenkernöl": "Aprikosenkernöl",
+    "Aprikosenkonfitüre": "Aprikosenkonfitüre",
+    "Aprikpsenessig": "Aprikosenessig",
+    "Aronia-Fruchtaufstrich": "Aronia-Fruchtaufstrich",
+    "Aronia-Muttersaft": "Aronia-Muttersaft",
+    "Aroniabeeren": "Aroniabeeren",
+    "Aroniagelee": "Aroniagelee",
+    "Aroniakompott": "Aroniakompott",
+    "Aroniakonfitüre": "Aroniakonfitüre",
+    "Aroniamus": "Aroniamus",
+    "Aronianektar": "Aronianektar",
+    "Aroniasaft": "Aroniasaft",
+    "Aroniasirup": "Aroniasirup",
+    "Aroniatee": "Aroniatee",
+    "Aroniawein": "Aroniawein",
+    "Aufstrich": "Aufstrich",
+    "Aufstriche": "Aufstriche",
+    "Aufstriche und Dips": "Aufstriche und Dips",
+    "Aufstriche, Dips und Eingemachtes": "Aufstriche, Dips und Eingemachtes",
+    "Augenbohnen": "Augenbohnen",
+    "Austernpilze": "Austernpilze",
+    "Avocado": "Avocado",
+    "BAKERY_PRODUCTS": "Bäckereiprodukte",
+    "BAMBOO_SPROUTS": "Bambussprossen",
+    "BANANAS": "Bananen",
+    "BARLEY": "Gerste",
+    "BASIL": "Basilikum",
+    "BEANS": "Bohnen",
+    "BEEF": "Rindfleisch",
+    "BEETROOT": "Rote Beete",
+    "BELL_PEPPERS": "Paprika",
+    "BIG_GAME": "Hochwild",
+    "BLACKBERRIES": "Brombeeren",
+    "BLACK_CURRANTS": "Schwarze Johannisbeeren",
+    "BLUEBERRIES": "Heidelbeeren",
+    "BOAR": "Schwarzwild",
+    "BOK_CHOY": "Pak Choi",
+    "BREAD": "Brot",
+    "BROCCOLI": "Brokkoli",
+    "BRUSSELS_SPROUTS": "Rosenkohl",
+    "BUCKWHEAT": "Buchweizen",
+    "BUTTER": "Butter",
+    "BUTTERMILK": "Buttermilch",
+    "Babyspinat": "Babyspinat",
+    "Bachforelle": "Bachforelle",
+    "Bachsaibling": "Bachsaibling",
+    "Backerbsen": "Backerbsen",
+    "Backkakao": "Backkakao",
+    "Backmischungen": "Backmischungen",
+    "Backpulver": "Backpulver",
+    "Backwaren": "Backwaren",
+    "Baguette (Dinkel)": "Baguette (Dinkel)",
+    "Baguette (Weizen)": "Baguette (Weizen)",
+    "Balsamico": "Balsamico",
+    "Bambussprossen": "Bambussprossen",
+    "Bananen": "Bananen",
+    "Bandnudeln": "Bandnudeln",
+    "Bandnudeln (Buchweizen)": "Bandnudeln (Buchweizen)",
+    "Bandnudeln (Dinkel)": "Bandnudeln (Dinkel)",
+    "Bandnudeln (Dinkel-Vollkorn)": "Bandnudeln (Dinkel-Vollkorn)",
+    "Bandnudeln (Kichererbsen)": "Bandnudeln (Kichererbsen)",
+    "Basmatireis": "Basmatireis",
+    "Batavia": "Batavia",
+    "Bauchspeck (vom Schwein)": "Bauchspeck (vom Schwein)",
+    "Baumkuchen": "Baumkuchen",
+    "Belugalinsen": "Belugalinsen",
+    "Bergkäse": "Bergkäse",
+    "Berglinsen": "Berglinsen",
+    "Bienenstich": "Bienenstich",
+    "Bierschinken": "Bierschinken",
+    "Bierwurst": "Bierwurst",
+    "Birnenessig": "Birnenessig",
+    "Bischofsmütze": "Bischofsmütze",
+    "Blattgelatine": "Blattgelatine",
+    "Blattpetersilie": "Blattpetersilie",
+    "Blattsalat": "Blattsalat",
+    "Blattspinat": "Blattspinat",
+    "Blaue Lupine": "Blaue Lupine",
+    "Blaue Lupinen": "Blaue Lupinen",
+    "Blaue Tafeltrauben": "Blaue Tafeltrauben",
+    "Blaue Weintrauben": "Blaue Weintrauben",
+    "Blauer Wittling": "Blauer Wittling",
+    "Blauleng": "Blauleng",
+    "Blauschimmelkäse": "Blauschimmelkäse",
+    "Bleichsellerie": "Staudensellerie",
+    "Blockpaprika": "Blockpaprika",
+    "Blutwurst": "Blutwurst",
+    "Bockshornklee": "Bockshornklee",
+    "Bohnen": "Bohnen",
+    "Bohnenkraut": "Bohnenkraut",
+    "Bolognese": "Bolognese",
+    "Borlottibohnen": "Borlottibohnen",
+    "Borretsch": "Borretsch",
+    "Bratenrollen (Basis Weizenprotein)": "Bratenrollen (Basis: Weizenprotein)",
+    "Bratenrollen (Basis weiße Bohnen)": "Bratenrollen (Basis: weiße Bohnen)",
+    "Bratenrollen (Basis. Weizenprotein)": "Bratenrollen (Basis. Weizenprotein)",
+    "Bratenrollen (Basis. weiße Bohnen)": "Bratenrollen (Basis. weiße Bohnen)",
+    "Bratensoße": "Bratensoße",
+    "Bratöl": "Bratöl",
+    "Braunhirse": "Braunhirse",
+    "Brechbohnen": "Brechbohnen",
+    "Breitblättriger Thymian": "Breitblättriger Thymian",
+    "Brennnessel": "Brennnessel",
+    "Brokkolikeimlinge": "Brokkolikeimlinge",
+    "Bronner": "Bronner",
+    "Brot": "Brot",
+    "Brotaufstrich": "Brotaufstrich",
+    "Brotgewürz": "Brotgewürz",
+    "Bruderhahn": "Bruderhahn",
+    "Bruderhahnbolognese": "Bruderhahnbolognese",
+    "Bruderhahnbrust": "Bruderhahnbrust",
+    "Bruderhahnflügel": "Bruderhahnflügel",
+    "Bruderhahnkeule": "Bruderhahnkeule",
+    "Brunnenkresse": "Brunnenkresse",
+    "Brötchen": "Brötchen",
+    "Brühe": "Brühe",
+    "Brühwurst": "Brühwurst",
+    "Brühwürstchen": "Brühwürstchen",
+    "Buchweizenbrot": "Buchweizenbrot",
+    "Buchweizenflocken": "Buchweizenflocken",
+    "Buchweizengrieß": "Buchweizengrieß",
+    "Buchweizenmehl": "Buchweizenmehl",
+    "Buchweizennudeln": "Buchweizennudeln",
+    "Buchweizensprossen": "Buchweizensprossen",
+    "Bulgur": "Bulgur",
+    "Buttercremetorte": "Buttercremetorte",
+    "Butterkekse": "Butterkekse",
+    "Butternutkürbis": "Butternutkürbis",
+    "Butterzopf": "Butterzopf",
+    "Bärlauchpesto": "Bärlauchpesto",
+    "Bürgermeisterstück vom Rind": "Bürgermeisterstück vom Rind",
+    "CABBAGES": "Kohlgemüse",
+    "CARP": "Karpfen",
+    "CARROTS": "Karotten",
+    "CASHEWS": "Cashewnuss",
+    "CAULIFLOWER": "Blumenkohl",
+    "CELERY": "Sellerie",
+    "CERTIFIED_MILK": "Vorzugsmilch",
+    "CHAR": "Saibling",
+    "CHARD": "Mangold",
+    "CHEESE": "Käse",
+    "CHERVIL": "Kerbel",
+    "CHESTNUT": "Edelkastanie",
+    "CHIA": "Chia",
+    "CHICKEN": "Huhn",
+    "CHICKPEAS": "Kichererbsen",
+    "CHICORY": "Chicorée",
+    "CHINESE_LEAVES": "Chinakohl",
+    "CHIVES": "Schnittlauch",
+    "CITRUS_FRUIT": "Zitrusfrüchte",
+    "COALFISH": "Seelachs",
+    "COCONUTS": "Kokosnuss",
+    "COD": "Kabeljau",
+    "CORN": "Mais",
+    "CRAYFISCH": "Langusten",
+    "CREAM": "Rahm",
+    "CREAM_CHEESE": "Frischkäse",
+    "CUCUMBER": "Gurken",
+    "CULTIVATED_MUSHROOMS": "Zuchtpilze",
+    "CURD": "Quark",
+    "Camembert": "Camembert",
+    "Cantuccini": "Cantuccini",
+    "Cardy": "Cardy",
+    "Cardywurzeln": "Cardywurzeln",
+    "Cashewkerne": "Cashewkerne",
+    "Cayennepfeffer": "Cayennepfeffer",
+    "Champignons": "Champignons",
+    "Chardonnay": "Chardonnay",
+    "Cheddar": "Cheddar",
+    "Cherrytomaten": "Cherrytomaten",
+    "Chili": "Chili",
+    "Chiliflocken": "Chiliflocken",
+    "Chilifäden": "Chilifäden",
+    "Chilipulver": "Chilipulver",
+    "Chilischoten": "Chilischoten",
+    "Ciabatta": "Ciabatta",
+    "Cocktailtomaten": "Cocktailtomaten",
+    "Convenience": "Convenience",
+    "Cornflakes": "Cornflakes",
+    "Cornichons": "Cornichons",
+    "Couscous": "Couscous",
+    "Croissant": "Croissant",
+    "Crème fraîche": "Crème fraîche",
+    "Currypaste": "Currypaste",
+    "Currypulver": "Currypulver",
+    "DAIRY": "Milchprodukte",
+    "DAIRY_PRODUCTS": "Milcherzeugnisse",
+    "DAMASK_PLUMS": "Zwetschgen",
+    "DEMO Kantine Regenbogen": "DEMO Kantine Regenbogen",
+    "DILL": "Dill",
+    "DRY_FOOD": "Trockenprodukte",
+    "DUCK": "Ente",
+    "DURUM": "Hartweizen",
+    "Daikon Rettich": "Winterrettich",
+    "Daikon Rettich Keimlinge": "Winterrettich Keimlinge",
+    "Damhirsch": "Damhirsch",
+    "Damhirschbraten": "Damhirschbraten",
+    "Damhirschfilet": "Damhirschfilet",
+    "Damhirschgeschnetzeltes": "Damhirschgeschnetzeltes",
+    "Damhirschgulasch": "Damhirschgulasch",
+    "Damhirschhackfleisch": "Damhirschhackfleisch",
+    "Damhirschkeule": "Damhirschkeule",
+    "Damhirschragout": "Damhirschragout",
+    "Damhirschrücken": "Damhirschrücken",
+    "Damhirschschnitzel": "Damhirschschnitzel",
+    "Datteln": "Datteln",
+    "Debrecziner": "Debrecziner",
+    "Demo Angebot": "Demo Angebot",
+    "Demo Gesuch": "Demo Gesuch",
+    "Demo Untergesuch": "Demo Untergesuch",
+    "Dicke Bohnen": "Dicke Bohnen",
+    "Dicke Rippe vom Schwein": "Dicke Rippe vom Schwein",
+    "Dicke Wade vom Rind (mit Knochen)": "Dicke Wade vom Rind (mit Knochen)",
+    "Dicker Bug vom Rind": "Dicker Bug vom Rind",
+    "Dicker Bug vom Schwein": "Dicker Bug vom Schwein",
+    "Dill": "Dill",
+    "Dinkel": "Dinkel",
+    "Dinkelbrot": "Dinkelbrot",
+    "Dinkelbrötchen": "Dinkelbrötchen",
+    "Dinkeldrink": "Dinkeldrink",
+    "Dinkelflocken": "Dinkelflocken",
+    "Dinkelgrieß": "Dinkelgrieß",
+    "Dinkelkaffee": "Dinkelkaffee",
+    "Dinkelkleie": "Dinkelkleie",
+    "Dinkelmalz": "Dinkelmalz",
+    "Dinkelmehl": "Dinkelmehl",
+    "Dinkelnudeln": "Dinkelnudeln",
+    "Dinkelreis": "Dinkelreis",
+    "Dinkelschrot": "Dinkelschrot",
+    "Dinkelsprossen": "Dinkelsprossen",
+    "Dinkelvollkorngrieß": "Dinkelvollkorngrieß",
+    "Dinkelvollkornmehl": "Dinkelvollkornmehl",
+    "Dinkelvollkornnudeln": "Dinkelvollkornnudeln",
+    "Dips": "Dips",
+    "Dominosteine": "Dominosteine",
+    "Doppelkeks": "Doppelkeks",
+    "Dorade": "Dorade",
+    "Dorschfilet": "Dorschfilet",
+    "Dressings": "Dressings",
+    "Druschfrüchte": "Druschfrüchte",
+    "Döner (Basis Weizenprotein)": "Döner (Basis: Weizenprotein)",
+    "Döner (Basis. Weizenprotein)": "Döner (Basis. Weizenprotein)",
+    "EEL": "Aal",
+    "EGGPLANT": "Auberginen",
+    "EGGS": "Eier",
+    "EGG_PRODUCTS": "Eierzeugnisse",
+    "EINGEMACHTES": "Eingemachtes",
+    "ENDIVE": "Endivie",
+    "ESSIG": "Essig",
+    "ESSIG_UND_ÖL": "Essig und Öl",
+    "Echte Brunnenkresse": "Echte Brunnenkresse",
+    "Echte Zwetschgen": "Zwetschgen",
+    "Echter Kümmel": "Echter Kümmel",
+    "Echter Spinat": "Echter Spinat",
+    "Echter Thymian": "Echter Thymian",
+    "Echtes Labkraut": "Echtes Labkraut",
+    "Edamer": "Edamer",
+    "Eichblatt": "Eichblatt",
+    "Eichblatt grün": "Eichblatt grün",
+    "Eichblatt rot": "Eichblatt rot",
+    "Eier und Eiprodukte": "Eier und Eiprodukte",
+    "Eierlikör": "Eierlikör",
+    "Eigelb (flüssig)": "Eigelb (flüssig)",
+    "Eingelegtes": "Eingelegtes",
+    "Eingemachtes": "Eingemachtes",
+    "Einkorn": "Einkorn",
+    "Einkornmehl": "Einkornmehl",
+    "Eiprodukte": "Eiprodukte",
+    "Eisbergsalat": "Eisbergsalat",
+    "Eiweiß (flüssig)": "Eiweiß (flüssig)",
+    "Emmentaler": "Emmentaler",
+    "Emmer": "Emmer",
+    "Emmerflocken": "Emmerflocken",
+    "Emmermehl": "Emmermehl",
+    "Entenbraten": "Entenbraten",
+    "Entenbrust": "Entenbrust",
+    "Entenfilet": "Entenfilet",
+    "Entenflügel": "Entenflügel",
+    "Entenfrikassee": "Entenfrikassee",
+    "Entengeschnetzeltes": "Entengeschnetzeltes",
+    "Entengulasch": "Entengulasch",
+    "Entenkeule": "Entenkeule",
+    "Entenragout": "Entenragout",
+    "Entrecôte": "Entrecôte",
+    "Erbsen": "Erbsen",
+    "Erbsendrink": "Erbsendrink",
+    "Erbsenkeimlinge": "Erbsenkeimlinge",
+    "Erdbeeressig": "Erdbeeressig",
+    "Erdbeerjoghurt": "Erdbeerjoghurt",
+    "Erdbeerkonfitüre": "Erdbeerkonfitüre",
+    "Erdmandeln": "Erdmandeln",
+    "Erdnuss": "Erdnuss",
+    "Erdnussbutter": "Erdnussbutter",
+    "Erdnussmus": "Erdnussmus",
+    "Essig": "Speiseessig",
+    "Essig und Öl": "Essig und Öl",
+    "Essiggurken": "Essiggurken",
+    "Estragon": "Estragon",
+    "FALLOW_DEER": "Damwild",
+    "FEATHERED": "Federwild",
+    "FENNEL": "Fenchel",
+    "FISH": "Fisch",
+    "FISH_AND_SEAFOOD": "Fische und Meeresfrüchte",
+    "FLAT_PEAS": "Platterbsen",
+    "FLOWERY_VEGETABLES": "Blütengemüse",
+    "FOOD": "Essen",
+    "FRUIT": "Obst",
+    "FRUITS": "Obst",
+    "FRUIT_AND_VEGETABLES": "Obst und Gemüse",
+    "FRUIT_VEGETABLES": "Fruchtgemüse",
+    "FULL_EGGS": "Eier mit Schale",
+    "FUNGI": "Pilze",
+    "Farfalle": "Farfalle",
+    "Farfalle (Dinkel)": "Farfalle (Dinkel)",
+    "Farfalle (Dinkel-Vollkorn)": "Farfalle (Dinkel-Vollkorn)",
+    "Fasanenbraten": "Fasanenbraten",
+    "Fasanenbrust": "Fasanenbrust",
+    "Fasanenfilet": "Fasanenfilet",
+    "Fasanenflügel": "Fasanenflügel",
+    "Fasanenfrikassee": "Fasanenfrikassee",
+    "Fasanengulasch": "Fasanengulasch",
+    "Fasanenkeule": "Fasanenkeule",
+    "Fasanenragout": "Fasanenragout",
+    "Federkohl": "Federkohl",
+    "Feigen": "Feigen",
+    "Feinbackwaren": "Feinbackwaren",
+    "Feldhasenkeule": "Hasenkeule",
+    "Feldhasenläufe": "Hasenläufe",
+    "Feldhasenrücken": "Hasenrücken",
+    "Fertiggerichte und -komponenten": "Fertiggerichte und -komponenten",
+    "Fertigpizza": "Fertigpizza",
+    "Feta": "Hirtenkäse",
+    "Feuerbohnen": "Feuerbohnen",
+    "Filet (Basis weiße Bohnen)": "Filet (Basis: weiße Bohnen)",
+    "Filet (Basis. weiße Bohnen)": "Filet (Basis. weiße Bohnen)",
+    "Fischerzeugnisse": "Fischerzeugnisse",
+    "Fladenbrot": "Fladenbrot",
+    "Flageoletbohnen ": "Flageoletbohnen ",
+    "Flammkuchen": "Flammkuchen",
+    "Fleisch": "Fleisch",
+    "Fleisch und Wurst": "Wurst",
+    "Fleischalternativen": "Fleischalternativen",
+    "Fleischkäse": "Fleischkäse",
+    "Fleischtomaten": "Fleischtomaten",
+    "Fleischwurst": "Fleischwurst",
+    "Florentiner": "Florentiner",
+    "Flunder": "Flunder",
+    "Flussbarschfilet": "Flussbarschfilet",
+    "Flädle": "Flädle",
+    "Flüssigei": "Flüssigei",
+    "Forelle": "Forelle",
+    "Forellenfilet": "Forellenfilet",
+    "Fresh-Cut": "Fresh-Cut",
+    "Frikadelle (Basis Weizenprotein)": "Bulette (Basis: Weizenprotein)",
+    "Frikadelle (Basis. Weizenprotein)": "Frikadelle (Basis. Weizenprotein)",
+    "Frikadelle mit Soße": "Geflügelfrikadelle mit Soße",
+    "Frischhefe": "Frischhefe",
+    "Frischkäse": "Frischkäse",
+    "Frisée": "Frisée",
+    "Fruchtaufstriche": "Fruchtaufstriche",
+    "Fruchtjoghurt": "Fruchtjoghurt",
+    "Fränkische Mehlbeere": "Fränkische Mehlbeere",
+    "Früchte und Beeren": "Beerenobst",
+    "Früchtetee": "Früchtetee",
+    "Färberdistel": "Färberdistel",
+    "Färberdistelsamen": "Färberdistelsamen",
+    "Färberdistelöl": "Färberdistelöl",
+    "GARLIC": "Knoblauch",
+    "GINGER_ROOT": "Ingwer",
+    "GOOSE": "Gans",
+    "GOOSEBERRIES": "Stachelbeeren",
+    "GRAINS": "Getreide",
+    "GRAINS_AND_LEGUMES": "Getreide und Hülsenfrüchte",
+    "GRAPEFRUIT": "Grapefruit",
+    "GREEN_BEANS": "Grüne Bohne",
+    "GREEN_SALAD": "Blattsalat",
+    "GREEN_SPELT": "Grünkern",
+    "GUINEA_FOWL": "Perlhuhn",
+    "Ganz": "Ganz",
+    "Garam Masala": "Garam Masala",
+    "Gartenkresse": "Gartenkresse",
+    "Gebäck": "Dauerbackwaren",
+    "Geflügelbolognese": "Geflügelbolognese",
+    "Geflügelfrikadelle mit Soße": "Geflügelfrikadelle mit Soße",
+    "Gekröse": "Gekröse",
+    "Gelatine": "Gelatine",
+    "Gelbe Bete": "Gelbe Beete",
+    "Gelbe Blockpaprika": "Gelbe Blockpaprika",
+    "Gelbe Bohnen": "Gelbe Wachsbohnen",
+    "Gelbe Linsen": "Gelbe Linsen",
+    "Gelbe Lupine": "Gelbe Lupine",
+    "Gelbe Lupinen": "Gelbe Lupinen",
+    "Gelbe Spitzpaprika": "Gelbe Spitzpaprika",
+    "Gelbe Tomatenpaprika": "Gelbe Tomatenpaprika",
+    "Gelbmehlweizen": "Gelbmehlweizen",
+    "Gelee": "Gelee",
+    "Gelee Extra": "Gelee Extra",
+    "Gemüse": "Gemüse",
+    "Gemüsebrühe": "Gemüsebrühe",
+    "Gemüsemischung": "Gemüsemischung",
+    "Gemüsesaft": "Gemüsesaft",
+    "Gemüsezwiebeln": "Gemüsezwiebeln",
+    "Gerstengrieß": "Gerstengrieß",
+    "Gerstenmalz": "Gerstenmalz",
+    "Gerstensprossen": "Gerstensprossen",
+    "Geschnetzeltes (Basis Weizenprotein)": "Geschnetzeltes (Basis: Weizenprotein)",
+    "Geschnetzeltes (Basis. Weizenprotein)": "Geschnetzeltes (Basis. Weizenprotein)",
+    "Getreideflocken": "Getreideflocken",
+    "Getreidekaffee": "Getreidekaffee",
+    "Getränke": "Getränke",
+    "Gewürze": "Gewürze",
+    "Gewürzfenchel": "Gewürzfenchel",
+    "Gewürzfenchelkraut": "Gewürzfenchelkraut",
+    "Gewürzfenchelsamen": "Gewürzfenchelsamen",
+    "Gewürzfenchelsamen (unreif)": "Gewürzfenchelsamen (unreif)",
+    "Gewürzmischungen": "Gewürzmischungen",
+    "Gewürznelken": "Gewürznelken",
+    "Giersch": "Giersch",
+    "Glaskirschen": "Glaskirschen",
+    "Glühwein": "Glühwein",
+    "Goldhirse": "Goldhirse",
+    "Gorgonzola": "Gorgonzola",
+    "Gouda": "Gouda",
+    "Granatäpfel": "Granatäpfel",
+    "Grauer Burgunder": "Grauer Burgunder",
+    "Grieß": "Grieß",
+    "Grillhähnchen": "Grillhähnchen",
+    "Große Maräne": "Große Maräne",
+    "Grüne Blockpaprika": "Grüne Blockpaprika",
+    "Grüne Linsen": "Grüne Linsen",
+    "Grüne Soße": "Grüne Soße",
+    "Grüne Spitzpaprika": "Grüne Spitzpaprika",
+    "Grüne Tomaten": "Grüne Tomaten",
+    "Grüne Tomatenpaprika": "Grüne Tomatenpaprika",
+    "Grüner Spargel": "Grüner Spargel",
+    "Grünkern": "Grünkern",
+    "Gulasch": "Gulasch",
+    "Gulasch (Basis Weizenprotein)": "Gulasch (Basis: Weizenprotein)",
+    "Gulasch (Basis. Weizenprotein)": "Gulasch (Basis. Weizenprotein)",
+    "Gurke": "Gurke",
+    "Gyros (Basis Weizenprotein)": "Gyros (Basis: Weizenprotein)",
+    "Gyros (Basis. Weizenprotein)": "Gyros (Basis. Weizenprotein)",
+    "Gänsebraten": "Gänsebraten",
+    "Gänsebrust": "Gänsebrust",
+    "Gänsefilet": "Gänsefilet",
+    "Gänseflügel": "Gänseflügel",
+    "Gänsegulasch": "Gänsegulasch",
+    "Gänsekeule": "Gänsekeule",
+    "Gänseragout": "Gänseragout",
+    "HADDOCK": "Schellfisch",
+    "HALIBUT": "Heilbutt",
+    "HARD_CHEESE": "Hartkäse",
+    "HARE": "Feldhase",
+    "HAZEL_NUTS": "Haselnuss",
+    "HEADED_CABBAGE": "Kopfkohl",
+    "HERBS": "Kräuter",
+    "HERRING": "Hering",
+    "HONIG": "Honig",
+    "HORSERADISH": "Meerrettich",
+    "Hackfleisch (halb und halb": "Hackfleisch halb und halb",
+    "Hackfleisch (halb und halb)": "Hackfleisch (halb und halb)",
+    "Haferbrot": "Haferbrot",
+    "Haferdrink": "Haferdrink",
+    "Haferflocken": "Haferflocken",
+    "Haferkleie": "Haferkleie",
+    "Hafermehl": "Hafermehl",
+    "Hafermischbrot": "Hafermischbrot",
+    "Haferreis": "Haferreis",
+    "Hagebuttentee": "Hagebuttentee",
+    "Hagelzucker": "Hagelzucker",
+    "Halbe Ente": "Halbe Ente",
+    "Halbe Gans": "Halbe Gans",
+    "Halbe Pute": "Halbe Pute",
+    "Halbes Hähnchen": "Halbes Hähnchen",
+    "Halbes Kalb": "Halbes Kalb",
+    "Halbes Lamm": "Halbes Lamm",
+    "Halbes Perlhuhn": "Halbes Perlhuhn",
+    "Halbes Rind": "Halbes Rind",
+    "Halbes Schaf": "Halbes Schaf",
+    "Halbes Schwein": "Halbes Schwein",
+    "Halloumi": "Halloumi",
+    "Hanf": "Hanf",
+    "Hanfdrink": "Hanfdrink",
+    "Hanfkaffee": "Hanfkaffee",
+    "Hanfmehl": "Hanfmehl",
+    "Hanfnudeln": "Hanfnudeln",
+    "Hanfsamen": "Hanfsamen",
+    "Hanföl": "Hanföl",
+    "Hartweizengrieß": "Hartweizengrieß",
+    "Haselnussjoghurt": "Haselnussjoghurt",
+    "Haselnussöl": "Haselnussöl",
+    "Hasenbraten": "Hasenbraten",
+    "Hasenfilet": "Hasenfilet",
+    "Hasenfrikassee": "Hasenfrikassee",
+    "Hasengeschnetzeltes": "Hasengeschnetzeltes",
+    "Hasengulasch": "Hasengulasch",
+    "Hasenragout": "Hasenragout",
+    "Hausmacher Blutwurst": "Hausmacher Blutwurst",
+    "Hausmacher Leberwurst": "Hausmacher Leberwurst",
+    "Hausmacher Wurst": "Hausmacher Wurst",
+    "Hechtfilet": "Hechtfilet",
+    "Hefe": "Hefe",
+    "Hefezopf": "Hefezopf",
+    "Heidelbeer-Holunder-Joghurt": "Heidelbeer-Holunder-Joghurt",
+    "Heidelbeeressig": "Heidelbeeressig",
+    "Heidelbeerjoghurt": "Heidelbeerjoghurt",
+    "Heidesand": "Heidesand",
+    "Heilbuttfilet": "Heilbuttfilet",
+    "Heringsfilet": "Heringsfilet",
+    "Herz": "Herz",
+    "Herz (Kalb)": "Kalbsherz",
+    "Herz (Rind)": "Rinderherz",
+    "Herz (Schaf)": "Schafsherz",
+    "Herz (Schwein)": "Schweineherz",
+    "Herzkirschen": "Herzkirschen",
+    "Himbeeressig": "Himbeeressig",
+    "Himbeerjoghurt": "Himbeerjoghurt",
+    "Himbeerkonfitüre": "Himbeerkonfitüre",
+    "Hirschgulasch": "Hirschgulasch",
+    "Hirschles Bio-Vermarktung": "Hirschles Bio-Vermarktung",
+    "Hirsedrink": "Hirsedrink",
+    "Hirseflocken": "Hirseflocken",
+    "Hirsegrieß": "Hirsegrieß",
+    "Hirsemehl": "Hirsemehl",
+    "Hochrippe": "Hochrippe",
+    "Hokkaido": "Hokkaido",
+    "Holunderbeeren": "Holunderbeeren",
+    "Holunderessig": "Holunderessig",
+    "Honig": "Honig",
+    "Honig, Aufstriche und Eingemachtes": "Honig, Aufstriche und Eingemachtes",
+    "Honiglikör": "Honiglikör",
+    "Hähnchen": "Hähnchen",
+    "Hähnchenalternative (Basis Weizenprotein)": "Hähnchenalternative (Basis: Weizenprotein)",
+    "Hähnchenalternative (Basis. Weizenprotein)": "Hähnchenalternative (Basis. Weizenprotein)",
+    "Hähnchenbolognese": "Hähnchenbolognese",
+    "Hähnchenfleisch": "Hähnchenfleisch",
+    "Hühnerbolognese": "Hühnerbolognese",
+    "Hühnerbraten": "Hühnerbraten",
+    "Hühnerbrust": "Hühnerbrust",
+    "Hühnerbrühe": "Hühnerbrühe",
+    "Hühnerfilet": "Hühnerfilet",
+    "Hühnerflügel": "Hühnerflügel",
+    "Hühnerfrikassee": "Hühnerfrikassee",
+    "Hühnergeschnetzeltes": "Hühnergeschnetzeltes",
+    "Hühnergulasch": "Hühnergulasch",
+    "Hühnerhälse": "Hühnerhälse",
+    "Hühnerkeule": "Hühnerkeule",
+    "Hühnerragout": "Hühnerragout",
+    "Hühnerschnitzel": "Hühnerschnitzel",
+    "Hülsenfrüchte": "Hülsenfrüchte",
+    "ICEBERG_LETTUCE": "Eisbergsalat",
+    "INNARDS": "Innereien",
+    "Igel Stachelbart": "Igel Stachelbart",
+    "Ingwerpulver": "Ingwerpulver",
+    "Innereien": "Innereien",
+    "Italienische Kräuter": "Italienische Kräuter",
+    "Jagdwurst": "Jagdwurst",
+    "Johannisbeeren": "Johannisbeeren",
+    "Johannisbeeressig": "Johannisbeeressig",
+    "Johannisbeersaft": "Johannisbeersaft",
+    "Johanniter": "Johanniter",
+    "KALE": "Grünkohl",
+    "KEFIR": "Kefir",
+    "KERNELS": "Kerne",
+    "KIDNEY_BEANS": "Kidneybohnen",
+    "KOHLRABI": "Kohlrabi",
+    "KUMQUAT": "Kumquat",
+    "Kabeljaufilet": "Kabeljaufilet",
+    "Kaffee": "Kaffee",
+    "Kakao": "Kakao",
+    "Kakaopulver": "Kakaopulver",
+    "Kalb": "Kalb",
+    "Kalbsbraten": "Kalbsbraten",
+    "Kalbsbries": "Kalbsbries",
+    "Kalbsbrust": "Kalbsbrust",
+    "Kalbsdünnung": "Kalbsdünnung",
+    "Kalbsfilet": "Kalbsfilet",
+    "Kalbsfrikassee": "Kalbsfrikassee",
+    "Kalbsgeschnetzeltes": "Kalbsgeschnetzeltes",
+    "Kalbsgulasch": "Kalbsgulasch",
+    "Kalbshackfleisch": "Kalbshackfleisch",
+    "Kalbshals": "Kalbshals",
+    "Kalbshaxe": "Kalbshaxe",
+    "Kalbshüfte": "Kalbshüfte",
+    "Kalbskeule mit Knochen": "Kalbskeule mit Knochen",
+    "Kalbskeule ohne Knochen": "Kalbskeule ohne Knochen",
+    "Kalbskopf": "Kalbskopf",
+    "Kalbskotelett": "Kalbskotelett",
+    "Kalbsniere": "Kalbsniere",
+    "Kalbsnuss": "Kalbsnuss",
+    "Kalbsoberschale": "Kalbsoberschale",
+    "Kalbsragout": "Kalbsragout",
+    "Kalbsrippe": "Kalbsrippe",
+    "Kalbsrumpsteak": "Kalbsrumpsteak",
+    "Kalbsrücken mit Knochen": "Kalbsrücken mit Knochen",
+    "Kalbsrücken ohne Knochen": "Kalbsrücken ohne Knochen",
+    "Kalbsschulter": "Kalbsschulter",
+    "Kalbsunterschale": "Kalbsunterschale",
+    "Kalbszunge": "Kalbszunge",
+    "Kaldaunen vom Kalb": "Kaldaunen vom Kalb",
+    "Kaldaunen vom Lamm": "Kaldaunen vom Lamm",
+    "Kaldaunen vom Rind": "Kaldaunen vom Rind",
+    "Kamokamo": "Kamokamo",
+    "Kamut": "Kamut",
+    "Kamutflocken": "Kamutflocken",
+    "Kamutmehl": "Kamutmehl",
+    "Kaninchenbraten": "Kaninchenbraten",
+    "Kaninchenfilet": "Kaninchenfilet",
+    "Kaninchenfrikassee": "Kaninchenfrikassee",
+    "Kaninchengeschnetzeltes": "Kaninchengeschnetzeltes",
+    "Kaninchengulasch": "Kaninchengulasch",
+    "Kaninchenhackfleisch": "Kaninchenhackfleisch",
+    "Kaninchenkeule": "Kaninchenkeule",
+    "Kaninchenläufe": "Kaninchenläufe",
+    "Kaninchenragout": "Kaninchenragout",
+    "Kaninchenrücken": "Kaninchenrücken",
+    "Kaninchenschnitzel": "Kaninchenschnitzel",
+    "Kapern": "Kapern",
+    "Kapuzinerkresse": "Kapuzinerkresse",
+    "Kardamom": "Kardamom",
+    "Karpfenfilet": "Karpfenfilet",
+    "Kartoffelstärke": "Kartoffelstärke",
+    "Kastenbrot": "Kastenbrot",
+    "Kaviarstange": "Kaviarstange",
+    "Kekse": "Kekse",
+    "Kerbelrübe": "Kerbelrübe",
+    "Kernobst": "Kernobst",
+    "Ketchup": "Ketchup",
+    "Kichererbsen": "Kichererbsen",
+    "Kimchi": "Kimchi",
+    "Kipferl": "Kipferl",
+    "Kirschen": "Kirschen",
+    "Kirschjoghurt": "Kirschjoghurt",
+    "Kleie": "Kleie",
+    "Kleinblättrige Brunnenkresse": "Kleinblättrige Brunnenkresse",
+    "Kleine Maräne": "Kleine Maräne",
+    "Kleingebäck": "Kleingebäck",
+    "Kliesche": "Kliesche",
+    "Knackwurst": "Knackwurst",
+    "Knoblauch-Schnittlauch": "Knoblauch-Schnittlauch",
+    "Knoblauch-Schnittlauch Keimlinge": "Knoblauch-Schnittlauch Keimlinge",
+    "Knoblauchsrauke": "Knoblauchsrauke",
+    "Knoblauchzehen": "Knoblauchzehen",
+    "Knochenschinken": "Knochenschinken",
+    "Knollensellerie": "Knollensellerie",
+    "Knorpelkirschen": "Knorpelkirschen",
+    "Knurrhahn": "Knurrhahn",
+    "Knäckebrot": "Knäckebrot",
+    "Kochkäse": "Kochkäse",
+    "Kochmettwurst": "Kochmettwurst",
+    "Kochsahne": "Kochsahne",
+    "Kochschinken": "Kochschinken",
+    "Kochstreichwurst": "Kochstreichwurst",
+    "Kochwurst": "Kochwurst",
+    "Kohl": "Kohl",
+    "Kokosmehl": "Kokosmehl",
+    "Kokosmilch": "Kokosmilch",
+    "Kokosnuss": "Kokosnuss",
+    "Kokosraspeln": "Kokosraspeln",
+    "Kokosöl": "Kokosöl",
+    "Kombucha": "Kombucha",
+    "Kompott": "Kompott",
+    "Konfitüre": "Konfitüre",
+    "Konfitüre Extra": "Konfitüre Extra",
+    "Koriander": "Koriander",
+    "Korianderkraut": "Korianderkraut",
+    "Koriandersamen": "Koriandersamen",
+    "Kreuzkümmel": "Kreuzkümmel",
+    "Kronfleisch": "Kronfleisch",
+    "Kronfleisch (Kalb)": "Kronfleisch vom Kalb",
+    "Kronfleisch (Rind)": "Kronfleisch vom Rind",
+    "Kronfleisch (Schwein)": "Kronfleisch vom Schwein",
+    "Kräcker": "Kräcker",
+    "Kräuter der Provence": "Kräuter der Provence",
+    "Kräuter-Frischkäse": "Kräuter-Frischkäse",
+    "Kräuterlikör": "Kräuterlikör",
+    "Kräutermischung": "Kräutermischung",
+    "Kräutersalz": "Kräutersalz",
+    "Kräuterseitlinge": "Kräuterseitlinge",
+    "Kräutertee": "Kräutertee",
+    "Kuchen und Torten": "Kuchen und Torten",
+    "Kurkuma": "Kurkuma",
+    "Kurkumapaste": "Kurkumapaste",
+    "Kurkumapulver": "Kurkumapulver",
+    "Käsesoße": "Käsesoße",
+    "Kümmellikör": "Kümmellikör",
+    "Kümmelsamen": "Kümmelsamen",
+    "Kümmelschnaps": "Kümmelschnaps",
+    "Kürbiskerne": "Kürbiskerne",
+    "Kürbiskernöl": "Kürbiskernöl",
+    "LAMB": "Lammfleisch",
+    "LAMBS_LETTUCE": "Feldsalat",
+    "LAND_ANIMALS": "Landtiere",
+    "LEAFY_VEGETABLES": "Blattgemüse",
+    "LEEK": "Porree",
+    "LEGUMES": "Hülsenfrüchte",
+    "LEMONS": "Zitronen",
+    "LEMON_BALM": "Zitronenmelisse",
+    "LENTILS": "Linsen",
+    "LETTUCE": "Kopfsalat",
+    "LIMES": "Limetten",
+    "LOBSTER": "Hummer",
+    "LOVAGE": "Liebstöckel",
+    "LOW_FAT_MILK": "Fettarme Milch",
+    "LUPINS": "Lupinen",
+    "Labkraut": "Labkraut",
+    "Lachs": "Lachs",
+    "Lachsfilet": "Lachsfilet",
+    "Lachsforelle": "Lachsforelle",
+    "Lachsforellenfilet": "Lachsforellenfilet",
+    "Lamm": "Lamm",
+    "Lammbraten": "Lammbraten",
+    "Lammbrust": "Lammbrust",
+    "Lammdünnung": "Lammdünnung",
+    "Lammfilet": "Lammfilet",
+    "Lammfrikassee": "Lammfrikassee",
+    "Lammgeschnetzeltes": "Lammgeschnetzeltes",
+    "Lammgulasch": "Lammgulasch",
+    "Lammhackfleisch": "Lammhackfleisch",
+    "Lammhals und -nacken": "Lammhals und -nacken",
+    "Lammhaxe": "Lammhaxe",
+    "Lammhüfte": "Lammhüfte",
+    "Lammkeule": "Lammkeule",
+    "Lammkopf": "Lammkopf",
+    "Lammkotelett": "Lammkotelett",
+    "Lammkrone": "Lammkrone",
+    "Lammlunge": "Lammlunge",
+    "Lammniere": "Lammniere",
+    "Lammragout": "Lammragout",
+    "Lammrücken": "Lammrücken",
+    "Lammrücken mit Knochen": "Lammrücken mit Knochen",
+    "Lammrücken ohne Knochen": "Lammrücken ohne Knochen",
+    "Lammschnitzel": "Lammschnitzel",
+    "Lammschulter": "Lammschulter",
+    "Landgurke": "Landgurke",
+    "Langkornreis": "Langkornreis",
+    "Lasagneblätter": "Lasagneblätter",
+    "Lauch": "Lauch",
+    "Laugenbrötchen": "Laugenbrötchen",
+    "Leber": "Leber",
+    "Leber (Kalb)": "Kalbsleber",
+    "Leber (Lamm)": "Lammleber",
+    "Leber (Rind)": "Rinderleber",
+    "Leber (Schwein)": "Schweineleber",
+    "Leberwurst": "Leberwurst",
+    "Lebkuchen": "Lebkuchen",
+    "Leguminosen": "Leguminosen",
+    "Lein": "Lein",
+    "Leindotter": "Leindotter",
+    "Leindottersamen": "Leindottersamen",
+    "Leindotteröl": "Leindotteröl",
+    "Leinmehl": "Leinmehl",
+    "Leinsamen": "Leinsamen",
+    "Leinöl": "Leinöl",
+    "Likör": "Likör",
+    "Limabohnen": "Limabohnen",
+    "Limonade": "Limonade",
+    "Lollo": "Lollo",
+    "Lollo bionda": "Lollo bionda",
+    "Lollo rossa": "Lollo rosso",
+    "Lorbeer": "Lorbeer",
+    "Lupinenkaffee": "Lupinenkaffee",
+    "Lyoner": "Lyoner",
+    "Löffelbiskuits": "Löffelbiskuits",
+    "Löffelkraut": "Löffelkraut",
+    "Löwenzahn": "Löwenzahn",
+    "MACADAMIA_NUTS": "Macadamianuss",
+    "MACKEREL": "Makrele",
+    "MANDARINS": "Mandarinen",
+    "MARJORAM": "Majoran",
+    "MARKER_PEA": "Markerbse",
+    "MARROW_CABBAGE": "Markstammkohl",
+    "MEAT": "Fleisch",
+    "MEAT_AND_POULTRY": "Fleisch und Geflügel",
+    "MELONS": "Melonen",
+    "MILK": "Milch",
+    "MILLET": "Hirse",
+    "MIRABELLES": "Mirabellen",
+    "MISC_FRUIT": "Andere Früchte",
+    "MISC_GRAIN": "Spezielle Getreide",
+    "MISC_LETTUCES": "Andere Salate",
+    "MISC_MEAT": "Anderes Fleisch",
+    "MISC_NUTS": "Anderes Schalenobst",
+    "MISC_POULTRY": "Anderes Geflügel",
+    "MISC_SEA_ANIMALS": "Andere Wassertiere",
+    "MORELLO_CHERRIES": "Schattenmorellen",
+    "MUSSELS": "Muscheln",
+    "Magerquark": "Magerquark",
+    "Maisessig": "Maisessig",
+    "Maisgrieß": "Maisgrieß",
+    "Maiskeimöl": "Maiskeimöl",
+    "Maiskörner": "Maiskörner",
+    "Maismalz": "Maismalz",
+    "Maismehl": "Maismehl",
+    "Maisstärke": "Maisstärke",
+    "Maisvollkornmehl": "Maisvollkornmehl",
+    "Makkaroni": "Makkaroni",
+    "Makrelenfilet": "Makrelenfilet",
+    "Malabarspinat": "Malabarspinat",
+    "Malz": "Malz",
+    "Malzessig": "Malzessig",
+    "Malzkaffee (Gerste)": "Malzkaffee (Gerste)",
+    "Mandelmus": "Mandelmus",
+    "Mandeln": "Mandeln",
+    "Mangojoghurt": "Mangojoghurt",
+    "Margarine": "Margarine",
+    "Marmelade": "Marmelade",
+    "Marmorkuchen": "Marmorkuchen",
+    "Maronen": "Maronen",
+    "Marzipan": "Marzipan",
+    "Marzipantorte": "Marzipantorte",
+    "Maräne": "Maräne",
+    "Mascarpone": "Mascarpone",
+    "Masthähnchen": "Masthähnchen",
+    "Maulbeeren": "Maulbeeren",
+    "Maultaschen": "Maultaschen",
+    "Mayonnaise": "Mayonnaise",
+    "Meeresfrüchte": "Meeresfrüchte",
+    "Meerrettichwurzeln": "Meerrettichwurzeln",
+    "Mehl": "Mehl",
+    "Mehlbeeren": "Mehlbeeren",
+    "Mehrkornbrötchen": "Mehrkornbrötchen",
+    "Merlot": "Merlot",
+    "Mettwurst": "Mettwurst",
+    "Microgreens": "Microgreens",
+    "Microgreens-Mischung": "Microgreens-Mischung",
+    "Mie-Nudeln": "Mie-Nudeln",
+    "Miesmuscheln": "Miesmuscheln",
+    "Milchbrötchen": "Milchbrötchen",
+    "Milcherzeugnisse und Eier": "Milch und Milcherzeugnisse",
+    "Milchreis": "Milchreis",
+    "Mineralwasser": "Mineralwasser",
+    "Minze": "Minze",
+    "Miso": "Miso",
+    "Miso (Lupinen)": "Miso (Lupinen)",
+    "Mispeln": "Mispeln",
+    "Mohnbrötchen": "Mohnbrötchen",
+    "Mohnkuchen": "Mohnkuchen",
+    "Molkeneiweißkäse": "Molkeneiweißkäse",
+    "Molkenkäse": "Molkenkäse",
+    "Moosbeeren": "Moosbeeren",
+    "Morcheln": "Morcheln",
+    "Mozzarella": "Mozzarella",
+    "Mungbohnen": "Mungbohnen",
+    "Mus": "Mus",
+    "Muscaris": "Muscaris",
+    "Muskat": "Muskat",
+    "Muskatkürbis": "Muskatkürbis",
+    "Müsli": "Müsli",
+    "NECTARINES": "Nektarinen",
+    "NUTS": "Nüsse",
+    "NUTS_AND_SEEDS": "Nüsse und Samen",
+    "Naturjoghurt": "Naturjoghurt",
+    "Nectacot": "Nectacot",
+    "Nektar": "Nektar",
+    "Nektarinen": "Nektarinen",
+    "Nelken": "Nelken",
+    "Nordseekrabben": "Nordseekrabben",
+    "Nudeln": "Nudeln",
+    "Nudeln (Hartweizengrieß)": "Nudeln (Hartweizengrieß)",
+    "Nussmus": "Nussmus",
+    "Nüsse und Kerne": "Nüsse und Kerne",
+    "OAT": "Hafer",
+    "OAT_ROOT": "Haferwurzel",
+    "OILS": "Öle",
+    "OILS_AND_SUGAR": "Öle und Zucker",
+    "OLIVES": "Oliven",
+    "ONION_VEGETABLES": "Zwiebelgemüse",
+    "ORANGES": "Orangen",
+    "OSTRICH": "Strauß",
+    "Oblaten": "Oblaten",
+    "Obst und Gemüse": "Obst",
+    "Obstessig": "Obstessig",
+    "Obstsaft": "Obstsaft",
+    "Obstschnäpse": "Obstschnäpse",
+    "Obstweine": "Obstweine",
+    "Oliven": "Oliven",
+    "Olivenöl": "Olivenöl",
+    "Orange": "Orange",
+    "Orange Blockpaprika": "Orange Blockpaprika",
+    "Orange Spitzpaprika": "Orange Spitzpaprika",
+    "Orange Tomatenpaprika": "Orange Tomatenpaprika",
+    "Orangenlikör": "Orangenlikör",
+    "Orangenmarmelade": "Orangenmarmelade",
+    "Orangensaft": "Orangensaft",
+    "Oregano": "Oregano",
+    "PANGASIUS": "Pangasius",
+    "PARSLEY": "Petersilie",
+    "PARSNIP": "Pastinake",
+    "PARTRIDGE": "Rebhuhn",
+    "PEACHES": "Pfirsiche",
+    "PEANUTS": "Erdnuss",
+    "PEARS": "Birnen",
+    "PEAS": "Erbsen",
+    "PEEL_PEA": "Schalerbse",
+    "PERCH": "Flussbarsch",
+    "PHEASANT": "Fasan",
+    "PIGEON_PEAS": "Straucherbsen",
+    "PIKE": "Hecht",
+    "PINEAPPLES": "Ananas",
+    "PINE_SEEDS": "Pinienkerne",
+    "PINTO_BEANS": "Pintobohne",
+    "PISTACHIO": "Pistazie",
+    "PITAHAYA": "Pitahaya",
+    "PLAICE": "Scholle",
+    "PLANTS": "Pflanzen",
+    "PLUMS": "Pflaumen",
+    "POINTED_CABBAGE": "Spitzkohl",
+    "POME": "Kernobst",
+    "PORK": "Schweinefleisch",
+    "POTATOES": "Kartoffeln",
+    "POULTRY": "Geflügel",
+    "PRAWN": "Krabben",
+    "PUMPKINS": "Kürbis",
+    "PUMPKIN_SEEDS": "Kürbiskerne",
+    "Pak Choi Keimlinge": "Pak Choi Keimlinge",
+    "Paprikamark": "Paprikamark",
+    "Paprikapulver": "Paprikapulver",
+    "Paprikatomaten": "Paprikatomaten",
+    "Parmesan": "Parmesan",
+    "Pasta filata Käse": "Pasta filata Käse",
+    "Patisson": "Patisson",
+    "Penne": "Penne",
+    "Penne (Dinkel)": "Penne (Dinkel)",
+    "Penne (Dinkel-Vollkorn)": "Penne (Dinkel-Vollkorn)",
+    "Penne (Kichererbsen)": "Penne (Kichererbsen)",
+    "Peperoni": "Peperoni",
+    "Perlbohnen": "Perlbohnen",
+    "Perlhuhnbraten": "Perlhuhnbraten",
+    "Perlhuhnbrust": "Perlhuhnbrust",
+    "Perlhuhnfilet": "Perlhuhnfilet",
+    "Perlhuhnflügel": "Perlhuhnflügel",
+    "Perlhuhnfrikassee": "Perlhuhnfrikassee",
+    "Perlhuhngeschnetzeltes": "Perlhuhngeschnetzeltes",
+    "Perlhuhnkeule": "Perlhuhnkeule",
+    "Perlzwiebeln": "Perlzwiebeln",
+    "Petersilie": "Petersilie",
+    "Pfatterer Rüben": "Pfatterer Rüben",
+    "Pfeffer": "Pfeffer",
+    "Pfefferkraut": "Pfefferkraut",
+    "Pfefferminze": "Pfefferminze",
+    "Pfifferlinge": "Pfifferlinge",
+    "Pfirsich-Maracuja-Joghurt": "Pfirsich-Maracuja-Joghurt",
+    "Pfirsichjoghurt": "Pfirsichjoghurt",
+    "Pfirsichkonfitüre": "Pfirsichkonfitüre",
+    "Pflanzendrinks": "Pflanzendrinks",
+    "Pflanzenöle": "Pflanzenöle",
+    "Pflaumenmus": "Pflaumenmus",
+    "Pimpinelle": "Pimpinelle",
+    "Pizzagewürz": "Pizzagewürz",
+    "Plattpfirsiche": "Plattpfirsiche",
+    "Popcornmais": "Popcornmais",
+    "Preiselbeeren": "Preiselbeeren",
+    "Prinzessbohnen": "Prinzessbohnen",
+    "Pseudogetreide": "Pseudogetreide",
+    "Pseudogetreideflocken": "Pseudogetreideflocken",
+    "Puddingpulver": "Puddingpulver",
+    "Puderzucker": "Puderzucker",
+    "Pumpernickel": "Pumpernickel",
+    "Puntarelle": "Puntarelle",
+    "Putenbolognese": "Putenbolognese",
+    "Putenbraten": "Putenbraten",
+    "Putenbrust": "Putenbrust",
+    "Putenbrustaufschnitt": "Putenbrustaufschnitt",
+    "Putenfilet": "Putenfilet",
+    "Putenfleisch": "Putenfleisch",
+    "Putenflügel": "Putenflügel",
+    "Putenfrikassee": "Putenfrikassee",
+    "Putengeschnetzeltes": "Putengeschnetzeltes",
+    "Putengulasch": "Putengulasch",
+    "Putenhälse": "Putenhälse",
+    "Putenkeule": "Putenkeule",
+    "Putenoberkeule": "Putenoberkeule",
+    "Putenoyster": "Putenoyster",
+    "Putenragout": "Putenragout",
+    "Putensalami": "Putensalami",
+    "Putenschinken": "Putenschinken",
+    "Putenschnitzel": "Putenschnitzel",
+    "Putenunterkeule": "Putenunterkeule",
+    "QUAIL": "Wachtel",
+    "QUINCES": "Quitten",
+    "QUINOA": "Quinoa",
+    "Quappe": "Quappe",
+    "Quinoaflocken": "Quinoaflocken",
+    "Quinoamehl": "Quinoamehl",
+    "Quinoasprossen": "Quinoasprossen",
+    "Quittenessig": "Quittenessig",
+    "Quittengelee": "Quittengelee",
+    "RABBIT": "Kaninchen",
+    "RADISH": "Rettich",
+    "RASPBERRIES": "Himbeeren",
+    "RAW_MILK": "Rohmilch",
+    "RED_CABBAGE": "Rotkohl",
+    "RED_CURRANTS": "Rote Johannisbeeren",
+    "RED_DEER": "Rotwild",
+    "RED_RADISH": "Radieschen",
+    "RICE": "Reis",
+    "ROCKET_SALAD": "Rucola",
+    "ROE_DEER": "Rehwild",
+    "ROGGENBROT": "Roggenbrot",
+    "ROMANESCO": "Romanesco",
+    "ROOT_VEGETABLES": "Wurzelgemüse",
+    "ROSEFISH": "Rotbarsch",
+    "RUTABAGA": "Steckrübe",
+    "RYE": "Roggen",
+    "Radieschenkeimlinge": "Radieschenkeimlinge",
+    "Rahmjoghurt": "Rahmjoghurt",
+    "Rahmspinat": "Rahmspinat",
+    "Raps": "Raps",
+    "Rapskernöl": "Rapskernöl",
+    "Rapskörner": "Rapskörner",
+    "Rapsöl": "Rapsöl",
+    "Ras el Hanout": "Ras el Hanout",
+    "Rebhuhnbraten": "Rebhuhnbraten",
+    "Rebhuhnbrust": "Rebhuhnbrust",
+    "Rebhuhnfilet": "Rebhuhnfilet",
+    "Rebhuhnflügel": "Rebhuhnflügel",
+    "Rebhuhnfrikassee": "Rebhuhnfrikassee",
+    "Rebhuhnragout": "Rebhuhnragout",
+    "Regenbogenforelle": "Regenbogenforelle",
+    "Regent": "Regent",
+    "Regent Rosé": "Regent Rosé",
+    "Reh": "Reh",
+    "Rehbraten": "Rehbraten",
+    "Rehfilet": "Rehfilet",
+    "Rehgeschnetzeltes": "Rehgeschnetzeltes",
+    "Rehgulasch": "Rehgulasch",
+    "Rehhackfleisch": "Rehhackfleisch",
+    "Rehkeule": "Rehkeule",
+    "Rehragout": "Rehragout",
+    "Rehrücken": "Rehrücken",
+    "Rehschnitzel": "Rehschnitzel",
+    "Reisetomaten": "Reisetomaten",
+    "Reismehl": "Reismehl",
+    "Reisnudeln": "Reisnudeln",
+    "Rhabarber": "Rhabarber",
+    "Rhabarberlikör": "Rhabarberlikör",
+    "Rhabarbersaft": "Rhabarbersaft",
+    "Riesling": "Riesling",
+    "Rind": "Rind",
+    "Rinderbraten": "Rinderbraten",
+    "Rinderbrust mit Knochen": "Rinderbrust mit Knochen",
+    "Rinderbrust ohne Knochen": "Rinderbrust ohne Knochen",
+    "Rinderbrät": "Rinderbrät",
+    "Rinderbrühe": "Rinderbrühe",
+    "Rinderbugblatt": "Rinderbugblatt",
+    "Rinderbuglende": "Rinderbuglende",
+    "Rinderfilet": "Rinderfilet",
+    "Rinderflanksteak": "Rinderflanksteak",
+    "Rinderfrikassee": "Rinderfrikassee",
+    "Rinderfüße": "Rinderfüße",
+    "Rindergeschnetzeltes": "Rindergeschnetzeltes",
+    "Rindergulasch": "Rindergulasch",
+    "Rinderhackfleisch": "Rinderhackfleisch",
+    "Rinderhals": "Rinderhals",
+    "Rinderhüfte": "Rinderhüfte",
+    "Rinderkeule mit Knochen": "Rinderkeule mit Knochen",
+    "Rinderkeule ohne Knochen": "Rinderkeule ohne Knochen",
+    "Rinderkopf": "Rinderkopf",
+    "Rinderkotelett": "Rinderkotelett",
+    "Rinderlunge": "Rinderlunge",
+    "Rinderniere": "Rinderniere",
+    "Rindernierenzapfen": "Rindernierenzapfen",
+    "Rindernuss": "Rindernuss",
+    "Rinderoberschale": "Rinderoberschale",
+    "Rinderquerrippe": "Rinderquerrippe",
+    "Rinderrumpsteak": "Rinderrumpsteak",
+    "Rinderrücken mit Knochen": "Rinderrücken mit Knochen",
+    "Rinderrücken ohne Knochen": "Rinderrücken ohne Knochen",
+    "Rinderschinken": "Rinderschinken",
+    "Rinderschnitzel": "Rinderschnitzel",
+    "Rinderunterschale": "Rinderunterschale",
+    "Rinderwade (ohne Knochen)": "Rinderwade (ohne Knochen)",
+    "Rinderzunge": "Rinderzunge",
+    "Rindfleisch": "Rindfleisch",
+    "Rindsragout": "Rindsragout",
+    "Ringelbeete": "Ringelbeete",
+    "Risottoreis": "Risottoreis",
+    "Rispentomaten": "Rispentomaten",
+    "Rivaner": "Rivaner",
+    "Roggenbrot": "Roggenbrot",
+    "Roggenbrötchen": "Roggenbrötchen",
+    "Roggenflocken": "Roggenflocken",
+    "Roggenkleie": "Roggenkleie",
+    "Roggenmalz": "Roggenmalz",
+    "Roggenmehl": "Roggenmehl",
+    "Roggenmischbrot": "Roggenmischbrot",
+    "Roggenschrot (Type 1800)": "Roggenschrot (Type 1800)",
+    "Roggensprossen": "Roggensprossen",
+    "Roggenvollkornbrot": "Roggenvollkornbrot",
+    "Roggenvollkornmehl": "Roggenvollkornmehl",
+    "Rohmilch": "Rohmilch",
+    "Rohrzucker": "Rohrzucker",
+    "Rohschinken": "Rohschinken",
+    "Rohwurst": "Rohwurst",
+    "Romana": "Romana",
+    "Rosinen": "Rosinen",
+    "Rosinenbrötchen": "Rosinenbrötchen",
+    "Rosmarin": "Rosmarin",
+    "Roséweine": "Roséweine",
+    "Rotbarschfilet": "Rotbarschfilet",
+    "Rote Beete Keimlinge": "Rote Beete Keimlinge",
+    "Rote Blockpaprika": "Rote Blockpaprika",
+    "Rote Grütze": "Rote Grütze",
+    "Rote Holunderbeeren": "Rote Holunderbeeren",
+    "Rote Linsen": "Rote Linsen",
+    "Rote Maulbeeren": "Rote Maulbeeren",
+    "Rote Spitzpaprika": "Rote Spitzpaprika",
+    "Rote Tafeltrauben": "Rote Tafeltrauben",
+    "Rote Tomatenpaprika": "Rote Tomatenpaprika",
+    "Rote Weintrauben": "Rote Weintrauben",
+    "Rote Zwiebeln": "Rote Zwiebeln",
+    "Rothirsch": "Rothirsch",
+    "Rothirschbraten": "Rothirschbraten",
+    "Rothirschfilet": "Rothirschfilet",
+    "Rothirschgeschnetzeltes": "Rothirschgeschnetzeltes",
+    "Rothirschgulasch": "Rothirschgulasch",
+    "Rothirschhackfleisch": "Rothirschhackfleisch",
+    "Rothirschkeule": "Rothirschkeule",
+    "Rothirschragout": "Rothirschragout",
+    "Rothirschrücken": "Rothirschrücken",
+    "Rothirschschnitzel": "Rothirschschnitzel",
+    "Rotkornweizen": "Rotkornweizen",
+    "Rotweine": "Rotweine",
+    "Rum": "Rum",
+    "Russisch Brot": "Russisch Brot",
+    "Rübenzucker": "Rübenzucker",
+    "Rübsen": "Rübsen",
+    "Rübstiel": "Rübstiel",
+    "SAGE": "Salbei",
+    "SALADS": "Salat",
+    "SALMON": "Lachs",
+    "SALSIFY": "Schwarzwurzel",
+    "SARDINE": "Sardine",
+    "SAVOY_CABBAGE": "Wirsing",
+    "SCHNEPFE": "Schnepfe",
+    "SEAFISCH": "Seefisch",
+    "SEAFOOD": "Krusten-, Schalen-, und Weichtiere",
+    "SEEDS": "Samen",
+    "SEMI_HARD_CHEESE": "Schnittkäse",
+    "SEMI_SOFT_CHEESE": "Halbfester Schnittkäse",
+    "SHALLOTS": "Schalotten",
+    "SHRIMP": "Garnelen",
+    "SKIMMED_MILK": "Magermilch",
+    "SMALL_GAME": "Niederwild",
+    "SNAILS": "Schnecken",
+    "SNAP_PEA": "Zuckererbse",
+    "SNIPE": "Schnepfe",
+    "SOFT_CHEESE": "Weichkäse",
+    "SOFT_FRUIT": "Beerenobst",
+    "SORREL": "Sauerampfer",
+    "SOUR_CHERRIES": "Sauerkirschen",
+    "SOUR_CREAM": "Saure Sahne",
+    "SOUR_CREAM_SCHMAND": "Schmand",
+    "SOUR_MILK_PRODUCTS": "Sauermilchprodukte",
+    "SOY_BEANS": "Sojabohnen",
+    "SPELT": "Dinkel",
+    "SPINACH": "Spinat",
+    "SPREADS_AND_DIPS": "Aufstriche und Dips",
+    "SPRING_CABBAGE": "Federkohl",
+    "SPRING_ONION": "Frühlingszwiebeln",
+    "SPROUTS": "Sprossengemüse",
+    "STONE_FRUIT": "Steinobst",
+    "STRAWBERRIES": "Erdbeeren",
+    "SUGAR": "Zucker",
+    "SUGAR_BEET": "Zuckerrübe",
+    "SUNFLOWER_SEEDS": "Sonnenblumenkerne",
+    "SWEET_CHERRIES": "Süßkirschen",
+    "SWEET_CREAM": "Sahne",
+    "SWEET_POTATO": "Süßkartoffeln",
+    "SWEET_WATER_FISH": "Süßwasserfisch",
+    "Saaten": "Saaten",
+    "Safran": "Safran",
+    "Sahnejoghurt": "Sahnejoghurt",
+    "Sahnequark": "Sahnequark",
+    "Sahnetorte": "Sahnetorte",
+    "Saiblingsfilet": "Saiblingsfilet",
+    "Salami": "Salami",
+    "Salanova": "Salanova",
+    "Salatgurke": "Salatgurke",
+    "Salz": "Salz",
+    "Salzgebäck": "Salzgebäck",
+    "Sanddorn": "Sanddorn",
+    "Sardinenfilet": "Sardinenfilet",
+    "Saucen": "Soßen",
+    "Sauerkirschkonfitüre": "Sauerkirschkonfitüre",
+    "Sauerkraut": "Sauerkraut",
+    "Sauermilchkäse": "Sauermilchkäse",
+    "Sauerrahmbutter": "Sauerrahmbutter",
+    "Sauerteig-Anstellgut": "Sauerteig-Anstellgut",
+    "Sauerteigbrot": "Sauerteigbrot",
+    "Schabzigerklee": "Schabzigerklee",
+    "Schaf": "Schaf",
+    "Schafbraten": "Schafbraten",
+    "Schafbrust": "Schafbrust",
+    "Schafdünnung": "Schafdünnung",
+    "Schaffilet": "Schaffilet",
+    "Schaffleisch": "Schaffleisch",
+    "Schafgarbe": "Schafgarbe",
+    "Schafgulasch": "Schafgulasch",
+    "Schafragout": "Schafragout",
+    "Schafrücken mit Knochen": "Schafrücken mit Knochen",
+    "Schafrücken ohne Knochen": "Schafrücken ohne Knochen",
+    "Schafschnitzel": "Schafschnitzel",
+    "Schafshackfleisch": "Schafshackfleisch",
+    "Schafshals und -nacken": "Schafshals und -nacken",
+    "Schafshaxe": "Schafshaxe",
+    "Schafskeule": "Schafskeule",
+    "Schafskäse": "Schafskäse",
+    "Schafsschulter": "Schafsschulter",
+    "Schattenmorellen": "Schattenmorellen",
+    "Scheinebacke": "Scheinebacke",
+    "Schellfischfilet": "Schellfischfilet",
+    "Schimmelkäse": "Schimmelkäse",
+    "Schinken": "Schinken",
+    "Schinken (Hüfte)": "Schinken (Hüfte)",
+    "Schinken (Nuss)": "Schinken (Nuss)",
+    "Schinken (Oberschale)": "Schinken (Oberschale)",
+    "Schinken (Unterschale)": "Schinken (Unterschale)",
+    "Schinkensalami": "Schinkensalami",
+    "Schinkenspeck": "Schinkenspeck",
+    "Schlagsahne": "Schlagsahne",
+    "Schlehen": "Schlehen",
+    "Schleie": "Schleie",
+    "Schmand": "Schmand",
+    "Schmelzkäse": "Schmelzkäse",
+    "Schmelzkäsezubereitung": "Schmelzkäsezubereitung",
+    "Schmorgurke": "Schmorgurke",
+    "Schmorwurst": "Schmorwurst",
+    "Schnaps": "Schnaps",
+    "Schnepfe": "Schnepfe",
+    "Schnepfenbrust": "Schnepfenbrust",
+    "Schnepfenfilet": "Schnepfenfilet",
+    "Schnepfenflügel": "Schnepfenflügel",
+    "Schnittmangold": "Schnittmangold",
+    "Schnittsalatmischung": "Schnittsalatmischung",
+    "Schnittsellerie": "Schnittsellerie",
+    "Schnitzel (Basis Weizenprotein)": "Schnitzel (Basis: Weizenprotein)",
+    "Schnitzel (Basis. Weizenprotein)": "Schnitzel (Basis. Weizenprotein)",
+    "Schokoladenaufstrich": "Schokoladenaufstrich",
+    "Schokoladenpuddingpulver": "Schokoladenpuddingpulver",
+    "Schollenfilet": "Schollenfilet",
+    "Schrot": "Schrot",
+    "Schrotbrötchen": "Schrotbrötchen",
+    "Schupfnudeln": "Schupfnudeln",
+    "Schwanzrolle vom Rind": "Schwanzrolle vom Rind",
+    "Schwanzrolle vom Schwein": "Schwanzrolle vom Schwein",
+    "Schwartemagen": "Schwartemagen",
+    "Schwarzbrot": "Schwarzbrot",
+    "Schwarze Bohnen": "Schwarze Bohnen",
+    "Schwarze Maulbeeren": "Schwarze Maulbeeren",
+    "Schwarzkirschkonfitüre": "Schwarzkirschkonfitüre",
+    "Schwarzkümmel": "Schwarzkümmel",
+    "Schwarzkümmelöl": "Schwarzkümmelöl",
+    "Schwein": "Schwein",
+    "Schweinebacke": "Schweinebacke",
+    "Schweinebauch": "Schweinebauch",
+    "Schweinebraten": "Schweinebraten",
+    "Schweinebrust": "Schweinebrust",
+    "Schweinebrät": "Schweinebrät",
+    "Schweinefilet": "Schweinefilet",
+    "Schweinefrikassee": "Schweinefrikassee",
+    "Schweinefüße": "Schweinefüße",
+    "Schweinegeschnetzeltes": "Schweinegeschnetzeltes",
+    "Schweinegulasch": "Schweinegulasch",
+    "Schweinehackfleisch": "Schweinehackfleisch",
+    "Schweinehals und -nacken": "Schweinehals und -nacken",
+    "Schweinehinterhaxe": "Schweinehinterhaxe",
+    "Schweinehüfte": "Schweinehüfte",
+    "Schweinekeule mit Knochen": "Schweinekeule mit Knochen",
+    "Schweinekeule ohne Keule": "Schweinekeule ohne Knochen",
+    "Schweinekeule ohne Knochen": "Schweinekeule ohne Knochen",
+    "Schweinekopf": "Schweinekopf",
+    "Schweinekotelett": "Schweinekotelett",
+    "Schweinelachs": "Schweinelachs",
+    "Schweinelunge": "Schweinelunge",
+    "Schweineniere": "Schweineniere",
+    "Schweinenuss": "Schweinenuss",
+    "Schweineoberschale": "Schweineoberschale",
+    "Schweineragout": "Schweineragout",
+    "Schweinerumpsteak": "Schweinerumpsteak",
+    "Schweinerücken": "Schweinerücken",
+    "Schweineschnitzel": "Schweineschnitzel",
+    "Schweineschulter": "Schweineschulter",
+    "Schweineunterschale": "Schweineunterschale",
+    "Schweinevorderhaxe": "Schweinevorderhaxe",
+    "Schweinezunge": "Schweinezunge",
+    "Schweinshaxe": "Schweinshaxe",
+    "Schälgurke": "Schälgurke",
+    "Seeforelle": "Seeforelle",
+    "Seelachsfilet": "Seelachsfilet",
+    "Seesaibling": "Seesaibling",
+    "Seeteufel": "Seeteufel",
+    "Seezunge": "Seezunge",
+    "Seitan": "Seitan",
+    "Sekt": "Sekt",
+    "Semmelbrösel": "Semmelbrösel",
+    "Senf": "Senf",
+    "Senfkeimlinge": "Senfkeimlinge",
+    "Senfkörner": "Senfkörner",
+    "Senföl": "Senföl",
+    "Sesam": "Sesam",
+    "Sesambrötchen": "Sesambrötchen",
+    "Sesamöl": "Sesamöl",
+    "Shiitake": "Shiitake",
+    "Silberzwiebeln": "Silberzwiebeln",
+    "Sirup": "Sirup",
+    "Skyr": "Skyr",
+    "Soja": "Soja",
+    "Sojabohnenkeime": "Sojabohnenkeime",
+    "Sojadrink": "Sojadrink",
+    "Sojaschnetzel": "Sojaschnetzel",
+    "Sojasoße": "Sojasoße",
+    "Sojaöl": "Sojaöl",
+    "Sonnenblumen": "Sonnenblumen",
+    "Sonnenblumenkeimlinge": "Sonnenblumenkeimlinge",
+    "Sonnenblumenöl": "Sonnenblumenöl",
+    "Sonstige Früchte": "Andere Früchte",
+    "Sonstige Getränke": "Andere Getränke",
+    "Sonstige Milchprodukte": "Andere Milchprodukte",
+    "Sonstige Nüsse und Kerne": "Andere Nüsse und Kerne",
+    "Sonstige Salate": "Andere Salate",
+    "Sonstige Wassertiere": "Andere Wassertiere",
+    "Sonstiges": "Sonstiges",
+    "Sonstiges Fleisch und Wurst": "Anderes Fleisch und Wurst",
+    "Sonstiges Geflügel": "Anderes Geflügel",
+    "Sonstiges Gemüse": "Anderes Gemüse",
+    "Sonstiges Getreide": "Andere Getreide",
+    "Sonstiges Trockensortiment": "Andere Trockenprodukte",
+    "Spaghetti": "Spaghetti",
+    "Spaghetti (Buchweizen)": "Spaghetti (Buchweizen)",
+    "Spaghetti (Dinkel)": "Spaghetti (Dinkel)",
+    "Spaghetti (Dinkel-Vollkorn)": "Spaghetti (Dinkel-Vollkorn)",
+    "Spaghetti (Hanf)": "Spaghetti (Hanf)",
+    "Spaghettikürbis": "Spaghettikürbis",
+    "Spargelbruch": "Spargelbruch",
+    "Speierling (Frucht)": "Speierling (Frucht)",
+    "Speisebete": "Speisebeete",
+    "Speiseeis": "Speiseeis",
+    "Speisefette": "Speisefette",
+    "Speisequark": "Speisequark",
+    "Speisequarkzubereitung": "Speisequarkzubereitung",
+    "Speiserüben": "Speiserüben",
+    "Speisestärke": "Speisestärke",
+    "Spekulatius": "Spekulatius",
+    "Spillinge": "Spillinge",
+    "Spirelli": "Spirelli",
+    "Spirelli (Dinkel)": "Spirelli (Dinkel)",
+    "Spirelli (Dinkel-Vollkorn)": "Spirelli (Dinkel-Vollkorn)",
+    "Spirelli (Hanf)": "Spirelli (Hanf)",
+    "Spirelli (Kichererbsen)": "Spirelli (Kichererbsen)",
+    "Spirituosen": "Spirituosen",
+    "Spitzpaprika": "Spitzpaprika",
+    "Spitzwegerich": "Spitzwegerich",
+    "Sprossen": "Sprossen",
+    "Sprotte": "Sprotte",
+    "Spätburgunder Rosé": "Spätburgunder Rosé",
+    "Spätburgunder Rotwein": "Spätburgunder Rotwein",
+    "Spätzle": "Spätzle",
+    "Steckrübe": "Steckrübe",
+    "Steinbeißer": "Steinbeißer",
+    "Steinbutt": "Steinbutt",
+    "Steinobst": "Steinobst",
+    "Steinpilze": "Steinpilze",
+    "Stielmangold": "Stielmangold",
+    "Stint": "Stint",
+    "Strauchtomaten": "Strauchtomaten",
+    "Streuselkuchen": "Streuselkuchen",
+    "Stöcker": "Stöcker",
+    "Suppen und Eintöpfe": "Suppen und Eintöpfe",
+    "Suppengrün": "Suppengrün",
+    "Suppenhuhn": "Suppenhuhn",
+    "Suppennudeln": "Suppennudeln",
+    "Säfte": "Säfte",
+    "Sülzwurst": "Sülzwurst",
+    "Süßdolde": "Süßdolde",
+    "Süßlupinen": "Süßlupinen",
+    "Süßrahmbutter": "Süßrahmbutter",
+    "Süßweichseln": "Süßweichseln",
+    "TEST": "Test",
+    "THYME": "Thymian",
+    "TOMATOES": "Tomaten",
+    "TRITICALE": "Triticale",
+    "TROCKENSORTIMENT": "TROCKENPRODUKTE",
+    "TROPICAL_FRUIT": "Südfrüchte",
+    "TROUT": "Forelle",
+    "TUBERS": "Knollengemüse",
+    "TUNA": "Thunfisch",
+    "TURKEY": "Pute",
+    "TURNIPS": "Mairüben",
+    "TURNIP_RABS": "Rübenkraut",
+    "Tabasco-Soße": "Tabasco-Soße",
+    "Tafelessig": "Tafelessig",
+    "Tafelspitz vom Kalb": "Tafelspitz vom Kalb",
+    "Tafelspitz vom Rind": "Tafelspitz vom Rind",
+    "Tafeltrauben": "Tafeltrauben",
+    "Tagliatelle": "Tagliatelle",
+    "Tahin": "Tahin",
+    "Taubnessel": "Taubnessel",
+    "Tee": "Tee und teeähnliche Erzeugnisse",
+    "Teewurst": "Teewurst",
+    "Teff": "Teff",
+    "Teig": "Teig",
+    "Teigwaren": "Teigwaren",
+    "Tellerlinsen": "Tellerlinsen",
+    "Teltower Rübchen": "Teltower Rübchen",
+    "Tempeh": "Tempeh",
+    "Tempeh (Sojabohnen)": "Tempeh (Sojabohnen)",
+    "Tempeh (Süßlupinen)": "Tempeh (Süßlupinen)",
+    "Tempeh (Wachtelbohnen)": "Tempeh (Wachtelbohnen)",
+    "Test": "Test",
+    "Test ": "Test ",
+    "Thunfisch": "Thunfisch",
+    "Thunfischfilet": "Thunfischfilet",
+    "Tier": "Tier",
+    "Tilsiter": "Tilsiter",
+    "Toastbrot": "Toastbrot",
+    "Tofu": "Tofu",
+    "Tomatenmark": "Tomatenmark",
+    "Tomatenpaprika": "Tomatenpaprika",
+    "Topinambur": "Topinambur",
+    "Tortenboden": "Tortenboden",
+    "Traubenkernöl": "Traubenkernöl",
+    "Traubensaft": "Traubensaft",
+    "Traubensecco": "Traubensecco",
+    "Traubensecco (alkoholfrei)": "Traubensecco (alkoholfrei)",
+    "Trockenbohnen": "Trockenbohnen",
+    "Trockenfisch": "Trockenfisch",
+    "Trockenhefe": "Trockenhefe",
+    "Trockensortiment": "Trockenprodukte",
+    "UNCULTIVATED_MUSHROOMS": "Wildpilze",
+    "Unter-Demo-Gesuch": "Unter-Demo-Gesuch",
+    "Ur-Dinkelbrot": "Ur-Dinkelbrot",
+    "Urdbohnen ": "Urdbohnen ",
+    "Urroggen": "Urroggen",
+    "VEAL": "Kalbsfleisch",
+    "VEGETABLES": "Gemüse",
+    "VEGETABLE_FENNEL": "Gemüsefenchel",
+    "VENISON": "Wild",
+    "Vanille": "Vanille",
+    "Vanilleeis": "Vanilleeis",
+    "Vanillejoghurt": "Vanillejoghurt",
+    "Vanillepuddingpulver": "Vanillepuddingpulver",
+    "Vanilleschoten": "Vanilleschoten",
+    "Vanillezucker": "Vanillezucker",
+    "Viertel Ente": "Viertel Ente",
+    "Viertel Gans": "Viertel Gans",
+    "Viertel Hähnchen": "Viertel Hähnchen",
+    "Viertel Perlhuhn": "Viertel Perlhuhn",
+    "Viertel Pute": "Viertel Pute",
+    "Viertel Rind": "Viertel Rind",
+    "Viertel Schwein": "Viertel Schwein",
+    "Vogelbeeren": "Vogelbeeren",
+    "Vollei (flüssig)": "Vollei (flüssig)",
+    "Vollkornsemmelbrösel": "Vollkornsemmelbrösel",
+    "Vollquark": "Vollquark",
+    "Vorderschinken": "Vorderschinken",
+    "WALNUTS": "Walnuss",
+    "WELSH_ONION": "Winterzwiebel",
+    "WHEAT": "Weizen",
+    "WHEY": "Molke",
+    "WHITE_BEANS": "Weiße Bohne",
+    "WHITE_CABBAGE": "Weißkohl",
+    "WHOLE_MILK": "Vollmilch",
+    "WILD_DUCK": "Wildenten",
+    "WILD_GARLIC": "Bärlauch",
+    "WINE_BERRIES": "Weinbeeren",
+    "Wacholderbeeren": "Wacholderbeeren",
+    "Wacholderschnaps": "Wacholderschnaps",
+    "Wachsbohnen": "Wachsbohnen",
+    "Wachtelbohnen": "Wachtelbohnen",
+    "Wachtelbrust": "Wachtelbrust",
+    "Wachtelfilet": "Wachtelfilet",
+    "Wachtelflügel": "Wachtelflügel",
+    "Wachtelfrikassee": "Wachtelfrikassee",
+    "Wachtelkeule": "Wachtelkeule",
+    "Wachtelragout": "Wachtelragout",
+    "Waffeldauergebäck": "Waffeldauergebäck",
+    "Waldmeister": "Waldmeister",
+    "Waldpilze": "Waldpilze",
+    "Walnussöl": "Walnussöl",
+    "Weichweizen": "Weichweizen",
+    "Weichweizengrieß": "Weichweizengrieß",
+    "Weine": "Weine",
+    "Weintrauben": "Weintrauben",
+    "Weintraubenkerne": "Weintraubenkerne",
+    "Weizenbrot": "Weizenbrot",
+    "Weizenbrötchen": "Weizenbrötchen",
+    "Weizeneiweiß": "Weizeneiweiß",
+    "Weizenflocken": "Weizenflocken",
+    "Weizengrieß": "Weizengrieß",
+    "Weizenkeime": "Weizenkeime",
+    "Weizenkeimöl": "Weizenkeimöl",
+    "Weizenkleie": "Weizenkleie",
+    "Weizenmalz": "Weizenmalz",
+    "Weizenmehl": "Weizenmehl",
+    "Weizenmischbrot": "Weizenmischbrot",
+    "Weizenmischbrötchen": "Weizenmischbrötchen",
+    "Weizenschrot": "Weizenschrot (Type 1700)",
+    "Weizensprossen": "Weizensprossen",
+    "Weizenstärke": "Weizenstärke",
+    "Weizenvollkornbrot": "Weizenvollkornbrot",
+    "Weizenvollkorngrieß": "Weizenvollkorngrieß",
+    "Weizenvollkornkekse": "Weizenvollkornkekse",
+    "Weizenvollkornmehl": "Weizenvollkornmehl",
+    "Weiße Beete": "Weiße Beete",
+    "Weiße Johannisbeeren": "Weiße Johannisbeeren",
+    "Weiße Lupine": "Weiße Lupine",
+    "Weiße Lupinen": "Weiße Lupinen",
+    "Weiße Maulbeeren": "Weiße Maulbeeren",
+    "Weiße Tafeltrauben": "Weiße Tafeltrauben",
+    "Weiße Weintrauben": "Weiße Weintrauben",
+    "Weißer Burgunder": "Weißer Burgunder",
+    "Weißer Spargel": "Weißer Spargel",
+    "Weißweine": "Weißweine",
+    "Wels": "Wels",
+    "Wiener Massen": "Wiener Massen",
+    "Wiener Schnitzel": "Wiener Schnitzel",
+    "Wiener Würstchen": "Wiener Würstchen",
+    "Wilde Rübe": "Wilde Rübe",
+    "Wildente": "Wildente",
+    "Wildentenbraten": "Wildentenbraten",
+    "Wildentenbrust": "Wildentenbrust",
+    "Wildentenfilet": "Wildentenfilet",
+    "Wildentenflügel": "Wildentenflügel",
+    "Wildentenkeule": "Wildentenkeule",
+    "Wildentenragout": "Wildentenragout",
+    "Wilder Fenchel": "Wilder Fenchel",
+    "Wildkräuter": "Wildkräuter",
+    "Wildpreiselbeeren": "Wildpreiselbeeren",
+    "Wildschwein": "Wildschwein",
+    "Wildschweinbraten": "Wildschweinbraten",
+    "Wildschweinfilet": "Wildschweinfilet",
+    "Wildschweinfrikassee": "Wildschweinfrikassee",
+    "Wildschweingeschnetzeltes": "Wildschweingeschnetzeltes",
+    "Wildschweingulasch": "Wildschweingulasch",
+    "Wildschweinhackfleisch": "Wildschweinhackfleisch",
+    "Wildschweinkeule": "Wildschweinkeule",
+    "Wildschweinragout": "Wildschweinragout",
+    "Wildschweinrücken": "Wildschweinrücken",
+    "Wildschweinschinken": "Wildschweinschinken",
+    "Wildtomaten": "Wildtomaten",
+    "Wittling": "Wittling",
+    "Wolfsbarsch": "Wolfsbarsch",
+    "Worcestersauce": "Worcestersauce",
+    "Wurst": "Wurst",
+    "Wurzelgemüse": "Wurzelgemüse",
+    "Wurzelpetersilie": "Wurzelpetersilie",
+    "Wurzelspinat": "Wurzelspinat",
+    "YOGURT": "Joghurt",
+    "YOUNG_COD": "Dorsch",
+    "ZANDER": "Zander",
+    "ZUCCHINI": "Zucchini",
+    "Zanderfilet": "Zanderfilet",
+    "Zickleinfleisch": "Zickleinfleisch",
+    "Ziege": "Ziege",
+    "Ziegenbrust": "Ziegenbrust",
+    "Ziegenfleisch": "Ziegenfleisch",
+    "Ziegenfrischkäse": "Ziegenfrischkäse",
+    "Ziegenkäse": "Ziegenkäse",
+    "Ziegenrücken": "Ziegenrücken",
+    "Ziegenschlegel": "Ziegenschlegel",
+    "Ziegenschnittkäse": "Ziegenschnittkäse",
+    "Ziegenschulter und -hals": "Ziegenschulter und -hals",
+    "Ziegenweichkäse": "Ziegenweichkäse",
+    "Ziegenwurst": "Ziegenwurst",
+    "Zimt": "Zimt",
+    "Zimtstangen": "Zimtstangen",
+    "Zitrone": "Zitrone",
+    "Zitronengras": "Zitronengras",
+    "Zitronengurke": "Zitronengurke",
+    "Zitronenjoghurt": "Zitronenjoghurt",
+    "Zitronensaft": "Zitronensaft",
+    "Zitronenthymian": "Zitronenthymian",
+    "Zitrusfrüchte": "Zitrusfrüchte",
+    "Zucchini": "Zucchini",
+    "Zuchtpilze": "Zuchtpilze",
+    "Zuckerrübensirup": "Zuckerrübensirup",
+    "Zweinutzungshuhn": "Zweinutzungshuhn",
+    "Zwergmehlbeere": "Zwergmehlbeere",
+    "Zwetschgenessig": "Zwetschgenessig",
+    "Zwieback": "Zwieback",
+    "Zwiebel": "Zwiebeln",
+    "ferment34": "ferment34",
+    "mildgesäuerte Butter": "mildgesäuerte Butter",
+    "orphans": "orphans",
+    "schwarze Holunderbeeren": "Schwarze Holunderbeeren",
+    "schwarzer Pfeffer": "Schwarzer Pfeffer",
+    "tropisches Obst": "Tropisches Obst",
+    "undefined": "undefined",
+    "weizenvollkorngrieß": "weizenvollkorngrieß",
+    "weißer Pfeffer": "Weißer Pfeffer",
+    "Öl": "Speiseöl",
+    "Ölfrüchte": "Ölfrüchte",
+    "Ölpflanzen": "Ölpflanzen",
+    "Ölsaaten": "Ölsaaten",
+    "Ölsaatenmehle": "Ölsaatenmehle"
+  }

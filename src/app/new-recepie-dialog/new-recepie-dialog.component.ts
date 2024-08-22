@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -17,6 +17,10 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ChipModule } from 'primeng/chip';
 import { RecipeService } from '../shared/services/recipe.service';
+import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -35,12 +39,18 @@ import { RecipeService } from '../shared/services/recipe.service';
     CheckboxModule,
     ChipModule,
     FormsModule,
+    ToastModule
   ],
+  providers: [MessageService],
 })
 
 
-export class NewRecepieDialogComponent {
-
+export class NewRecepieDialogComponent implements OnInit {
+  @Output() closeDialog = new EventEmitter<void>();
+  ingredientOptions: { label: string, value: string }[] = [];
+  allIngredients: { label: string, value: string }[] = [];
+  pageSize = 50; // Number of items to load at once
+  loading = false;
   units = [
     { label: 'Grams', value: 'g' },
     { label: 'Kilograms', value: 'kg' },
@@ -92,7 +102,7 @@ export class NewRecepieDialogComponent {
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
 
-  constructor(private fb: FormBuilder, private recipeService: RecipeService) {
+  constructor(private fb: FormBuilder, private recipeService: RecipeService, private http: HttpClient, private messageService: MessageService,private nearbuyTestService: NearbuyTestService) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
       recipeDescription: [''],
@@ -113,6 +123,33 @@ export class NewRecepieDialogComponent {
         }, {} as { [key: string]: any })
       ),
     });
+  }
+  ngOnInit() {
+    this.fetchIngredientOptions();
+  }
+
+  fetchIngredientOptions() {
+    this.nearbuyTestService.getData().subscribe(
+      data => {
+        this.ingredientOptions = data.map(item => ({
+          label: item.displayLabel, // Show this in the dropdown
+          value: item.value // Store this for saving to the DB
+        }));
+        this.ingredientOptions = this.ingredientOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+        console.log('Data fetched and mapped successfully:', this.ingredientOptions);
+      },
+      error => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch and map data.' });
+        console.error('Error fetching and mapping data:', error);
+      }
+    );
+  }  
+
+  loadMore(event: any) {
+    const loadedItems = this.ingredientOptions.length;
+    const moreItems = this.allIngredients.slice(loadedItems, loadedItems + this.pageSize);
+    this.ingredientOptions = [...this.ingredientOptions, ...moreItems];
   }
 
   get steps(): FormArray {
@@ -227,26 +264,37 @@ export class NewRecepieDialogComponent {
   }
 
   saveRecipe() {
-    const recipeData = this.form.value;
+    if (this.form.invalid) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all required fields.' });
+      return;
+    }
 
-    // Adding step images to the recipe data
+    this.loading = true;
+    this.form.disable(); // Disable the form
+
+    const recipeData = this.form.value;
     recipeData.steps = recipeData.steps.map((step: any, index: number) => ({
       ...step,
       images: this.stepImages[index] || [],
     }));
-
-    // Adding selected diets to the recipe data
-    recipeData.diets = Object.keys(this.selectedDiets).filter(
-      (key) => this.selectedDiets[key],
-    );
-
-    // Adding the recipe image to the recipe data
+    recipeData.diets = Object.keys(this.selectedDiets).filter((key) => this.selectedDiets[key]);
     recipeData.recipeImage = this.recipeImage;
-
     recipeData.nearbuyId = '1234'; // Replace with actual nearbuy ID
-    console.log(JSON.stringify(recipeData, null, 2));
-    this.recipeService.saveRecipe(recipeData).subscribe((response) => {
-      console.log(response);
-    });
+
+    this.recipeService.saveRecipe(recipeData).subscribe(
+      (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Recipe saved successfully!' });
+        this.loading = false;
+        this.form.reset(); // Reset the form
+        this.form.enable(); // Re-enable the form
+        //this.closeDialog.emit(); // Close the dialog if needed
+      },
+      (error) => {
+        console.error(error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save the recipe.' });
+        this.loading = false;
+        this.form.enable(); // Re-enable the form
+      }
+    );
   }
 }

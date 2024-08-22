@@ -13,6 +13,9 @@ import { AddressType } from '../shared/types/address.type';
 import { OfferType } from '../shared/types/offer.type';
 import { SearchComponent } from './components/search/search.component';
 import { DialogModule } from 'primeng/dialog';
+import { SeasonCalendarComponent } from "./components/season-calendar/season-calendar/season-calendar.component";
+import { StoreService } from '../shared/store/store.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -24,13 +27,14 @@ import { DialogModule } from 'primeng/dialog';
     MapComponent,
     NearOffersCardComponent,
     NgOptimizedImage,
-    NgFor, 
+    NgFor,
     NgIf,
     SearchComponent,
     CardModule,
     ButtonModule,
     DialogModule,
-  ],
+    SeasonCalendarComponent
+],
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
@@ -39,11 +43,13 @@ export class DashboardComponent implements OnInit {
   suggestedRecipes: PublicRecipeType[] = [];
   offers: OfferType[] = [];
   loaded = false;
+  private subscription: Subscription = new Subscription();
 
   constructor(
     public offerService: OfferService,
     private supabaseService: SupabaseService,
     private publicRecipeService: PublicRecipeService,
+    private store: StoreService // Inject StoreService
   ) {}
 
   ngOnInit(): void {
@@ -72,32 +78,23 @@ export class DashboardComponent implements OnInit {
   }
 
   getOffers() {
-    const address: AddressType = { 
-        id: "addr-123456",
-        city: "Berlin",
-        lat: 52.520008,
-        links: {
-          self: "https://api.example.com/addresses/addr-123456",
-          update: "https://api.example.com/addresses/addr-123456/update",
-          remove: "https://api.example.com/addresses/addr-123456/remove",
-          company: "https://api.example.com/companies/comp-789012"
-        },
-        lon: 13.404954,
-        street: "Unter den Linden",
-        name: "Brandenburg Gate",
-        suffix: "Mitte",
-        zipcode: "10117",
-        type: "landmark" 
-    }; // Example address
-    const searchRadiusInKM = 50; // Example search radius
-
-    console.log('Initiating search with radius:', searchRadiusInKM, 'and address:', address);
-    this.offerService.setOffersBySearchRadius(searchRadiusInKM, address);
-
+    this.subscription.add(
+      this.store.selectedCompanyContext$.subscribe(company => {
+        if (company && company.addresses && company.addresses.length > 0) {
+          const addressUrl = company.addresses[0].self; // Use the first address
+          this.offerService.getAddress(addressUrl).subscribe((address: AddressType) => {
+            const searchRadiusInKM = 50; // Adjust the search radius as needed
+            this.offerService.setOffersBySearchRadius(searchRadiusInKM, address);
+          });
+        }
+      })
+    );
+    
+    this.subscription.add(
     this.offerService.offers$.subscribe(offers => {
-      console.log('Received offers:', offers);
       this.offers = offers;
-    });
+    })
+  );
 
     this.offerService.loaded$.subscribe(loaded => {
       this.loaded = loaded;
@@ -115,9 +112,6 @@ export class DashboardComponent implements OnInit {
       result[n] = arr[x in taken ? taken[x] : x];
       taken[x] = --len in taken ? taken[len] : len;
     }
-
-    console.log('Random:', result);
-
     return result as PublicRecipeType[];
   }
 

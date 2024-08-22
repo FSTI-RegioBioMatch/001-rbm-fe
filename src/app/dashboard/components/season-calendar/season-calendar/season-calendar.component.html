@@ -1,0 +1,41 @@
+@if (loaded) {
+  <div class="card-wrapper">
+      <h2>Saisonkalender meiner Region</h2>
+      <p-card class="card card-my-recepies"> 
+        <div>
+            <div class="carousel-content" #carousel>
+              <div>
+                <p-button (click)="filterProductsBySeason('spring')">Frühling</p-button>
+                <p-button (click)="filterProductsBySeason('summer')">Sommer</p-button>
+                <p-button (click)="filterProductsBySeason('autumn')">Herbst</p-button>
+                <p-button (click)="filterProductsBySeason('winter')">Winter</p-button>
+                <button class="cancel-button" (click)="clearFilteredProducts()">✕</button>
+              </div>
+              </div>
+            <p>Please select a season to find products</p>
+          </div>
+  
+        <p-card class="card card-my-recepies">
+          <ng-container *ngFor="let product of filteredProducts; trackBy: trackByFn">
+            <p (click)="showDetails(product)">{{ product.ontoFoodType?.label }}</p>
+          </ng-container>
+        </p-card>
+      </p-card>
+
+       <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="header">
+          Product Details
+        </ng-template>
+        <ng-container  *ngIf="selectedProduct">
+          <p><strong>Company Name:</strong> {{ selectedProduct.company.name }}</p>
+          <p><strong>Label:</strong> {{ selectedProduct.company.label }}</p>
+          <p><strong>Address:</strong> {{ selectedProduct.address.city }}</p>
+          <p><strong>Product:</strong> {{ selectedProduct.ontoFoodType?.label }}</p>
+          <p><strong>Amount:</strong> {{ selectedProduct.product.totalAmount }} {{ selectedProduct.product.unit }}</p>
+          <p><strong>From:</strong> {{ selectedProduct.product.dateStart }}</p>
+          <p><strong>To:</strong> {{ selectedProduct.product.dateEnd }}</p>
+          <p><strong>Link:</strong> <a [href]="selectedProduct.links.company" target="_blank">{{ selectedProduct.links.company }}</a></p>
+        </ng-container>
+      </p-dialog>
+    </div>
+  }
