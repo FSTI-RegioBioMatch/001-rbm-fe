@@ -40,7 +40,7 @@
   flex: 1;
   overflow-y: auto;
   max-height: 800px;
-  padding-left: 10%;
+  // padding-left: 10%;
 }
 
 .recipe-list-add {
@@ -75,7 +75,7 @@
   text-align: center;
   width: 80%;
   height: 200px;
-  max-width: 300px;
+  max-width: 200px;
   border-radius: 8px;
   border: 1px solid #ececec;
   position: relative;
@@ -233,9 +233,17 @@
 
   .suffix {
     position: absolute;
-    right: 90px;
+    left: 50px;
     pointer-events: none;
     color: #29784d;
+  }
+}
+
+::ng-deep form {
+  margin-bottom: 20px;
+
+  button {
+    border-radius: 5px;
   }
 }
 
@@ -244,6 +252,9 @@
 }
 
 ::ng-deep full-calendar {
+  table{
+    border-radius: 10px;
+  }
   td, th, table {
     border-color: #e5eddd !important;
   }
@@ -252,9 +263,32 @@
     color: #29784d;
   }
 
+  .fc-button-group button {
+    background-color: #cbecc4 !important;
+    color: black !important;
+    border: none !important;
+  }
+
+  .fc-today-button {
+    background-color: #b2d1ac !important;
+    color: black !important;
+    border: none !important;
+  }
+
   .fc-event-main {
     background-color: #cbecc4;
+    color: #29784d  !important;
+    border: none !important;
+  }
+  .fc-h-event {
+    background-color: #cbecc4;
     color: black  !important;
+    border: none !important;
+  }
+
+  .fc-day-today {
+    background-color: #f5fff3 !important;
+    color: black !important;
     border: none !important;
   }
 }

@@ -17,7 +17,7 @@
           <div class="recipe-name">
             <p>{{ recipe.recipeName }}</p>
           </div>
-          <p-button class="remove-button" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
+          <p-button class="remove-button rbm-standard-pbtn-round" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         </div>
       </div>
       <br>
-      <div>
+      
         <div class="form-field">
           <label for="name">Name</label>
           <input id="name" type="text" formControlName="name" pInputText placeholder="Name"/>
@@ -51,8 +51,8 @@
           <label for="description">Beschreibung</label>
           <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"></textarea>
         </div>
-      </div>
-      <div>
+      
+ 
         <div class="form-field">
           <label for="portions">Portions</label>
           <div class="input-wrapper">
@@ -75,7 +75,7 @@
             <span class="suffix">Personen</span>
           </div>
         </div>
-        </div>
+      <br>
       <div class="form-field">
         <p-button (click)="saveMenuPlan()">Speichern</p-button>
       </div>
@@ -86,12 +86,12 @@
     <div class="search-bar">
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
-    <div class="recipe-list-add">
+    <div class="recipe-list-add rbm_scrollbar">
       <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">
         <div class="recipe-name">{{ recipe.recipeName }}</div>
-        <p-button class="add-button" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+        <p-button class="add-button rbm-standard-pbtn-round" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
       </div>
     </div>
   </div>
