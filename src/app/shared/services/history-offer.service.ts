@@ -77,7 +77,6 @@ import { HistoricProductType } from '../types/historicproduct.type';
       
     setProductsBySearchCriteria(searchRadiusInKM: number, address: AddressType) {
         this.loadedSubject.next(false);
-        console.log("lat: & lon:", address.lat, address.lon)
 
         // Calculate the bounding box using GeoService
         const boundingBox = this.geoService.getBoundingBox(

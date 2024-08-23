@@ -2,15 +2,17 @@
   <div class="container">
     <div class="card-list-container">
       <div class="card-list">
+        
         <div class="card-wrapper">
           <h2>Meine Rezepte</h2>
-          <p-card header="zur Vollansicht" class="card card-my-recepies">
+          <p-card class="card card-my-recepies">
             <div>
-              @for (item of randomRecipes; track $index) {
-                <p (click)="openDetails(item)">
-                  {{ item.title }}
-                </p>
-              }
+              <ng-container *ngFor="let item of companyRecipes; let i = index; trackBy: trackByFn">
+                <ng-container *ngIf="i < 3">
+                  <p (click)="openRecipeDetails(item)"> {{ item.recipeName }}</p>
+                </ng-container>
+              </ng-container>
+              <p-button label="Zu meinen Rezepten" (click)="navigateToRecipes()"></p-button>
             </div>
           </p-card>
         </div>
@@ -18,17 +20,15 @@
         <div class="card-wrapper">
           <h2>Meine Menüplanung</h2>
           <p-card class="card card-my-recepies">
-            <div class="title-wrapper">
-              <span>zur Vollansicht</span>
-              <p-button icon="">
-                <span class="material-symbols-outlined"> add </span>
-              </p-button>
-            </div>
             <div>
-              <p>KW</p>
-              <p>KW</p>
-              <p>KW</p>
-              <p>KW</p>
+              <ng-container *ngFor="let menu of recentMenus; let i = index; trackBy: trackByFn">
+                <ng-container *ngIf="i < 3">
+                  <p (click)="openMenuDetails(menu)">
+                    {{ menu.name }}
+                  </p>
+                </ng-container>
+              </ng-container>
+              <p-button label="Zu meiner Menüplanung" (click)="navigateToMenuPlanning()"></p-button>
             </div>
           </p-card>
         </div>
@@ -78,5 +78,26 @@
           </div>
         </div>
       </div>
+
+      <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="header">
+          Rezept Details
+        </ng-template>
+        <ng-container  *ngIf="selectedRecipe">
+          <p><strong>Rezeptname:</strong> {{ selectedRecipe.recipeName }}</p>
+          <p><strong>Rezeptbeschreibung:</strong> {{ selectedRecipe.description }}</p>
+        </ng-container>
+      </p-dialog>
+
+      <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="header">
+          Menü Details
+        </ng-template>
+        <ng-container  *ngIf="selectedMenu">
+          <p><strong>Menüname:</strong> {{ selectedMenu.name }}</p>
+          <p><strong>Menübeschreibung:</strong> {{ selectedMenu.beschreibung }}</p>
+          <p><strong>Portionen:</strong> {{ selectedMenu.portions }}</p>
+        </ng-container>
+      </p-dialog>
 </div>
 }

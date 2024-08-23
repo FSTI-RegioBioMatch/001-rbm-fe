@@ -3,6 +3,7 @@ export interface RecipeType {
   imageUrls: string[];
   ingredients: Ingredient[];
   portions: number;
+  recipeName: string;
   title: string;
   description: Description[];
   companyId?: string;
