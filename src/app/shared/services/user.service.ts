@@ -20,6 +20,7 @@ export class UserService {
   }
 
   saveUser(user: UserType): Observable<UserType> {
+    console.log('Saving user', user);
     return this.getUsers().pipe(
       map(users => [...users, user]),
       tap(users => this.saveUsersToStorage(users)),
