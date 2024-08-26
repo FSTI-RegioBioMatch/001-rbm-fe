@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CompanyType } from '../types/company.type';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
@@ -29,8 +29,8 @@ export class CompanyService {
       self: '',
       update: '',
       remove: '',
-      company: ''
-    }
+      company: '',
+    },
   };
 
   constructor(
@@ -46,11 +46,14 @@ export class CompanyService {
       .set('format', 'SEARCH_RESULT');
 
     // Merge additional dynamic parameters
-    dynamicParams.keys().forEach(key => {
+    dynamicParams.keys().forEach((key) => {
       params = params.set(key, dynamicParams.get(key)!);
     });
 
-    return this.http.get<CompanyType[]>(`${environment.NEARBUY_API}/companies`, { params });
+    return this.http.get<CompanyType[]>(
+      `${environment.NEARBUY_API}/companies`,
+      { params },
+    );
   }
 
   setCompaniesBySearchCriteria(searchRadiusInKM: number, address: AddressType) {
@@ -74,18 +77,20 @@ export class CompanyService {
       .set('lat2', boundingBox.latMax.toString())
       .set('lon2', boundingBox.lonMax.toString());
 
-    this.getCompanies(params).pipe(
-      tap(companies => this.companiesSubject.next(companies)),
-      finalize(() => this.loadedSubject.next(true))
-    ).subscribe({
-      next: () => {},
-      error: (error) => {
-        console.error('Error fetching companies:', error);
-        this.loadedSubject.next(true);
-      }
-    });
+    this.getCompanies(params)
+      .pipe(
+        tap((companies) => this.companiesSubject.next(companies)),
+        finalize(() => this.loadedSubject.next(true)),
+      )
+      .subscribe({
+        next: () => {},
+        error: (error) => {
+          console.error('Error fetching companies:', error);
+          this.loadedSubject.next(true);
+        },
+      });
   }
-  
+
   getCompaniesObservable(): Observable<CompanyType[]> {
     return this.companies$;
   }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PersonType } from '../types/person.type';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { EmploymentType } from '../types/employment.type';
 import { CompanyType } from '../types/company.type';
 import { HttpClient } from '@angular/common/http';
