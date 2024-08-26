@@ -9,8 +9,10 @@
 <p-toast></p-toast>
 
 <div class="einkaufsliste-actions">
-    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"></button>
-    <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"></button>
+    <button [disabled]="true" pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
+        (click)="createShoppingList()"></button>
+    <button [disabled]="true" pButton label="Einkaufsliste speichern" icon="pi pi-save"
+        (click)="saveShoppingList()"></button>
 </div>
 
 <div *ngIf="loading" class="text-center">
@@ -68,7 +70,8 @@
     </ng-template>
 </p-table>
 
-<div *ngIf="!loading"> <!-- also check if ek list exists, later in another comp anyway-->
+<div *ngIf="!loading && false"> <!-- also check if ek list exists, later in another comp anyway-->
+    <!--REMOVE FALSE AGAIN!-->
     <h3>Einkaufsliste</h3>
     <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
         <ng-template pTemplate="header">
