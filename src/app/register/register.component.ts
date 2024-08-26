@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { UserType } from '../shared/types/user.type';
+import { UserService } from '../shared/services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -20,39 +22,45 @@ import { ToastModule } from 'primeng/toast';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private messageService: MessageService) {
+  constructor(
+    private fb: FormBuilder, 
+    private messageService: MessageService,
+    private userService: UserService
+  ) {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      phoneNumber: ['', Validators.required],
-      age: ['', [Validators.required, Validators.min(18)]]
+      password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)]],
+      street: ['', Validators.required],
+      houseNumber: ['', [Validators.required, Validators.pattern(/^[1-9]\d*(?:[-\s]?(?:[a-zA-Z]+|\d+))?$/)]],
+      postalCode: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
+      city: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{10,14}$/)]],
+      role: ['', [Validators.required]], 
+      privacyPolicy: [false, [Validators.requiredTrue]]
     });
   }
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      this.saveUser(this.registerForm.value);
+      this.saveUser(this.registerForm.value as UserType);
     } else {
-      this.messageService.add({ severity: 'error', summary: 'Validation Error', detail: 'Please correct the errors in the form.' });
+      this.messageService.add({ severity: 'error', summary: 'Validierungsfehler', detail: 'Bitte korrigieren Sie die Fehler im Formular.' });
       this.markFormGroupTouched(this.registerForm);
     }
   }
 
-  saveUser(userData: any): void {
-    // Simulate saving the user data and handle the response
-    try {
-      // Replace with actual service call
-      console.log('Saving user data', userData);
-      
-      // If successful:
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!' });
-      
-    } catch (error) {
-      // If there's an error:
-      console.error('Error saving user data', error);
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while registering the user.' });
-    }
+  saveUser(userData: UserType): void {
+    this.userService.saveUser(userData).subscribe(
+      () => {
+        this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Benutzer erfolgreich registriert!' });
+      },
+      (error) => {
+        console.error('Fehler beim Speichern der Benutzerdaten', error);
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Beim Registrieren des Benutzers ist ein Fehler aufgetreten.' });
+      }
+    );
   }
 
   markFormGroupTouched(formGroup: FormGroup): void {

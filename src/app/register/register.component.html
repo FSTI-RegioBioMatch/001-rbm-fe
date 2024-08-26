@@ -1,52 +1,115 @@
 <p-toast position="top-right"></p-toast>
 
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-container">
-    <h2 class="form-title">Register</h2>
+    <h2 class="form-title">Registrierung</h2>
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" formControlName="name" type="text" placeholder="Enter name"
-            [ngClass]="{'is-invalid': isFieldInvalid('name')}">
-        <div *ngIf="isFieldInvalid('name')" class="invalid-feedback">
-            Name is required.
-        </div>
-    </div>
-
+    <h3 class="form-title">Anmeldedaten</h3>
     <div class="form-group">
         <label for="email">Email</label>
-        <input id="email" formControlName="email" type="email" placeholder="Enter email"
+        <input id="email" formControlName="email" type="email" placeholder="Email"
             [ngClass]="{'is-invalid': isFieldInvalid('email')}">
         <div *ngIf="isFieldInvalid('email')" class="invalid-feedback">
-            Enter a valid email.
+            Geben Sie eine gültige E-Mail-Adresse ein.
         </div>
     </div>
 
     <div class="form-group">
-        <label for="password">Password</label>
-        <input id="password" formControlName="password" type="password" placeholder="Enter password"
+        <label for="password">Passwort</label>
+        <input id="password" formControlName="password" type="password" placeholder="Passwort"
             [ngClass]="{'is-invalid': isFieldInvalid('password')}">
         <div *ngIf="isFieldInvalid('password')" class="invalid-feedback">
-            Password is required (min. 6 characters).
+            Passwort ist erforderlich (min. 6 Zeichen).
+        </div>
+    </div>
+    
+    <h3 class="form-title">Kontaktdaten</h3>
+    <div class="form-group">
+        <label for="lastName">Nachname</label>
+        <input id="lastName" formControlName="lastName" type="text" placeholder="Nachname"
+            [ngClass]="{'is-invalid': isFieldInvalid('lastName')}">
+        <div *ngIf="isFieldInvalid('lastName')" class="invalid-feedback">
+            Nachname ist erforderlich.
         </div>
     </div>
 
     <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Enter phone number"
+        <label for="firstName">Vorname</label>
+        <input id="firstName" formControlName="firstName" type="text" placeholder="Vorname"
+            [ngClass]="{'is-invalid': isFieldInvalid('firstName')}">
+        <div *ngIf="isFieldInvalid('firstName')" class="invalid-feedback">
+            Vorname ist erforderlich.
+        </div>
+    </div>
+
+    <div>Adresse</div>
+    <div class="form-group">
+        <label for="street">Straße</label>
+        <input id="street" formControlName="street" type="text" placeholder="Straße"
+            [ngClass]="{'is-invalid': isFieldInvalid('street')}">
+        <div *ngIf="isFieldInvalid('street')" class="invalid-feedback">
+            Straße ist erforderlich.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="houseNumber">Hausnummer</label>
+        <input id="houseNumber" formControlName="houseNumber" type="text" placeholder="Hausnummer"
+            [ngClass]="{'is-invalid': isFieldInvalid('houseNumber')}">
+        <div *ngIf="isFieldInvalid('houseNumber')" class="invalid-feedback">
+            Hausnummer ist erforderlich.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="postalCode">PLZ</label>
+        <input id="postalCode" formControlName="postalCode" type="text" placeholder="PLZ"
+            [ngClass]="{'is-invalid': isFieldInvalid('postalCode')}">
+        <div *ngIf="isFieldInvalid('postalCode')" class="invalid-feedback">
+            PLZ ist erforderlich.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="city">Stadt</label>
+        <input id="city" formControlName="city" type="text" placeholder="Stadt"
+            [ngClass]="{'is-invalid': isFieldInvalid('city')}">
+        <div *ngIf="isFieldInvalid('city')" class="invalid-feedback">
+            Stadt ist erforderlich.
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNumber">Telefonnummer</label>
+        <input id="phoneNumber" formControlName="phoneNumber" type="text" placeholder="Telefonnummer"
             [ngClass]="{'is-invalid': isFieldInvalid('phoneNumber')}">
         <div *ngIf="isFieldInvalid('phoneNumber')" class="invalid-feedback">
-            Phone number is required.
+            Telefonnummer ist erforderlich.
         </div>
     </div>
 
     <div class="form-group">
-        <label for="age">Age</label>
-        <input id="age" formControlName="age" type="number" placeholder="Enter age"
-            [ngClass]="{'is-invalid': isFieldInvalid('age')}">
-        <div *ngIf="isFieldInvalid('age')" class="invalid-feedback">
-            You must be at least 18 years old.
+        <label for="role">Rolle in RegioBioMatch</label>
+        <select id="role" formControlName="role" [ngClass]="{'is-invalid': isFieldInvalid('role')}">
+            <option value="">Bitte auswählen</option>
+            <option value="gastronom">Gastronom/in</option>
+            <option value="erzeuger">Erzeuger/in</option>
+            <option value="veredler">Veredler/in</option>
+        </select>
+        <div *ngIf="isFieldInvalid('role')" class="invalid-feedback">
+            Bitte wählen Sie eine Rolle aus.
         </div>
     </div>
 
-    <button [disabled]="registerForm.invalid" type="submit" class="submit-button">Register</button>
+    <div class="form-group">
+        <label for="privacyPolicy">
+            <input id="privacyPolicy" formControlName="privacyPolicy" type="checkbox"
+                [ngClass]="{'is-invalid': isFieldInvalid('privacyPolicy')}">
+            Ich habe die <a href="#" target="_blank">Datenschutzbestimmungen</a> gelesen und stimme ihnen zu.
+        </label>
+        <div *ngIf="isFieldInvalid('privacyPolicy')" class="invalid-feedback">
+            Sie müssen den Datenschutzbestimmungen zustimmen, um fortzufahren.
+        </div>
+    </div>
+
+    <button [disabled]="registerForm.invalid" type="submit" class="submit-button">Registrieren</button>
 </form>
