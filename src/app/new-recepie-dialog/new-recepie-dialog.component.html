@@ -111,12 +111,12 @@
                             <div *ngFor="let ingredient of ingredients.controls; let i = index" [formGroupName]="i"
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
-                                    <div class="ingredient-con">
+                                    <div class="ingredient-con rbm-flex-row">
                                         <p-dropdown [options]="ingredientOptions" formControlName="name"
                                             placeholder="Name der Zutat" [showClear]="true" filter="true"
                                             filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
                                             [virtualScroll]="true" [itemSize]="50" [lazy]="true"
-                                            (onLazyLoad)="loadMore($event)">
+                                            (onLazyLoad)="loadMore($event)" class="name">
                                         </p-dropdown>
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
@@ -124,17 +124,17 @@
                                         <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
                                             class="p-button-rounded p-button-danger p-button-text"></button>
                                     </div>
-                                    <div>
-                                        <div formArrayName="alternatives">
+                                    <div class="ingredient-con">
+                                        <div formArrayName="alternatives" class="rbm-max-width-per100">
                                             <div *ngFor="let alternative of getAlternatives(i).controls; let j = index"
                                                 [formGroupName]="j" style="margin-top: 8px;">
-                                                <div style="display: flex; align-items: center;">
+                                                <div class="rbm-flex-row rbm-flex-wrap rbm-gap-p8">
 
                                                     <p-dropdown [options]="ingredientOptions" formControlName="name"
                                                         placeholder="Name der alternativen Zutat" [showClear]="true"
                                                         filter="true" filterPlaceholder="Suche nach Zutat"
                                                         optionLabel="label" optionValue="value" [virtualScroll]="true"
-                                                        [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)">
+                                                        [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)" class="name">
                                                     </p-dropdown>
 
 

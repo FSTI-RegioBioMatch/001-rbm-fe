@@ -1881,6 +1881,15 @@
   margin-left: 3.05rem;
   margin-left: var(--rbm-space-4xl);
 }
+.rbm-gap-p5 {
+  gap: 5px;
+}
+.rbm-gap-p8 {
+  gap: 8px;
+}
+.rbm-gap-p11 {
+  gap: 11px;
+}
 .rbm-gap-4xs {
   gap: 0.33rem;
   gap: var(--rbm-space-4xs);
@@ -2398,7 +2407,7 @@ H6 {
 .rbm-content-stretch {
   justify-content: stretch;
 }
-.rbm-pace-between {
+.rbm-space-between {
   justify-content: space-between;
 }
 .rbm-space-around {
@@ -2454,6 +2463,9 @@ H6 {
 .rbm-max-site-width {
   max-width: 140rem;
   width: 100%;
+}
+.rbm-max-width-per100 {
+  max-width: 100%;
 }
 .rbm-max-width-140 {
   max-width: 140rem;
@@ -3029,6 +3041,41 @@ input::placeholder {
   color: #000000;
 }
 
+// dropdown calendaar
+
+.p-calendar {
+  border: none;
+  background-color: var(--rbm-willow-green);
+  
+  input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .p-datepicker-trigger {
+    background-color: var(--rbm-willow-green-d-1);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 8px;
+    box-shadow: none;
+  }
+  .p-focus {
+    box-shadow: none;
+    outline-style: none;
+    outline-width: 0;
+  }
+}
+
+::ng-deep p-calendar {
+  .p-focus {
+    box-shadow: none;
+    outline-style: none;
+    outline-width: 0;
+  }
+}
+
+
 //textarea
 
 textarea {
@@ -3129,12 +3176,9 @@ button {
 
 // Calendar
 
-::ng-deep full-calendar {
-  table {
-    border-radius: 10px;
-  }
+full-calendar {
   td, th, table {
-    border-color: #e5eddd !important;
+    border-color: var(--rbm-willow-green) !important;
   }
 
   a {
@@ -3168,6 +3212,11 @@ button {
     background-color: #f5fff3 !important;
     color: black !important;
     border: none !important;
+  }
+
+  .fc-toolbar-title {
+    text-transform: uppercase;
+    color: var(--rbm-sea-green);
   }
 }
 

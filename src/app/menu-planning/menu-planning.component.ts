@@ -31,6 +31,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-menu-planning',
@@ -52,7 +53,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     DialogModule,
     ToastModule,
     ProgressSpinnerModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TabViewModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
@@ -80,6 +82,9 @@ export class MenuPlanningComponent implements OnInit {
 
   calendarLoaded = false
   recipesLoaded = false
+
+  activeIndex: number = 0;
+  visible: boolean = false;
 
   constructor(
     private store: StoreService,
@@ -143,6 +148,10 @@ export class MenuPlanningComponent implements OnInit {
         this.loadRecipes(); 
         this.loadAllEvents();
       });
+  }
+
+  showDialog() {
+    this.visible = true;
   }
   
 
