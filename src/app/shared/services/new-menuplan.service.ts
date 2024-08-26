@@ -15,7 +15,7 @@ export class NewMenuplanService {
 
   /**
    * Saves a new menu plan with the currently selected company ID.
-   * 
+   *
    * @param menuPlan - The menu plan data to be saved.
    * @returns An Observable of the saved menu plan.
    */
@@ -37,7 +37,7 @@ export class NewMenuplanService {
 
   /**
    * Deletes a menu plan by ID with the currently selected company ID.
-   * 
+   *
    * @param menuPlanId - The ID of the menu plan to delete.
    * @returns An Observable of void.
    */
@@ -59,7 +59,7 @@ export class NewMenuplanService {
 
   /**
    * Deletes an event from a menu plan by IDs with the currently selected company ID.
-   * 
+   *
    * @param menuPlanId - The ID of the menu plan.
    * @param eventId - The ID of the event to delete.
    * @returns An Observable of the response.
@@ -82,7 +82,7 @@ export class NewMenuplanService {
 
   /**
    * Retrieves a menu plan by ID with the currently selected company ID.
-   * 
+   *
    * @param menuPlanId - The ID of the menu plan to retrieve.
    * @returns An Observable of the menu plan.
    */
@@ -104,7 +104,7 @@ export class NewMenuplanService {
 
   /**
    * Retrieves all menu plans with the currently selected company ID.
-   * 
+   *
    * @returns An Observable of an array of menu plans.
    */
   getAllMenuPlans(): Observable<any[]> {
@@ -124,7 +124,7 @@ export class NewMenuplanService {
   }
   /**
  * Updates an event in a menu plan by IDs with the currently selected company ID.
- * 
+ *
  * @param menuPlanId - The ID of the menu plan.
  * @param eventId - The ID of the event to update.
  * @param eventData - The updated event data.
