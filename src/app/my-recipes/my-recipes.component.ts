@@ -180,7 +180,7 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
   getFromToRange(): string {
     const start = this.currentPage * this.pageSize + 1;
     const end = Math.min((this.currentPage + 1) * this.pageSize, this.totalElements);
-    return `${start} - ${end} of ${this.totalElements}`;
+    return `${start} - ${end} von ${this.totalElements}`;
   }
   openAddRecipeDialog(): void {
     this.displayAddRecipeDialog = true;

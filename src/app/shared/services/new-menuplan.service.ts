@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { StoreService } from '../store/store.service';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NewMenuplanService {
-  private apiUrl = 'http://localhost:8082/api/v1/new-menu-plans';
+  private apiUrl = `${environment.API_CORE}/new-menu-plans`;
 
   constructor(private http: HttpClient, private storeService: StoreService) {}
 

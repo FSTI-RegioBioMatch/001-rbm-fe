@@ -265,7 +265,7 @@ export class NewRecepieDialogComponent implements OnInit {
 
   saveRecipe() {
     if (this.form.invalid) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all required fields.' });
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Bitte fülle alle Felder aus.' });
       return;
     }
 
@@ -283,7 +283,7 @@ export class NewRecepieDialogComponent implements OnInit {
 
     this.recipeService.saveRecipe(recipeData).subscribe(
       (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Recipe saved successfully!' });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Rezept gespeichert!' });
         this.loading = false;
         this.form.reset(); // Reset the form
         this.form.enable(); // Re-enable the form
