@@ -1,8 +1,8 @@
 <div class="flex gap-2">
   <p-button routerLink="/menu-planning">Menüplanung</p-button>
   <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-  <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-  <p-button>Angebotsliste</p-button>
+  <p-button [disabled]="true" routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+  <p-button [disabled]="true">Angebotsliste</p-button>
 </div>
 <p-confirmDialog></p-confirmDialog>
 <div class="container">
@@ -16,124 +16,121 @@
           <p>Keine Rezepte hinzugefügt</p>
         </div>
         <div *ngFor="let recipe of menuPlan" class="recipe-item">
-          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-            class="recipe-image">
+          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'"
+            alt="{{ recipe.recipeName }}" class="recipe-image">
           <div class="recipe-name">
             <p>{{ recipe.recipeName }}</p>
           </div>
-          <p-button class="remove-button rbm-standard-pbtn-round" (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
+          <p-button class="remove-button rbm-standard-pbtn-round"
+            (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
         </div>
       </div>
     </div>
-      <div class="rbm-flex-row rbm-space-between rbm-gap-xl">
-        <form [formGroup]="menuPlanForm" class=".rbm-columns-2 .rbm-width-40">
-          <div class="date-config">
-            <div class="form-field">
-              <label for="nachsteAusfuhrung">Nächste Ausführung</label>
-              <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
-                [options]="nextExecutionOptions"></p-dropdown>
-            </div>
-            <div class="form-field">
-              <label for="wochentag">Wochentag</label>
-              <p-dropdown id="wochentag" formControlName="wochentag" [options]="weekDays"></p-dropdown>
-            </div>
-            <div class="form-field">
-              <label for="wiederholung">Wiederholung</label>
-              <p-dropdown id="wiederholung" formControlName="wiederholung" [options]="repeatOptions"></p-dropdown>
-            </div>
-          </div>
-          <br>
-            <div class="form-field">
-              <label for="name">Name</label>
-              <input id="name" type="text" formControlName="name" pInputText placeholder="Name" />
-            </div>
-            <div class="form-field">
-              <label for="ort">Ort</label>
-              <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort" />
-            </div>
-            <div class="form-field description-field">
-              <label for="description">Beschreibung</label>
-              <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"></textarea>
-            </div>
-          
+    <div class="rbm-flex-row rbm-space-between rbm-gap-xl">
+      <form [formGroup]="menuPlanForm" class=".rbm-columns-2 .rbm-width-40">
+        <div class="date-config">
           <div class="form-field">
-            <label for="portions">Portions</label>
-            <div class="input-wrapper">
-              <input id="portions" type="number" formControlName="portions" pInputText placeholder="0" />
-              <span class="suffix">Personen</span>
-            </div>
-          </div>
-  
-          <div class="form-field">
-            <label for="portionsVegetarisch">Vegetarisch</label>
-            <div class="input-wrapper">
-              <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
-                placeholder="0" />
-              <span class="suffix">Personen</span>
-            </div>
+            <label for="nachsteAusfuhrung">Nächste Ausführung</label>
+            <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
+              [options]="nextExecutionOptions"></p-dropdown>
           </div>
           <div class="form-field">
-            <label for="portionsVegan">Vegan</label>
-            <div class="input-wrapper">
-              <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0" />
-              <span class="suffix">Personen</span>
-            </div>
+            <label for="wochentag">Wochentag</label>
+            <p-dropdown id="wochentag" formControlName="wochentag" [options]="weekDays"></p-dropdown>
           </div>
-        
-          <br>
           <div class="form-field">
-            <p-button (click)="saveMenuPlan()" [disabled]="menuPlanForm.invalid || loading">Speichern</p-button>
+            <label for="wiederholung">Wiederholung</label>
+            <p-dropdown id="wiederholung" formControlName="wiederholung" [options]="repeatOptions"></p-dropdown>
           </div>
-        </form>
-    
-  
-        <div *ngIf="!calendarLoaded" class="text-center rbm-width-60">
-          <p-progressSpinner></p-progressSpinner>
         </div>
-        <full-calendar *ngIf="calendarLoaded" #calendar [options]="calendarOptions" class="text-center rbm-full-width"></full-calendar>
-        <p-dialog [(visible)]="displayEventDialog" modal="modal" header="Event Details">
-          <div *ngIf="selectedEvent">
-            <h3>{{ selectedEvent.title }}</h3>
-            <div class="dialog-content">
-              <p><strong>Beschreibung:</strong> {{ selectedEvent.extendedProps.description }}</p>
-              <p><strong>Ort:</strong> {{ selectedEvent.extendedProps.location }}</p>
-              <p><strong>Portionen:</strong> {{ selectedEvent.extendedProps.portions }}</p>
-              <p><strong>Vegetarische Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
-              <p><strong>Vegane Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
-              <p><strong>Wiederholung:</strong> {{ selectedEvent.extendedProps.repeatFrequency }}</p>
-            </div>
-            <div class="dialog-actions">
-              <p-button label="Dieses Event löschen" icon="pi pi-trash" class="p-button-danger"
-                (click)="deleteSingleEvent(selectedEvent)"></p-button>
-              <p-button label="Alle Events löschen" icon="pi pi-trash" class="p-button-danger"
-                (click)="deleteAllEvents(selectedEvent.extendedProps.menuId)"></p-button>
-            </div>
-          </div>
-        </p-dialog>
-      </div>
-  
-</div>
+        <br>
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" pInputText placeholder="Name" />
+        </div>
+        <div class="form-field">
+          <label for="ort">Ort</label>
+          <input id="ort" type="text" formControlName="ort" pInputText placeholder="ort" />
+        </div>
+        <div class="form-field description-field">
+          <label for="description">Beschreibung</label>
+          <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"></textarea>
+        </div>
 
-<p-dialog 
-    header="Weitere Rezepte" 
-    [modal]="true"
-    [(visible)]="visible" 
-    [style]="{ width: '50rem', height: '100%' }" 
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
-    class="recipe-list-all">
+        <div class="form-field">
+          <label for="portions">Portions</label>
+          <div class="input-wrapper">
+            <input id="portions" type="number" formControlName="portions" pInputText placeholder="0" />
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="portionsVegetarisch">Vegetarisch</label>
+          <div class="input-wrapper">
+            <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
+              placeholder="0" />
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="portionsVegan">Vegan</label>
+          <div class="input-wrapper">
+            <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0" />
+            <span class="suffix">Personen</span>
+          </div>
+        </div>
+
+        <br>
+        <div class="form-field">
+          <p-button (click)="saveMenuPlan()" [disabled]="menuPlanForm.invalid || loading">Speichern</p-button>
+        </div>
+      </form>
+
+
+      <div *ngIf="!calendarLoaded" class="text-center rbm-width-60">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+      <full-calendar *ngIf="calendarLoaded" #calendar [options]="calendarOptions"
+        class="text-center rbm-full-width"></full-calendar>
+      <p-dialog [(visible)]="displayEventDialog" modal="modal" header="Event Details">
+        <div *ngIf="selectedEvent">
+          <h3>{{ selectedEvent.title }}</h3>
+          <div class="dialog-content">
+            <p><strong>Beschreibung:</strong> {{ selectedEvent.extendedProps.description }}</p>
+            <p><strong>Ort:</strong> {{ selectedEvent.extendedProps.location }}</p>
+            <p><strong>Portionen:</strong> {{ selectedEvent.extendedProps.portions }}</p>
+            <p><strong>Vegetarische Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegetarisch }}</p>
+            <p><strong>Vegane Portionen:</strong> {{ selectedEvent.extendedProps.portionsVegan }}</p>
+            <p><strong>Wiederholung:</strong> {{ selectedEvent.extendedProps.repeatFrequency }}</p>
+          </div>
+          <div class="dialog-actions">
+            <p-button label="Dieses Event löschen" icon="pi pi-trash" class="p-button-danger"
+              (click)="deleteSingleEvent(selectedEvent)"></p-button>
+            <p-button label="Alle Events löschen" icon="pi pi-trash" class="p-button-danger"
+              (click)="deleteAllEvents(selectedEvent.extendedProps.menuId)"></p-button>
+          </div>
+        </div>
+      </p-dialog>
+    </div>
+
+  </div>
+
+  <p-dialog header="Weitere Rezepte" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', height: '100%' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" class="recipe-list-all">
     <div class="search-bar">
       <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
-      <div class="recipe-list-add" #recipeList>
-        <div *ngIf="!recipesLoaded" class="text-center">
-          <p-progressSpinner></p-progressSpinner>
-        </div>
-        <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
-          <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
-            class="recipe-image">
-          <div class="recipe-name">{{ recipe.recipeName }}</div>
-          <p-button class="add-button rbm-standard-pbtn-round" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
-        </div>
+    <div class="recipe-list-add" #recipeList>
+      <div *ngIf="!recipesLoaded" class="text-center">
+        <p-progressSpinner></p-progressSpinner>
       </div>
-    
-</p-dialog>
+      <div *ngFor="let recipe of filteredRecipes" class="recipe-item">
+        <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
+          class="recipe-image">
+        <div class="recipe-name">{{ recipe.recipeName }}</div>
+        <p-button class="add-button rbm-standard-pbtn-round" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+      </div>
+    </div>
+
+  </p-dialog>
