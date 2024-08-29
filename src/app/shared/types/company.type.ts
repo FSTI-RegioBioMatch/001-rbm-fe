@@ -1,3 +1,5 @@
+import { NearbuyRole } from '../../shared/store/store.service'; // Adjust the import path as needed
+
 export interface CompanyType {
   id: string;
   name: string;
@@ -39,5 +41,5 @@ export interface CompanyType {
     unit: string;
   };
   resultType: string;
-  roles: string[];
+  roles: NearbuyRole[];
 }

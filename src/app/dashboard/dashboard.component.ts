@@ -1,6 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/services/offer.service';
@@ -15,14 +21,30 @@ import { OfferType } from '../shared/types/offer.type';
 import { MenuplanType } from '../shared/types/menuplan.type';
 import { SearchComponent } from './components/search/search.component';
 import { DialogModule } from 'primeng/dialog';
-import { SeasonCalendarComponent } from "./components/season-calendar/season-calendar/season-calendar.component";
-import { StoreService } from '../shared/store/store.service';
+import { SeasonCalendarComponent } from './components/season-calendar/season-calendar/season-calendar.component';
+import {
+  StoreService,
+  rbmRole,
+  NearbuyRole,
+} from '../shared/store/store.service';
 import { Subscription } from 'rxjs';
 import { RecipeService } from '../shared/services/recipe.service';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
-import { RecipeType} from '../shared/types/recipe.type'
+import { RecipeType } from '../shared/types/recipe.type';
 import { filter, switchMap } from 'rxjs/operators';
+import { CompanyType } from '../shared/types/company.type';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 
+interface DashboardItem {
+  type: string;
+  title: string;
+  component?: any;
+  method?: () => void;
+}
 
 @Component({
   selector: 'app-new-dashboard',
@@ -39,8 +61,10 @@ import { filter, switchMap } from 'rxjs/operators';
     CardModule,
     ButtonModule,
     DialogModule,
-    SeasonCalendarComponent
-],
+    SeasonCalendarComponent,
+    DragDropModule,
+    CommonModule,
+  ],
 })
 export class DashboardComponent implements OnInit {
   @ViewChild('carousel') carousel!: ElementRef;
@@ -61,16 +85,22 @@ export class DashboardComponent implements OnInit {
   selectedSortOption: string = 'recipeName,asc';
   fromDate: Date | null = null;
   toDate: Date | null = null;
-  displayDialog: boolean = false;
+  displayRecipeDialog: boolean = false;
+  displayMenuDialog: boolean = false;
+  rbmRole: rbmRole = 'gastro';
+  nearbuyRoles: NearbuyRole[] = [];
+  selectedCompany: CompanyType | null = null;
+  dashboardConfig: any;
+  dashboardComponents: DashboardItem[] = [];
 
   constructor(
     public offerService: OfferService,
     private publicRecipeService: PublicRecipeService,
-    private store: StoreService, // Inject StoreService
+    private store: StoreService,
     private recipeService: RecipeService,
     private menuplanService: NewMenuplanService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -78,43 +108,46 @@ export class DashboardComponent implements OnInit {
     this.loadPublicRecipes();
     this.getOffers();
     this.getRecentMenus();
+    this.loadCompanyAndRoles();
   }
 
-  openRecipeDetails(recipe: RecipeType){
-      this.selectedRecipe = recipe; 
-      this.displayDialog = true;
-      this.cdr.detectChanges();
-  }
-
-  openMenuDetails(menu: MenuplanType){
-    this.selectedMenu = menu; 
-    this.displayDialog = true;
+  openRecipeDetails(recipe: RecipeType) {
+    this.selectedRecipe = recipe;
+    this.displayRecipeDialog = true;
+    this.displayMenuDialog = false;
     this.cdr.detectChanges();
-}
+  }
+
+  openMenuDetails(menu: MenuplanType) {
+    this.selectedMenu = menu;
+    this.displayMenuDialog = true;
+    this.displayRecipeDialog = false;
+    this.cdr.detectChanges();
+  }
 
   loadCompanyRecipes(): void {
     const seasons = this.getSeasonsFromDateRange(this.fromDate, this.toDate);
     this.store.selectedCompanyContext$
       .pipe(
-        filter(company => company !== null && company.id !== undefined),
-        switchMap(company =>
+        filter((company) => company !== null && company.id !== undefined),
+        switchMap((company) =>
           this.recipeService.getRecipesByCompanyId(
             this.currentPage,
             this.pageSize,
             this.selectedSortOption,
             this.searchName,
-            seasons
-          )
-        )
+            seasons,
+          ),
+        ),
       )
       .subscribe(
-        page => {
+        (page) => {
           this.companyRecipes = page.content;
           this.totalElements = page.totalElements;
         },
-        error => {
+        (error) => {
           console.error('Error loading company recipes:', error);
-        }
+        },
       );
   }
 
@@ -125,13 +158,16 @@ export class DashboardComponent implements OnInit {
         this.suggestedRecipes = this.getRandom(recipes, 20);
         this.randomRecipes = this.getRandom(recipes, 3);
       },
-      error => {
+      (error) => {
         console.error('Error loading public recipes:', error);
-      }
+      },
     );
   }
 
-  getSeasonsFromDateRange(fromDate: Date | null, toDate: Date | null): string[] {
+  getSeasonsFromDateRange(
+    fromDate: Date | null,
+    toDate: Date | null,
+  ): string[] {
     if (!fromDate || !toDate) {
       return [];
     }
@@ -140,16 +176,30 @@ export class DashboardComponent implements OnInit {
     const startMonth = fromDate.getMonth() + 1;
     const endMonth = toDate.getMonth() + 1;
 
-    if ((startMonth <= 2 || startMonth === 12) || (endMonth <= 2 || endMonth === 12)) {
+    if (
+      startMonth <= 2 ||
+      startMonth === 12 ||
+      endMonth <= 2 ||
+      endMonth === 12
+    ) {
       seasons.push('Winter');
     }
-    if ((startMonth <= 5 && startMonth >= 3) || (endMonth <= 5 && endMonth >= 3)) {
+    if (
+      (startMonth <= 5 && startMonth >= 3) ||
+      (endMonth <= 5 && endMonth >= 3)
+    ) {
       seasons.push('Spring');
     }
-    if ((startMonth <= 8 && startMonth >= 6) || (endMonth <= 8 && endMonth >= 6)) {
+    if (
+      (startMonth <= 8 && startMonth >= 6) ||
+      (endMonth <= 8 && endMonth >= 6)
+    ) {
       seasons.push('Summer');
     }
-    if ((startMonth <= 11 && startMonth >= 9) || (endMonth <= 11 && endMonth >= 9)) {
+    if (
+      (startMonth <= 11 && startMonth >= 9) ||
+      (endMonth <= 11 && endMonth >= 9)
+    ) {
       seasons.push('Autumn');
     }
 
@@ -158,42 +208,149 @@ export class DashboardComponent implements OnInit {
 
   getOffers() {
     this.subscription.add(
-      this.store.selectedCompanyContext$.subscribe(company => {
+      this.store.selectedCompanyContext$.subscribe((company) => {
         if (company && company.addresses && company.addresses.length > 0) {
           const addressUrl = company.addresses[0].self;
-          this.offerService.getAddress(addressUrl).subscribe((address: AddressType) => {
-            const searchRadiusInKM = 50;
-            this.offerService.setOffersBySearchRadius(searchRadiusInKM, address);
-          });
+          this.offerService
+            .getAddress(addressUrl)
+            .subscribe((address: AddressType) => {
+              const searchRadiusInKM = 50;
+              this.offerService.setOffersBySearchRadius(
+                searchRadiusInKM,
+                address,
+              );
+            });
         }
-      })
-    );
-    
-    this.subscription.add(
-      this.offerService.offers$.subscribe(offers => {
-        this.offers = offers;
-      })
+      }),
     );
 
-    this.offerService.loaded$.subscribe(loaded => {
+    this.subscription.add(
+      this.offerService.offers$.subscribe((offers) => {
+        this.offers = offers;
+      }),
+    );
+
+    this.offerService.loaded$.subscribe((loaded) => {
       this.loaded = loaded;
     });
   }
 
   getRecentMenus() {
     this.store.selectedCompanyContext$
-    .pipe(
-      filter(company => company !== null),
-      switchMap(company => this.menuplanService.getAllMenuPlans())
-    )
-    .subscribe(
-      menus => {
-        this.recentMenus = menus.slice(0, 3); // Get the first 3 menus
+      .pipe(
+        filter((company) => company !== null),
+        switchMap((company) => this.menuplanService.getAllMenuPlans()),
+      )
+      .subscribe(
+        (menus) => {
+          this.recentMenus = menus.slice(0, 3); // Get the first 3 menus
+        },
+        (error) => {
+          console.error('Error loading menus:', error);
+        },
+      );
+  }
+
+  loadCompanyAndRoles(): void {
+    this.store.selectedCompanyContext$.subscribe(
+      (company) => {
+        if (company) {
+          this.selectedCompany = company;
+          console.log('Selected company:', company);
+          this.loadDashboardComponents();
+        }
       },
-      error => {
-        console.error('Error loading menus:', error);
-      }
+      (error) => {
+        console.error('Error loading selected company:', error);
+      },
     );
+
+    this.store.rbmRole$.subscribe(
+      (rbmRole) => {
+        this.rbmRole = 'gastro'; //unbedingt wieder auf rbmRole setzen!!!
+        console.log('Current RBM Role:', this.rbmRole);
+        this.loadDashboardComponents();
+      },
+      (error) => {
+        console.error('Error loading RBM role:', error);
+      },
+    );
+  }
+
+  loadDashboardComponents(): void {
+    console.log('Loading dashboard components for role:', this.rbmRole);
+    switch (this.rbmRole) {
+      case 'gastro':
+        this.dashboardComponents = [
+          { type: 'map', title: 'Karte', component: MapComponent },
+          {
+            type: 'near-offers',
+            title: 'Angebote in der Nähe',
+            component: NearOffersCardComponent,
+          },
+          { type: 'search', title: 'Suche', component: SearchComponent },
+          {
+            type: 'season-calendar',
+            title: 'Saisonkalender',
+            component: SeasonCalendarComponent,
+          },
+          {
+            type: 'recent-menus',
+            title: 'Aktuelle Menüs',
+            method: this.getRecentMenus.bind(this),
+          },
+          {
+            type: 'company-recipes',
+            title: 'Firmenrezepte',
+            method: this.loadCompanyRecipes.bind(this),
+          },
+          {
+            type: 'public-recipes',
+            title: 'Öffentliche Rezepte',
+            method: this.loadPublicRecipes.bind(this),
+          },
+        ];
+        break;
+      case 'producer':
+        this.dashboardComponents = [
+          //{ type: 'my-products', title: 'Meine Produkte', component: MyProductsComponent },
+          //{ type: 'my-orders', title: 'Meine Aufträge', component: MyOrdersComponent },
+          { type: 'map', title: 'Meine Region', component: MapComponent },
+          {
+            type: 'season-calendar',
+            title: 'Mein Saisonkalender',
+            component: SeasonCalendarComponent,
+          },
+          //{ type: 'top-products', title: 'Top Erzeugnisse meiner Region', component: TopProductsComponent },
+          {
+            type: 'search',
+            title: 'Suche in meiner Region',
+            component: SearchComponent,
+          },
+          //{ type: 'top-recipes', title: 'Top Rezepte meiner Region', component: TopRecipesComponent }
+        ];
+        break;
+      case 'refiner':
+        this.dashboardComponents = [
+          //{ type: 'my-products', title: 'Meine Produkte', component: MyProductsComponent },
+          //{ type: 'my-suppliers', title: 'Meine Lieferanten', component: MySuppliersComponent },
+          //{ type: 'my-orders', title: 'Meine Aufträge', component: MyOrdersComponent },
+          { type: 'map', title: 'Meine Region', component: MapComponent },
+          {
+            type: 'season-calendar',
+            title: 'Mein Saisonkalender',
+            component: SeasonCalendarComponent,
+          },
+          //{ type: 'top-products', title: 'Top Erzeugnisse meiner Region', component: TopProductsComponent },
+          {
+            type: 'search',
+            title: 'Suche in meiner Region',
+            component: SearchComponent,
+          },
+          //{ type: 'top-recipes', title: 'Top Rezepte meiner Region', component: TopRecipesComponent }
+        ];
+        break;
+    }
   }
 
   getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
@@ -220,5 +377,13 @@ export class DashboardComponent implements OnInit {
 
   trackByFn(index: number, item: any): any {
     return item.id || index; // Use item.id if available, otherwise use the index
+  }
+
+  onDrop(event: CdkDragDrop<DashboardItem[]>) {
+    moveItemInArray(
+      this.dashboardComponents,
+      event.previousIndex,
+      event.currentIndex,
+    );
   }
 }

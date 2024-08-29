@@ -30,6 +30,14 @@
             "polyfills": [
               "zone.js"
             ],
+            "allowedCommonJsDependencies": [
+              "ws",
+              "base64-js",
+              "js-sha256",
+              "moment",
+              "convert-units",
+              "leaflet"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [

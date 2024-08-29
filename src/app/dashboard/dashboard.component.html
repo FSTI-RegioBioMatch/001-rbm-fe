@@ -1,99 +1,110 @@
 @if (loaded) {
   <div class="container">
-    <div class="card-list-container">
-      <div class="card-list">
-        
-        <div class="card-wrapper">
-          <h2>Meine Rezepte</h2>
-          <p-card class="card card-my-recepies">
-            <div>
-              <ng-container *ngFor="let item of companyRecipes; let i = index; trackBy: trackByFn">
-                <ng-container *ngIf="i < 3">
-                  <p (click)="openRecipeDetails(item)"> {{ item.recipeName }}</p>
-                </ng-container>
-              </ng-container>
-              <p-button label="Zu meinen Rezepten" (click)="navigateToRecipes()"></p-button>
+    <div cdkDropList class="dashboard-grid" (cdkDropListDropped)="onDrop($event)">
+      @for (component of dashboardComponents; track component.type) {
+        @if (component.type !== 'public-recipes') {
+          <div class="dashboard-item" cdkDrag>
+            <div class="dashboard-component">
+              <h2>{{ component.title }}</h2>
+              @switch (component.type) {
+                @case ('recent-menus') {
+                  <div class="card-wrapper">
+                    <p-card class="card card-my-recepies">
+                      <div>
+                        <ng-container *ngFor="let menu of recentMenus; let i = index; trackBy: trackByFn">
+                          <ng-container *ngIf="i < 3">
+                            <p (click)="openMenuDetails(menu)">
+                              {{ menu.name }}
+                            </p>
+                          </ng-container>
+                        </ng-container>
+                        <p-button label="Zu meiner Menüplanung" (click)="navigateToMenuPlanning()"></p-button>
+                      </div>
+                    </p-card>
+                  </div>
+                }
+                @case ('company-recipes') {
+                  <div class="card-wrapper">
+                    <p-card class="card card-my-recepies">
+                      <div>
+                        <ng-container *ngFor="let item of companyRecipes; let i = index; trackBy: trackByFn">
+                          <ng-container *ngIf="i < 3">
+                            <p (click)="openRecipeDetails(item)"> {{ item.recipeName }}</p>
+                          </ng-container>
+                        </ng-container>
+                        <p-button label="Zu meinen Rezepten" (click)="navigateToRecipes()"></p-button>
+                      </div>
+                    </p-card>
+                  </div>
+                }
+                @case ('map') {
+                  <div class="card-wrapper">
+                    <p-card class="card">
+                      <app-map
+                      [lat]="offerService.address.lat"
+                      [lng]="offerService.address.lon"
+                      [offers]="offers"
+                      class="map-card"
+                      ></app-map>
+                    </p-card>
+                  </div>
+                }
+                @case ('near-offers') {
+                  <app-near-offers-card />
+                }
+                @case ('search') {
+                  <app-search />
+                }
+                @case ('season-calendar') {
+                  <app-season-calendar />
+                }
+                
+              }
             </div>
-          </p-card>
+          </div>
+        }
+      }
+    </div>
+    
+    <div class="side-scroll-container">
+      <h2>Rezeptempfehlungen für mich</h2>
+      <div class="small-card-list-container">
+        <div class="mb-2">
+          <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
         </div>
-
-        <div class="card-wrapper">
-          <h2>Meine Menüplanung</h2>
-          <p-card class="card card-my-recepies">
-            <div>
-              <ng-container *ngFor="let menu of recentMenus; let i = index; trackBy: trackByFn">
-                <ng-container *ngIf="i < 3">
-                  <p (click)="openMenuDetails(menu)">
-                    {{ menu.name }}
-                  </p>
-                </ng-container>
+        <div class="small-card-list">
+          <ng-container *ngFor="let item of suggestedRecipes; trackBy: trackByFn">
+            <div class="small-card">
+              <ng-container *ngIf="item.image_urls">
+                <img
+                  class="w-100 h-100"
+                  [src]="item.image_urls[0]"
+                  style="object-fit: fill"
+                  alt="picture of the recipe"
+                />
               </ng-container>
-              <p-button label="Zu meiner Menüplanung" (click)="navigateToMenuPlanning()"></p-button>
+              <span class="" style="z-index: 999">{{ item.title }}</span>
             </div>
-          </p-card>
+          </ng-container>
         </div>
-
-        <div class="card-wrapper">
-          <h2>Meine Region</h2>
-          <p-card class="card">
-            <app-map
-            [lat]="offerService.address.lat"
-            [lng]="offerService.address.lon"
-            [offers]="offers"
-            class="map-card"
-            ></app-map>
-          </p-card>
-        </div>
-
-        <app-season-calendar />
-
-        <app-near-offers-card />
-        
-        <app-search />
-
       </div>
     </div>
-      
-    <div class="side-scroll-container">
-        <h2>Rezeptempfehlungen für mich</h2>
-        <br />
-        <div class="small-card-list-container" style="padding: 24px">
-          <div class="mb-2">
-            <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
-          </div>
-          <div class="small-card-list">
-            <ng-container *ngFor="let item of suggestedRecipes; trackBy: trackByFn">
-              <div class="small-card">
-                <ng-container *ngIf="item.image_urls">
-                  <img
-                    class="w-100 h-100"
-                    [src]="item.image_urls[0]"
-                    style="object-fit: fill"
-                    alt="picture of the recipe"
-                  />
-                </ng-container>
-                <span class="" style="z-index: 999">{{ item.title }}</span>
-              </div>
-            </ng-container>
-          </div>
-        </div>
-      </div>
 
-      <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
-        <ng-template pTemplate="header">
-          Rezept Details
-        </ng-template>
-        <ng-container  *ngIf="selectedRecipe">
+      <p-dialog [(visible)]="displayRecipeDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+        <ng-container *ngIf="selectedRecipe">
+          <ng-template pTemplate="header">
+            Rezept Details
+          </ng-template>
           <p><strong>Rezeptname:</strong> {{ selectedRecipe.recipeName }}</p>
           <p><strong>Rezeptbeschreibung:</strong> {{ selectedRecipe.description }}</p>
         </ng-container>
       </p-dialog>
-
-      <p-dialog [(visible)]="displayDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
-        <ng-template pTemplate="header">
-          Menü Details
-        </ng-template>
-        <ng-container  *ngIf="selectedMenu">
+  
+      <p-dialog [(visible)]="displayMenuDialog" [style]="{width: '50vw'}" [modal]="true" [draggable]="false" [resizable]="false">
+        <ng-container *ngIf="selectedMenu">
+          <ng-template pTemplate="header">
+            Menü Details
+          </ng-template>
           <p><strong>Menüname:</strong> {{ selectedMenu.name }}</p>
           <p><strong>Menübeschreibung:</strong> {{ selectedMenu.beschreibung }}</p>
           <p><strong>Portionen:</strong> {{ selectedMenu.portions }}</p>

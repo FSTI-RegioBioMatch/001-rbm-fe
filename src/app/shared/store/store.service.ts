@@ -11,6 +11,16 @@ import { OfferType } from '../types/offer.type';
 import { PublicRecipeType } from '../types/public-recipe.type';
 import { RecipeType } from '../types/recipe.type';
 
+export type NearbuyRole =
+  | 'SUPPLIER'
+  | 'CONSUMER'
+  | 'SHIPPER'
+  | 'CONSOLIDATOR'
+  | 'PROCESSOR'
+  | 'WHOLESALER'
+  | 'NETWORKER';
+export type rbmRole = 'producer' | 'refiner' | 'gastro';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,6 +48,9 @@ export class StoreService {
   // Companies
   private companiesSubject = new BehaviorSubject<CompanyType[]>([]);
   public companies$ = this.companiesSubject.asObservable();
+
+  private rbmRoleSubject = new BehaviorSubject<rbmRole>('gastro');
+  public rbmRole$ = this.rbmRoleSubject.asObservable();
 
   // current user company context
   private selectedCompanyContext = new BehaviorSubject<CompanyType | null>(
@@ -153,8 +166,8 @@ export class StoreService {
   private selectedCompanyContextChangedListener() {
     this.selectedCompanyContext$.subscribe((company) => {
       if (company) {
-        // this.companiesSubject.next([company]);
         localStorage.setItem('company_context', company.id);
+        this.updaterbmRole(company.roles);
       }
     });
   }
@@ -162,5 +175,26 @@ export class StoreService {
   public updateSelectedCompanyContext(company: CompanyType) {
     console.info('Updating selected company context:', company);
     this.selectedCompanyContext.next(company);
+    this.updaterbmRole(company.roles as NearbuyRole[]);
+  }
+
+  private updaterbmRole(roles: NearbuyRole[]) {
+    const rbmRole = this.mapToRBMRole(roles);
+    this.rbmRoleSubject.next(rbmRole);
+  }
+
+  private mapToRBMRole(roles: NearbuyRole[]): rbmRole {
+    console.log('nearbuy role:', roles);
+    if (roles.includes('SUPPLIER')) {
+      return 'producer';
+    } else if (
+      roles.some((role) =>
+        ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
+      )
+    ) {
+      return 'refiner';
+    } else {
+      return 'gastro'; // Default to gastro if no matching roles
+    }
   }
 }

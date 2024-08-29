@@ -15,6 +15,7 @@ import {
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
 import { MapComponent } from './dashboard/components/map/map.component';
 import { currentCompanyInterceptor } from './shared/interceptors/current-company.interceptor';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DialogService } from 'primeng/dynamicdialog';
 
 function initializeKeycloak(keycloak: KeycloakService) {
@@ -48,6 +49,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ReactiveFormsModule,
     ToolbarComponent,
     MapComponent,
+    DragDropModule,
   ],
   providers: [
     // TODO uncomment to enable Keycloak

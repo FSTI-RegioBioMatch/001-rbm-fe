@@ -23,23 +23,23 @@ export class ToolbarComponent implements OnInit {
       label: 'Options',
       items: [
         {
-          label: 'Meine Rezepte',
-          icon: 'pi pi-refresh',
+          label: 'Übersicht',
+          routerLink: '/dashboard',
+        },
+        {
+          label: 'Rezepte',
           routerLink: '/my-recipes',
         },
         {
-          label: 'Meine Menüplanung',
-          icon: 'pi pi-upload',
+          label: 'Menüplanung',
           routerLink: '/menu-planning',
         },
         {
-          label: 'Mein {Martkplatz}',
-          icon: 'pi pi-upload',
+          label: '{Martkplatz}',
           routerLink: '/recipes',
         },
         {
           label: 'Bereich xy',
-          icon: 'pi pi-upload',
           routerLink: '/recipes',
         },
       ],
