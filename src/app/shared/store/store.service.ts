@@ -143,25 +143,46 @@ export class StoreService {
   }
 
   private getSelectedCompanyFromSessionStore() {
+    // Try to get the company context from local storage
     const companyContext = localStorage.getItem('company_context');
+    
     if (companyContext) {
-      console.info('Company context from session store:', companyContext);
+        console.info('Company context from session store:', companyContext);
 
-      this.companies$.subscribe((companies) => {
-        const company = companies.find((c) => c.id === companyContext);
-        if (company) {
-          this.selectedCompanyContext.next(company);
-        }
-      });
-      // this.selectedCompanyContext.next(companyContext);
+        // Subscribe to the companies$ observable
+        this.companies$.subscribe((companies) => {
+            // Check if companies is defined and is an array
+            if (Array.isArray(companies)) {
+                // Try to find a company that matches the stored companyContext
+                const company = companies.find((c) => c && c.id === companyContext);
+
+                if (company) {
+                    // If found, set it as the selected company context
+                    this.selectedCompanyContext.next(company);
+                } else {
+                    console.warn(`No company found with id: ${companyContext}`);
+                }
+            } else {
+                console.warn('Companies data is not available or not an array');
+            }
+        });
     } else {
-      this.companies$.subscribe((companies) => {
-        if (companies.length > 0) {
-          this.selectedCompanyContext.next(companies[0]);
-        }
-      });
+        // If companyContext is not in local storage
+        console.info('No company context found in session store');
+
+        // Subscribe to the companies$ observable
+        this.companies$.subscribe((companies) => {
+            // Check if companies is defined and is an array
+            if (Array.isArray(companies) && companies.length > 0) {
+                // Set the first company as the selected company context
+                this.selectedCompanyContext.next(companies[0]);
+            } else {
+                console.warn('No companies available to select as default');
+            }
+        });
     }
-  }
+}
+
 
   private selectedCompanyContextChangedListener() {
     this.selectedCompanyContext$.subscribe((company) => {
@@ -179,22 +200,35 @@ export class StoreService {
   }
 
   private updaterbmRole(roles: NearbuyRole[]) {
-    const rbmRole = this.mapToRBMRole(roles);
-    this.rbmRoleSubject.next(rbmRole);
-  }
-
-  private mapToRBMRole(roles: NearbuyRole[]): rbmRole {
-    console.log('nearbuy role:', roles);
-    if (roles.includes('SUPPLIER')) {
-      return 'producer';
-    } else if (
-      roles.some((role) =>
-        ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
-      )
-    ) {
-      return 'refiner';
+    if (Array.isArray(roles)) {
+        const rbmRole = this.mapToRBMRole(roles);
+        this.rbmRoleSubject.next(rbmRole);
     } else {
-      return 'gastro'; // Default to gastro if no matching roles
+        console.warn('Roles is not an array or is undefined:', roles);
+        this.rbmRoleSubject.next('gastro'); // Default if roles is invalid
     }
-  }
+}
+
+private mapToRBMRole(roles: NearbuyRole[]): rbmRole {
+    console.log('nearbuy role:', roles);
+
+    if (!Array.isArray(roles)) {
+        console.warn('Expected roles to be an array, received:', roles);
+        return 'gastro'; // Return a default value if roles is invalid
+    }
+
+    // Use type guard to ensure roles are strings
+    if (roles.includes('SUPPLIER')) {
+        return 'producer';
+    } else if (
+        roles.some((role) =>
+            ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
+        )
+    ) {
+        return 'refiner';
+    } else {
+        return 'gastro'; // Default to gastro if no matching roles
+    }
+}
+
 }
