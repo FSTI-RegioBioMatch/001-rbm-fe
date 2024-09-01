@@ -10,9 +10,7 @@
 
 <div class="einkaufsliste-actions">
     <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
-        (click)="createShoppingList()"></button>
-    <button pButton label="Einkaufsliste speichern" icon="pi pi-save"
-        (click)="saveShoppingList()"></button>
+        (click)="createShoppingList()" [disabled]="selectedMenuPlans.length === 0"></button>
 </div>
 
 <div *ngIf="loading" class="text-center">
@@ -37,7 +35,7 @@
 
 
         <tr>
-            <td><input type="checkbox" [(ngModel)]="menuPlan.selected" /></td>
+            <td><input type="checkbox" [(ngModel)]="menuPlan.selected" (change)="updateSelectedMenuPlans()" /></td>
             <td>{{ menuPlan.name }}</td>
             <td>{{ menuPlan.nextExecution }}</td>
             <td>{{ menuPlan.weekday }}</td>
@@ -74,7 +72,7 @@
     </ng-template>
 </p-table>
 
-<div *ngIf="!loading"> <!-- also check if ek list exists, later in another comp anyway-->
+<p-dialog [(visible)]="displayShoppingListDialog" [modal]="true" [header]="'Einkaufsliste'" [closable]="true">
     <h3>Einkaufsliste</h3>
     <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
         <ng-template pTemplate="header">
@@ -94,30 +92,22 @@
             </tr>
             <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
                 <td></td>
-                <td>
-                    <strong>{{ item.totalInLargestUnit }}</strong> <!-- Display the total amount in the largest unit -->
-                </td>
-
+                <td><strong>{{ item.totalInLargestUnit }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
-                        <input pInputText type="number" [value]="item.processingBreakdown[process]"
-                            (change)="updateAmount(item, process, $event)" />
-                        <!-- Error message specific to this input field -->
+                        <input pInputText type="number" [value]="item.processingBreakdown[process]" (change)="updateAmount(item, process, $event)" />
                         <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
                             {{ item.errorMessages[process] }}
                         </div>
                     </div>
                 </td>
-
-                <td>
-                    <strong>{{ item.unit }}</strong> <!-- Display the unit directly without a dropdown -->
-                </td>
+                <td><strong>{{ item.unit }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
                         <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
                     </div>
                 </td>
-                <td>{{ item.sourceRecipes.join(', ') }}</td>
+                <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
                         <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
@@ -126,5 +116,6 @@
             </tr>
         </ng-template>
     </p-table>
-
-</div>
+    <button pButton label="Einkaufsliste speichern" icon="pi pi-save"
+    (click)="saveShoppingList()"></button>
+</p-dialog>

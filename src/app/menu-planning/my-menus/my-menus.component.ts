@@ -16,6 +16,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
 
 interface Ingredient {
   name: string;
@@ -56,7 +57,8 @@ interface EnhancedIngredient {
     DropdownModule,
     TooltipModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule
   ],
   providers: [MessageService],
   templateUrl: './my-menus.component.html',
@@ -71,6 +73,7 @@ export class MyMenusComponent implements OnInit {
   groupedShoppingList: { [name: string]: EnhancedIngredient[] } = {}; // Grouped by ingredient name
 
   loading = false;
+  displayShoppingListDialog: boolean = false;
 
   processingOptions = [
     { label: 'Ganz', value: 'ganz' },
@@ -88,6 +91,8 @@ export class MyMenusComponent implements OnInit {
     private messageService: MessageService,
     private router: Router
   ) {}
+
+
 
   ngOnInit(): void {
     this.loading = true;
@@ -148,8 +153,10 @@ export class MyMenusComponent implements OnInit {
 
   toggleSelectAll(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;
-    this.menuPlans.forEach(menuPlan => menuPlan.selected = checked);
+    this.menuPlans.forEach(menuPlan => (menuPlan.selected = checked));
+    this.updateSelectedMenuPlans();
   }
+  
 
   createShoppingList(): void {
     const selectedMenuPlans = this.menuPlans.filter(plan => plan.selected);
@@ -242,6 +249,7 @@ export class MyMenusComponent implements OnInit {
     });
 
     console.log('Grouped Einkaufsliste:', this.groupedShoppingList);
+    this.displayShoppingListDialog = true
 }
   areUnitsCompatible(unit1: string, unit2: string): boolean {
     // Check if both units are mass units
@@ -257,7 +265,10 @@ export class MyMenusComponent implements OnInit {
     return false;
   }
 
-  
+  updateSelectedMenuPlans(): void {
+    this.selectedMenuPlans = this.menuPlans.filter(plan => plan.selected);
+  }
+
   calculateTotalInLargestUnit(totalAmount: number, unit: string): string {
     const germanUnits = {
       volume: ['ml', 'l'],  // Preferred volume units in German
@@ -482,5 +493,8 @@ export class MyMenusComponent implements OnInit {
     console.log("will go to", menuplan)
     this.router.navigate(["menu-planning/my-menus/details", menuplan.id])
   }
-
+  uniqueSourceRecipes(recipes: string[]): string {
+    // Use Set to remove duplicates and join them with commas
+    return Array.from(new Set(recipes)).join(', ');
+  }
 }
