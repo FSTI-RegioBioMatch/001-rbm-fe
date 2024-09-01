@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -40,6 +41,7 @@ import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
     ChipModule,
     FormsModule,
     ToastModule,
+    MultiSelectModule
   ],
   providers: [MessageService],
 })
@@ -205,8 +207,8 @@ export class NewRecepieDialogComponent implements OnInit {
       energie: [''],
       portionen: [''],
       besonderheiten: [''],
-      essensgaeste: [''],
-      allergene: [''],
+      essensgaeste: [[]],  // Changed to array for multi-select
+      allergene: [[]],     // Changed to array for multi-select
       saison: [''],
       selectedDiets: this.fb.group(
         // FormGroup mit mehreren FormControls

@@ -83,14 +83,15 @@
                         </div>
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Essensgäste</label>
-                            <p-dropdown [options]="guestsOptions" formControlName="essensgaeste"
-                                placeholder="Essensgäste" [ngStyle]="{'flex': '1'}"></p-dropdown>
-                        </div>
-                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <p-multiSelect [options]="guestsOptions" formControlName="essensgaeste"
+                                           placeholder="Essensgäste auswählen" [ngStyle]="{'flex': '1'}"></p-multiSelect>
+                          </div>
+                          <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Allergene</label>
-                            <p-dropdown [options]="allergeneOptions" formControlName="allergene" placeholder="Allergene"
-                                [ngStyle]="{'flex': '1'}"></p-dropdown>
-                        </div>
+                            <p-multiSelect [options]="allergeneOptions" formControlName="allergene"
+                                           placeholder="Allergene auswählen" [ngStyle]="{'flex': '1'}"></p-multiSelect>
+                          </div>
+                          
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Saison</label>
                             <p-dropdown [options]="saisonOptions" formControlName="saison" placeholder="Saison"
