@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StoreService } from '../shared/store/store.service';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { filter, take } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -13,9 +13,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import deLocale from '@fullcalendar/core/locales/de';
-import { EventHoveringArg } from 'fullcalendar';
+import { EventApi, EventHoveringArg } from 'fullcalendar';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import moment from 'moment';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-menu-plan-details',
@@ -27,9 +29,11 @@ import moment from 'moment';
     FullCalendarModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export class MenuPlanDetailsComponent implements OnInit {
   @ViewChild('calendar') calendarComponent!: FullCalendarComponent;
@@ -44,7 +48,9 @@ export class MenuPlanDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private storeService: StoreService,
     private menuplanService: NewMenuplanService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -127,6 +133,7 @@ export class MenuPlanDetailsComponent implements OnInit {
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;
+        console.log(this.selectedEvent)
       },
       eventDrop: this.handleEventDrop.bind(this)
     };
@@ -168,5 +175,59 @@ export class MenuPlanDetailsComponent implements OnInit {
     if (this.calendarComponent && this.calendarComponent.getApi()) {
       this.calendarComponent.getApi().refetchEvents();
     }
+  }
+
+  confirmDelete(message: string, onAccept: () => void): void {
+    this.confirmationService.confirm({
+      message: message,
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: onAccept,
+      reject: () => {},
+    });
+  }
+
+  deleteSingleEvent(event: EventApi): void {
+    this.confirmDelete("Are you sure you want to delete this event?", () => {
+      const eventId = event.id;
+      const menuId = event.extendedProps['menuId'];
+      this.events = this.events.filter(e => e.id !== eventId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
+        () => {
+          console.log(`Event ${eventId} deleted successfully`);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
+          this.updateCalendar();
+          this.displayEventDialog = false;
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
+          console.error('Error deleting event:', error);
+        }
+      );
+    });
+  }
+  
+  deleteAllEvents(): void {
+    let menuId = this.menuPlan.id
+    this.confirmDelete("Wirklich den Menüplan löschen?", () => {
+      this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
+      this.calendarOptions.events = [...this.events];
+      this.menuplanService.deleteMenuPlan(menuId).subscribe(
+        () => {
+          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
+          this.updateCalendar();
+          this.displayEventDialog = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
+          setTimeout(() => {
+            this.router.navigate(['/menu-planning']);
+          }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
+        },
+        error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
+          console.error('Error deleting Menu Plan:', error);
+        }
+      );
+    });
   }
 }

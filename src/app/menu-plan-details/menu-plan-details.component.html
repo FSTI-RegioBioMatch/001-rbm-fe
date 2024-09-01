@@ -1,13 +1,23 @@
 <div *ngIf="loading" class="text-center">
     <p-progressSpinner></p-progressSpinner>
 </div>
-
+<p-confirmDialog></p-confirmDialog>
 <div *ngIf="menuPlan && !loading" class="menu-plan-detail">
 
 
     <full-calendar #calendar [options]="calendarOptions"
     class="text-center rbm-full-width"></full-calendar>
-
+    <p-dialog [(visible)]="displayEventDialog" modal="modal" [header]="selectedEvent?.title" [closable]="true">
+        <div *ngIf="selectedEvent">
+            <div class="dialog-content">
+                <p><strong>Datum:</strong> {{ selectedEvent.start | date:'fullDate' }} {{ selectedEvent.start | date:'shortTime' }}</p>
+            </div>
+            <div class="dialog-actions" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <p-button label="Löschen" icon="pi pi-trash" class="p-button-danger" (click)="deleteSingleEvent(selectedEvent)"></p-button>
+            </div>
+        </div>
+    </p-dialog>
+    
     <h2>{{ menuPlan.name }}</h2>
     <p><strong>Beschreibung:</strong> {{ menuPlan.description }}</p>
     <p><strong>Ort:</strong> {{ menuPlan.location }}</p>
@@ -26,6 +36,8 @@
             </li>
         </ul>
     </div>
+    <p-button label="Menüplan löschen" icon="pi pi-trash" class="p-button-danger"
+    (click)="deleteAllEvents()"></p-button>
 </div>
 
 
