@@ -30,6 +30,7 @@
             <th>Wiederholung</th>
             <th>Einkaufen?</th>
             <th>Komponenten</th>
+            <th>Funktionen</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-menuPlan>
@@ -51,6 +52,9 @@
                     *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
                 <button pButton icon="pi pi-chevron-up" (click)="toggleExpandMenuPlan(menuPlan.id)"
                     *ngIf="expandedMenuPlanId === menuPlan.id"></button>
+            </td>
+            <td>
+                <button pButton (click)="gotoDetails(menuPlan)"></button>
             </td>
         </tr>
         <tr *ngIf="expandedMenuPlanId === menuPlan.id">

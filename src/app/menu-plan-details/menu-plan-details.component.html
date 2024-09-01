@@ -1,0 +1,39 @@
+<div *ngIf="loading" class="text-center">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+<div *ngIf="menuPlan && !loading" class="menu-plan-detail">
+    <h2>{{ menuPlan.name }}</h2>
+    <p><strong>Beschreibung:</strong> {{ menuPlan.description }}</p>
+    <p><strong>Ort:</strong> {{ menuPlan.location }}</p>
+    <p><strong>Nächste Ausführung:</strong> {{ menuPlan.nextExecution }}</p>
+    <p><strong>Wochentag:</strong> {{ menuPlan.weekday }}</p>
+    <p><strong>Wiederholung:</strong> {{ menuPlan.repeatFrequency }}</p>
+    <p><strong>Portionen:</strong> {{ menuPlan.portions }}</p>
+    <p><strong>Vegetarische Portionen:</strong> {{ menuPlan.portionsVegetarisch }}</p>
+    <p><strong>Vegane Portionen:</strong> {{ menuPlan.portionsVegan }}</p>
+
+    <div *ngIf="menuPlan.recipes.length">
+        <h3>Rezepte</h3>
+        <ul>
+            <li *ngFor="let recipe of menuPlan.recipes">
+                {{ recipe.name }}
+            </li>
+        </ul>
+    </div>
+
+    <div *ngIf="menuPlan.events.length">
+        <h3>Events</h3>
+        <ul>
+            <li *ngFor="let event of menuPlan.events">
+                <p>{{ event.start | date: 'medium' }} - {{ event.location }}</p>
+                <p>{{ event.description }}</p>
+                <p><strong>Portionen:</strong> {{ event.portions }}</p>
+                <p><strong>Vegetarische Portionen:</strong> {{ event.portionsVegetarisch }}</p>
+                <p><strong>Vegane Portionen:</strong> {{ event.portionsVegan }}</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<p-toast></p-toast>

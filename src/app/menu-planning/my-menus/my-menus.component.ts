@@ -12,7 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import convert, { Unit } from 'convert-units';
 import { NewShoppingListService } from '../../shared/services/new-shopping-list.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -63,6 +63,7 @@ interface EnhancedIngredient {
   styleUrl: './my-menus.component.scss'
 })
 export class MyMenusComponent implements OnInit {
+
   menuPlans: any[] = [];
   expandedMenuPlanId: string | null = null;
   recipesWithIngredients: { [key: string]: Recipe[] } = {};
@@ -84,7 +85,8 @@ export class MyMenusComponent implements OnInit {
     private recipeService: RecipeService,
     private store: StoreService,
     private shoppingListService: NewShoppingListService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -453,6 +455,11 @@ export class MyMenusComponent implements OnInit {
         console.error('Error saving shopping list:', error);
       }
     );
+  }
+  gotoDetails(menuplan:any)
+  {
+    console.log("will go to", menuplan)
+    this.router.navigate(["menu-planning/my-menus/details", menuplan.id])
   }
 
 }
