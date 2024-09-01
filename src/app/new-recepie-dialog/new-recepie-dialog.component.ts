@@ -250,33 +250,35 @@ export class NewRecepieDialogComponent implements OnInit {
   }
   
 
-  onFilter(event: any) {
+  onFilter(event: any, index: number) {
     const filterValue = event.filter.trim().toLowerCase();
-  
-    // Check if the filter is empty, reset options
+    const ingredientFormGroup = this.ingredients.at(index) as FormGroup;
+    let filteredOptions = [];
+
+    // Check if the filter is empty, reset to all ingredients
     if (!filterValue) {
-      this.ingredientOptions = [...this.allIngredients];
-      return;
-    }
-  
-    // Use default filtering
-    const filteredOptions = this.allIngredients.filter(option =>
-      option.label.toLowerCase().includes(filterValue)
-    );
-  
-    if (filteredOptions.length > 0) {
-      // Set ingredientOptions to filtered results if found
-      this.ingredientOptions = filteredOptions;
+        filteredOptions = [...this.allIngredients];
     } else {
-      // No results found, show the search string as a selectable option
-      this.ingredientOptions = [
-        {
-          label: `${filterValue}`,
-          value: filterValue,
-        },
-      ];
+        // Filter options based on the search string
+        filteredOptions = this.allIngredients.filter(option =>
+            option.label.toLowerCase().includes(filterValue)
+        );
+
+        // If no options match, use the search string as a fallback option
+        if (filteredOptions.length === 0) {
+            filteredOptions = [
+                {
+                    label: `${filterValue}`,
+                    value: filterValue,
+                }
+            ];
+        }
     }
-  }
+
+    // Update the form group with the filtered options
+    ingredientFormGroup.patchValue({ ingredientOptions: filteredOptions });
+}
+
   
   
   loadMore(event: any) {
@@ -319,6 +321,7 @@ export class NewRecepieDialogComponent implements OnInit {
       optional: [false],
       note: [''], // Note field
       alternatives: this.fb.array([]), // Array to hold alternative ingredients
+      ingredientOptions: [this.allIngredients] // Initialize with all ingredients
     });
   }
 

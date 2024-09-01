@@ -114,7 +114,7 @@
                                 <div class="box-wrapper">
                                     <div class="ingredient-con rbm-flex-row">
                                         <p-dropdown 
-                                        [options]="ingredientOptions"
+                                        [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
                                         formControlName="name"
                                         placeholder="Name der Zutat"
                                         [showClear]="true"
@@ -126,9 +126,9 @@
                                         [itemSize]="50"
                                         [lazy]="true"
                                         (onLazyLoad)="loadMore($event)"
-                                        (onFilter)="onFilter($event)"
+                                        (onFilter)="onFilter($event, i)"
                                         class="name">
-                                      </p-dropdown>                                                                         
+                                    </p-dropdown>                                                                        
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>
@@ -172,7 +172,7 @@
                                             (click)="toggleNoteField(i)"
                                             style="margin-top: 8px; margin-right: 8px;"></button>
                                         <p-checkbox formControlName="optional" binary="true" label="Optional"
-                                            [ngStyle]="{'margin-bottom': '8px'}"></p-checkbox>
+                                            [ngStyle]="{'margin-bottom': '8px'}"> </p-checkbox>
                                     </div>
                                 </div>
                             </div>
