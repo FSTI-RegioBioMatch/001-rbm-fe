@@ -3,6 +3,11 @@
 </div>
 
 <div *ngIf="menuPlan && !loading" class="menu-plan-detail">
+
+
+    <full-calendar #calendar [options]="calendarOptions"
+    class="text-center rbm-full-width"></full-calendar>
+
     <h2>{{ menuPlan.name }}</h2>
     <p><strong>Beschreibung:</strong> {{ menuPlan.description }}</p>
     <p><strong>Ort:</strong> {{ menuPlan.location }}</p>
@@ -21,19 +26,8 @@
             </li>
         </ul>
     </div>
-
-    <div *ngIf="menuPlan.events.length">
-        <h3>Events</h3>
-        <ul>
-            <li *ngFor="let event of menuPlan.events">
-                <p>{{ event.start | date: 'medium' }} - {{ event.location }}</p>
-                <p>{{ event.description }}</p>
-                <p><strong>Portionen:</strong> {{ event.portions }}</p>
-                <p><strong>Vegetarische Portionen:</strong> {{ event.portionsVegetarisch }}</p>
-                <p><strong>Vegane Portionen:</strong> {{ event.portionsVegan }}</p>
-            </li>
-        </ul>
-    </div>
 </div>
+
+
 
 <p-toast></p-toast>

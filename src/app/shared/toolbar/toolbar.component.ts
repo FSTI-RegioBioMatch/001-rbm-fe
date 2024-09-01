@@ -60,4 +60,7 @@ export class ToolbarComponent implements OnInit {
       height: '30%',
     });
   }
+  goToHome() {
+    this.route.navigate(['/dashboard']);
+  }
 }

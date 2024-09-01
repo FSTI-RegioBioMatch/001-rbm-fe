@@ -112,12 +112,22 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
                                     <div class="ingredient-con rbm-flex-row">
-                                        <p-dropdown [options]="ingredientOptions" formControlName="name"
-                                            placeholder="Name der Zutat" [showClear]="true" filter="true"
-                                            filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
-                                            [virtualScroll]="true" [itemSize]="50" [lazy]="true"
-                                            (onLazyLoad)="loadMore($event)" class="name">
-                                        </p-dropdown>
+                                        <p-dropdown 
+                                        [options]="ingredientOptions"
+                                        formControlName="name"
+                                        placeholder="Name der Zutat"
+                                        [showClear]="true"
+                                        filter="true"
+                                        filterPlaceholder="Suche nach Zutat"
+                                        optionLabel="label"
+                                        optionValue="value"
+                                        [virtualScroll]="true"
+                                        [itemSize]="50"
+                                        [lazy]="true"
+                                        (onLazyLoad)="loadMore($event)"
+                                        (onFilter)="onFilter($event)"
+                                        class="name">
+                                      </p-dropdown>                                                                         
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>

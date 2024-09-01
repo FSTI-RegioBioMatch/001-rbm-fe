@@ -139,18 +139,14 @@ export class NewRecepieDialogComponent implements OnInit {
   fetchIngredientOptions() {
     this.nearbuyTestService.getData().subscribe(
       (data) => {
-        this.ingredientOptions = data.map((item) => ({
-          label: item.displayLabel, // Show this in the dropdown
-          value: item.value, // Store this for saving to the DB
+        // Store all ingredients for manual filtering
+        this.allIngredients = data.map((item) => ({
+          label: item.displayLabel,
+          value: item.value,
         }));
-        this.ingredientOptions = this.ingredientOptions.sort((a, b) =>
-          a.label.localeCompare(b.label),
-        );
-
-        console.log(
-          'Data fetched and mapped successfully:',
-          this.ingredientOptions,
-        );
+  
+        // Initially set ingredientOptions to allIngredients
+        this.ingredientOptions = [...this.allIngredients];
       },
       (error) => {
         this.messageService.add({
@@ -162,7 +158,37 @@ export class NewRecepieDialogComponent implements OnInit {
       },
     );
   }
+  
 
+  onFilter(event: any) {
+    const filterValue = event.filter.trim().toLowerCase();
+  
+    // Check if the filter is empty, reset options
+    if (!filterValue) {
+      this.ingredientOptions = [...this.allIngredients];
+      return;
+    }
+  
+    // Use default filtering
+    const filteredOptions = this.allIngredients.filter(option =>
+      option.label.toLowerCase().includes(filterValue)
+    );
+  
+    if (filteredOptions.length > 0) {
+      // Set ingredientOptions to filtered results if found
+      this.ingredientOptions = filteredOptions;
+    } else {
+      // No results found, show the search string as a selectable option
+      this.ingredientOptions = [
+        {
+          label: `${filterValue}`,
+          value: filterValue,
+        },
+      ];
+    }
+  }
+  
+  
   loadMore(event: any) {
     const loadedItems = this.ingredientOptions.length;
     const moreItems = this.allIngredients.slice(
