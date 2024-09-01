@@ -1,10 +1,12 @@
 @if (loaded) {
   <div class="container">
-    <div cdkDropList class="dashboard-grid" (cdkDropListDropped)="onDrop($event)">
+    @if (dashboardComponents.length > 0) {
+    <div #dashboardGrid class="dashboard-grid">
       @for (component of dashboardComponents; track component.type) {
         @if (component.type !== 'public-recipes') {
-          <div class="dashboard-item" cdkDrag>
+          <div class="dashboard-item" [attr.data-id]="component.type">
             <div class="dashboard-component">
+              <div class="drag-handle">&#9776;</div>
               <h2>{{ component.title }}</h2>
               @switch (component.type) {
                 @case ('recent-menus') {
@@ -65,6 +67,9 @@
         }
       }
     </div>
+  } @else {
+    <p>Loading dashboard components...</p>
+  }
     
     <div class="side-scroll-container">
       <h2>Rezeptempfehlungen für mich</h2>

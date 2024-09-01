@@ -3,6 +3,8 @@ import {
   OnInit,
   ViewChild,
   ElementRef,
+  AfterViewInit,
+  AfterViewChecked,
   ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -33,11 +35,7 @@ import { NewMenuplanService } from '../shared/services/new-menuplan.service';
 import { RecipeType } from '../shared/types/recipe.type';
 import { filter, switchMap } from 'rxjs/operators';
 import { CompanyType } from '../shared/types/company.type';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import Sortable from 'sortablejs';
 
 interface DashboardItem {
   type: string;
@@ -62,12 +60,13 @@ interface DashboardItem {
     ButtonModule,
     DialogModule,
     SeasonCalendarComponent,
-    DragDropModule,
     CommonModule,
   ],
 })
-export class DashboardComponent implements OnInit {
-  @ViewChild('carousel') carousel!: ElementRef;
+export class DashboardComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
+  @ViewChild('dashboardGrid') dashboardGridElement!: ElementRef;
   randomRecipes: PublicRecipeType[] = [];
   companyRecipes: RecipeType[] = [];
   publicRecipes: PublicRecipeType[] = [];
@@ -92,6 +91,8 @@ export class DashboardComponent implements OnInit {
   selectedCompany: CompanyType | null = null;
   dashboardConfig: any;
   dashboardComponents: DashboardItem[] = [];
+  private sortableInstance: Sortable | null = null;
+  private sortableInitialized = false;
 
   constructor(
     public offerService: OfferService,
@@ -104,11 +105,63 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('DashboardComponent initialized');
     this.loadCompanyRecipes();
     this.loadPublicRecipes();
     this.getOffers();
     this.getRecentMenus();
     this.loadCompanyAndRoles();
+    this.loadDashboardComponents();
+    this.loadDashboardConfiguration();
+  }
+
+  ngAfterViewInit() {
+    this.initSortableIfPossible();
+  }
+
+  ngAfterViewChecked() {
+    this.initSortableIfPossible();
+  }
+
+  private initSortableIfPossible() {
+    if (!this.sortableInitialized && this.dashboardGridElement) {
+      this.initSortable();
+      this.sortableInitialized = true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  initSortable() {
+    if (this.sortableInstance) {
+      this.sortableInstance.destroy();
+    }
+
+    const el = this.dashboardGridElement.nativeElement;
+    if (el) {
+      console.log('Creating Sortable instance', el);
+      this.sortableInstance = new Sortable(el, {
+        animation: 150,
+        ghostClass: 'blue-background-class',
+        handle: '.dashboard-item',
+        onEnd: (evt: any) => {
+          console.log('Drag ended', evt);
+          const newIndex = evt.newIndex;
+          const oldIndex = evt.oldIndex;
+
+          // Update the order in your array
+          const item = this.dashboardComponents.splice(oldIndex, 1)[0];
+          this.dashboardComponents.splice(newIndex, 0, item);
+
+          // Save the new configuration
+          this.saveDashboardConfiguration();
+
+          // Trigger change detection
+          this.cdr.detectChanges();
+        },
+      });
+    } else {
+      console.error('Dashboard grid element not found');
+    }
   }
 
   openRecipeDetails(recipe: RecipeType) {
@@ -351,6 +404,7 @@ export class DashboardComponent implements OnInit {
         ];
         break;
     }
+    this.loadDashboardConfiguration();
   }
 
   getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
@@ -367,6 +421,33 @@ export class DashboardComponent implements OnInit {
     return result as PublicRecipeType[];
   }
 
+  loadDashboardConfiguration(): void {
+    const savedConfig = localStorage.getItem(
+      `dashboard-config-${this.rbmRole}`,
+    );
+    if (savedConfig) {
+      const savedComponentTypes = JSON.parse(savedConfig);
+      this.dashboardComponents = savedComponentTypes
+        .map((type: string) =>
+          this.dashboardComponents.find((comp) => comp.type === type),
+        )
+        .filter(
+          (comp: DashboardItem | undefined): comp is DashboardItem =>
+            comp !== undefined,
+        );
+
+      // We don't need to reinitialize sortable here, as it will be handled by ngAfterViewChecked
+    }
+  }
+
+  saveDashboardConfiguration(): void {
+    const componentTypes = this.dashboardComponents.map((comp) => comp.type);
+    localStorage.setItem(
+      `dashboard-config-${this.rbmRole}`,
+      JSON.stringify(componentTypes),
+    );
+  }
+
   navigateToRecipes() {
     this.router.navigate(['/my-recipes']);
   }
@@ -377,13 +458,5 @@ export class DashboardComponent implements OnInit {
 
   trackByFn(index: number, item: any): any {
     return item.id || index; // Use item.id if available, otherwise use the index
-  }
-
-  onDrop(event: CdkDragDrop<DashboardItem[]>) {
-    moveItemInArray(
-      this.dashboardComponents,
-      event.previousIndex,
-      event.currentIndex,
-    );
   }
 }
