@@ -1,17 +1,17 @@
 <div class="flex gap-2">
     <p-button routerLink="/menu-planning">Menüplanung</p-button>
     <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-    <p-button [disabled]="true" routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-    <p-button [disabled]="true">Angebotsliste</p-button>
+    <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+    <p-button>Angebotsliste</p-button>
     <br><br>
 </div>
 
 <p-toast></p-toast>
 
 <div class="einkaufsliste-actions">
-    <button [disabled]="true" pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
+    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
         (click)="createShoppingList()"></button>
-    <button [disabled]="true" pButton label="Einkaufsliste speichern" icon="pi pi-save"
+    <button pButton label="Einkaufsliste speichern" icon="pi pi-save"
         (click)="saveShoppingList()"></button>
 </div>
 
@@ -74,8 +74,7 @@
     </ng-template>
 </p-table>
 
-<div *ngIf="!loading && false"> <!-- also check if ek list exists, later in another comp anyway-->
-    <!--REMOVE FALSE AGAIN!-->
+<div *ngIf="!loading"> <!-- also check if ek list exists, later in another comp anyway-->
     <h3>Einkaufsliste</h3>
     <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
         <ng-template pTemplate="header">

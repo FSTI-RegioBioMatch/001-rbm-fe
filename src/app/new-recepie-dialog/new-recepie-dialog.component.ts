@@ -299,7 +299,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createStep(): FormGroup {
     return this.fb.group({
       schritt: ['', Validators.required],
-      anleitung: ['', Validators.required],
+      anleitung: [''],
     });
   }
 

@@ -155,83 +155,108 @@ export class MyMenusComponent implements OnInit {
     const selectedMenuPlans = this.menuPlans.filter(plan => plan.selected);
     this.selectedMenuPlans = selectedMenuPlans;
     const shoppingListMap: { [key: string]: EnhancedIngredient[] } = {};
-  
+
     selectedMenuPlans.forEach(menuPlan => {
-      const recipes = this.recipesWithIngredients[menuPlan.id];
-      if (recipes) {
-        recipes.forEach(recipe => {
-          recipe.ingredients.forEach((ingredient: Ingredient) => {
-            const key = ingredient.name;
-            let amount = parseFloat(ingredient.amount as string);
-            const processing = ingredient.processing || 'n/a';
-            const unit = ingredient.unit;
-  
-            if (shoppingListMap[key]) {
-              let foundCompatibleUnit = false;
-  
-              shoppingListMap[key].forEach(existingIngredient => {
-                if (this.isValidUnit(unit) && this.isValidUnit(existingIngredient.unit)) {
-                  try {
-                    const normalizedAmount = convert(amount).from(unit as Unit).to(existingIngredient.unit as Unit);
-  
-                    if (existingIngredient.processingBreakdown[processing]) {
-                      existingIngredient.processingBreakdown[processing] += normalizedAmount;
+        const recipes = this.recipesWithIngredients[menuPlan.id];
+        if (recipes) {
+            recipes.forEach(recipe => {
+                recipe.ingredients.forEach((ingredient: Ingredient) => {
+                    const key = ingredient.name;
+                    let amount = parseFloat(ingredient.amount as string);
+                    const processing = ingredient.processing || 'n/a';
+                    const unit = ingredient.unit;
+
+                    if (shoppingListMap[key]) {
+                        let foundCompatibleUnit = false;
+
+                        shoppingListMap[key].forEach(existingIngredient => {
+                            if (this.areUnitsCompatible(existingIngredient.unit, unit)) {
+                                if (this.isValidUnit(unit) && this.isValidUnit(existingIngredient.unit)) {
+                                    try {
+                                        const normalizedAmount = convert(amount).from(unit as Unit).to(existingIngredient.unit as Unit);
+
+                                        if (existingIngredient.processingBreakdown[processing]) {
+                                            existingIngredient.processingBreakdown[processing] += normalizedAmount;
+                                        } else {
+                                            existingIngredient.processingBreakdown[processing] = normalizedAmount;
+                                        }
+                                        existingIngredient.totalAmount += normalizedAmount;
+                                        existingIngredient.sourceRecipes.push(recipe.recipeName);
+                                        foundCompatibleUnit = true;
+                                    } catch (error) {
+                                        // Incompatible units, do nothing
+                                    }
+                                } else if (unit === existingIngredient.unit) {
+                                    // Same unit type (e.g., 'blocks' with 'blocks')
+                                    if (existingIngredient.processingBreakdown[processing]) {
+                                        existingIngredient.processingBreakdown[processing] += amount;
+                                    } else {
+                                        existingIngredient.processingBreakdown[processing] = amount;
+                                    }
+                                    existingIngredient.totalAmount += amount;
+                                    existingIngredient.sourceRecipes.push(recipe.recipeName);
+                                    foundCompatibleUnit = true;
+                                }
+                            }
+                        });
+
+                        if (!foundCompatibleUnit) {
+                            shoppingListMap[key].push({
+                                name: ingredient.name,
+                                unit: unit,
+                                totalAmount: amount,
+                                sourceRecipes: [recipe.recipeName],
+                                category: this.getCategory(unit),
+                                convertible: this.isValidUnit(unit),
+                                processingBreakdown: {
+                                    [processing]: amount
+                                },
+                                totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit)
+                            });
+                        }
                     } else {
-                      existingIngredient.processingBreakdown[processing] = normalizedAmount;
+                        shoppingListMap[key] = [{
+                            name: ingredient.name,
+                            unit: unit,
+                            totalAmount: amount,
+                            sourceRecipes: [recipe.recipeName],
+                            category: this.getCategory(unit),
+                            convertible: this.isValidUnit(unit),
+                            processingBreakdown: {
+                                [processing]: amount
+                            },
+                            totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit)
+                        }];
                     }
-                    existingIngredient.totalAmount += normalizedAmount;
-                    existingIngredient.sourceRecipes.push(recipe.recipeName);
-                    foundCompatibleUnit = true;
-                  } catch (error) {
-                    // Incompatible units, do nothing
-                  }
-                }
-              });
-  
-              if (!foundCompatibleUnit) {
-                shoppingListMap[key].push({
-                  name: ingredient.name,
-                  unit: unit,
-                  totalAmount: amount,
-                  sourceRecipes: [recipe.recipeName],
-                  category: this.getCategory(unit),
-                  convertible: this.isValidUnit(unit),
-                  processingBreakdown: {
-                    [processing]: amount
-                  },
-                  totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit) // Calculate and store the total in the largest unit
                 });
-              }
-            } else {
-              shoppingListMap[key] = [{
-                name: ingredient.name,
-                unit: unit,
-                totalAmount: amount,
-                sourceRecipes: [recipe.recipeName],
-                category: this.getCategory(unit),
-                convertible: this.isValidUnit(unit),
-                processingBreakdown: {
-                  [processing]: amount
-                },
-                totalInLargestUnit: this.calculateTotalInLargestUnit(amount, unit) // Calculate and store the total in the largest unit
-              }];
-            }
-          });
-        });
-      }
+            });
+        }
     });
-  
+
     this.groupedShoppingList = {};
     Object.entries(shoppingListMap).forEach(([name, ingredients]) => {
-      this.groupedShoppingList[name] = ingredients.map(ingredient => {
-        // Recalculate the total in the largest unit after all amounts are summed
-        ingredient.totalInLargestUnit = this.calculateTotalInLargestUnit(ingredient.totalAmount, ingredient.unit);
-        return ingredient;
-      });
+        this.groupedShoppingList[name] = ingredients.map(ingredient => {
+            ingredient.totalInLargestUnit = this.calculateTotalInLargestUnit(ingredient.totalAmount, ingredient.unit);
+            return ingredient;
+        });
     });
-  
+
     console.log('Grouped Einkaufsliste:', this.groupedShoppingList);
+}
+  areUnitsCompatible(unit1: string, unit2: string): boolean {
+    // Check if both units are mass units
+    if (this.isMassUnit(unit1) && this.isMassUnit(unit2)) return true;
+
+    // Check if both units are volume units
+    if (this.isVolumeUnit(unit1) && this.isVolumeUnit(unit2)) return true;
+
+    // Check if both units are the same discrete type
+    if (unit1 === unit2) return true;
+
+    // Otherwise, they are not compatible
+    return false;
   }
+
   
   calculateTotalInLargestUnit(totalAmount: number, unit: string): string {
     const germanUnits = {
@@ -259,10 +284,6 @@ export class MyMenusComponent implements OnInit {
       return `${totalAmount} ${unit}`; // Fallback in case of error
     }
   }
-  
-  
-
-
 
   updateAmount(item: EnhancedIngredient, process: string, event: Event): void {
     const inputElement = event.target as HTMLInputElement;
