@@ -316,6 +316,14 @@ export class NewRecepieDialogComponent implements OnInit {
     this.steps.push(this.createStep());
   }
 
+  removeImage(stepIndex: number, imageIndex: number): void {
+    // Check if the stepIndex exists in stepImages
+    if (this.stepImages[stepIndex]) {
+      // Remove the image at the specified imageIndex
+      this.stepImages[stepIndex].splice(imageIndex, 1);
+    }
+  }
+
   removeStep(index: number) {
     this.steps.removeAt(index);
   }
@@ -397,8 +405,11 @@ export class NewRecepieDialogComponent implements OnInit {
     }
   }
 
-  removeRecipeImage() {
+  removeRecipeImage(): void {
     this.recipeImage = null;
+  }
+  clearAllUploadedImages(): void {
+    this.stepImages = {}
   }
 
   toggleDiet(value: string) {
@@ -441,6 +452,8 @@ export class NewRecepieDialogComponent implements OnInit {
           detail: 'Rezept gespeichert!',
         });
         this.loading = false;
+        this.removeRecipeImage();
+        this.clearAllUploadedImages();
         this.form.reset(); // Reset the form
         this.form.enable(); // Re-enable the form
         //this.closeDialog.emit(); // Close the dialog if needed
