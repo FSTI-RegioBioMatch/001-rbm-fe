@@ -5,9 +5,11 @@
       @for (component of dashboardComponents; track component.type) {
         @if (component.type !== 'public-recipes') {
           <div class="dashboard-item" [attr.data-id]="component.type">
-            <div class="dashboard-component">
-              <div class="drag-handle">&#9776;</div>
+            <div class="dashboard-item-handle">
+              <i class="fas fa-grip-lines"></i> <!-- You can use any icon here -->
               <h2>{{ component.title }}</h2>
+            </div>
+            <div class="dashboard-component">
               @switch (component.type) {
                 @case ('recent-menus') {
                   <div class="card-wrapper">
