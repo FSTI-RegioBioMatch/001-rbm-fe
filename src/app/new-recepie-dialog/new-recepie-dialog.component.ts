@@ -264,9 +264,15 @@ export class NewRecepieDialogComponent implements OnInit {
             option.label.toLowerCase().includes(filterValue)
         );
 
-        // If no options match, use the search string as a fallback option
-        if (filteredOptions.length === 0) {
+        // Check if the filterValue is already in the filtered options
+        const filterValueExists = filteredOptions.some(option =>
+            option.label.toLowerCase() === filterValue
+        );
+
+        // If the filterValue does not exist in the filtered options, add it as a fallback option
+        if (!filterValueExists) {
             filteredOptions = [
+                ...filteredOptions,
                 {
                     label: `${filterValue}`,
                     value: filterValue,
@@ -278,6 +284,7 @@ export class NewRecepieDialogComponent implements OnInit {
     // Update the form group with the filtered options
     ingredientFormGroup.patchValue({ ingredientOptions: filteredOptions });
 }
+
 
   
   
