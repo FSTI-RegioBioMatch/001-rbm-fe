@@ -10,7 +10,7 @@
   <div class="menu-plan-form">
     <div>
       <br><br>
-      <p-button (onClick)="showDialog()" label="Hinzufügen" />
+      <p-button (onClick)="showDialog()" label="Rezept Hinzufügen" />
       <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
         <div *ngIf="menuPlan.length === 0" class="recipe-item placeholder">
           <p>Keine Rezepte hinzugefügt</p>
@@ -119,7 +119,7 @@
   <p-dialog header="Weitere Rezepte" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', height: '100%' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" class="recipe-list-all">
     <div class="search-bar">
-      <input type="text" pInputText placeholder="Search" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
+      <input type="text" pInputText placeholder="Suche nach Rezept" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
     </div>
     <div class="recipe-list-add" #recipeList>
       <div *ngIf="!recipesLoaded" class="text-center">
