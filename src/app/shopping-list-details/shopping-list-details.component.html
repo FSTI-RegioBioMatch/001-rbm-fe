@@ -11,12 +11,14 @@
 
         <h3>Ingredients</h3>
         <p-accordion>
-            <p-accordionTab *ngFor="let ingredientName of ingredientNames" header="{{ ingredientName }}">
+            <p-accordionTab *ngFor="let ingredientName of ingredientNames"
+                header="{{ getLocalizedLabel(ingredientName) }}">
                 <div *ngFor="let ingredient of shoppingList.groupedShoppingList[ingredientName]"
                     class="p-grid p-align-center">
                     <div class="p-col-8">
-                        <p><strong>Name:</strong> {{ ingredient.name }}</p>
-                        <p><strong>Total Amount:</strong> {{ ingredient.totalAmount }} {{ ingredient.unit }}</p>
+                        <p><strong>Name:</strong> {{ getLocalizedLabel(ingredient.name) }}</p>
+                        <p><strong>Total Amount:</strong> {{ ingredient.totalAmount }} {{ getUnitLabel(ingredient.unit)
+                            }}</p>
                         <p><strong>Category:</strong> {{ ingredient.category }}</p>
                         <p *ngIf="ingredient.convertible"><strong>Convertible:</strong> Yes</p>
                         <p *ngIf="!ingredient.convertible"><strong>Convertible:</strong> No</p>
