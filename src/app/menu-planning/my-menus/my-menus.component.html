@@ -9,8 +9,8 @@
 <p-toast></p-toast>
 
 <div class="einkaufsliste-actions">
-    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
-        (click)="createShoppingList()" [disabled]="selectedMenuPlans.length === 0"></button>
+    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
+        [disabled]="selectedMenuPlans.length === 0"></button>
 </div>
 
 <div *ngIf="loading" class="text-center">
@@ -60,7 +60,8 @@
                 <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
                     <h5>{{ recipe.recipeName }}</h5>
                     <div *ngFor="let ingredient of recipe.ingredients" class="ingredient-item">
-                        <span>{{ ingredient.amount }} {{ ingredient.unit }} of {{ ingredient.name }}</span>
+                        <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
+                            getLocalizedLabel(ingredient.name) }}</span>
                         <p-dropdown [options]="processingOptions" [(ngModel)]="ingredient.processing"
                             placeholder="Select processing">
                         </p-dropdown>
@@ -95,7 +96,8 @@
                 <td><strong>{{ item.totalInLargestUnit }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
-                        <input pInputText type="number" [value]="item.processingBreakdown[process]" (change)="updateAmount(item, process, $event)" />
+                        <input pInputText type="number" [value]="item.processingBreakdown[process]"
+                            (change)="updateAmount(item, process, $event)" />
                         <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
                             {{ item.errorMessages[process] }}
                         </div>
@@ -116,6 +118,6 @@
             </tr>
         </ng-template>
     </p-table>
-    <button pButton label="Einkaufsliste speichern" icon="pi pi-save"
-    (click)="saveShoppingList()"></button>
+    <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"
+        [disabled]="isGroupedShoppingListEmpty()"></button>
 </p-dialog>
