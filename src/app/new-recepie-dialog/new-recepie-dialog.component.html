@@ -215,7 +215,8 @@
                                                     class="p-button-rounded p-button-danger p-button-sm" style="position: absolute; top: 0; right: 0; margin: 4px;"></button>
                                             </div>
                                             <p-fileUpload #fileUpload name="image[]" url="./upload" (onSelect)="handleFileUpload($event, i, fileUpload)"
-                                                multiple mode="basic" accept="image/*" chooseIcon="pi pi-images"></p-fileUpload>
+                                                multiple mode="basic" accept="image/*" chooseIcon="pi pi-images" 
+                                                *ngIf="(stepImages[i]?.length || 0) < 5"></p-fileUpload>
                                         </div>
                                     </div>
                                 </div>

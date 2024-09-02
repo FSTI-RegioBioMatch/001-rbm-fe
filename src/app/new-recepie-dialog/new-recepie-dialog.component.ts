@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -196,6 +197,7 @@ export class NewRecepieDialogComponent implements OnInit {
     private http: HttpClient,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
+    private imageCompress: NgxImageCompressService
   ) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
@@ -377,33 +379,137 @@ export class NewRecepieDialogComponent implements OnInit {
     this.showNote[index] = !this.showNote[index];
   }
 
-  handleFileUpload(event: any, index: number, fileUpload: any) {
+  async handleFileUpload(event: any, index: number, fileUpload: any) {
     const files = event.files;
     if (!this.stepImages[index]) {
-      this.stepImages[index] = [];
+        this.stepImages[index] = [];
     }
 
-    for (let file of files) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.stepImages[index].push(e.target.result);
-      };
-      reader.readAsDataURL(file);
+    const maxImagesPerStep = 5;
+    const currentImageCount = this.stepImages[index].length;
+    const totalSelectedFiles = files.length;
+
+    // Check if adding the selected files exceeds the maximum allowed images per step
+    if (currentImageCount + totalSelectedFiles > maxImagesPerStep) {
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Limit erreicht',
+            detail: `Maximal ${maxImagesPerStep} Bilder pro Schritt erlaubt. Sie haben ${currentImageCount} Bilder und versuchen, ${totalSelectedFiles} hinzuzufügen.`,
+        });
+        fileUpload.clear();
+        return;
     }
 
+    // Notify user about the image processing
+    this.messageService.add({
+        severity: 'info',
+        summary: 'Verarbeitung',
+        detail: 'Bilder werden verarbeitet. Bitte warten...',
+    });
+
+    const fileProcessingPromises = [];
+
+    // Process each file (up to the available slots limit)
+    for (let i = 0; i < totalSelectedFiles; i++) {
+        const file = files[i];
+        const fileProcessingPromise = this.processFile(file, index);
+        fileProcessingPromises.push(fileProcessingPromise);
+    }
+
+    try {
+        await Promise.all(fileProcessingPromises);
+        // Notify the user that the processing is complete
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Fertig',
+            detail: 'Bilder erfolgreich hochgeladen und verarbeitet.',
+        });
+    } catch (error) {
+        console.error('Error processing image:', error);
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Es gab ein Problem beim Verarbeiten der Bilder.',
+        });
+    }
+
+    // Clear the file upload component
     fileUpload.clear();
-  }
+}
 
-  handleRecipeImageUpload(event: any) {
-    const file = event.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.recipeImage = e.target.result;
-      };
-      reader.readAsDataURL(file);
+private async processFile(file: File, index: number) {
+    const base64 = await this.readFileAsDataURL(file);
+    // Compress the image before adding
+    const compressedImage = await this.imageCompress.compressFile(base64, -1, 50, 50);
+
+    // Check for duplicate images
+    if (this.stepImages[index].includes(compressedImage)) {
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Duplikat',
+            detail: 'Dieses Bild wurde bereits hochgeladen.',
+        });
+        return;
     }
+
+    // Add compressed image to stepImages
+    this.stepImages[index].push(compressedImage);
+}
+
+// Helper function to read file as Data URL
+private readFileAsDataURL(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async handleRecipeImageUpload(event: any) {
+  const file = event.files[0];
+  if (!file) return;
+
+  // Notify user about the image processing
+  this.messageService.add({
+      severity: 'info',
+      summary: 'Verarbeitung',
+      detail: 'Das Rezeptbild wird verarbeitet. Bitte warten...',
+  });
+
+  try {
+      const base64 = await this.readFileAsDataURL(file);
+      // Compress the image before setting it
+      const compressedImage = await this.imageCompress.compressFile(base64, -1, 50, 50);
+
+      // Check if the same image is already set
+      if (this.recipeImage === compressedImage) {
+          this.messageService.add({
+              severity: 'warn',
+              summary: 'Duplikat',
+              detail: 'Dieses Rezeptbild wurde bereits hochgeladen.',
+          });
+          return;
+      }
+
+      // Set the compressed image as the recipe image
+      this.recipeImage = compressedImage;
+
+      // Notify the user that the processing is complete
+      this.messageService.add({
+          severity: 'success',
+          summary: 'Fertig',
+          detail: 'Rezeptbild erfolgreich hochgeladen und verarbeitet.',
+      });
+  } catch (error) {
+      console.error('Error processing recipe image:', error);
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Fehler',
+          detail: 'Es gab ein Problem beim Verarbeiten des Rezeptbildes.',
+      });
   }
+}
 
   removeRecipeImage(): void {
     this.recipeImage = null;
