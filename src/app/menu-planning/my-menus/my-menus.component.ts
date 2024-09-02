@@ -190,7 +190,6 @@ export class MyMenusComponent implements OnInit {
 
 getUnitLabel(unitValue: string): string {
   const unit = ingredientUnits.find(u => u.value === unitValue);
-  console.log("checking", unitValue)
   return unit ? unit.label : unitValue; // Return the label if found, else return the value itself
 }
 
