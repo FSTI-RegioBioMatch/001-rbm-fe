@@ -89,7 +89,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-groupName>
             <tr>
-                <td colspan="7"><strong>{{ groupName }}</strong></td>
+                <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
             </tr>
             <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
                 <td></td>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                 </td>
-                <td><strong>{{ item.unit }}</strong></td>
+                <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
                         <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
