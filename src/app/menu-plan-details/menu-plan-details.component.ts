@@ -121,20 +121,48 @@ export class MenuPlanDetailsComponent implements OnInit {
     this.calendarOptions = {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin],
       headerToolbar: {
-        left: 'prev,next today',
+        left: 'prev,next today exportButton',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
+        right: 'dayGridMonth,dayGridWeek,dayGridDay'
+    },
       firstDay: 1,
       editable: true,
       droppable: true,
       events: this.events,
       locale: deLocale,
+      eventResizableFromStart: false,
+      eventDurationEditable: false,
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;
       },
-      eventDrop: this.handleEventDrop.bind(this)
+      customButtons: {
+        exportButton: {
+            text: 'Export',
+            click: () => {
+                alert('Exporting calendar!');
+            }
+        }
+    },
+      eventDrop: this.handleEventDrop.bind(this),
+              // Highlight weekends
+              weekends: true, // Ensures weekends are shown in the calendar
+              businessHours: false, // Not relevant for menu planning, keeps the whole week visible
+      
+              // Setting a fixed height for the calendar to make it consistent across views
+              height: 'auto', // Adjust to the container automatically
+      
+              // Limiting the number of events displayed per day to improve readability
+              dayMaxEvents: 10, // Collapses additional events into a +N more link
+      
+              // Display event titles in full
+              eventDisplay: 'block', // Ensures the event titles are fully displayed in the day cells
+      
+              // Adjusting the day names to a shorter format for better readability
+              dayHeaderFormat: { weekday: 'short' }, // Shows 'Mon', 'Tue', etc.
+      
+              // Disabling event time to focus on date only
+              displayEventTime: false, // Hides the time in event display
     };
   }
 
