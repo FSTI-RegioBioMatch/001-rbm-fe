@@ -284,7 +284,6 @@ export class MenuPlanningComponent implements OnInit {
     // Send to backend
     this.menuplanService.saveMenuPlan(menuPlanDataObject).subscribe(
       (response) => {
-        console.log('Menu Plan saved successfully:', response);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
         this.menuPlanForm.reset();
         this.menuPlanForm.enable();
@@ -407,7 +406,6 @@ export class MenuPlanningComponent implements OnInit {
 
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
         (response) => {
-            console.log('Event updated successfully:', response);
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
             this.updateCalendar();
         },
@@ -438,7 +436,6 @@ export class MenuPlanningComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
         () => {
-          console.log(`Event ${eventId} deleted successfully`);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
           this.updateCalendar();
           this.displayEventDialog = false;
@@ -457,7 +454,7 @@ export class MenuPlanningComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteMenuPlan(menuId).subscribe(
         () => {
-          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
+
           this.updateCalendar();
           this.displayEventDialog = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });

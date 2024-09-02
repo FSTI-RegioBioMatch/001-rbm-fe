@@ -133,7 +133,6 @@ export class MenuPlanDetailsComponent implements OnInit {
       eventClick: (info: EventHoveringArg) => {
         this.selectedEvent = info.event;
         this.displayEventDialog = true;
-        console.log(this.selectedEvent)
       },
       eventDrop: this.handleEventDrop.bind(this)
     };
@@ -159,7 +158,6 @@ export class MenuPlanDetailsComponent implements OnInit {
 
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
       (response) => {
-        console.log('Event updated successfully:', response);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
         this.updateCalendar();
       },
@@ -195,7 +193,6 @@ export class MenuPlanDetailsComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
         () => {
-          console.log(`Event ${eventId} deleted successfully`);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
           this.updateCalendar();
           this.displayEventDialog = false;
@@ -215,7 +212,6 @@ export class MenuPlanDetailsComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteMenuPlan(menuId).subscribe(
         () => {
-          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
           this.updateCalendar();
           this.displayEventDialog = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
