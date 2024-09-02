@@ -51,6 +51,7 @@
     "@angular-devkit/build-angular": "^17.2.0",
     "@angular/cli": "^17.2.0",
     "@angular/compiler-cli": "^17.2.0",
+    "@angular/localize": "^17.3.11",
     "@types/convert-units": "^2.3.9",
     "@types/jasmine": "~5.1.0",
     "@types/uuid": "^10.0.0",
