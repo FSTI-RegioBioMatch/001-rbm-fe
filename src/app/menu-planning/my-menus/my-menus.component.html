@@ -13,9 +13,11 @@
         [disabled]="selectedMenuPlans.length === 0"></button>
 </div>
 
-<div *ngIf="loading" class="text-center">
+<div *ngIf="loading || loadingRecipes || loadingLocalize" class="text-center">
+    <p>{{ getLoadingMessage() }}</p>
     <p-progressSpinner></p-progressSpinner>
 </div>
+
 <p-table [value]="menuPlans" class="p-datatable-gridlines" *ngIf="!loading">
     <ng-template pTemplate="header">
         <tr>
@@ -46,10 +48,10 @@
                 <button pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
             </td>
             <td>
-                <button pButton icon="pi pi-chevron-down" (click)="toggleExpandMenuPlan(menuPlan.id)"
-                    *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
-                <button pButton icon="pi pi-chevron-up" (click)="toggleExpandMenuPlan(menuPlan.id)"
-                    *ngIf="expandedMenuPlanId === menuPlan.id"></button>
+                <button [disabled]="loadingRecipes" pButton icon="pi pi-chevron-down"
+                    (click)="toggleExpandMenuPlan(menuPlan.id)" *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
+                <button [disabled]="loadingRecipes" pButton icon="pi pi-chevron-up"
+                    (click)="toggleExpandMenuPlan(menuPlan.id)" *ngIf="expandedMenuPlanId === menuPlan.id"></button>
             </td>
             <td>
                 <button pButton (click)="gotoDetails(menuPlan)"></button>
@@ -63,11 +65,13 @@
                         <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
                             getLocalizedLabel(ingredient.name) }}</span>
                         <p-dropdown [options]="processingOptions" [(ngModel)]="ingredient.processing"
-                            placeholder="Select processing">
+                            placeholder="Verarbeitung auswählen">
                         </p-dropdown>
                         <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
                     </div>
+                    <div *ngIf="recipe.ingredients.length === 0">Keine Zutaten</div>
                 </div>
+                <div *ngIf="recipesWithIngredients[menuPlan.id].length === 0">Keine Rezepte</div>
             </td>
         </tr>
     </ng-template>

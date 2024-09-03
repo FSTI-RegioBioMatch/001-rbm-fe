@@ -24,6 +24,7 @@ import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { CustomValidators } from '../shared/validators/custom-validators'; 
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -43,7 +44,8 @@ import { CustomValidators } from '../shared/validators/custom-validators';
     ChipModule,
     FormsModule,
     ToastModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ProgressSpinnerModule
   ],
   providers: [MessageService],
 })
@@ -53,6 +55,7 @@ export class NewRecepieDialogComponent implements OnInit {
   allIngredients: { label: string; value: string }[] = [];
   pageSize = 50; // Number of items to load at once
   loading = false;
+  loadingIngredients = false;
   units = [
     { label: 'Gramm', value: 'g' },
     { label: 'Kilogramm', value: 'kg' },
@@ -233,6 +236,7 @@ export class NewRecepieDialogComponent implements OnInit {
   }
 
   fetchIngredientOptions() {
+    this.loadingIngredients = true;
     this.nearbuyTestService.getData().subscribe(
       (data) => {
         // Store all ingredients for manual filtering
@@ -243,6 +247,7 @@ export class NewRecepieDialogComponent implements OnInit {
   
         // Initially set ingredientOptions to allIngredients
         this.ingredientOptions = [...this.allIngredients];
+        this.loadingIngredients = false;
       },
       (error) => {
         this.messageService.add({
@@ -250,11 +255,20 @@ export class NewRecepieDialogComponent implements OnInit {
           summary: 'Error',
           detail: 'Failed to fetch and map data.',
         });
+        this.loadingIngredients = false;
         console.error('Error fetching and mapping data:', error);
       },
     );
   }
   
+  getLoadingMessage(): string {
+    if (this.loading) {
+      return '';
+    } else if (this.loadingIngredients) {
+      return 'Lade Zutaten...';
+    }
+    return '';
+  }
 
   onFilter(event: any, index: number) {
     const filterValue = event.filter.trim().toLowerCase();

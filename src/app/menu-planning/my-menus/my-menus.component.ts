@@ -4,7 +4,7 @@ import { RecipeService } from '../../shared/services/recipe.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { filter, switchMap, forkJoin, of, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { StoreService } from '../../shared/store/store.service';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -117,6 +117,8 @@ export class MyMenusComponent implements OnInit {
   groupedShoppingList: { [name: string]: EnhancedIngredient[] } = {}; // Grouped by ingredient name
   localizationData: { displayLabel: string; value: string }[] = [];
   loading = false;
+  loadingRecipes = false;
+  loadingLocalize = false;
   displayShoppingListDialog: boolean = false;
 
   processingOptions = [
@@ -140,7 +142,7 @@ export class MyMenusComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.loading = true;
+    this.loading = true; // Set to true when loading menu plans
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -149,26 +151,35 @@ export class MyMenusComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.menuPlans = data;
-          this.nearbuyTestService.getData().subscribe({
-            next: (result) => {
-              this.localizationData = result; // Save localization data for later use
-            },
-            error: (err) => {
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Übersetzungen' });
-            }
-          });
+          this.loadLocalizationData(); // Load localization data separately
           this.menuPlans.forEach(menuPlan => {
             this.loadRecipesWithIngredients(menuPlan.id);
           });
-          this.loading = false;
+          this.loading = false; // Set to false after loading menu plans
         },
         error: (error) => {
-          this.loading = false;
+          this.loading = false; // Set to false in case of an error
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Menüplanung' });
           console.error('Error loading menu plans', error);
         }
       });
   }
+
+  loadLocalizationData(): void {
+    this.loadingLocalize = true; // Set to true when loading localization data
+    this.nearbuyTestService.getData().subscribe({
+      next: (result) => {
+        this.localizationData = result;
+        this.loadingLocalize = false; // Set to false after successful loading
+      },
+      error: (err) => {
+        this.loadingLocalize = false; // Set to false in case of an error
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Übersetzungen' });
+        console.error('Error loading localization data', err);
+      }
+    });
+  }
+
 
   // Helper function to get localized display label for an ingredient
   getLocalizedLabel(ingredientName: string): string {
@@ -188,35 +199,75 @@ export class MyMenusComponent implements OnInit {
     return Object.keys(this.groupedShoppingList).length === 0;
 }
 
+
+getLoadingMessage(): string {
+  if (this.loading) {
+    return 'Lade Menüpläne...';
+  } else if (this.loadingRecipes) {
+    return 'Rezepte mit Zutaten werden geladen...';
+  } else if (this.loadingLocalize) {
+    return 'Übersetzungen werden geladen...';
+  }
+  return '';
+}
+
 getUnitLabel(unitValue: string): string {
   const unit = ingredientUnits.find(u => u.value === unitValue);
   return unit ? unit.label : unitValue; // Return the label if found, else return the value itself
 }
 
-  loadRecipesWithIngredients(menuPlanId: string): void {
-    const menuPlan = this.menuPlans.find(plan => plan.id === menuPlanId);
-    if (menuPlan) {
-      const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
-        this.recipeService.getRecipeById(recipe.id).pipe(
-          catchError(error => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: `Fehler beim Laden für Rezept ${recipe.id}` });
-            console.error(`Error fetching recipe ${recipe.id}:`, error);
-            return of(null); // Handle errors gracefully
-          })
-        )
-      );
-      forkJoin(recipeRequests).subscribe({
+loadRecipesWithIngredients(menuPlanId: string): void {
+  this.loadingRecipes = true; // Set to true when loading recipes
+  const menuPlan = this.menuPlans.find(plan => plan.id === menuPlanId);
+
+  if (menuPlan) {
+    // Even if menuPlan has no recipes, proceed with setting loading to false after processing
+    const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
+      this.recipeService.getRecipeById(recipe.id).pipe(
+        catchError(error => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: `Fehler beim Laden für Rezept ${recipe.id}` });
+          console.error(`Error fetching recipe ${recipe.id}:`, error);
+          return of(null); // Handle errors gracefully
+        })
+      )
+    );
+
+    // Use finalize to ensure loadingRecipes is reset
+    forkJoin(recipeRequests)
+      .pipe(
+        finalize(() => {
+          console.log(`Recipes with ingredients for menu plan ${menuPlanId} loaded successfully`);
+          this.loadingRecipes = false; // Reset loading flag when operation completes
+        })
+      )
+      .subscribe({
         next: (recipes: (Recipe | null)[]) => {
+          // Keep all recipes, even if they have no ingredients
           this.recipesWithIngredients[menuPlanId] = recipes.filter((recipe): recipe is Recipe => recipe !== null);
-          this.loading = false;
+
+          // Log which recipes are missing ingredients for debugging
+          recipes.forEach(recipe => {
+            if (recipe !== null && (!recipe.ingredients || recipe.ingredients.length === 0)) {
+              console.log(`Recipe ${recipe.id} in menu plan ${menuPlanId} has no ingredients.`);
+            }
+          });
+
+          // Log if no recipes were found for a menu plan
+          if (recipes.length === 0) {
+            console.log(`No recipes found for menu plan ${menuPlanId}.`);
+          }
         },
         error: (error) => {
-          this.loading = false;
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Rezepte mit Zutaten' });
+          console.error('Error loading recipes with ingredients', error);
         }
       });
-    }
+  } else {
+    console.log(`No menu plan found for ID ${menuPlanId}.`);
+    this.loadingRecipes = false; // If menuPlan is not found, reset the loading state
   }
+}
+
 
   toggleSelectAll(event: Event): void {
     const checked = (event.target as HTMLInputElement).checked;

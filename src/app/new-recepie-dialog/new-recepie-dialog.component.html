@@ -8,6 +8,11 @@
                 <button pButton class="new-recipe_savebtn" icon="pi pi-check" type="button" label="Speichern"
                     [disabled]="loading || form.invalid" (click)="saveRecipe()"></button>
             </div>
+
+            <div *ngIf="loading || loadingIngredients" class="text-center">
+                <p>{{ getLoadingMessage() }}</p>
+                <p-progressSpinner></p-progressSpinner>
+            </div>
         </ng-template>
         <ng-template pTemplate="content">
 
