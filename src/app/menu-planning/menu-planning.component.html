@@ -25,6 +25,11 @@
             (click)="removeRecipeFromMenuPlan(recipe)">-</p-button>
         </div>
       </div>
+
+    </div>
+    <div class="validation-message"
+      *ngIf="menuPlanForm.hasError('atLeastOneRecipe') && (menuPlanForm.dirty || menuPlanForm.touched)">
+      Es muss mindestens ein Rezept hinzugefügt werden.
     </div>
     <div class="rbm-flex-row rbm-space-between rbm-gap-xl">
       <form [formGroup]="menuPlanForm" class="menu-plan-form rbm-columns-2 rbm-width-40">
@@ -90,7 +95,7 @@
           <label for="portions">Portionen<span class="mandatory">*</span></label>
           <div class="input-wrapper">
             <input id="portions" type="number" formControlName="portions" pInputText placeholder="0"
-              class="input-number" />
+              class="input-number" min="0" />
             <span class="suffix">Personen</span>
           </div>
           <div class="validation-message"
@@ -100,10 +105,10 @@
         </div>
 
         <div class="form-field">
-          <label for="portionsVegetarisch">Vegetarisch</label>
+          <label for="portionsVegetarisch">Vegetarisch<span class="mandatory">*</span></label>
           <div class="input-wrapper">
             <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
-              placeholder="0" class="input-number" />
+              placeholder="0" class="input-number" min="0" />
             <span class="suffix">Personen</span>
           </div>
           <div class="validation-message"
@@ -113,10 +118,10 @@
         </div>
 
         <div class="form-field">
-          <label for="portionsVegan">Vegan</label>
+          <label for="portionsVegan">Vegan<span class="mandatory">*</span></label>
           <div class="input-wrapper">
             <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText placeholder="0"
-              class="input-number" />
+              class="input-number" min="0" />
             <span class="suffix">Personen</span>
           </div>
           <div class="validation-message"
@@ -172,7 +177,8 @@
   <p-dialog header="Weitere Rezepte" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem', height: '100%' }"
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" class="recipe-list-all">
     <div class="search-bar">
-      <input type="text" pInputText placeholder="Suche nach Rezept" [(ngModel)]="searchQuery" (input)="filterRecipes()" />
+      <input type="text" pInputText placeholder="Suche nach Rezept" [(ngModel)]="searchQuery"
+        (input)="filterRecipes()" />
     </div>
     <div class="recipe-list-add" #recipeList>
       <div *ngIf="!recipesLoaded" class="text-center">

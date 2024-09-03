@@ -21,18 +21,6 @@ export class CustomValidators {
    */
   static atLeastOnePortion(controlsNames: string[]): ValidatorFn {
     return (formGroup: AbstractControl): ValidationErrors | null => {
-      // Check if any of the relevant portion fields are touched or dirty
-      const areRelevantFieldsInteracted = controlsNames.some(controlName => {
-        const control = formGroup.get(controlName);
-        return control && (control.dirty || control.touched);
-      });
-  
-      // If none of the relevant fields are interacted with, don't show validation error
-      if (!areRelevantFieldsInteracted) {
-        return null;
-      }
-  
-      // Check if at least one portion field has a value greater than 0
       const isValid = controlsNames.some(controlName => {
         const control = formGroup.get(controlName);
         return control && Number(control.value) > 0;
@@ -41,6 +29,11 @@ export class CustomValidators {
       return isValid ? null : { atLeastOnePortion: true };
     };
   }
-  
-  
+
+  static atLeastOneRecipe(menuPlan: () => any[]): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const recipes = menuPlan();
+      return recipes.length > 0 ? null : { atLeastOneRecipe: true };
+    };
+  }  
 }

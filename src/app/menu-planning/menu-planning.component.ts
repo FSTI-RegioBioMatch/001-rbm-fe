@@ -103,11 +103,14 @@ export class MenuPlanningComponent implements OnInit {
       wiederholung: new FormControl('', Validators.required),
       ort: new FormControl('', Validators.required),
       portions: new FormControl([Validators.required, Validators.min(0)]),
-      portionsVegetarisch: new FormControl(Validators.min(0)),
-      portionsVegan: new FormControl(Validators.min(0)),
+      portionsVegetarisch: new FormControl([Validators.required, Validators.min(0)]),
+      portionsVegan: new FormControl([Validators.required, Validators.min(0)]),
       description: new FormControl('', CustomValidators.optionalMinLength(1)),
     }, {
-      validators: CustomValidators.atLeastOnePortion(['portions', 'portionsVegetarisch', 'portionsVegan'])
+      validators: [
+        CustomValidators.atLeastOnePortion(['portions', 'portionsVegetarisch', 'portionsVegan']),
+        CustomValidators.atLeastOneRecipe(() => this.menuPlan)
+      ]
     });
   }
   
@@ -236,16 +239,22 @@ export class MenuPlanningComponent implements OnInit {
       return;
     }
     this.menuPlan.push(recipe);
+    this.menuPlanForm.updateValueAndValidity(); // Update form validity
   }
-
+  
   removeRecipeFromMenuPlan(recipe: any): void {
     const index = this.menuPlan.indexOf(recipe);
     if (index > -1) {
       this.menuPlan.splice(index, 1);
     }
+    this.menuPlanForm.updateValueAndValidity(); // Update form validity
   }
 
   saveMenuPlan(): void {
+    if (this.menuPlanForm.invalid || this.menuPlan.length === 0) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail:'Bitte mindestens ein Rezept hinzufügen' });
+      return;
+    }
     this.loading = true;
     this.menuPlanForm.disable();
     const menuPlanData = {
