@@ -210,7 +210,7 @@ export class StoreService {
 }
 
 private mapToRBMRole(roles: NearbuyRole[]): rbmRole {
-    console.log('nearbuy role:', roles);
+    //console.log('nearbuy role:', roles);
 
     if (!Array.isArray(roles)) {
         console.warn('Expected roles to be an array, received:', roles);

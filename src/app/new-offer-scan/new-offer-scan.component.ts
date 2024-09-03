@@ -55,11 +55,8 @@ export class NewOfferScanComponent implements OnInit {
 
   private handleLatLon(latLon: { lat: number; lon: number } | null): Observable<any> {
     if (!latLon) {
-      console.log('No latLon');
       return of(null);
     }
-
-    console.log('latLon', latLon);
     this.offerService.setOffersBySearchRadius(50, this.offerService.address);
 
     const { latMin, latMax, lonMin, lonMax } = this.geoService.getBoundingBox(20, latLon.lat, latLon.lon);
@@ -110,17 +107,14 @@ export class NewOfferScanComponent implements OnInit {
 
   private handleResults(results: any): void {
     this.results = results;
-    console.log('results', this.results);
 
     if (this.shoppingList && Array.isArray(this.shoppingList.ingredients) && this.shoppingList.ingredients.length > 0) {
       this.compareWithShoppingList(this.shoppingList.ingredients);
-      console.log('this.shoppingList', this.shoppingList);
 
       this.shoppingList.ingredients.forEach((ingredient: any, index: number) => {
         this.selectedCompanies[index] = this.matchedIngredientCompanies(ingredient.name);
       });
 
-      console.log('selectedCompanies', this.selectedCompanies);
       this.scanInProgress = false;
     } else {
       console.error('Shopping list or ingredients are not defined or empty.');
@@ -156,7 +150,6 @@ export class NewOfferScanComponent implements OnInit {
                 
                 // Exact or partial match
                 if (this.isMatchingProduct(ingredientName, productCategory)) {
-                    console.log('Match Found:', company, product, ingredient);
                     this.matchedProducts.push({
                         ...product,
                         company: company.name // Adding company name for easier debugging and display
@@ -165,8 +158,6 @@ export class NewOfferScanComponent implements OnInit {
             });
         });
     });
-
-    console.log('Final matchedProducts:', this.matchedProducts);
 }
 
 
@@ -239,13 +230,8 @@ matchedIngredientCompanies(ingredientName: string): any[] {
       .subscribe({
         next: (shoppingList) => {
           this.shoppingList = shoppingList;
-          console.log('Shopping list fetched successfully:', this.shoppingList);
-          console.log('Grouped Shopping List:', this.shoppingList?.groupedShoppingList);
-
           // Extract ingredients from groupedShoppingList
           this.shoppingList.ingredients = this.extractIngredientsFromGroupedList(this.shoppingList.groupedShoppingList);
-
-          console.log('Ingredients:', this.shoppingList.ingredients);
         },
         error: (error) => {
           console.error('Error fetching shopping list:', error);

@@ -3220,6 +3220,17 @@ full-calendar {
   }
 }
 
+//table
+
+p-table {
+  margin-top: 100px;
+
+  .p-datatable-thead th {
+    background-color: var(--rbm-willow-green) !important;
+    color: var(--rbm-sea-green);
+  }
+}
+
 
 /***
  *     _____                _ _           

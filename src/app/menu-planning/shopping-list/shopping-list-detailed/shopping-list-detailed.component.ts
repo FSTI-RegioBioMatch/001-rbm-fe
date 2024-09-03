@@ -27,12 +27,10 @@ export class ShoppingListDetailedComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
-      console.log('id', params['id']);
       this.id = params['id'];
       this.shoppingListService
         .getShoppingListByCompanyIdAndId(this.id)
         .subscribe((shoppingList) => {
-          console.log('shopping list', shoppingList);
           this.shoppingList = shoppingList;
           this.loading = false;
         });

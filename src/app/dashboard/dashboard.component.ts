@@ -1,13 +1,14 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ViewChild,
   ElementRef,
   AfterViewInit,
   AfterViewChecked,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { MapComponent } from './components/map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
@@ -64,7 +65,7 @@ interface DashboardItem {
   ],
 })
 export class DashboardComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
+  implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy
 {
   @ViewChild('dashboardGrid') dashboardGridElement!: ElementRef;
   randomRecipes: PublicRecipeType[] = [];
@@ -93,6 +94,8 @@ export class DashboardComponent
   dashboardComponents: DashboardItem[] = [];
   private sortableInstance: Sortable | null = null;
   private sortableInitialized = false;
+  private routerSubscription!: Subscription;
+  private viewInitialized = false;
 
   constructor(
     public offerService: OfferService,
@@ -104,18 +107,26 @@ export class DashboardComponent
     private cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     console.log('DashboardComponent initialized');
+    this.loadCompanyAndRoles(); // This will call loadDashboardComponents
     this.loadCompanyRecipes();
     this.loadPublicRecipes();
     this.getOffers();
     this.getRecentMenus();
-    this.loadCompanyAndRoles();
-    this.loadDashboardComponents();
-    this.loadDashboardConfiguration();
+
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        console.log('Navigation ended, reinitializing Sortable');
+        this.sortableInitialized = false;
+        this.initSortableIfPossible();
+      });
   }
 
   ngAfterViewInit() {
+    console.log('View initialized');
+    this.viewInitialized = true;
     this.initSortableIfPossible();
   }
 
@@ -124,25 +135,44 @@ export class DashboardComponent
   }
 
   private initSortableIfPossible() {
-    if (!this.sortableInitialized && this.dashboardGridElement) {
+    if (
+      this.viewInitialized &&
+      !this.sortableInitialized &&
+      this.dashboardGridElement
+    ) {
+      console.log('Initializing Sortable');
       this.initSortable();
       this.sortableInitialized = true;
       this.cdr.detectChanges();
     }
   }
 
-  initSortable() {
+  ngOnDestroy() {
+    console.log('DashboardComponent being destroyed');
+    if (this.sortableInstance) {
+      this.sortableInstance.destroy();
+    }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private initSortable() {
     if (this.sortableInstance) {
       this.sortableInstance.destroy();
     }
 
     const el = this.dashboardGridElement.nativeElement;
     if (el) {
-      console.log('Creating Sortable instance', el);
-      this.sortableInstance = new Sortable(el, {
+      console.log('Dashboard grid element found:', el);
+      this.sortableInstance = Sortable.create(el, {
         animation: 150,
         ghostClass: 'blue-background-class',
-        handle: '.dashboard-item',
+        handle: '.dashboard-item-handle',
+        draggable: '.dashboard-item',
+        onStart: (evt) => {
+          console.log('Drag started', evt);
+        },
         onEnd: (evt: any) => {
           console.log('Drag ended', evt);
           const newIndex = evt.newIndex;
@@ -159,8 +189,17 @@ export class DashboardComponent
           this.cdr.detectChanges();
         },
       });
+      console.log('Sortable instance created:', this.sortableInstance);
     } else {
       console.error('Dashboard grid element not found');
+    }
+  }
+
+  private destroySortable() {
+    if (this.sortableInstance) {
+      console.log('Destroying existing Sortable instance');
+      this.sortableInstance.destroy();
+      this.sortableInstance = null;
     }
   }
 
@@ -436,7 +475,7 @@ export class DashboardComponent
             comp !== undefined,
         );
 
-      // We don't need to reinitialize sortable here, as it will be handled by ngAfterViewChecked
+      console.log('Loaded dashboard configuration:', this.dashboardComponents);
     }
   }
 
@@ -446,6 +485,7 @@ export class DashboardComponent
       `dashboard-config-${this.rbmRole}`,
       JSON.stringify(componentTypes),
     );
+    console.log('Saved dashboard configuration:', componentTypes);
   }
 
   navigateToRecipes() {

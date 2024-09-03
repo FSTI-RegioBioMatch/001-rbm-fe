@@ -192,6 +192,23 @@
   .dashboard-item:hover {
     background-color: #f0f0f0;
   }
+
+  .dashboard-item-handle {
+    background-color: #e0e0e0;
+    padding: 0.5rem;
+    cursor: move;
+    display: flex;
+    align-items: center;
+  
+    i {
+      margin-right: 0.5rem;
+    }
+  
+    h2 {
+      margin: 0;
+    }
+  }
+  
   
   .dashboard-component {
     height: 100%;
@@ -276,4 +293,8 @@
     opacity: 0.8;
     background-color: #f0f0f0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .dragging {
+    opacity: 0.5;
   }

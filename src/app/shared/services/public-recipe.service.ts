@@ -60,7 +60,6 @@ export class PublicRecipeService {
               );
             });
           });
-        console.log(tempData);
       });
   }
 

@@ -10,6 +10,11 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { GalleriaModule } from 'primeng/galleria';
+import { DropdownModule } from 'primeng/dropdown';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-recipie-details',
@@ -22,7 +27,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     FormsModule,
     ToastModule,
     ProgressSpinnerModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TableModule,
+    GalleriaModule,
+    DropdownModule,
+    OverlayPanelModule,
+    CheckboxModule
   ],
   providers: [MessageService, ConfirmationService]
 })
@@ -33,6 +43,75 @@ export class RecipieDetailsComponent implements OnInit {
   editMode = false;
   deleting = false; // New state to track deletion process
   saving = false;   // New state to track saving process
+  responsiveOptions: any[] = [];
+  selectedTags: { [key: string]: boolean } = {};
+
+  units = [
+    { label: 'Gramm', value: 'g' },
+    { label: 'Kilogramm', value: 'kg' },
+    { label: 'Liter', value: 'l' },
+    { label: 'Milliliter', value: 'ml' },
+    { label: 'Stück', value: 'pcs' },
+    { label: 'Teelöffel', value: 'tsp' },
+    { label: 'Esslöffel', value: 'tbsp' },
+    { label: 'Tassen', value: 'cup' },
+    { label: 'Pfund', value: 'lb' },
+    { label: 'Unzen', value: 'oz' },
+    { label: 'Pakete', value: 'pkg' },
+    { label: 'Scheiben', value: 'slices' },
+    { label: 'Prisen', value: 'pinch' },
+    { label: 'Dosen', value: 'cans' },
+    { label: 'Flaschen', value: 'bottles' },
+    { label: 'Gläser', value: 'jars' },
+    { label: 'Zentiliter', value: 'cl' },
+    { label: 'Milligramm', value: 'mg' },
+    { label: 'Dekagramm', value: 'dag' },
+    { label: 'Gallonen', value: 'gallon' },
+    { label: 'Pints', value: 'pint' },
+    { label: 'Quarts', value: 'quart' },
+    { label: 'Stangen', value: 'sticks' },
+    { label: 'Blätter', value: 'leaves' },
+    { label: 'Becher', value: 'beaker' },
+    { label: 'Kellen', value: 'ladle' },
+    { label: 'Zweige', value: 'sprigs' },
+    { label: 'Köpfe', value: 'heads' },
+    { label: 'Zehen', value: 'cloves' }, 
+    { label: 'Schalen', value: 'peels' }, 
+    { label: 'Hände', value: 'hands' },
+    { label: 'Bündel', value: 'bunches' },
+    { label: 'Blöcke', value: 'blocks' },
+    { label: 'Scheiben', value: 'slices' }, 
+    { label: 'Körner', value: 'grains' },
+  ];
+
+  dietOptions = [
+    { label: 'Vegan', value: 'vegan' },
+    { label: 'Vegetarisch', value: 'vegetarian' },
+    { label: 'Glutenfrei', value: 'gluten_free' },
+    { label: 'Laktosefrei', value: 'dairy_free' },
+    { label: 'Paleo', value: 'paleo' },
+    { label: 'Ketogen', value: 'ketogenic' },
+    { label: 'Pescetarisch', value: 'pescetarian' },
+    { label: 'Rohkost', value: 'raw_food' },
+    { label: 'Frutarier', value: 'fruitarian' },
+    { label: 'Flexitarier', value: 'flexitarian' },
+    { label: 'Low Carb', value: 'low_carb' },
+    { label: 'High Protein', value: 'high_protein' },
+    { label: 'Zuckerfrei', value: 'sugar_free' },
+    { label: 'Nussfrei', value: 'nut_free' },
+    { label: 'Südstrand-Diät', value: 'south_beach_diet' },
+    { label: 'Mittelmeer-Diät', value: 'mediterranean_diet' },
+    { label: 'FODMAP-arm', value: 'low_fodmap' },
+    { label: 'Kohlenhydratarm', value: 'low_carbohydrate' },
+    { label: 'Proteinreich', value: 'high_protein' },
+    { label: 'Fettarm', value: 'low_fat' },
+    { label: 'Keine Konservierungsstoffe', value: 'no_preservatives' },
+  ];
+
+  getDietLabel(value: string): string {
+    const option = this.dietOptions.find(opt => opt.value === value);
+    return option ? option.label : value;
+  }
 
   constructor(
     private recipeService: RecipeService,
@@ -52,6 +131,21 @@ export class RecipieDetailsComponent implements OnInit {
       }
       this.fetchRecipe();
     });
+
+    this.responsiveOptions = [
+      {
+        breakpoint: '1024px',
+        numVisible: 5
+      },
+      {
+        breakpoint: '768px',
+        numVisible: 3
+      },
+      {
+        breakpoint: '560px',
+        numVisible: 1
+      }
+    ];
   }
 
   fetchRecipe(): void {
@@ -98,6 +192,7 @@ export class RecipieDetailsComponent implements OnInit {
       error: (err) => {
         console.error('Error saving recipe:', err);
         this.messageService.add({ severity: 'error', summary: 'Error saving recipe', detail: 'Failed to update recipe' });
+        console.error('Full error response:', err);
       },
       complete: () => {
         this.saving = false; // End saving process
@@ -134,5 +229,14 @@ export class RecipieDetailsComponent implements OnInit {
         this.deleting = false; // End deleting process
       }
     });
+  }
+
+  toggleDiet(diet: string): void {
+    const index = this.recipe.diets.indexOf(diet);
+    if (index > -1) {
+      this.recipe.diets.splice(index, 1);
+    } else {
+      this.recipe.diets.push(diet);
+    }
   }
 }

@@ -28,13 +28,11 @@ export class ShoppingListComponent implements OnInit {
     this.shoppingListService
       .getShoppingListByCompanyId()
       .subscribe((shoppingLists) => {
-        console.log('shopping lists', shoppingLists);
         this.shoppingList = shoppingLists;
       });
   }
 
   onClickShoppingListItem(shoppingList: ShoppingListType) {
-    console.log('shopping list item clicked', shoppingList);
     this.router.navigate(['/menu-planning/shopping-list', shoppingList.id]);
   }
 }

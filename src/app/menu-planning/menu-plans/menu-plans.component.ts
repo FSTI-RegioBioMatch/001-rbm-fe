@@ -34,7 +34,6 @@ export class MenuPlansComponent implements OnInit {
     this.menuPlanService.getMenuPlans().subscribe((menuPlans) => {
       this.menuPlans = menuPlans;
       this.rows = menuPlans;
-      console.log(213123213213123123, this.rows);
     });
   }
 
@@ -51,7 +50,6 @@ export class MenuPlansComponent implements OnInit {
   }
 
   show() {
-    console.log(this.selectedMenuPlans);
 
     const consolidatedData: { [key: string]: Ingredient } = {};
     const ingredients: Ingredient[] = [];
@@ -75,12 +73,10 @@ export class MenuPlansComponent implements OnInit {
     });
 
     const consolidatedIngredients = Object.values(consolidatedData);
-    console.log('consolidated', consolidatedIngredients);
 
     this.shoppingListService
       .createShoppingList(consolidatedIngredients)
       .subscribe((res) => {
-        console.log('res', res);
       });
   }
 }

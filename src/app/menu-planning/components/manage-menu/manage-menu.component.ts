@@ -87,14 +87,12 @@ export class ManageMenuComponent implements OnInit, AfterViewInit {
           this.recipes = response.data as PublicRecipeType[];
           this.rows = response.data as PublicRecipeType[];
 
-          console.log(this.recipes);
         }
       });
   }
 
   onSearchValueChangedListener() {
     this.search.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
-      console.log('value', value);
     });
   }
 
@@ -102,13 +100,9 @@ export class ManageMenuComponent implements OnInit, AfterViewInit {
     const currentWeek = moment().isoWeek();
     const currentYear = moment().year();
     const lastWeekOfYear = moment().endOf('year').subtract(2, 'day').isoWeek();
-    console.log(564456, moment().endOf('year').subtract(2, 'day').isoWeek());
     // const lastWeekOfYear = 53;
     const weekNumbers: number[] = [];
 
-    console.log('currentWeek', currentWeek);
-    console.log('currentYear', currentYear);
-    console.log('lastWeekOfYear', lastWeekOfYear);
 
     for (let week = currentWeek; week <= lastWeekOfYear; week++) {
       weekNumbers.push(week);
@@ -122,7 +116,6 @@ export class ManageMenuComponent implements OnInit, AfterViewInit {
       weekNumbers.push(1);
     }
 
-    console.log('weekNumbers', weekNumbers);
 
     return weekNumbers;
   }

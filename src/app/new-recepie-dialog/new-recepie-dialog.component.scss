@@ -80,7 +80,7 @@
   }
 
   .p-checkbox-icon {
-    color: rgb(255, 255, 255);
+    color: white;
   }
 }
 
@@ -277,10 +277,6 @@
   flex-direction: column;
   gap: 24px;
   width: 50%;
-}
-
-::ng-deep .new-recipe-card-iibox .p-checkbox-box {
-  background-color: white;
 }
 
 .box-wrapper {
