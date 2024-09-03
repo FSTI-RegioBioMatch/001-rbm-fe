@@ -11,6 +11,25 @@
   width: 100%;
 }
 
+.mandatory {
+  color: red;
+  margin-left: 2px;
+}
+
+.validation-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.menu-plan-form .form-field label {
+  font-weight: bold;
+}
+
+.menu-plan-form .form-field {
+  margin-bottom: 1rem;
+}
+
 ::ng-deep .p-tabview-nav-container {
   position: relative;
   display: flex;

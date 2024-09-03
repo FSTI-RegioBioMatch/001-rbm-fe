@@ -30,6 +30,9 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TabViewModule } from 'primeng/tabview';
+import { CustomValidators } from '../shared/validators/custom-validators'; 
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-menu-planning',
@@ -53,6 +56,8 @@ import { TabViewModule } from 'primeng/tabview';
     ProgressSpinnerModule,
     ConfirmDialogModule,
     TabViewModule,
+    TooltipModule,
+    MessageModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
@@ -97,10 +102,12 @@ export class MenuPlanningComponent implements OnInit {
       wochentag: new FormControl('', Validators.required),
       wiederholung: new FormControl('', Validators.required),
       ort: new FormControl('', Validators.required),
-      portions: new FormControl('', Validators.required),
-      portionsVegetarisch: new FormControl(''),
-      portionsVegan: new FormControl(''),
-      description: new FormControl(''),
+      portions: new FormControl([Validators.required, Validators.min(0)]),
+      portionsVegetarisch: new FormControl(Validators.min(0)),
+      portionsVegan: new FormControl(Validators.min(0)),
+      description: new FormControl('', CustomValidators.optionalMinLength(1)),
+    }, {
+      validators: CustomValidators.atLeastOnePortion(['portions', 'portionsVegetarisch', 'portionsVegan'])
     });
   }
   
