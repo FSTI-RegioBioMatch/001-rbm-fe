@@ -1,6 +1,176 @@
 <p-toast></p-toast>
 <p-confirmDialog></p-confirmDialog>
 
+
+
+<div class="container" *ngIf="!loading">
+  <div class="edit-bar rbm-full-width rbm-gap-p8 rbm-flex-row">
+    <button (click)="toggleEditMode()">{{ editMode ? 'Bearbeiten beenden' : 'Bearbeiten' }}</button>
+    <button (click)="confirmDelete()">Löschen</button>
+    <button (click)="saveRecipe()">Änderungen Speichern</button>
+  </div>
+  <br>
+  <div class="header">
+    <div style="display: flex; align-items: center;">
+      <h1 *ngIf="!editMode">{{ recipe?.recipeName }}</h1>
+      <input *ngIf="editMode" [(ngModel)]="recipe.recipeName" />
+    </div>
+    <div class="tags">
+      <div class="tag" *ngFor="let diet of recipe?.diets">
+        {{ getDietLabel(diet) }}
+      </div>
+      <p-toast></p-toast>
+      <button *ngIf="editMode" class="tag" (click)="op.toggle($event)">+ Add</button>
+
+
+      <p-overlayPanel #op [style]="{ width: '450px' }" [showCloseIcon]="true">
+        <ng-template pTemplate="content">
+          <div class="diet-options-container">
+            <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
+              <p-checkbox class="diet-option-chip_checkbox" [binary]="true" [ngModel]="recipe.diets.includes(option.value)"></p-checkbox>
+              <label>{{ option.label }}</label>
+            </div>
+          </div>
+        </ng-template>
+      </p-overlayPanel>
+    </div>
+  </div>
+  <br>
+  <div class="recipe-detail-card_col1">
+    <div class="left">
+      <img *ngIf="recipe?.recipeImage" [src]="recipe?.recipeImage" alt="Recipe Image" class="recipe-detail-image">
+    </div>
+
+    <div class="right">
+      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex; align-items: center;">
+        <div style="width: 50%;"><label>Energie in kcal:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.energie }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.energie" />
+      </div>
+      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+        <div style="width: 50%;"><label>Portionen:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.portionen }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.portionen" />
+      </div>
+      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+        <div style="width: 50%;"><label>Besonderheiten:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.besonderheiten }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.besonderheiten" />
+      </div>
+      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+        <div style="width: 50%;"><label>Essensgäste:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.essensgaeste }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.essensgaeste" />
+      </div>
+      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+        <div style="width: 50%;"><label>Allergene:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.allergene }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.allergene" />
+      </div>
+      <div style="padding: 8px; display: flex;align-items: center;;">
+        <div style="width: 50%;"><label>Saison:</label></div>
+        <p *ngIf="!editMode">{{ recipe?.saison }}</p>
+        <input *ngIf="editMode" [(ngModel)]="recipe.saison" />
+      </div>
+    </div>
+  </div>
+  <div class="content">
+   <div class="description">
+    <h2>
+     Beschreibung
+    </h2>
+    <p *ngIf="!editMode">{{ recipe?.recipeDescription }}</p>
+    <textarea *ngIf="editMode" [(ngModel)]="recipe.recipeDescription"></textarea>
+    <div class="ingredients">
+     <h3>
+      Zutaten
+     </h3>
+     <table>
+      <tr *ngFor="let ingredient of recipe?.ingredients">
+       <th class="rbm-bg-willow-green-10">
+        <p *ngIf="!editMode">{{ ingredient?.amount }} {{ ingredient?.unit }}</p>
+        <input *ngIf="editMode" [(ngModel)]="ingredient.amount" placeholder="Anzahl" />
+        <p-dropdown *ngIf="editMode" [options]="units" [(ngModel)]="ingredient.unit" placeholder="Einheit"></p-dropdown>
+       </th>
+       <td class="rbm-gap-p5">
+        <p *ngIf="!editMode" class="rbm-text-sea-green">{{ ingredient?.name }}</p>
+        <small *ngIf="!editMode">
+          {{ ingredient?.note }}
+        </small>
+        <span *ngIf="ingredient?.optional">(Optional)</span>
+          <ul *ngIf="ingredient?.alternatives.length > 0">
+            <li *ngFor="let alt of ingredient?.alternatives">
+              Alternativ: <span *ngIf="!editMode"><p class="rbm-text-sea-green">&nbsp; &nbsp; {{ alt?.name }}</p>&nbsp; &nbsp; {{ alt?.amount }} {{ alt?.unit }} </span>
+              <input *ngIf="editMode" [(ngModel)]="alt.amount" placeholder="Amount" />
+              <input *ngIf="editMode" [(ngModel)]="alt.unit" placeholder="Unit" />
+              <input *ngIf="editMode" [(ngModel)]="alt.name" placeholder="Name" />
+            </li>
+          </ul>
+        <input *ngIf="editMode" [(ngModel)]="ingredient.name" placeholder="Name" />
+        <input *ngIf="editMode" [(ngModel)]="ingredient.note" placeholder="Notiz" class="rbm-full-width">
+       </td>
+      </tr>
+     </table>
+    </div>
+   </div>
+   
+  </div>
+  <div class="instructions">
+   <h2>
+    Anleitung
+   </h2>
+   <div class="step" *ngFor="let step of recipe?.steps; let i = index">
+    <div *ngIf="step?.images && step?.images.length == 0" class="step-images">
+      <div class="rbm-bg-willow-green rbm-flex-column rbm-items-middle rbm-content-center" style="width: 200px;height: 200px;">{{ i + 1 }}</div>
+    </div>
+    <div *ngIf="step?.images && step?.images.length > 0 && step?.images.length < 2" class="step-images">
+      <img *ngFor="let image of step?.images" [src]="image" alt="Step Image" width="200" height="150">
+    </div>
+    <div *ngIf="step?.images && step?.images.length > 1" class="step-images">
+      <p-galleria 
+      [value]="step.images" 
+      (valueChange)="step.images = $event" 
+      [showItemNavigators]="true" 
+      [showThumbnails]="false" 
+      [showIndicators]="true" 
+      [showIndicatorsOnItem]="true" 
+      [responsiveOptions]="responsiveOptions" 
+      [containerStyle]="{ 'width': '200px', 'height': '200px', 'max-width': '200px', 'max-height': '200px' }">
+      <ng-template pTemplate="item" let-item>
+        <img [src]="item" style="width: 100%; display: block;" />
+      </ng-template>
+      <ng-template pTemplate="thumbnail" let-item>
+        <div class="grid grid-nogutter justify-content-center">
+          <img [src]="item" style="display: block;" />
+        </div>
+      </ng-template>
+    </p-galleria>
+    </div>
+    <div class="text">
+      <div class="rbm-flex-row rbm-items-middle">
+        <div class="stepnumberbubble rbm-bg-tea-green" >{{ i + 1 }}</div>
+        <span *ngIf="!editMode" style="font-size: 24px;">{{ step?.schritt }}</span>
+        <input *ngIf="editMode" [(ngModel)]="step.schritt" placeholder="Name" />
+      </div>
+      <br>
+      <p *ngIf="!editMode">{{ step?.anleitung }}</p>
+      <textarea *ngIf="editMode" [(ngModel)]="step.anleitung"></textarea>
+    </div>
+   </div>
+   
+  </div>
+ </div>
+
+
+
+
+
+
+
+
+<!-- 
+
+
 <ng-container *ngIf="!loading">
   <p-card class="recipe-detail-card">
     <ng-template pTemplate="header" class="recipe-detail-card_header">
@@ -21,33 +191,33 @@
         </div>
 
         <div class="right">
-          <div style="margin-bottom: 8px;">
-            <label>Energie in kcal:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex; align-items: center;">
+            <div style="width: 50%;"><label>Energie in kcal:</label></div>
             <p *ngIf="!editMode">{{ recipe?.energie }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.energie" />
           </div>
-          <div style="margin-bottom: 8px;">
-            <label>Portionen:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+            <div style="width: 50%;"><label>Portionen:</label></div>
             <p *ngIf="!editMode">{{ recipe?.portionen }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.portionen" />
           </div>
-          <div style="margin-bottom: 8px;">
-            <label>Besonderheiten:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+            <div style="width: 50%;"><label>Besonderheiten:</label></div>
             <p *ngIf="!editMode">{{ recipe?.besonderheiten }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.besonderheiten" />
           </div>
-          <div style="margin-bottom: 8px;">
-            <label>Essensgäste:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+            <div style="width: 50%;"><label>Essensgäste:</label></div>
             <p *ngIf="!editMode">{{ recipe?.essensgaeste }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.essensgaeste" />
           </div>
-          <div style="margin-bottom: 8px;">
-            <label>Allergene:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
+            <div style="width: 50%;"><label>Allergene:</label></div>
             <p *ngIf="!editMode">{{ recipe?.allergene }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.allergene" />
           </div>
-          <div style="margin-bottom: 8px;">
-            <label>Saison:</label>
+          <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;;">
+            <div style="width: 50%;"><label>Saison:</label></div>
             <p *ngIf="!editMode">{{ recipe?.saison }}</p>
             <input *ngIf="editMode" [(ngModel)]="recipe.saison" />
           </div>
@@ -104,4 +274,4 @@
 
 <ng-container *ngIf="loading">
   <p-progressSpinner></p-progressSpinner>
-</ng-container>
+</ng-container> -->

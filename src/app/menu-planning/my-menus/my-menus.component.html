@@ -1,18 +1,16 @@
 <div class="flex gap-2">
     <p-button routerLink="/menu-planning">Menüplanung</p-button>
     <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-    <p-button [disabled]="true" routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-    <p-button [disabled]="true">Angebotsliste</p-button>
+    <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+    <p-button>Angebotsliste</p-button>
     <br><br>
 </div>
 
 <p-toast></p-toast>
 
 <div class="einkaufsliste-actions">
-    <button [disabled]="true" pButton label="Einkaufszettel Erstellen" icon="pi pi-file"
-        (click)="createShoppingList()"></button>
-    <button [disabled]="true" pButton label="Einkaufsliste speichern" icon="pi pi-save"
-        (click)="saveShoppingList()"></button>
+    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
+        [disabled]="selectedMenuPlans.length === 0"></button>
 </div>
 
 <div *ngIf="loading" class="text-center">
@@ -30,13 +28,14 @@
             <th>Wiederholung</th>
             <th>Einkaufen?</th>
             <th>Komponenten</th>
+            <th>Details</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-menuPlan>
 
 
         <tr>
-            <td><input type="checkbox" [(ngModel)]="menuPlan.selected" /></td>
+            <td><input type="checkbox" [(ngModel)]="menuPlan.selected" (change)="updateSelectedMenuPlans()" /></td>
             <td>{{ menuPlan.name }}</td>
             <td>{{ menuPlan.nextExecution }}</td>
             <td>{{ menuPlan.weekday }}</td>
@@ -52,13 +51,17 @@
                 <button pButton icon="pi pi-chevron-up" (click)="toggleExpandMenuPlan(menuPlan.id)"
                     *ngIf="expandedMenuPlanId === menuPlan.id"></button>
             </td>
+            <td>
+                <button pButton (click)="gotoDetails(menuPlan)"></button>
+            </td>
         </tr>
         <tr *ngIf="expandedMenuPlanId === menuPlan.id">
             <td colspan="9">
                 <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
                     <h5>{{ recipe.recipeName }}</h5>
                     <div *ngFor="let ingredient of recipe.ingredients" class="ingredient-item">
-                        <span>{{ ingredient.amount }} {{ ingredient.unit }} of {{ ingredient.name }}</span>
+                        <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
+                            getLocalizedLabel(ingredient.name) }}</span>
                         <p-dropdown [options]="processingOptions" [(ngModel)]="ingredient.processing"
                             placeholder="Select processing">
                         </p-dropdown>
@@ -70,9 +73,7 @@
     </ng-template>
 </p-table>
 
-<div *ngIf="!loading && false"> <!-- also check if ek list exists, later in another comp anyway-->
-    <!--REMOVE FALSE AGAIN!-->
-    <h3>Einkaufsliste</h3>
+<p-dialog [(visible)]="displayShoppingListDialog" [modal]="true" [header]="'Einkaufsliste'" [closable]="true">
     <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
         <ng-template pTemplate="header">
             <tr>
@@ -87,34 +88,27 @@
         </ng-template>
         <ng-template pTemplate="body" let-groupName>
             <tr>
-                <td colspan="7"><strong>{{ groupName }}</strong></td>
+                <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
             </tr>
             <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
                 <td></td>
-                <td>
-                    <strong>{{ item.totalInLargestUnit }}</strong> <!-- Display the total amount in the largest unit -->
-                </td>
-
+                <td><strong>{{ item.totalInLargestUnit }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
                         <input pInputText type="number" [value]="item.processingBreakdown[process]"
                             (change)="updateAmount(item, process, $event)" />
-                        <!-- Error message specific to this input field -->
                         <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
                             {{ item.errorMessages[process] }}
                         </div>
                     </div>
                 </td>
-
-                <td>
-                    <strong>{{ item.unit }}</strong> <!-- Display the unit directly without a dropdown -->
-                </td>
+                <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item)">
                         <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
                     </div>
                 </td>
-                <td>{{ item.sourceRecipes.join(', ') }}</td>
+                <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
                 <td>
                     <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
                         <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
@@ -123,5 +117,6 @@
             </tr>
         </ng-template>
     </p-table>
-
-</div>
+    <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"
+        [disabled]="isGroupedShoppingListEmpty()"></button>
+</p-dialog>

@@ -1,0 +1,45 @@
+<div *ngIf="loading" class="text-center">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<div *ngIf="menuPlan && !loading" class="menu-plan-detail">
+
+
+    <full-calendar #calendar [options]="calendarOptions"
+    class="text-center rbm-full-width"></full-calendar>
+    <p-dialog [(visible)]="displayEventDialog" modal="modal" [header]="selectedEvent?.title" [closable]="true">
+        <div *ngIf="selectedEvent">
+            <div class="dialog-content">
+                <p><strong>Datum:</strong> {{ selectedEvent.start | date:'fullDate' }} {{ selectedEvent.start | date:'shortTime' }}</p>
+            </div>
+            <div class="dialog-actions" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                <p-button label="Löschen" icon="pi pi-trash" class="p-button-danger" (click)="deleteSingleEvent(selectedEvent)"></p-button>
+            </div>
+        </div>
+    </p-dialog>
+    
+    <h2>{{ menuPlan.name }}</h2>
+    <p><strong>Beschreibung:</strong> {{ menuPlan.description }}</p>
+    <p><strong>Ort:</strong> {{ menuPlan.location }}</p>
+    <p><strong>Nächste Ausführung:</strong> {{ menuPlan.nextExecution }}</p>
+    <p><strong>Wochentag:</strong> {{ menuPlan.weekday }}</p>
+    <p><strong>Wiederholung:</strong> {{ menuPlan.repeatFrequency }}</p>
+    <p><strong>Portionen:</strong> {{ menuPlan.portions }}</p>
+    <p><strong>Vegetarische Portionen:</strong> {{ menuPlan.portionsVegetarisch }}</p>
+    <p><strong>Vegane Portionen:</strong> {{ menuPlan.portionsVegan }}</p>
+
+    <div *ngIf="menuPlan.recipes.length">
+        <h3>Rezepte</h3>
+        <ul>
+            <li *ngFor="let recipe of menuPlan.recipes">
+                {{ recipe.name }}
+            </li>
+        </ul>
+    </div>
+    <p-button label="Menüplan löschen" icon="pi pi-trash" class="p-button-danger"
+    (click)="deleteAllEvents()"></p-button>
+</div>
+
+
+
+<p-toast></p-toast>

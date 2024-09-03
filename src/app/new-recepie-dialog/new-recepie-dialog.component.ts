@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -40,6 +41,7 @@ import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
     ChipModule,
     FormsModule,
     ToastModule,
+    MultiSelectModule
   ],
   providers: [MessageService],
 })
@@ -50,48 +52,136 @@ export class NewRecepieDialogComponent implements OnInit {
   pageSize = 50; // Number of items to load at once
   loading = false;
   units = [
-    { label: 'Grams', value: 'g' },
-    { label: 'Kilograms', value: 'kg' },
-    { label: 'Liters', value: 'l' },
-    { label: 'Milliliters', value: 'ml' },
+    { label: 'Gramm', value: 'g' },
+    { label: 'Kilogramm', value: 'kg' },
+    { label: 'Liter', value: 'l' },
+    { label: 'Milliliter', value: 'ml' },
+    { label: 'Stück', value: 'pcs' },
+    { label: 'Teelöffel', value: 'tsp' },
+    { label: 'Esslöffel', value: 'tbsp' },
+    { label: 'Tassen', value: 'cup' },
+    { label: 'Pfund', value: 'lb' },
+    { label: 'Unzen', value: 'oz' },
+    { label: 'Pakete', value: 'pkg' },
+    { label: 'Scheiben', value: 'slices' },
+    { label: 'Prisen', value: 'pinch' },
+    { label: 'Dosen', value: 'cans' },
+    { label: 'Flaschen', value: 'bottles' },
+    { label: 'Gläser', value: 'jars' },
+    { label: 'Zentiliter', value: 'cl' },
+    { label: 'Milligramm', value: 'mg' },
+    { label: 'Dekagramm', value: 'dag' },
+    { label: 'Gallonen', value: 'gallon' },
+    { label: 'Pints', value: 'pint' },
+    { label: 'Quarts', value: 'quart' },
+    { label: 'Stangen', value: 'sticks' },
+    { label: 'Blätter', value: 'leaves' },
+    { label: 'Becher', value: 'beaker' },
+    { label: 'Kellen', value: 'ladle' },
+    { label: 'Zweige', value: 'sprigs' },
+    { label: 'Köpfe', value: 'heads' },
+    { label: 'Zehen', value: 'cloves' }, 
+    { label: 'Schalen', value: 'peels' }, 
+    { label: 'Hände', value: 'hands' },
+    { label: 'Bündel', value: 'bunches' },
+    { label: 'Blöcke', value: 'blocks' },
+    { label: 'Scheiben', value: 'slices' }, 
+    { label: 'Körner', value: 'grains' },
   ];
-
-  kitchenOptions = [
-    { label: 'Italian', value: 'italian' },
-    { label: 'Chinese', value: 'chinese' },
-    { label: 'Mexican', value: 'mexican' },
-    // Add more options as needed
-  ];
-
+  
   guestsOptions = [
-    { label: 'children', value: 'children' },
-    { label: 'adults', value: 'adults' },
-    { label: 'elderly', value: 'elderly' },
-    // Add more options as needed
+    { label: 'Kinder', value: 'children' },
+    { label: 'Erwachsene', value: 'adults' },
+    { label: 'Senioren', value: 'elderly' },
+    { label: 'Vegetarier', value: 'vegetarians' },
+    { label: 'Veganer', value: 'vegans' },
+    { label: 'Sportler', value: 'athletes' },
+    { label: 'Schwangere', value: 'pregnant_women' },
+    { label: 'Allergiker', value: 'allergy_sufferers' },
+    { label: 'Diabetiker', value: 'diabetics' },
+    { label: 'Laktoseintolerant', value: 'lactose_intolerant' },
+    { label: 'Glutenintolerant', value: 'gluten_intolerant' },
+    { label: 'Halal', value: 'halal' },
+    { label: 'Koscher', value: 'kosher' },
+    { label: 'Fructoseintolerant', value: 'fructose_intolerant' },
+    { label: 'Histaminintolerant', value: 'histamine_intolerant' },
+    { label: 'Säuglinge', value: 'infants' },
+    { label: 'Teenager', value: 'teenagers' },
+    { label: 'Pescetarier', value: 'pescetarians' },
+    { label: 'Ketogene Diät', value: 'ketogenic' },
+    { label: 'Paleo Diät', value: 'paleo' },
+    { label: 'Niedrigkalorisch', value: 'low_calorie' },
+    { label: 'Niedriger Natriumgehalt', value: 'low_sodium' },
+    { label: 'Hoher Proteingehalt', value: 'high_protein' },
+    { label: 'Niedriger Fettgehalt', value: 'low_fat' },
+    { label: 'Ohne Zuckerzusatz', value: 'no_added_sugar' },
+    { label: 'Vegetarisch mit Fisch', value: 'vegetarian_with_fish' },
+    { label: 'Rohkost', value: 'raw_food' },
   ];
-
+  
   allergeneOptions = [
     { label: 'Gluten', value: 'gluten' },
-    { label: 'Nuts', value: 'nuts' },
-    { label: 'Dairy', value: 'dairy' },
-    // Add more options as needed
+    { label: 'Nüsse', value: 'nuts' },
+    { label: 'Milchprodukte', value: 'dairy' },
+    { label: 'Eier', value: 'eggs' },
+    { label: 'Fisch', value: 'fish' },
+    { label: 'Schalentiere', value: 'shellfish' },
+    { label: 'Erdnüsse', value: 'peanuts' },
+    { label: 'Soja', value: 'soy' },
+    { label: 'Sesam', value: 'sesame' },
+    { label: 'Sellerie', value: 'celery' },
+    { label: 'Senf', value: 'mustard' },
+    { label: 'Lupinen', value: 'lupins' },
+    { label: 'Weichtiere', value: 'molluscs' },
+    { label: 'Sulfite', value: 'sulfites' },
+    { label: 'Krebstiere', value: 'crustaceans' },
+    { label: 'Kuhmilcheiweiß', value: 'cow_milk_protein' },
+    { label: 'Histamin', value: 'histamine' },
+    { label: 'Fruktose', value: 'fructose' },
+    { label: 'Farbstoffe', value: 'food_colorings' },
+    { label: 'Konservierungsstoffe', value: 'preservatives' },
+    { label: 'Alkohol', value: 'alcohol' },
+    { label: 'Weizen', value: 'wheat' },
+    { label: 'Schwefeldioxid', value: 'sulfur_dioxide' },
+    { label: 'Gelatine', value: 'gelatine' },
+    { label: 'Hefe', value: 'yeast' },
+    { label: 'Mais', value: 'corn' },
+    { label: 'Mohn', value: 'poppy_seeds' },
+    { label: 'Kakao', value: 'cocoa' },
   ];
+  
 
   saisonOptions = [
-    { label: 'Spring', value: 'spring' },
-    { label: 'Summer', value: 'summer' },
-    { label: 'Autumn', value: 'autumn' },
+    { label: 'Sommer', value: 'spring' },
+    { label: 'Frühling', value: 'summer' },
+    { label: 'Herbst', value: 'autumn' },
     { label: 'Winter', value: 'winter' },
-    // Add more options as needed
   ];
 
   dietOptions = [
     { label: 'Vegan', value: 'vegan' },
-    { label: 'Vegetarian', value: 'vegetarian' },
-    { label: 'Gluten-Free', value: 'gluten-free' },
-    { label: 'Dairy-Free', value: 'dairy-free' },
-    // Add more options as needed
+    { label: 'Vegetarisch', value: 'vegetarian' },
+    { label: 'Glutenfrei', value: 'gluten_free' },
+    { label: 'Laktosefrei', value: 'dairy_free' },
+    { label: 'Paleo', value: 'paleo' },
+    { label: 'Ketogen', value: 'ketogenic' },
+    { label: 'Pescetarisch', value: 'pescetarian' },
+    { label: 'Rohkost', value: 'raw_food' },
+    { label: 'Frutarier', value: 'fruitarian' },
+    { label: 'Flexitarier', value: 'flexitarian' },
+    { label: 'Low Carb', value: 'low_carb' },
+    { label: 'High Protein', value: 'high_protein' },
+    { label: 'Zuckerfrei', value: 'sugar_free' },
+    { label: 'Nussfrei', value: 'nut_free' },
+    { label: 'Südstrand-Diät', value: 'south_beach_diet' },
+    { label: 'Mittelmeer-Diät', value: 'mediterranean_diet' },
+    { label: 'FODMAP-arm', value: 'low_fodmap' },
+    { label: 'Kohlenhydratarm', value: 'low_carbohydrate' },
+    { label: 'Proteinreich', value: 'high_protein' },
+    { label: 'Fettarm', value: 'low_fat' },
+    { label: 'Keine Konservierungsstoffe', value: 'no_preservatives' },
   ];
+  
 
   selectedDiets: { [key: string]: boolean } = {};
   recipeImage: string | null = null;
@@ -117,8 +207,8 @@ export class NewRecepieDialogComponent implements OnInit {
       energie: [''],
       portionen: [''],
       besonderheiten: [''],
-      essensgaeste: [''],
-      allergene: [''],
+      essensgaeste: [[]],  // Changed to array for multi-select
+      allergene: [[]],     // Changed to array for multi-select
       saison: [''],
       selectedDiets: this.fb.group(
         // FormGroup mit mehreren FormControls
@@ -139,18 +229,14 @@ export class NewRecepieDialogComponent implements OnInit {
   fetchIngredientOptions() {
     this.nearbuyTestService.getData().subscribe(
       (data) => {
-        this.ingredientOptions = data.map((item) => ({
-          label: item.displayLabel, // Show this in the dropdown
-          value: item.value, // Store this for saving to the DB
+        // Store all ingredients for manual filtering
+        this.allIngredients = data.map((item) => ({
+          label: item.displayLabel,
+          value: item.value,
         }));
-        this.ingredientOptions = this.ingredientOptions.sort((a, b) =>
-          a.label.localeCompare(b.label),
-        );
-
-        console.log(
-          'Data fetched and mapped successfully:',
-          this.ingredientOptions,
-        );
+  
+        // Initially set ingredientOptions to allIngredients
+        this.ingredientOptions = [...this.allIngredients];
       },
       (error) => {
         this.messageService.add({
@@ -162,7 +248,46 @@ export class NewRecepieDialogComponent implements OnInit {
       },
     );
   }
+  
 
+  onFilter(event: any, index: number) {
+    const filterValue = event.filter.trim().toLowerCase();
+    const ingredientFormGroup = this.ingredients.at(index) as FormGroup;
+    let filteredOptions = [];
+
+    // Check if the filter is empty, reset to all ingredients
+    if (!filterValue) {
+        filteredOptions = [...this.allIngredients];
+    } else {
+        // Filter options based on the search string
+        filteredOptions = this.allIngredients.filter(option =>
+            option.label.toLowerCase().includes(filterValue)
+        );
+
+        // Check if the filterValue is already in the filtered options
+        const filterValueExists = filteredOptions.some(option =>
+            option.label.toLowerCase() === filterValue
+        );
+
+        // If the filterValue does not exist in the filtered options, add it as a fallback option
+        if (!filterValueExists) {
+            filteredOptions = [
+                ...filteredOptions,
+                {
+                    label: `${filterValue}`,
+                    value: filterValue,
+                }
+            ];
+        }
+    }
+
+    // Update the form group with the filtered options
+    ingredientFormGroup.patchValue({ ingredientOptions: filteredOptions });
+}
+
+
+  
+  
   loadMore(event: any) {
     const loadedItems = this.ingredientOptions.length;
     const moreItems = this.allIngredients.slice(
@@ -183,7 +308,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createStep(): FormGroup {
     return this.fb.group({
       schritt: ['', Validators.required],
-      anleitung: ['', Validators.required],
+      anleitung: [''],
     });
   }
 
@@ -203,6 +328,7 @@ export class NewRecepieDialogComponent implements OnInit {
       optional: [false],
       note: [''], // Note field
       alternatives: this.fb.array([]), // Array to hold alternative ingredients
+      ingredientOptions: [this.allIngredients] // Initialize with all ingredients
     });
   }
 

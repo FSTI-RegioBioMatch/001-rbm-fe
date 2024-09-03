@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +17,13 @@ import { MapComponent } from './dashboard/components/map/map.component';
 import { currentCompanyInterceptor } from './shared/interceptors/current-company.interceptor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DialogService } from 'primeng/dynamicdialog';
+
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+
+import { PrimeNGConfig } from 'primeng/api';
+import { primengLocaleDe } from './primeng-locale-de'; // Import your custom German locale
+
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -39,6 +46,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
       ],
     });
 }
+
+registerLocaleData(localeDe);
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,8 +75,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
       withFetch(),
     ),
     DialogService,
+    { provide: LOCALE_ID, useValue: 'de-DE' }
   ],
   bootstrap: [AppComponent],
   exports: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private config: PrimeNGConfig) {
+    this.config.setTranslation(primengLocaleDe); // Apply the custom German locale configuration
+  }
+}

@@ -83,14 +83,17 @@
                         </div>
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Essensgäste</label>
-                            <p-dropdown [options]="guestsOptions" formControlName="essensgaeste"
-                                placeholder="Essensgäste" [ngStyle]="{'flex': '1'}"></p-dropdown>
-                        </div>
-                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                            <p-multiSelect [options]="guestsOptions" formControlName="essensgaeste"
+                                           placeholder="Essensgäste auswählen" [ngStyle]="{'flex': '1'}"
+                                           [selectedItemsLabel]="'{0} Elemente ausgewählt'" ></p-multiSelect>
+                          </div>
+                          <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Allergene</label>
-                            <p-dropdown [options]="allergeneOptions" formControlName="allergene" placeholder="Allergene"
-                                [ngStyle]="{'flex': '1'}"></p-dropdown>
-                        </div>
+                            <p-multiSelect [options]="allergeneOptions" formControlName="allergene"
+                                           placeholder="Allergene auswählen" [ngStyle]="{'flex': '1'}"
+                                           [selectedItemsLabel]="'{0} Elemente ausgewählt'" ></p-multiSelect>
+                          </div>
+                          
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Saison</label>
                             <p-dropdown [options]="saisonOptions" formControlName="saison" placeholder="Saison"
@@ -112,12 +115,22 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
                                     <div class="ingredient-con rbm-flex-row">
-                                        <p-dropdown [options]="ingredientOptions" formControlName="name"
-                                            placeholder="Name der Zutat" [showClear]="true" filter="true"
-                                            filterPlaceholder="Suche nach Zutat" optionLabel="label" optionValue="value"
-                                            [virtualScroll]="true" [itemSize]="50" [lazy]="true"
-                                            (onLazyLoad)="loadMore($event)" class="name">
-                                        </p-dropdown>
+                                        <p-dropdown 
+                                        [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
+                                        formControlName="name"
+                                        placeholder="Name der Zutat"
+                                        [showClear]="true"
+                                        filter="true"
+                                        filterPlaceholder="Suche nach Zutat"
+                                        optionLabel="label"
+                                        optionValue="value"
+                                        [virtualScroll]="true"
+                                        [itemSize]="50"
+                                        [lazy]="true"
+                                        (onLazyLoad)="loadMore($event)"
+                                        (onFilter)="onFilter($event, i)"
+                                        class="name">
+                                    </p-dropdown>                                                                        
                                         <input pInputText type="text" formControlName="amount" placeholder="Menge">
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>
@@ -161,7 +174,7 @@
                                             (click)="toggleNoteField(i)"
                                             style="margin-top: 8px; margin-right: 8px;"></button>
                                         <p-checkbox formControlName="optional" binary="true" label="Optional"
-                                            [ngStyle]="{'margin-bottom': '8px'}"></p-checkbox>
+                                            [ngStyle]="{'margin-bottom': '8px'}"> </p-checkbox>
                                     </div>
                                 </div>
                             </div>

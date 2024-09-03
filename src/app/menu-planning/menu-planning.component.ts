@@ -3,7 +3,6 @@ import { ManageMenuComponent } from './components/manage-menu/manage-menu.compon
 import { StoreService } from '../shared/store/store.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import moment from 'moment/moment';
-import { MenuplanService } from '../shared/services/menuplan.service';
 import { RouterLink } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { JsonPipe } from '@angular/common';
@@ -16,7 +15,6 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
 import { DialogModule } from 'primeng/dialog';
-import { TooltipModule } from 'primeng/tooltip';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';

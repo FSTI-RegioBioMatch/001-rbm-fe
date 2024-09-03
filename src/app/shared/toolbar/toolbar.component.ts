@@ -93,4 +93,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       height: '30%',
     });
   }
+  goToHome() {
+    this.router.navigate(['/dashboard']);
+  }
 }

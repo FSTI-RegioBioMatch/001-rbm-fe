@@ -15,6 +15,7 @@ import { ShoppingListOverviewComponent } from './shopping-list-overview/shopping
 import { ShoppingListDetailsComponent } from './shopping-list-details/shopping-list-details.component';
 import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component';
 import { RegisterComponent } from './register/register.component';
+import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -41,6 +42,10 @@ const routes: Routes = [
   {
     path: 'menu-planning/my-menus',
     component: MyMenusComponent,
+  },
+  {
+    path: 'menu-planning/my-menus/details/:id',
+    component: MenuPlanDetailsComponent
   },
   // {
   //   path: 'menu-planning/shopping-list',
