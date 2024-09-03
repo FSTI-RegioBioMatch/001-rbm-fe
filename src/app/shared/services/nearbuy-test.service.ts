@@ -23,9 +23,6 @@ export class NearbuyTestService {
 
     return forkJoin([mainData$, localizeData$]).pipe(
       map(([mainData, localizeData]) => {
-        console.log('Main Data:', mainData);
-        console.log('Localize Data:', localizeData);
-
         return this.mapAndCombineData(mainData, localizeData);
       })
     );

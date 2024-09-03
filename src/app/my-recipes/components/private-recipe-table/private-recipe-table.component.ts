@@ -31,7 +31,6 @@ export class PrivateRecipeTableComponent implements OnInit {
 
   private getRecipesByCompanyContext() {
     this.recipeService.getRecipesByCompanyContext().subscribe((recipes) => {
-      console.log(recipes);
       this.recipes = recipes;
       this.rows = recipes;
       this.temp = [...recipes];
@@ -39,17 +38,14 @@ export class PrivateRecipeTableComponent implements OnInit {
   }
 
   onRowSelected({ selected }: any) {
-    console.log(selected);
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
   onActivate(event: any) {
-    console.log('Activate Event', event);
   }
 
   onClickCreateMenuPlan() {
-    console.log('Create Menu Plan');
     this.store.selectedRecipesSubject.next(this.selected);
     this.router.navigate(['/menu-planning']);
   }

@@ -107,9 +107,9 @@
     (onPageChange)="onPageChange($event)"></p-paginator>
 
     <div class="pagination-controls text-end mt-3">
-    <button pButton label="Previous" icon="pi pi-chevron-left" class="p-button-secondary me-2" (click)="onPrevPage()"
+    <button pButton label="Vorherige Seite" icon="pi pi-chevron-left" class="p-button-secondary me-2" (click)="onPrevPage()"
       [disabled]="currentPage === 0"></button>
-    <button pButton label="Next" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
+    <button pButton label="Nächste Seite" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
       (click)="onNextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements"></button>
     </div>
   </div>

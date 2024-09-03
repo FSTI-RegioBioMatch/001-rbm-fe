@@ -190,19 +190,15 @@
                             <label style="margin-left: 8px;">Rezept benötigt Vorbereitungszeit</label>
                         </div>
                         <div formArrayName="steps">
-                            <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i"
-                                style="margin-top: 16px;">
+                            <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i" style="margin-top: 16px;">
                                 <div class="box-wrapper ingredient-item">
                                     <div>
-                                        <div
-                                            style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
                                             <div style="display: flex; align-items: center;">
                                                 <div class="counter">{{ i + 1 }}</div>
-                                                <input pInputText type="text" formControlName="schritt"
-                                                    placeholder="Schritt" style="width: 100%;">
+                                                <input pInputText type="text" formControlName="schritt" placeholder="Schritt" style="width: 100%;">
                                                 <button pButton type="button" icon="pi pi-trash" (click)="removeStep(i)"
-                                                    class="p-button-rounded p-button-danger p-button-text"
-                                                    style="margin-left: 8px;"></button>
+                                                    class="p-button-rounded p-button-danger p-button-text" style="margin-left: 8px;"></button>
                                             </div>
                                         </div>
                                     </div>
@@ -212,24 +208,24 @@
                                                 style="width: 100%; resize: vertical;"></textarea>
                                         </div>
                                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                                            <div *ngFor="let image of stepImages[i]"
-                                                style="display: inline-block; margin: 4px;">
-                                                <img [src]="image" alt="Image preview"
-                                                    style="width: 100px; height: 100px;">
+                                            <div *ngFor="let image of stepImages[i]; let j = index" style="display: inline-block; margin: 4px; position: relative;">
+                                                <img [src]="image" alt="Image preview" style="width: 100px; height: 100px;">
+                                                <!-- Add remove button on top of each image -->
+                                                <button pButton type="button" icon="pi pi-times" (click)="removeImage(i, j)"
+                                                    class="p-button-rounded p-button-danger p-button-sm" style="position: absolute; top: 0; right: 0; margin: 4px;"></button>
                                             </div>
-                                            <p-fileUpload #fileUpload name="image[]" url="./upload"
-                                                (onSelect)="handleFileUpload($event, i, fileUpload)" multiple
-                                                mode="basic" accept="image/*" chooseIcon="pi pi-images"></p-fileUpload>
+                                            <p-fileUpload #fileUpload name="image[]" url="./upload" (onSelect)="handleFileUpload($event, i, fileUpload)"
+                                                multiple mode="basic" accept="image/*" chooseIcon="pi pi-images" 
+                                                *ngIf="(stepImages[i]?.length || 0) < 5"></p-fileUpload>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus"
-                            label="Schritt hinzufügen" (click)="addStep()" style="margin-top: 16px;"></button>
+                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus" label="Schritt hinzufügen" (click)="addStep()"
+                            style="margin-top: 16px;"></button>
                     </div>
                 </div>
-
                 <p-toast></p-toast>
             </form>
         </ng-template>

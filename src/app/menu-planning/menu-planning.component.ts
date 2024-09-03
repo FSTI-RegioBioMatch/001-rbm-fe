@@ -30,6 +30,7 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-menu-planning',
@@ -53,6 +54,7 @@ import { TabViewModule } from 'primeng/tabview';
     ProgressSpinnerModule,
     ConfirmDialogModule,
     TabViewModule,
+    TooltipModule
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
@@ -284,7 +286,6 @@ export class MenuPlanningComponent implements OnInit {
     // Send to backend
     this.menuplanService.saveMenuPlan(menuPlanDataObject).subscribe(
       (response) => {
-        console.log('Menu Plan saved successfully:', response);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
         this.menuPlanForm.reset();
         this.menuPlanForm.enable();
@@ -368,24 +369,55 @@ export class MenuPlanningComponent implements OnInit {
 
   setupCalendarOptions(): void {
     this.calendarOptions = {
-      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin],
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay'
-      },
-      firstDay: 1,
-      editable: true,
-      droppable: true,
-      events: this.events,
-      locale: deLocale,
-      eventClick: (info: EventHoveringArg) => {
-        this.selectedEvent = info.event;
-        this.displayEventDialog = true;
-      },
-      eventDrop: this.handleEventDrop.bind(this)
+        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin],
+        firstDay: 1,
+        editable: true,
+        droppable: true,
+        events: this.events,
+        locale: deLocale,
+        eventResizableFromStart: false,
+        eventDurationEditable: false,
+        eventClick: (info: EventHoveringArg) => {
+            this.selectedEvent = info.event;
+            this.displayEventDialog = true;
+        },
+        eventDrop: this.handleEventDrop.bind(this),
+
+        // Highlight weekends
+        weekends: true, // Ensures weekends are shown in the calendar
+        businessHours: false, // Not relevant for menu planning, keeps the whole week visible
+
+        // Setting a fixed height for the calendar to make it consistent across views
+        height: 'auto', // Adjust to the container automatically
+
+        // Limiting the number of events displayed per day to improve readability
+        dayMaxEvents: 10, // Collapses additional events into a +N more link
+
+        // Display event titles in full
+        eventDisplay: 'block', // Ensures the event titles are fully displayed in the day cells
+
+        // Adjusting the day names to a shorter format for better readability
+        dayHeaderFormat: { weekday: 'short' }, // Shows 'Mon', 'Tue', etc.
+
+        // Disabling event time to focus on date only
+        displayEventTime: false, // Hides the time in event display
+
+        customButtons: {
+            exportButton: {
+                text: 'Export',
+                click: () => {
+                    alert('Exporting calendar!');
+                }
+            }
+        },
+        headerToolbar: {
+            left: 'prev,next today exportButton',
+            center: 'title',
+            right: 'dayGridMonth,dayGridWeek,dayGridDay'
+        }
     };
-  }
+}
+
 
   handleEventDrop(eventDropInfo: any): void {
     const updatedEvent = eventDropInfo.event;
@@ -407,7 +439,6 @@ export class MenuPlanningComponent implements OnInit {
 
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
         (response) => {
-            console.log('Event updated successfully:', response);
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
             this.updateCalendar();
         },
@@ -438,7 +469,6 @@ export class MenuPlanningComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
         () => {
-          console.log(`Event ${eventId} deleted successfully`);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
           this.updateCalendar();
           this.displayEventDialog = false;
@@ -457,7 +487,7 @@ export class MenuPlanningComponent implements OnInit {
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteMenuPlan(menuId).subscribe(
         () => {
-          console.log(`Menu Plan ${menuId} and all its events deleted successfully`);
+
           this.updateCalendar();
           this.displayEventDialog = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });

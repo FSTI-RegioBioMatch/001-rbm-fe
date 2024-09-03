@@ -64,11 +64,8 @@ export class OfferScanComponent implements OnInit {
     latLon: { lat: number; lon: number } | null,
   ): Observable<any> {
     if (!latLon) {
-      console.log('No latLon');
       return of(null);
     }
-
-    console.log('latLon', latLon);
     this.offerService.setOffersBySearchRadius(50, this.offerService.address);
 
     const { latMin, latMax, lonMin, lonMax } = this.geoService.getBoundingBox(
@@ -140,28 +137,21 @@ export class OfferScanComponent implements OnInit {
 
   private handleResults(results: any): void {
     this.results = results;
-    console.log('results', this.results);
     this.compareWithShoppingList();
-    console.log('this.shoppingList', this.shoppingList);
 
     this.shoppingList.ingredients.forEach((ingredient, index) => {
-      console.log(
-        'matched int',
-        this.matchedIngredientCompanies(ingredient.name),
-      );
       this.selectedCompanies[index] = this.matchedIngredientCompanies(
         ingredient.name,
       );
     });
 
-    console.log('selectedCompanies', this.selectedCompanies);
     this.scanInProgress = false;
   }
 
   private loadRouterParams(): void {
     this.router.params.subscribe((params) => {
       if (!params['id'] || !params['scanId']) {
-        console.log('No id');
+
       } else {
         this.scanId = params['scanId'];
         this.shoppingListId = params['id'];
@@ -176,13 +166,10 @@ export class OfferScanComponent implements OnInit {
       this.results.companies.forEach((company) => {
         company.products.forEach((product: ProductType) => {
           if (product.category.label === ingredient.name) {
-            console.log('Match Company', company, product, ingredient);
             this.matchedProducts.push(product);
           }
         });
       });
-      console.log('results', this.results);
-      console.log('matchedProducts', this.matchedProducts);
     });
   }
 
@@ -213,21 +200,13 @@ export class OfferScanComponent implements OnInit {
     rowIndex: number,
     ingredientName: string,
   ): string {
-    console.log(
-      'rowIndex',
-      rowIndex,
-      'ingredientName',
-      ingredientName,
-      this.selectedCompanies,
-    );
+
     if (!this.selectedCompanies[rowIndex].products) return '';
 
     const offerDetail = this.selectedCompanies[rowIndex].products.find(
       (product: ProductType) => product.category.label === ingredientName,
     )?.offerDetail;
 
-    console.log('offerDetail.pricePerUnit', offerDetail?.pricePerUnit);
-    console.log('offerDetail', offerDetail);
 
     return offerDetail?.pricePerUnit || '';
   }
