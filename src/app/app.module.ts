@@ -23,6 +23,7 @@ import localeDe from '@angular/common/locales/de';
 
 import { PrimeNGConfig } from 'primeng/api';
 import { primengLocaleDe } from './primeng-locale-de'; // Import your custom German locale
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {

@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NewRecepieDialogComponent } from '../new-recepie-dialog/new-recepie-dialog.component';
 import { MessageService } from 'primeng/api';
 import { Toast, ToastModule } from 'primeng/toast';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-my-recipes',
@@ -33,7 +34,8 @@ import { Toast, ToastModule } from 'primeng/toast';
     RouterModule,
     DialogModule,
     NewRecepieDialogComponent,
-    ToastModule
+    ToastModule,
+    SidebarComponent,
   ],
   providers: [MessageService],
   templateUrl: './my-recipes.component.html',

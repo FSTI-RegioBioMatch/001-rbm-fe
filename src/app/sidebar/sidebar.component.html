@@ -1,0 +1,15 @@
+<div style="width: 250px;"></div>
+<div class="sidebar">
+  <ul>
+    <li *ngFor="let link of navLinks" [class.active]="isActive(link.path)">
+      <a *ngIf="link.path" [href]="link.path">
+        <i [class]="link.icon"></i>
+        {{ link.label }}
+      </a>
+      <span *ngIf="!link.path" class="rbm-not-allowed">
+        <i [class]="link.icon"></i>
+        {{ link.label }}
+      </span>
+    </li>
+  </ul>
+</div>

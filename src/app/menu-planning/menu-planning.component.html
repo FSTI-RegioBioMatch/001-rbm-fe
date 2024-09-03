@@ -35,11 +35,13 @@
       <form [formGroup]="menuPlanForm" class="menu-plan-form rbm-columns-2 rbm-width-40">
         <div class="date-config">
           <div class="form-field">
-            <label for="nachsteAusfuhrung">Nächste Ausführung<span class="mandatory">*</span></label>
+            <label for="nachsteAusfuhrung">Nächste Ausführung<span class="mandatory">*</span><span 
+              *ngIf="menuPlanForm.get('nachsteAusfuhrung')?.hasError('required') && (menuPlanForm.get('nachsteAusfuhrung')?.touched || menuPlanForm.get('nachsteAusfuhrung')?.dirty)" 
+              class="validation-message">| Nächste Ausführung ist erforderlich.</span></label>
             <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
-              [options]="nextExecutionOptions"></p-dropdown>
+              [options]="nextExecutionOptions" ></p-dropdown>
             <div class="validation-message"
-              *ngIf="menuPlanForm.get('nachsteAusfuhrung')?.hasError('required') && (menuPlanForm.get('nachsteAusfuhrung')?.touched || menuPlanForm.get('nachsteAusfuhrung')?.dirty)">
+              >
               Nächste Ausführung ist erforderlich.
             </div>
           </div>

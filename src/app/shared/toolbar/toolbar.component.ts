@@ -9,6 +9,13 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { MenubarModule } from 'primeng/menubar';
+import { TooltipModule } from 'primeng/tooltip';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { ToolbarMenuService } from '../services/toolbarmenu.service';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-toolbar',
@@ -21,16 +28,23 @@ import { filter } from 'rxjs/operators';
     InputTextModule,
     ButtonModule,
     MenuModule,
+    MenubarModule,
+    TooltipModule,
+    AvatarModule,
+    AvatarGroupModule,
+    CommonModule,
   ],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   visible: boolean = false;
+  burgerMenuActive: boolean = true;
   menuItems: MenuItem[] = [];
   private routerSubscription: Subscription | undefined;
 
   constructor(
     private router: Router,
     private dialogService: DialogService,
+    private menuService: ToolbarMenuService,
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +54,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.updateActiveMenuItem();
       });
+    this.menuService.burgerMenuState$.subscribe(state => {
+      this.burgerMenuActive = state;
+    });
   }
 
   ngOnDestroy(): void {
@@ -68,16 +85,16 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       {
         label: 'Marktplatz',
         icon: 'pi pi-fw pi-shopping-cart',
-        routerLink: '/recipes',
+        routerLink: '',
       },
       {
         label: 'Bereich xy',
         icon: 'pi pi-fw pi-cog',
-        routerLink: '/recipes',
+        routerLink: '',
       },
     ];
   }
-
+  
   updateActiveMenuItem(): void {
     const currentUrl = this.router.url;
     this.menuItems.forEach((item) => {

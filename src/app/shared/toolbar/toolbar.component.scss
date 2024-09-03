@@ -12,6 +12,7 @@
 .logo-container {
   display: flex;
   align-items: center;
+  margin-right: 12px;
   
   svg {
     height: 48px;
@@ -48,11 +49,6 @@
   word-wrap: break-word
 }
 
-.user-avatar {
-  width: 40px;
-  height: 40px;
-}
-
 .store-container {
   width: 40px;
   height: 40px;
@@ -60,8 +56,62 @@
   background-color: #29784D;
 }
 
-.button {
-  background-color: #00b661;
+button {
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
 
+.pseudo-toolbar {
+  height: 70px;
+}
 
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: white;
+  border-bottom: 1px solid rgb(235, 235, 235);
+  height: 70px;
+}
+
+::ng-deep .rbm-burgermenu {
+
+  button {
+    background-color: var(--rbm-tea-green);
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+
+  }
+
+  button:hover {
+    background-color: var(--rbm-sea-green-30);
+  }
+}
+
+::ng-deep .rbm-pmenu {
+  .p-menuitem-icon  {
+    color: var(--rbm-sea-green);
+  }
+
+  .p-menuitem-content:hover {
+    background-color: var(--rbm-tea-green-20);
+    span {
+      color: var(--rbm-sea-green);
+    }
+  }
+}
+
+::ng-deep p-avatar {
+  .p-avatar {
+    background-color: var(--rbm-sea-green);
+    height: 44px;
+    width: 44px;
+    color: var(--rbm-tea-green);
+  }
+}

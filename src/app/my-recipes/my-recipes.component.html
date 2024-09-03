@@ -1,34 +1,5 @@
 <div class="container">
-  <div style="width: 250px;"></div>
-  <div class="sidebar">
-   <ul>
-    <li><a href="/dashboard">
-     <i class="pi pi-home">
-     </i>
-     Übersicht
-    </a></li>
-    <li class="active"><a href="/my-recipes">
-     <i class="pi pi-book">
-     </i>
-     Meine Rezepte
-    </a></li>
-    <li><a href="/menu-planning">
-     <i class="pi pi-clipboard">
-     </i>
-     Meine Menüs
-    </a></li>
-    <li>
-     <i class="pi pi-shop">
-     </i>
-     Markplatz
-    </li>
-    <li>
-     <i class="pi pi-objects-column">
-     </i>
-     Bereich X Y
-    </li>
-   </ul>
-  </div>
+  <app-sidebar></app-sidebar>
   <div class="main-content">
     <div class="header">
       <h2>
@@ -82,7 +53,7 @@
     <div class="recipes" *ngIf="!loading">
   
     <div class="recipe-card"  *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
-     <img [src]="recipe.recipeImage || 'placeholder-image-url.png'" height="150"  width="300"/>
+     <img [src]="recipe.recipeImage || 'assets/img/image_fallback.jpg'" height="150"  width="300"/>
      <div class="recipe-info">
       <h3>
         {{ recipe.recipeName }}
