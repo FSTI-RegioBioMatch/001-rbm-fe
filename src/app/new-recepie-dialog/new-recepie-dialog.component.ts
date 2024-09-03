@@ -23,6 +23,7 @@ import { ToastModule } from 'primeng/toast';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { NgxImageCompressService } from 'ngx-image-compress';
+import { CustomValidators } from '../shared/validators/custom-validators'; 
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -194,14 +195,13 @@ export class NewRecepieDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private recipeService: RecipeService,
-    private http: HttpClient,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
     private imageCompress: NgxImageCompressService
   ) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
-      recipeDescription: [''],
+      recipeDescription: ['', CustomValidators.optionalMinLength(1)],
       includeInMenuPlanning: [false],
       publishAsCommunityRecipe: [false],
       steps: this.fb.array([this.createStep()]),
@@ -222,7 +222,11 @@ export class NewRecepieDialogComponent implements OnInit {
           {} as { [key: string]: any },
         ),
       ),
-    });
+    }, {
+      validators: [
+        CustomValidators.atLeastOneEntry('steps'),
+        CustomValidators.atLeastOneEntry('ingredients')
+    ]});
   }
   ngOnInit() {
     this.fetchIngredientOptions();
@@ -310,7 +314,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createStep(): FormGroup {
     return this.fb.group({
       schritt: ['', Validators.required],
-      anleitung: [''],
+      anleitung: ['', CustomValidators.optionalMinLength(1) ],
     });
   }
 
@@ -333,10 +337,10 @@ export class NewRecepieDialogComponent implements OnInit {
   createIngredient(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
       unit: ['', Validators.required],
       optional: [false],
-      note: [''], // Note field
+      note: ['', CustomValidators.optionalMinLength(1)], // Note field
       alternatives: this.fb.array([]), // Array to hold alternative ingredients
       ingredientOptions: [this.allIngredients] // Initialize with all ingredients
     });

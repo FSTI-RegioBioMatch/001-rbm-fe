@@ -3,6 +3,19 @@
   box-shadow: 0 0 120px 0 rgba(0, 0, 0, 0.258);
 }
 
+
+.mandatory {
+  color: red;
+  margin-left: 4px;
+  font-size: 1.2em;
+}
+
+.validation-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 4px;
+}
+
 /* headercard */
 
 ::ng-deep .p-card-header {

@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup, FormArray } from '@angular/forms';
 
 export class CustomValidators {
 
@@ -36,4 +36,28 @@ export class CustomValidators {
       return recipes.length > 0 ? null : { atLeastOneRecipe: true };
     };
   }  
+    /**
+   * Validates that at least one item exists in a FormArray.
+   * @param controlNames The names of the controls to check.
+   */
+    static atLeastOneEntry(controlName: string): ValidatorFn {
+      return (formGroup: AbstractControl): ValidationErrors | null => {
+          const control = formGroup.get(controlName) as FormArray;
+          if (control && control.length > 0) {
+              // Clear error if there's at least one item
+              const errors = { ...formGroup.errors };
+              delete errors[controlName + 'Required'];
+              if (Object.keys(errors).length === 0) {
+                  formGroup.setErrors(null);
+              } else {
+                  formGroup.setErrors(errors);
+              }
+              return null;
+          } else {
+              // Set error if there are no items
+              return { [controlName + 'Required']: true };
+          }
+      };
+  }
+  
 }

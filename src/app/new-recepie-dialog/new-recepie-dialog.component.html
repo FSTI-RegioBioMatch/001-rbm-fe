@@ -16,8 +16,13 @@
                 <div class="new-recipe-card_col1">
 
                     <div class="left">
+                        <label>Name des Rezepts<span class="mandatory">*</span></label>
                         <input pInputText type="text" formControlName="recipeName" placeholder="Name des Rezepts"
                             style="margin-right: 8px;">
+                        <div class="validation-message"
+                            *ngIf="form.get('recipeName')?.invalid && (form.get('recipeName')?.dirty || form.get('recipeName')?.touched)">
+                            Rezeptname ist erforderlich.
+                        </div>
                         <div class="options">
                             <div class="item">
                                 <label style="margin-left: 8px;">In Menüplanung übernehmen</label>
@@ -84,16 +89,16 @@
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Essensgäste</label>
                             <p-multiSelect [options]="guestsOptions" formControlName="essensgaeste"
-                                           placeholder="Essensgäste auswählen" [ngStyle]="{'flex': '1'}"
-                                           [selectedItemsLabel]="'{0} Elemente ausgewählt'" ></p-multiSelect>
-                          </div>
-                          <div style="margin-bottom: 8px; display: flex; align-items: center;">
+                                placeholder="Essensgäste auswählen" [ngStyle]="{'flex': '1'}"
+                                [selectedItemsLabel]="'{0} Elemente ausgewählt'"></p-multiSelect>
+                        </div>
+                        <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Allergene</label>
                             <p-multiSelect [options]="allergeneOptions" formControlName="allergene"
-                                           placeholder="Allergene auswählen" [ngStyle]="{'flex': '1'}"
-                                           [selectedItemsLabel]="'{0} Elemente ausgewählt'" ></p-multiSelect>
-                          </div>
-                          
+                                placeholder="Allergene auswählen" [ngStyle]="{'flex': '1'}"
+                                [selectedItemsLabel]="'{0} Elemente ausgewählt'"></p-multiSelect>
+                        </div>
+
                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
                             <label style="flex: 1;">Saison</label>
                             <p-dropdown [options]="saisonOptions" formControlName="saison" placeholder="Saison"
@@ -115,25 +120,38 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
                                     <div class="ingredient-con rbm-flex-row">
-                                        <p-dropdown 
-                                        [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
-                                        formControlName="name"
-                                        placeholder="Name der Zutat"
-                                        [showClear]="true"
-                                        filter="true"
-                                        filterPlaceholder="Suche nach Zutat"
-                                        optionLabel="label"
-                                        optionValue="value"
-                                        [virtualScroll]="true"
-                                        [itemSize]="50"
-                                        [lazy]="true"
-                                        (onLazyLoad)="loadMore($event)"
-                                        (onFilter)="onFilter($event, i)"
-                                        class="name">
-                                    </p-dropdown>                                                                        
-                                        <input pInputText type="text" formControlName="amount" placeholder="Menge">
+                                        <label>Name der Zutat<span class="mandatory">*</span></label>
+                                        <p-dropdown
+                                            [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
+                                            formControlName="name" placeholder="Name der Zutat" [showClear]="true"
+                                            filter="true" filterPlaceholder="Suche nach Zutat" optionLabel="label"
+                                            optionValue="value" [virtualScroll]="true" [itemSize]="50" [lazy]="true"
+                                            (onLazyLoad)="loadMore($event)" (onFilter)="onFilter($event, i)"
+                                            class="name">
+                                        </p-dropdown>
+                                        <div class="validation-message"
+                                            *ngIf="ingredient.get('name')?.invalid && (ingredient.get('name')?.dirty || ingredient.get('name')?.touched)">
+                                            Name der Zutat ist erforderlich.
+                                        </div>
+
+                                        <label>Menge<span class="mandatory">*</span></label>
+                                        <input min="0" pInputText type="number" formControlName="amount"
+                                            placeholder="Menge">
+
+                                        <div class="validation-message"
+                                            *ngIf="ingredient.get('amount')?.invalid && (ingredient.get('amount')?.dirty || ingredient.get('amount')?.touched)">
+                                            Eine gültige Menge ist erforderlich.
+                                        </div>
+
+                                        <label>Einheit<span class="mandatory">*</span></label>
                                         <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                        <div class="validation-message"
+                                            *ngIf="ingredient.get('unit')?.invalid && (ingredient.get('unit')?.dirty || ingredient.get('unit')?.touched)">
+                                            Einheit ist erforderlich.
+                                        </div>
+
+
                                         <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
                                             class="p-button-rounded p-button-danger p-button-text"></button>
                                     </div>
@@ -147,11 +165,12 @@
                                                         placeholder="Name der alternativen Zutat" [showClear]="true"
                                                         filter="true" filterPlaceholder="Suche nach Zutat"
                                                         optionLabel="label" optionValue="value" [virtualScroll]="true"
-                                                        [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)" class="name">
+                                                        [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)"
+                                                        class="name">
                                                     </p-dropdown>
 
 
-                                                    <input pInputText type="text" formControlName="amount"
+                                                    <input min="0" pInputText type="number" formControlName="amount"
                                                         placeholder="Menge">
                                                     <p-dropdown [options]="units" formControlName="unit"
                                                         placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
@@ -179,6 +198,9 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="validation-message" *ngIf="form.errors?.['ingredientsRequired']">
+                            Bitte fügen Sie mindestens eine Zutat hinzu.
+                        </div>
                         <button class="add_ingredient_btn" pButton type="button" icon="pi pi-plus"
                             label="Zutat hinzufügen" (click)="addIngredient()" style="margin-top: 16px;"></button>
                     </div>
@@ -190,15 +212,24 @@
                             <label style="margin-left: 8px;">Rezept benötigt Vorbereitungszeit</label>
                         </div>
                         <div formArrayName="steps">
-                            <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i" style="margin-top: 16px;">
+                            <div *ngFor="let step of steps.controls; let i = index" [formGroupName]="i"
+                                style="margin-top: 16px;">
                                 <div class="box-wrapper ingredient-item">
                                     <div>
-                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div
+                                            style="display: flex; justify-content: space-between; align-items: center;">
                                             <div style="display: flex; align-items: center;">
                                                 <div class="counter">{{ i + 1 }}</div>
-                                                <input pInputText type="text" formControlName="schritt" placeholder="Schritt" style="width: 100%;">
+                                                <label>Schritt<span class="mandatory">*</span></label>
+                                                <input pInputText type="text" formControlName="schritt"
+                                                    placeholder="Schritt" style="width: 100%;">
+                                                <div class="validation-message"
+                                                    *ngIf="step.get('schritt')?.invalid && (step.get('schritt')?.dirty || step.get('schritt')?.touched)">
+                                                    Schritt ist erforderlich.
+                                                </div>
                                                 <button pButton type="button" icon="pi pi-trash" (click)="removeStep(i)"
-                                                    class="p-button-rounded p-button-danger p-button-text" style="margin-left: 8px;"></button>
+                                                    class="p-button-rounded p-button-danger p-button-text"
+                                                    style="margin-left: 8px;"></button>
                                             </div>
                                         </div>
                                     </div>
@@ -208,22 +239,30 @@
                                                 style="width: 100%; resize: vertical;"></textarea>
                                         </div>
                                         <div style="margin-bottom: 8px; display: flex; align-items: center;">
-                                            <div *ngFor="let image of stepImages[i]; let j = index" style="display: inline-block; margin: 4px; position: relative;">
-                                                <img [src]="image" alt="Image preview" style="width: 100px; height: 100px;">
+                                            <div *ngFor="let image of stepImages[i]; let j = index"
+                                                style="display: inline-block; margin: 4px; position: relative;">
+                                                <img [src]="image" alt="Image preview"
+                                                    style="width: 100px; height: 100px;">
                                                 <!-- Add remove button on top of each image -->
-                                                <button pButton type="button" icon="pi pi-times" (click)="removeImage(i, j)"
-                                                    class="p-button-rounded p-button-danger p-button-sm" style="position: absolute; top: 0; right: 0; margin: 4px;"></button>
+                                                <button pButton type="button" icon="pi pi-times"
+                                                    (click)="removeImage(i, j)"
+                                                    class="p-button-rounded p-button-danger p-button-sm"
+                                                    style="position: absolute; top: 0; right: 0; margin: 4px;"></button>
                                             </div>
-                                            <p-fileUpload #fileUpload name="image[]" url="./upload" (onSelect)="handleFileUpload($event, i, fileUpload)"
-                                                multiple mode="basic" accept="image/*" chooseIcon="pi pi-images" 
+                                            <p-fileUpload #fileUpload name="image[]" url="./upload"
+                                                (onSelect)="handleFileUpload($event, i, fileUpload)" multiple
+                                                mode="basic" accept="image/*" chooseIcon="pi pi-images"
                                                 *ngIf="(stepImages[i]?.length || 0) < 5"></p-fileUpload>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus" label="Schritt hinzufügen" (click)="addStep()"
-                            style="margin-top: 16px;"></button>
+                        <div class="validation-message" *ngIf="form.errors?.['stepsRequired']">
+                            Bitte fügen Sie mindestens einen Schritt hinzu.
+                        </div>
+                        <button pButton class="add_ingredient_btn" type="button" icon="pi pi-plus"
+                            label="Schritt hinzufügen" (click)="addStep()" style="margin-top: 16px;"></button>
                     </div>
                 </div>
                 <p-toast></p-toast>
