@@ -102,9 +102,9 @@ export class MenuPlanningComponent implements OnInit {
       wochentag: new FormControl('', Validators.required),
       wiederholung: new FormControl('', Validators.required),
       ort: new FormControl('', Validators.required),
-      portions: new FormControl([Validators.required, Validators.min(0)]),
-      portionsVegetarisch: new FormControl([Validators.required, Validators.min(0)]),
-      portionsVegan: new FormControl([Validators.required, Validators.min(0)]),
+      portions: new FormControl( 0, [Validators.required, Validators.min(0)]),
+      portionsVegetarisch: new FormControl(0, [Validators.required, Validators.min(0)]),
+      portionsVegan: new FormControl(0, [Validators.required, Validators.min(0)]),
       description: new FormControl('', CustomValidators.optionalMinLength(1)),
     }, {
       validators: [
@@ -303,6 +303,7 @@ export class MenuPlanningComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
         this.menuPlanForm.reset();
         this.menuPlanForm.enable();
+        this.menuPlan = [];
         this.updateCalendar();
         this.loading = false;
       },
