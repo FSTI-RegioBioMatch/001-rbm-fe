@@ -17,6 +17,7 @@ import { NewRecepieDialogComponent } from '../new-recepie-dialog/new-recepie-dia
 import { MessageService } from 'primeng/api';
 import { Toast, ToastModule } from 'primeng/toast';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { LoggingService } from '../shared/services/logging.service';
 
 @Component({
   selector: 'app-my-recipes',
@@ -70,7 +71,8 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
     private store: StoreService,
     private router: Router,
     private recipeService: RecipeService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private logService: LoggingService
   ) {}
 
   ngAfterViewInit(): void {}
@@ -104,6 +106,14 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
         error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch recipes.' });
           console.error('Error fetching recipes:', error);
+          const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+          this.logService.log(
+            'Error fetching recipes.', // Message
+            'ERROR',                       // Log level
+            { error: errorDetails },      // Additional data (error details)
+            new Date().toISOString(),       // timestamp
+            'currentUserId'                 // userId (replace with actual user ID if available)
+          );
           this.loading = false;
         }
       );

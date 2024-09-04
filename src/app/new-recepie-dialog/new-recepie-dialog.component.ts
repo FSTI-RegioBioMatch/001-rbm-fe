@@ -25,6 +25,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { CustomValidators } from '../shared/validators/custom-validators'; 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LoggingService } from '../shared/services/logging.service';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -200,7 +201,8 @@ export class NewRecepieDialogComponent implements OnInit {
     private recipeService: RecipeService,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
-    private imageCompress: NgxImageCompressService
+    private imageCompress: NgxImageCompressService,
+    private logService: LoggingService,
   ) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
@@ -256,7 +258,15 @@ export class NewRecepieDialogComponent implements OnInit {
           detail: 'Failed to fetch and map data.',
         });
         this.loadingIngredients = false;
-        console.error('Error fetching and mapping data:', error);
+        //console.error('Error fetching and mapping data:', error);
+        this.logService.log(
+          'Failed to fetch and map ingredient data.', // Message
+          'ERROR',                                   // Log level
+          { error: error.message },                   // Additional data (error object details)
+          new Date().toISOString(),                   // timestamp
+          'currentUserId'                             // userId (replace with actual user ID if available)
+        );
+
       },
     );
   }
@@ -449,6 +459,16 @@ export class NewRecepieDialogComponent implements OnInit {
             summary: 'Fehler',
             detail: 'Es gab ein Problem beim Verarbeiten der Bilder.',
         });
+        const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+
+        // Log the error with detailed information
+        this.logService.log(
+            'Es gab ein Problem beim Verarbeiten der Bilder.',      // Log message
+            'ERROR',                         // Log level
+            { error: errorDetails },          // Additional data (error details)
+            new Date().toISOString(),         // Timestamp
+            'currentUserId'                   // User ID (replace with actual user ID if available)
+        );
     }
 
     // Clear the file upload component
@@ -526,6 +546,16 @@ async handleRecipeImageUpload(event: any) {
           summary: 'Fehler',
           detail: 'Es gab ein Problem beim Verarbeiten des Rezeptbildes.',
       });
+      const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+
+      // Log the error with detailed information
+      this.logService.log(
+          'Es gab ein Problem beim Verarbeiten des Rezeptbildes.',      // Log message
+          'ERROR',                          // Log level
+          { error: errorDetails },          // Additional data (error details)
+          new Date().toISOString(),         // Timestamp
+          'currentUserId'                   // User ID (replace with actual user ID if available)
+      );
   }
 }
 
@@ -589,6 +619,14 @@ async handleRecipeImageUpload(event: any) {
           summary: 'Error',
           detail: 'Failed to save the recipe.',
         });
+        const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+        this.logService.log(
+          'Failed to save the recipe.', // Message
+          'ERROR',                       // Log level
+          { error: errorDetails },      // Additional data (error details)
+          new Date().toISOString(),       // timestamp
+          'currentUserId'                 // userId (replace with actual user ID if available)
+        );
         this.loading = false;
         this.form.enable(); // Re-enable the form
       },
