@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  flex-direction: column;
   padding: 20px;
 }
 
@@ -290,3 +291,13 @@
 }
 
 
+.flex-direction-switcher {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 1460px) {
+  .flex-direction-switcher {
+    flex-direction: column;
+  }
+}
