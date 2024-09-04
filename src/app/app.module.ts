@@ -60,6 +60,7 @@ registerLocaleData(localeDe);
     ToolbarComponent,
     MapComponent,
     DragDropModule,
+    SidebarComponent,
   ],
   providers: [
     // TODO uncomment to enable Keycloak
