@@ -154,7 +154,8 @@ export class RecipieDetailsComponent implements OnInit {
       .pipe(
         switchMap(company => {
           if (company && company.id) {
-            return this.recipeService.getRecipeById(this.recipeId);
+            // Fetch the recipe details without images
+            return this.recipeService.getRecipeById(this.recipeId, false);
           } else {
             this.router.navigate(['/my-recipes']);
             return of(null);
@@ -173,6 +174,21 @@ export class RecipieDetailsComponent implements OnInit {
         if (!this.recipe) {
           this.messageService.add({ severity: 'error', summary: 'Recipe not found', detail: 'The requested recipe could not be found.' });
           this.router.navigate(['/my-recipes']);
+        } else {
+          // Fetch images for each step asynchronously
+          this.recipe.steps.forEach((step: { images: string[] | never[]; }, index: number) => {
+            this.recipeService.getStepImages(this.recipeId, index)
+              .pipe(
+                catchError(error => {
+                  console.error(`Error fetching images for step ${index}:`, error);
+                  this.messageService.add({ severity: 'error', summary: 'Error fetching images', detail: `Failed to fetch images for step ${index}` });
+                  return of([]); // Return an empty array if there's an error
+                })
+              )
+              .subscribe(images => {
+                step.images = images;
+              });
+          });
         }
         this.loading = false;
       });
