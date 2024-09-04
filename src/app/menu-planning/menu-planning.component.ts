@@ -33,6 +33,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CustomValidators } from '../shared/validators/custom-validators'; 
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-menu-planning',
@@ -57,7 +58,9 @@ import { MessageModule } from 'primeng/message';
     ConfirmDialogModule,
     TabViewModule,
     TooltipModule,
-    MessageModule
+    MessageModule,
+    FloatLabelModule,
+    SidebarComponent,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './menu-planning.component.html',
