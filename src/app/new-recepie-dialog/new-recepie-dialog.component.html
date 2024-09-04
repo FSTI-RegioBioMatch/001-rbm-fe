@@ -166,6 +166,8 @@
                                                 [formGroupName]="j" style="margin-top: 8px;">
                                                 <div class="rbm-flex-row rbm-flex-wrap rbm-gap-p8">
 
+                                                    <label>Name der alternativen Zutat<span
+                                                            class="mandatory">*</span></label>
                                                     <p-dropdown [options]="ingredientOptions" formControlName="name"
                                                         placeholder="Name der alternativen Zutat" [showClear]="true"
                                                         filter="true" filterPlaceholder="Suche nach Zutat"
@@ -173,12 +175,30 @@
                                                         [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)"
                                                         class="name">
                                                     </p-dropdown>
+                                                    <div class="validation-message"
+                                                        *ngIf="alternative.get('name')?.invalid && (alternative.get('name')?.dirty || alternative.get('name')?.touched)">
+                                                        Name der alternativen Zutat ist erforderlich.
+                                                    </div>
 
 
+                                                    <label>Menge<span class="mandatory">*</span></label>
                                                     <input min="0" pInputText type="number" formControlName="amount"
                                                         placeholder="Menge">
+                                                    <div class="validation-message"
+                                                        *ngIf="alternative.get('amount')?.invalid && (alternative.get('amount')?.dirty || alternative.get('amount')?.touched)">
+                                                        Eine gültige Menge ist erforderlich.
+                                                    </div>
+
+
+                                                    <label>Einheit<span class="mandatory">*</span></label>
                                                     <p-dropdown [options]="units" formControlName="unit"
                                                         placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                                    <div class="validation-message"
+                                                        *ngIf="alternative.get('unit')?.invalid && (alternative.get('unit')?.dirty || alternative.get('unit')?.touched)">
+                                                        Einheit ist erforderlich.
+                                                    </div>
+
+
                                                     <button pButton type="button" icon="pi pi-trash"
                                                         (click)="removeAlternativeIngredient(i, j)"
                                                         class="p-button-rounded p-button-danger p-button-text"

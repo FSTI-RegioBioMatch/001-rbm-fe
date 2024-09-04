@@ -361,7 +361,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createIngredient(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]+([.,][0-9]+)?$'), Validators.min(0)]],
       unit: ['', Validators.required],
       optional: [false],
       note: ['', CustomValidators.optionalMinLength(1)], // Note field
@@ -381,7 +381,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createAlternative(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]+([.,][0-9]+)?$'), Validators.min(0)]],
       unit: ['', Validators.required],
     });
   }
