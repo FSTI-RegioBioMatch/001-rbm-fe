@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ToolbarMenuService } from '../shared/services/toolbarmenu.service';
 import { CommonModule } from '@angular/common';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.menuService.setBurgerMenuState(true);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    if (event.target.innerWidth >= 1000) {
+      this.menuService.setBurgerMenuState(false);
+    }
+    else {
+      this.menuService.setBurgerMenuState(true);
+    }
   }
 
   navLinks = [

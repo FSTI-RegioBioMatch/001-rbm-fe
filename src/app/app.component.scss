@@ -1,26 +1,41 @@
 .layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
-  
-  .toolbar {
-    flex: 0 0 auto;
-  }
-  
-  .main-content {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.toolbar {
+  flex: 0 0 auto;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  flex: 0 0 250px;
+  overflow-y: auto;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+@media (max-width: 1000px) {
   .sidebar {
-    flex: 0 0 250px; /* Adjust the width of the sidebar as needed */
-    overflow-y: auto;
+    display: none;
   }
-  
+
+  .main-content {
+    flex-direction: column;
+  }
+
   .content {
     flex: 1;
-    overflow-y: auto;
-    padding: 16px; /* Optional: Add padding to the content area */
+    width: 100%;
   }
+}
