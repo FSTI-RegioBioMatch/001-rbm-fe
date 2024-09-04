@@ -180,9 +180,14 @@ export class RecipieDetailsComponent implements OnInit {
             this.recipeService.getStepImages(this.recipeId, index)
               .pipe(
                 catchError(error => {
-                  console.error(`Error fetching images for step ${index}:`, error);
-                  this.messageService.add({ severity: 'error', summary: 'Error fetching images', detail: `Failed to fetch images for step ${index}` });
-                  return of([]); // Return an empty array if there's an error
+                  if (error.status === 404) {
+                    // No images found for this step, return an empty array without logging an error
+                    return of([]);
+                  } else {
+                    console.error(`Error fetching images for step ${index}:`, error);
+                    this.messageService.add({ severity: 'error', summary: 'Error fetching images', detail: `Failed to fetch images for step ${index}` });
+                    return of([]);
+                  }
                 })
               )
               .subscribe(images => {
