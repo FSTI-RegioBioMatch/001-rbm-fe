@@ -223,7 +223,7 @@ loadRecipesWithIngredients(menuPlanId: string): void {
   if (menuPlan) {
     // Even if menuPlan has no recipes, proceed with setting loading to false after processing
     const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
-      this.recipeService.getRecipeById(recipe.id).pipe(
+      this.recipeService.getRecipeById(recipe.id, false).pipe(
         catchError(error => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: `Fehler beim Laden für Rezept ${recipe.id}` });
           console.error(`Error fetching recipe ${recipe.id}:`, error);

@@ -1,2 +1,9 @@
-<app-toolbar />
-<router-outlet></router-outlet>
+<div class="layout">
+  <app-toolbar class="toolbar"></app-toolbar>
+  <div class="main-content">
+    <app-sidebar class="sidebar"></app-sidebar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

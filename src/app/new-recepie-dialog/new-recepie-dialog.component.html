@@ -21,13 +21,16 @@
                 <div class="new-recipe-card_col1">
 
                     <div class="left">
-                        <label>Name des Rezepts<span class="mandatory">*</span></label>
-                        <input pInputText type="text" formControlName="recipeName" placeholder="Name des Rezepts"
+                        <div>
+                        <p-floatLabel class="rbm-full-width">
+                            <input pInputText type="text" formControlName="recipeName" placeholder="Name des Rezepts*"
                             style="margin-right: 8px;">
-                        <div class="validation-message"
-                            *ngIf="form.get('recipeName')?.invalid && (form.get('recipeName')?.dirty || form.get('recipeName')?.touched)">
-                            Rezeptname ist erforderlich.
+                            <!-- <label for="name" >Name des Rezepts<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                            <span *ngIf="form.get('recipeName')?.invalid && (form.get('recipeName')?.dirty || form.get('recipeName')?.touched)" class="invalid_input_label">
+                                Rezeptname ist erforderlich.</span>
+                          </p-floatLabel>
                         </div>
+                        <br *ngIf="form.get('recipeName')?.invalid && (form.get('recipeName')?.dirty || form.get('recipeName')?.touched)">
                         <div class="options">
                             <div class="item">
                                 <label style="margin-left: 8px;">In Menüplanung übernehmen</label>
@@ -41,13 +44,25 @@
                     </div>
 
                     <div class="right">
-                        <div class="grid-4-column" formGroupName="selectedDiets">
-                            <div *ngFor="let option of dietOptions" class="diet-option-chip"
-                                (click)="toggleDiet(option.value)">
-                                <p-checkbox class="diet-option-chip_checkbox" [binary]="true"
-                                    [formControlName]="option.value"></p-checkbox>
-                                <label>{{option.label}}</label>
+                        <div class="rbm-flex-row rbm-flex-wrap rbm-content-top rbm-gap-p8" formGroupName="selectedDiets">
+                            <div class="tag" *ngFor="let diet of getSelectedDiets()">
+                                <span>{{ diet.label }}</span>
                             </div>
+                            <p-toast></p-toast>
+                            <button class="tag" (click)="op.toggle($event)">+/- Tags</button>
+                    
+                    
+                            <p-overlayPanel #op [style]="{ width: '450px' }" [showCloseIcon]="true" [ngClass]="'rbm_scrollbar'">
+                                <ng-template pTemplate="content">
+                                    <div class="diet-options-container">
+                                        <div *ngFor="let option of dietOptions" class="diet-option-chip">
+                                            <p-checkbox class="diet-option-chip_checkbox" [binary]="true"
+                                                [formControlName]="option.value"  [disabled]="isCheckboxDisabled(option.value)" (click)="toggleDiet(option.value)"></p-checkbox>
+                                            <label>{{ option.label }}</label>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-overlayPanel>
                         </div>
                     </div>
 
@@ -125,67 +140,95 @@
                                 style="margin-top: 16px;">
                                 <div class="box-wrapper">
                                     <div class="ingredient-con rbm-flex-row">
-                                        <label>Name der Zutat<span class="mandatory">*</span></label>
-                                        <p-dropdown
-                                            [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
-                                            formControlName="name" placeholder="Name der Zutat" [showClear]="true"
-                                            filter="true" filterPlaceholder="Suche nach Zutat" optionLabel="label"
-                                            optionValue="value" [virtualScroll]="true" [itemSize]="50" [lazy]="true"
-                                            (onLazyLoad)="loadMore($event)" (onFilter)="onFilter($event, i)"
-                                            class="name">
-                                        </p-dropdown>
-                                        <div class="validation-message"
-                                            *ngIf="ingredient.get('name')?.invalid && (ingredient.get('name')?.dirty || ingredient.get('name')?.touched)">
-                                            Name der Zutat ist erforderlich.
-                                        </div>
+                                        <p-floatLabel class="rbm-full-width">
+                                            <p-dropdown
+                                              [options]="ingredient.get('ingredientOptions')?.value || ingredientOptions"
+                                              formControlName="name" placeholder="Name der Zutat*" [showClear]="true"
+                                              filter="true" filterPlaceholder="Suche nach Zutat" optionLabel="label"
+                                              optionValue="value" [virtualScroll]="true" [itemSize]="50" [lazy]="true"
+                                              (onLazyLoad)="loadMore($event)" (onFilter)="onFilter($event, i)"
+                                              class="name custom-dropdown">
+                                            </p-dropdown>
+                                            <!-- <label for="name">Name der Zutat<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                            <span *ngIf="ingredient.get('name')?.invalid && (ingredient.get('name')?.dirty || ingredient.get('name')?.touched)" class="invalid_input_label">
+                                              Name der Zutat ist erforderlich.
+                                            </span>
+                                        </p-floatLabel>
+                                        <br *ngIf="ingredient.get('name')?.invalid && (ingredient.get('name')?.dirty || ingredient.get('name')?.touched)">
 
-                                        <label>Menge<span class="mandatory">*</span></label>
-                                        <input min="0" pInputText type="number" formControlName="amount"
-                                            placeholder="Menge">
+                                        <div class="rbm-flex-row rbm-gap-p5 rbm-full-width">
+                                        <p-floatLabel class="rbm-full-width">
+                                            <input min="0" pInputText type="number" formControlName="amount"
+                                            placeholder="Menge*" class="rbm-full-height rbm-full-width">
+                                            <!-- <label for="name" >Menge<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                            <span *ngIf="ingredient.get('amount')?.invalid && (ingredient.get('amount')?.dirty || ingredient.get('amount')?.touched)" class="invalid_input_label">
+                                                Eine gültige Menge ist erforderlich.</span>
+                                          </p-floatLabel>
 
-                                        <div class="validation-message"
-                                            *ngIf="ingredient.get('amount')?.invalid && (ingredient.get('amount')?.dirty || ingredient.get('amount')?.touched)">
-                                            Eine gültige Menge ist erforderlich.
-                                        </div>
 
-                                        <label>Einheit<span class="mandatory">*</span></label>
-                                        <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit"
+                                        <p-floatLabel class="rbm-full-width">
+                                            <p-dropdown [options]="units" formControlName="unit" placeholder="Einheit*"
                                             [ngStyle]="{'flex': '1'}"></p-dropdown>
-                                        <div class="validation-message"
-                                            *ngIf="ingredient.get('unit')?.invalid && (ingredient.get('unit')?.dirty || ingredient.get('unit')?.touched)">
-                                            Einheit ist erforderlich.
-                                        </div>
+                                            <!-- <label for="name" >Einheit<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                            <span *ngIf="ingredient.get('unit')?.invalid && (ingredient.get('unit')?.dirty || ingredient.get('unit')?.touched)" class="invalid_input_label">
+                                                Einheit ist erforderlich.</span>
+                                        </p-floatLabel>
+
 
 
                                         <button pButton type="button" icon="pi pi-trash" (click)="removeIngredient(i)"
-                                            class="p-button-rounded p-button-danger p-button-text"></button>
+                                            class="p-button-rounded p-button-danger p-button-text" style="min-width: 50px;"></button>
+                                        </div>
+                                       <br *ngIf="ingredient.get('unit')?.invalid && (ingredient.get('unit')?.dirty || ingredient.get('unit')?.touched)  || ingredient.get('amount')?.invalid && (ingredient.get('amount')?.dirty || ingredient.get('amount')?.touched)" class="invalid_input_label">
                                     </div>
                                     <div class="ingredient-con">
-                                        <div formArrayName="alternatives" class="rbm-max-width-per100">
+                                        <div formArrayName="alternatives" class="rbm-max-width-per100 alternatives">
                                             <div *ngFor="let alternative of getAlternatives(i).controls; let j = index"
                                                 [formGroupName]="j" style="margin-top: 8px;">
                                                 <div class="rbm-flex-row rbm-flex-wrap rbm-gap-p8">
 
-                                                    <p-dropdown [options]="ingredientOptions" formControlName="name"
-                                                        placeholder="Name der alternativen Zutat" [showClear]="true"
+                                                    <p-floatLabel class="rbm-full-width">
+                                                        <p-dropdown [options]="ingredientOptions" formControlName="name"
+                                                        placeholder="Name der alternativen Zutat*" [showClear]="true"
                                                         filter="true" filterPlaceholder="Suche nach Zutat"
                                                         optionLabel="label" optionValue="value" [virtualScroll]="true"
                                                         [itemSize]="50" [lazy]="true" (onLazyLoad)="loadMore($event)"
                                                         class="name">
-                                                    </p-dropdown>
+                                                        </p-dropdown>
+                                                        <!-- <label for="name" >Name der alternativen Zutat<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                                        <span  *ngIf="alternative.get('name')?.invalid && (alternative.get('name')?.dirty || alternative.get('name')?.touched)" class="invalid_input_label">
+                                                            Name der alternativen Zutat ist erforderlich.</span>
+                                                    </p-floatLabel>
+                                                    <br  *ngIf="alternative.get('name')?.invalid && (alternative.get('name')?.dirty || alternative.get('name')?.touched)">
+
+                                                    <div class="rbm-flex-row rbm-gap-p5 rbm-full-width">
+                                                    <p-floatLabel class="rbm-full-width rbm-full-height">
+                                                        <input min="0" pInputText type="number" formControlName="amount"
+                                                        placeholder="Menge*" class="rbm-full-width rbm-full-height">
+                                                        <!-- <label for="name" >Menge<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                                        <span  *ngIf="alternative.get('amount')?.invalid && (alternative.get('amount')?.dirty || alternative.get('amount')?.touched)" class="invalid_input_label">
+                                                            Eine gültige Menge ist erforderlich.</span>
+                                                    </p-floatLabel>
+
+                                                    <p-floatLabel class="rbm-full-width">
+                                                        <p-dropdown [options]="units" formControlName="unit"
+                                                        placeholder="Einheit*" [ngStyle]="{'flex': '1'}"></p-dropdown>
+                                                        <!-- <label for="name" >Einheit<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                                        <span  *ngIf="alternative.get('unit')?.invalid && (alternative.get('unit')?.dirty || alternative.get('unit')?.touched)" class="invalid_input_label">
+                                                            Eine gültige Menge ist erforderlich.</span>
+                                                    </p-floatLabel>
 
 
-                                                    <input min="0" pInputText type="number" formControlName="amount"
-                                                        placeholder="Menge">
-                                                    <p-dropdown [options]="units" formControlName="unit"
-                                                        placeholder="Einheit" [ngStyle]="{'flex': '1'}"></p-dropdown>
                                                     <button pButton type="button" icon="pi pi-trash"
                                                         (click)="removeAlternativeIngredient(i, j)"
                                                         class="p-button-rounded p-button-danger p-button-text"
-                                                        style="margin-left: 8px;"></button>
+                                                        style="margin-left: 8px; min-width: 50px;"></button>
+                                                    </div>
+                                                    <br *ngIf="alternative.get('unit')?.invalid && (alternative.get('unit')?.dirty || alternative.get('unit')?.touched) || alternative.get('amount')?.invalid && (alternative.get('amount')?.dirty || alternative.get('amount')?.touched)">
                                                 </div>
                                             </div>
                                         </div>
+                                        <br>
                                         <div *ngIf="showNote[i]" style="margin-top: 8px;">
                                             <textarea pInputTextarea formControlName="note" placeholder="Notiz"
                                                 style="width: 100%; resize: vertical;"></textarea>
@@ -225,19 +268,21 @@
                                             style="display: flex; justify-content: space-between; align-items: center;">
                                             <div style="display: flex; align-items: center;">
                                                 <div class="counter">{{ i + 1 }}</div>
-                                                <label>Schritt<span class="mandatory">*</span></label>
-                                                <input pInputText type="text" formControlName="schritt"
-                                                    placeholder="Schritt" style="width: 100%;">
-                                                <div class="validation-message"
-                                                    *ngIf="step.get('schritt')?.invalid && (step.get('schritt')?.dirty || step.get('schritt')?.touched)">
-                                                    Schritt ist erforderlich.
-                                                </div>
+                                                <p-floatLabel class="rbm-full-width">
+                                                    <input pInputText type="text" formControlName="schritt"
+                                                    placeholder="Schritt*" style="width: 100%;">
+                                                    <!-- <label for="name" >Schritt<span class="rbm-text-error rbm-text-s">*</span></label> -->
+                                                    <span  *ngIf="step.get('schritt')?.invalid && (step.get('schritt')?.dirty || step.get('schritt')?.touched)" class="invalid_input_label">
+                                                        Schritt ist erforderlich.</span>
+                                                </p-floatLabel>
                                                 <button pButton type="button" icon="pi pi-trash" (click)="removeStep(i)"
                                                     class="p-button-rounded p-button-danger p-button-text"
-                                                    style="margin-left: 8px;"></button>
+                                                    style="margin-left: 8px; min-width: 50px;"></button>
                                             </div>
+                                            
                                         </div>
                                     </div>
+                                    <br *ngIf="step.get('schritt')?.invalid && (step.get('schritt')?.dirty || step.get('schritt')?.touched)">
                                     <div>
                                         <div style="margin-bottom: 8px;">
                                             <textarea pInputTextarea formControlName="anleitung" placeholder="Anleitung"

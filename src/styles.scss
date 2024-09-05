@@ -161,6 +161,8 @@
   --rbm-dark-70: #000000b3;
   --rbm-dark-80: #000000cc;
   --rbm-dark-90: #000000e6;
+  --rbm-error: #FF0000;
+  --rbm-error-10: #ff00007a;
   --rbm-space-4xs: clamp(0.33rem, calc(-0.03vw + 0.33rem), 0.31rem);
   --rbm-space-3xs: clamp(0.41rem, calc(0.04vw + 0.4rem), 0.44rem);
   --rbm-space-2xs: clamp(0.51rem, calc(0.16vw + 0.48rem), 0.62rem);
@@ -1175,6 +1177,18 @@
 }
 .rbm-border-dark-90 {
   border-color: var(--rbm-dark-90);
+}
+.rbm-text-error {
+  color: var(--rbm-error);
+}
+.rbm-bg-error {
+  background-color: var(--rbm-error) !important;
+}
+.rbm-bg-error-10 {
+  background-color: var(--rbm-error-10) !important;
+}
+.rbm-border-error {
+  border-color: var(--rbm-error);
 }
 /* Fluid Spacing */
 .rbm-padding-4xs {
@@ -2561,6 +2575,9 @@ H6 {
 .rbm-radius-full {
   border-radius: var(--rbm-radius-full);
 }
+.rbm-radius-none {
+  border: none;
+}
 /* Borders */
 .rbm-border {
   border-width: 1px;
@@ -3123,19 +3140,23 @@ textarea {
   max-width: 100%;
 }
 
+.p-inputtext:enabled:focus {
+  box-shadow: none;
+}
+
 // checkboy
-::ng-deep .p-checkbox-box {
+.p-checkbox-box {
   border-radius: 4px;
-  border: 2px solid #29784D;
-  background-color: #E9FFC2;
+  border: 2px solid var(--rbm-sea-green);
 }
 
-::ng-deep .p-checkbox-box.p-highlight {
-  background-color: #29784D;
-  border-color: #29784D;
+.p-checkbox-box.p-highlight {
+  background-color: var(--rbm-sea-green);
+  border-color: var(--rbm-sea-green);
+  background: var(--rbm-sea-green);
 }
 
-::ng-deep .p-checkbox-icon {
+.p-checkbox-icon {
   color: rgb(255, 255, 255);
 }
 
@@ -3210,6 +3231,10 @@ button {
 // Calendar
 
 full-calendar {
+  .fc-toolbar-chunk {
+    display: flex; 
+    flex-wrap: nowrap;
+  }
   td, th, table {
     border-color: var(--rbm-willow-green) !important;
   }
@@ -3264,6 +3289,148 @@ p-table {
   }
 }
 
+// p-floatLabel dings
+
+.p-float-label {
+  position: relative;
+}
+
+
+::ng-deep p-floatLabel {
+  height: 100%;
+  width: 100%;
+  .p-float-label input:focus ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .p-float-label input.p-filled ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .float-label textarea:focus ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .float-label textarea.p-filled ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  span {
+    font-size: 13px;
+    padding: 0;
+  }
+  .invalid_input_label {
+    color: red;
+    bottom: -20px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+p-floatLabel {
+  height: 100%;
+  width: 100%;
+  .p-float-label input:focus ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .p-float-label input.p-filled ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .float-label textarea:focus ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  .float-label textarea.p-filled ~ label {
+    color: black;
+    background-color: rgba(255, 255, 255, 0);
+    margin-top: -10px;
+    font-size: 13px;
+    padding: 0;
+  }
+  span {
+    font-size: 13px;
+  }
+  .invalid_input_label {
+    color: red;
+    bottom: -20px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+// standard site toolbar
+
+.rbm-site-toolbar {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--rbm-tea-green);
+  width: fit-content;
+  border-radius: 5px;
+
+  button:hover {
+    background-color: var(--rbm-sea-green);
+    border-radius: 0;
+  }
+
+  button {
+    border-radius: 0;
+  }
+  
+  .first {
+    button {
+      border-top-left-radius: 5px !important;
+      border-bottom-left-radius: 5px !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+    button:hover {
+      border-top-left-radius: 5px !important;
+      border-bottom-left-radius: 5px !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+  }
+
+  .last {
+    button {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-top-right-radius: 5px !important;
+      border-bottom-right-radius: 5px !important;
+    }
+    button:hover {
+      border-top-left-radius: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-top-right-radius: 5px !important;
+      border-bottom-right-radius: 5px !important;
+    }
+  }
+}
 
 /***
  *     _____                _ _           

@@ -27,7 +27,8 @@
         <ng-template pTemplate="content">
           <div class="diet-options-container">
             <div *ngFor="let option of dietOptions" class="diet-option-chip" (click)="toggleDiet(option.value)">
-              <p-checkbox class="diet-option-chip_checkbox" [binary]="true" [ngModel]="recipe.diets.includes(option.value)"></p-checkbox>
+              <p-checkbox class="diet-option-chip_checkbox" [binary]="true"
+                [ngModel]="recipe.diets.includes(option.value)"></p-checkbox>
               <label>{{ option.label }}</label>
             </div>
           </div>
@@ -38,7 +39,8 @@
   <br>
   <div class="recipe-detail-card_col1">
     <div class="left">
-      <img [src]="recipe?.recipeImage || 'assets/img/image_fallback.jpg'" alt="Recipe Image" class="recipe-detail-image">
+      <img [src]="recipe?.recipeImage || 'assets/img/image_fallback.jpg'" alt="Recipe Image" class="recipe-detail-image"
+        loading="lazy">
     </div>
 
     <div class="right">
@@ -75,91 +77,92 @@
     </div>
   </div>
   <div class="content">
-   <div class="description">
-    <h2>
-     Beschreibung
-    </h2>
-    <p *ngIf="!editMode">{{ recipe?.recipeDescription }}</p>
-    <textarea *ngIf="editMode" [(ngModel)]="recipe.recipeDescription"></textarea>
-    <div class="ingredients">
-     <h3>
-      Zutaten
-     </h3>
-     <table>
-      <tr *ngFor="let ingredient of recipe?.ingredients">
-       <th class="rbm-bg-willow-green-10">
-        <p *ngIf="!editMode">{{ ingredient?.amount }} {{ ingredient?.unit }}</p>
-        <input *ngIf="editMode" [(ngModel)]="ingredient.amount" placeholder="Anzahl" />
-        <p-dropdown *ngIf="editMode" [options]="units" [(ngModel)]="ingredient.unit" placeholder="Einheit"></p-dropdown>
-       </th>
-       <td class="rbm-gap-p5">
-        <p *ngIf="!editMode" class="rbm-text-sea-green">{{ ingredient?.name }}</p>
-        <small *ngIf="!editMode">
-          {{ ingredient?.note }}
-        </small>
-        <span *ngIf="ingredient?.optional">(Optional)</span>
-          <ul *ngIf="ingredient?.alternatives.length > 0">
-            <li *ngFor="let alt of ingredient?.alternatives">
-              Alternativ: <span *ngIf="!editMode"><p class="rbm-text-sea-green">&nbsp; &nbsp; {{ alt?.name }}</p>&nbsp; &nbsp; {{ alt?.amount }} {{ alt?.unit }} </span>
-              <input *ngIf="editMode" [(ngModel)]="alt.amount" placeholder="Amount" />
-              <input *ngIf="editMode" [(ngModel)]="alt.unit" placeholder="Unit" />
-              <input *ngIf="editMode" [(ngModel)]="alt.name" placeholder="Name" />
-            </li>
-          </ul>
-        <input *ngIf="editMode" [(ngModel)]="ingredient.name" placeholder="Name" />
-        <input *ngIf="editMode" [(ngModel)]="ingredient.note" placeholder="Notiz" class="rbm-full-width">
-       </td>
-      </tr>
-     </table>
+    <div class="description">
+      <h2>
+        Beschreibung
+      </h2>
+      <p *ngIf="!editMode">{{ recipe?.recipeDescription }}</p>
+      <textarea *ngIf="editMode" [(ngModel)]="recipe.recipeDescription"></textarea>
+      <div class="ingredients">
+        <h3>
+          Zutaten
+        </h3>
+        <table>
+          <tr *ngFor="let ingredient of recipe?.ingredients">
+            <th class="rbm-bg-willow-green-10">
+              <p *ngIf="!editMode">{{ ingredient?.amount }} {{ ingredient?.unit }}</p>
+              <input *ngIf="editMode" [(ngModel)]="ingredient.amount" placeholder="Anzahl" />
+              <p-dropdown *ngIf="editMode" [options]="units" [(ngModel)]="ingredient.unit"
+                placeholder="Einheit"></p-dropdown>
+            </th>
+            <td class="rbm-gap-p5">
+              <p *ngIf="!editMode" class="rbm-text-sea-green">{{ ingredient?.name }}</p>
+              <small *ngIf="!editMode">
+                {{ ingredient?.note }}
+              </small>
+              <span *ngIf="ingredient?.optional">(Optional)</span>
+              <ul *ngIf="ingredient?.alternatives.length > 0">
+                <li *ngFor="let alt of ingredient?.alternatives">
+                  Alternativ: <span *ngIf="!editMode">
+                    <p class="rbm-text-sea-green">&nbsp; &nbsp; {{ alt?.name }}</p>&nbsp; &nbsp; {{ alt?.amount }} {{
+                    alt?.unit }}
+                  </span>
+                  <input *ngIf="editMode" [(ngModel)]="alt.amount" placeholder="Amount" />
+                  <input *ngIf="editMode" [(ngModel)]="alt.unit" placeholder="Unit" />
+                  <input *ngIf="editMode" [(ngModel)]="alt.name" placeholder="Name" />
+                </li>
+              </ul>
+              <input *ngIf="editMode" [(ngModel)]="ingredient.name" placeholder="Name" />
+              <input *ngIf="editMode" [(ngModel)]="ingredient.note" placeholder="Notiz" class="rbm-full-width">
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-   </div>
-   
+
   </div>
   <div class="instructions">
-   <h2>
-    Anleitung
-   </h2>
-   <div class="step" *ngFor="let step of recipe?.steps; let i = index">
-    <div *ngIf="step?.images && step?.images.length == 0" class="step-images">
-      <div class="rbm-bg-willow-green rbm-flex-column rbm-items-middle rbm-content-center" style="width: 200px;height: 200px;">{{ i + 1 }}</div>
-    </div>
-    <div *ngIf="step?.images && step?.images.length > 0 && step?.images.length < 2" class="step-images">
-      <img *ngFor="let image of step?.images" [src]="image" alt="Step Image" width="200" height="150">
-    </div>
-    <div *ngIf="step?.images && step?.images.length > 1" class="step-images">
-      <p-galleria 
-      [value]="step.images" 
-      (valueChange)="step.images = $event" 
-      [showItemNavigators]="true" 
-      [showThumbnails]="false" 
-      [showIndicators]="true" 
-      [showIndicatorsOnItem]="true" 
-      [responsiveOptions]="responsiveOptions" 
-      [containerStyle]="{ 'width': '200px', 'height': '200px', 'max-width': '200px', 'max-height': '200px' }">
-      <ng-template pTemplate="item" let-item>
-        <img [src]="item" style="width: 100%; display: block;" />
-      </ng-template>
-      <ng-template pTemplate="thumbnail" let-item>
-        <div class="grid grid-nogutter justify-content-center">
-          <img [src]="item" style="display: block;" />
-        </div>
-      </ng-template>
-    </p-galleria>
-    </div>
-    <div class="text">
-      <div class="rbm-flex-row rbm-items-middle">
-        <div class="stepnumberbubble rbm-bg-tea-green" >{{ i + 1 }}</div>
-        <span *ngIf="!editMode" style="font-size: 24px;">{{ step?.schritt }}</span>
-        <input *ngIf="editMode" [(ngModel)]="step.schritt" placeholder="Name" />
+    <h2>
+      Anleitung
+    </h2>
+    <div class="step" *ngFor="let step of recipe?.steps; let i = index">
+      <div *ngIf="step?.images && step?.images.length == 0" class="step-images">
+        <div class="rbm-bg-willow-green rbm-flex-column rbm-items-middle rbm-content-center"
+          style="width: 200px;height: 200px;">{{ i + 1 }}</div>
       </div>
-      <br>
-      <p *ngIf="!editMode">{{ step?.anleitung }}</p>
-      <textarea *ngIf="editMode" [(ngModel)]="step.anleitung"></textarea>
+      <div *ngIf="step?.images && step?.images.length > 0 && step?.images.length < 2" class="step-images">
+        <img *ngFor="let image of step?.images" [src]="image" alt="Step Image" width="200" height="150" loading="lazy">
+      </div>
+      <div *ngIf="step?.images && step?.images.length > 1" class="step-images">
+        <p-galleria [value]="step.images" (valueChange)="step.images = $event" [showItemNavigators]="true"
+          [showThumbnails]="false" [showIndicators]="true" [showIndicatorsOnItem]="true"
+          [responsiveOptions]="responsiveOptions"
+          [containerStyle]="{ 'width': '200px', 'height': '200px', 'max-width': '200px', 'max-height': '200px' }"
+          [circular]="true" [numVisible]="1">
+          <ng-template pTemplate="item" let-item>
+            <img [src]="item" style="width: 100%; display: block;" loading="lazy" />
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid grid-nogutter justify-content-center">
+              <img [src]="item" style="display: block;" loading="lazy" />
+            </div>
+          </ng-template>
+        </p-galleria>
+      </div>
+      <div class="text">
+        <div class="rbm-flex-row rbm-items-middle">
+          <div class="stepnumberbubble rbm-bg-tea-green">{{ i + 1 }}</div>
+          <span *ngIf="!editMode" style="font-size: 24px;">{{ step?.schritt }}</span>
+          <input *ngIf="editMode" [(ngModel)]="step.schritt" placeholder="Name" />
+        </div>
+        <br>
+        <p *ngIf="!editMode">{{ step?.anleitung }}</p>
+        <textarea *ngIf="editMode" [(ngModel)]="step.anleitung"></textarea>
+      </div>
     </div>
-   </div>
-   
+
   </div>
- </div>
+</div>
 
 
 

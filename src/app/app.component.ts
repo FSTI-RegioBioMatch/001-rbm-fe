@@ -4,6 +4,7 @@ import { AddressType } from './shared/types/address.type';
 import { RequestService } from './shared/services/request.service';
 import { forkJoin, of, switchMap, tap } from 'rxjs';
 import { StoreService } from './shared/store/store.service';
+import { LoggingService } from './shared/services/logging.service';
 
 @Component({
   selector: 'app-root',
@@ -12,15 +13,19 @@ import { StoreService } from './shared/store/store.service';
 })
 export class AppComponent implements OnInit {
   title = 'RegioBioMatch';
-
+  private logRetryInterval: any;
   constructor(
     private store: StoreService,
     private requestService: RequestService,
     private offerService: OfferService,
+    private loggingService: LoggingService
   ) {}
 
   ngOnInit(): void {
     this.store.initPersonMeInformation();
+    this.logRetryInterval = setInterval(() => {
+      this.loggingService.retryFailedLogs();
+    }, 3000);
   //   const observables = forkJoin({
   //     companyContext: this.store.selectedCompanyContext$.pipe(
   //       switchMap((company) => {
@@ -53,4 +58,9 @@ export class AppComponent implements OnInit {
 
   //TODO 
   // implement the logic above seperately in service and in needed components
+  ngOnDestroy(): void {
+    if (this.logRetryInterval) {
+      clearInterval(this.logRetryInterval);
+    }
+  }
 }

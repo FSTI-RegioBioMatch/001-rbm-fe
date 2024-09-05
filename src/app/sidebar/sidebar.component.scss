@@ -42,3 +42,41 @@
     border-radius: 5px;
     transition: 0.5s ease-in-out;
 }
+
+
+@media (max-width: 1000px) {
+    .sidebar {
+      display: none;
+    }
+  }
+
+.submenu {
+  position: absolute;
+  right: -40%;
+  top: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 16px !important;
+  margin: 0;
+  display: none; /* Initially hidden */
+  z-index: 100;
+  border-radius: 4px;
+}
+
+.submenu.visible {
+z-index: 0; /* Ändern wenn sublinks aktiviert werden sollen */
+}
+
+.sidebar .submenu ul li:hover {
+    padding: 0 !important;
+}
+
+.submenu li {
+  padding: 8px !important;
+}
+
+.submenu li a {
+  text-decoration: none;
+  color: black;
+}

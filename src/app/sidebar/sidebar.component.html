@@ -1,8 +1,8 @@
 <div style="width: 250px;"></div>
 <div class="sidebar">
   <ul>
-    <li *ngFor="let link of navLinks" [class.active]="isActive(link.path)">
-      <a *ngIf="link.path" [href]="link.path">
+    <li class="rbm-relative" *ngFor="let link of navLinks" [class.active]="isActive(link.path)" (mouseover)="hoverLink = link" (mouseleave)="hoverLink = null">
+      <a *ngIf="link.path" [routerLink]="link.path">
         <i [class]="link.icon"></i>
         {{ link.label }}
       </a>
@@ -10,6 +10,12 @@
         <i [class]="link.icon"></i>
         {{ link.label }}
       </span>
+      <ul class="submenu" *ngIf="link.subLinks && link.subLinks.length > 0" [class.visible]="hoverLink === link">
+        <li *ngFor="let subLink of link.subLinks">
+          <i [class]="link.icon"></i>
+          <a [routerLink]="subLink.path">{{ subLink.label }}</a>
+        </li>
+      </ul>
     </li>
   </ul>
 </div>

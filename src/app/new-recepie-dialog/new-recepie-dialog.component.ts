@@ -25,6 +25,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { CustomValidators } from '../shared/validators/custom-validators'; 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LoggingService } from '../shared/services/logging.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -45,7 +48,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FormsModule,
     ToastModule,
     MultiSelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    FloatLabelModule,
+    OverlayPanelModule,
   ],
   providers: [MessageService],
 })
@@ -200,7 +205,8 @@ export class NewRecepieDialogComponent implements OnInit {
     private recipeService: RecipeService,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
-    private imageCompress: NgxImageCompressService
+    private imageCompress: NgxImageCompressService,
+    private logService: LoggingService,
   ) {
     this.form = this.fb.group({
       recipeName: ['', Validators.required],
@@ -256,7 +262,15 @@ export class NewRecepieDialogComponent implements OnInit {
           detail: 'Failed to fetch and map data.',
         });
         this.loadingIngredients = false;
-        console.error('Error fetching and mapping data:', error);
+        //console.error('Error fetching and mapping data:', error);
+        this.logService.log(
+          'Failed to fetch and map ingredient data.', // Message
+          'ERROR',                                   // Log level
+          { error: error.message },                   // Additional data (error object details)
+          new Date().toISOString(),                   // timestamp
+          'currentUserId'                             // userId (replace with actual user ID if available)
+        );
+
       },
     );
   }
@@ -268,6 +282,10 @@ export class NewRecepieDialogComponent implements OnInit {
       return 'Lade Zutaten...';
     }
     return '';
+  }
+
+  getSelectedDiets() {
+    return this.dietOptions.filter(diet => this.selectedDiets[diet.value]);
   }
 
   onFilter(event: any, index: number) {
@@ -351,7 +369,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createIngredient(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]+([.,][0-9]+)?$'), Validators.min(0)]],
       unit: ['', Validators.required],
       optional: [false],
       note: ['', CustomValidators.optionalMinLength(1)], // Note field
@@ -371,7 +389,7 @@ export class NewRecepieDialogComponent implements OnInit {
   createAlternative(): FormGroup {
     return this.fb.group({
       name: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]+([.,][0-9]+)?$'), Validators.min(0)]],
       unit: ['', Validators.required],
     });
   }
@@ -449,6 +467,16 @@ export class NewRecepieDialogComponent implements OnInit {
             summary: 'Fehler',
             detail: 'Es gab ein Problem beim Verarbeiten der Bilder.',
         });
+        const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+
+        // Log the error with detailed information
+        this.logService.log(
+            'Es gab ein Problem beim Verarbeiten der Bilder.',      // Log message
+            'ERROR',                         // Log level
+            { error: errorDetails },          // Additional data (error details)
+            new Date().toISOString(),         // Timestamp
+            'currentUserId'                   // User ID (replace with actual user ID if available)
+        );
     }
 
     // Clear the file upload component
@@ -526,6 +554,16 @@ async handleRecipeImageUpload(event: any) {
           summary: 'Fehler',
           detail: 'Es gab ein Problem beim Verarbeiten des Rezeptbildes.',
       });
+      const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+
+      // Log the error with detailed information
+      this.logService.log(
+          'Es gab ein Problem beim Verarbeiten des Rezeptbildes.',      // Log message
+          'ERROR',                          // Log level
+          { error: errorDetails },          // Additional data (error details)
+          new Date().toISOString(),         // Timestamp
+          'currentUserId'                   // User ID (replace with actual user ID if available)
+      );
   }
 }
 
@@ -537,11 +575,25 @@ async handleRecipeImageUpload(event: any) {
   }
 
   toggleDiet(value: string) {
-    if (this.selectedDiets[value]) {
+    const selectedDiets = this.getSelectedDiets();
+    if (this.selectedDiets[value] && selectedDiets.length <= 5) {
       this.selectedDiets[value] = false;
     } else {
       this.selectedDiets[value] = true;
     }
+    if (selectedDiets.length == 5) {
+      this.selectedDiets[value] = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Limit erreicht',
+        detail: 'Sie können maximal 5 Tags auswählen.'
+      });
+    }
+  }
+
+  isCheckboxDisabled(value: string): boolean {
+    const selectedDiets = this.getSelectedDiets();
+    return selectedDiets.length >= 5 && !this.selectedDiets[value];
   }
 
   saveRecipe() {
@@ -589,6 +641,14 @@ async handleRecipeImageUpload(event: any) {
           summary: 'Error',
           detail: 'Failed to save the recipe.',
         });
+        const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
+        this.logService.log(
+          'Failed to save the recipe.', // Message
+          'ERROR',                       // Log level
+          { error: errorDetails },      // Additional data (error details)
+          new Date().toISOString(),       // timestamp
+          'currentUserId'                 // userId (replace with actual user ID if available)
+        );
         this.loading = false;
         this.form.enable(); // Re-enable the form
       },

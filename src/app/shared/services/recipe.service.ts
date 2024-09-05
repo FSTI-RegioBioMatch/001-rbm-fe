@@ -100,9 +100,13 @@ export class RecipeService {
   //     })
   //   );
   // }
-  getRecipeById(id: string): Observable<RecipeType> {
-    return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}`);
+  getRecipeById(id: string, includeImages: boolean = false): Observable<RecipeType> {
+    return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}?includeImages=${includeImages}`);
   }
+
+  getStepImages(recipeId: string, stepIndex: number): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.API_CORE}/new-recipes/${recipeId}/steps/${stepIndex}/images`);
+}
 
   updateRecipeById(id: string, recipe: Partial<RecipeType>): Observable<RecipeType> {
     return this.storeService.selectedCompanyContext$.pipe(
