@@ -45,9 +45,10 @@
                   <div class="card-wrapper">
                     <p-card class="card">
                       <app-map
-                      [lat]="offerService.address.lat"
-                      [lng]="offerService.address.lon"
+                      [lat]="mapLat"
+                      [lng]="mapLng"
                       [offers]="offers"
+                      [companies]="companies"
                       class="map-card"
                       ></app-map>
                     </p-card>
@@ -74,7 +75,7 @@
   }
     
     <div class="side-scroll-container">
-      <h2>Rezeptempfehlungen für mich</h2>
+      <h2>Rezeptempfehlungen</h2>
       <div class="small-card-list-container">
         <div class="mb-2">
           <img width="40" height="40" src="assets/img/edit_note.svg" alt="" />
@@ -117,5 +118,8 @@
           <p><strong>Portionen:</strong> {{ selectedMenu.portions }}</p>
         </ng-container>
       </p-dialog>
+</div>
+<div *ngIf="!loaded">
+  Loading...
 </div>
 }

@@ -37,6 +37,7 @@ import { RecipeType } from '../shared/types/recipe.type';
 import { filter, switchMap } from 'rxjs/operators';
 import { CompanyType } from '../shared/types/company.type';
 import Sortable from 'sortablejs';
+import { CompanyService } from '../shared/services/company.service';
 
 interface DashboardItem {
   type: string;
@@ -96,6 +97,9 @@ export class DashboardComponent
   private sortableInitialized = false;
   private routerSubscription!: Subscription;
   private viewInitialized = false;
+  companies: CompanyType[] = [];
+  mapLat: number = 0;
+  mapLng: number = 0;
 
   constructor(
     public offerService: OfferService,
@@ -105,15 +109,16 @@ export class DashboardComponent
     private menuplanService: NewMenuplanService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    private companyService: CompanyService,
   ) {}
 
   ngOnInit() {
-    console.log('DashboardComponent initialized');
     this.loadCompanyAndRoles(); // This will call loadDashboardComponents
     this.loadCompanyRecipes();
     this.loadPublicRecipes();
     this.getOffers();
     this.getRecentMenus();
+    this.getCompanies();
 
     this.routerSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -132,6 +137,16 @@ export class DashboardComponent
 
   ngAfterViewChecked() {
     this.initSortableIfPossible();
+  }
+
+  getCompanies() {
+    this.subscription.add(
+      this.companyService.companies$.subscribe((companies) => {
+        this.companies = companies;
+        // Trigger change detection if needed
+        this.cdr.detectChanges();
+      }),
+    );
   }
 
   private initSortableIfPossible() {
@@ -300,31 +315,43 @@ export class DashboardComponent
 
   getOffers() {
     this.subscription.add(
+      this.offerService.offers$.subscribe((offers) => {
+        console.log('Offers updated', offers);
+        this.offers = offers;
+        this.cdr.detectChanges();
+      }),
+    );
+
+    this.subscription.add(
       this.store.selectedCompanyContext$.subscribe((company) => {
         if (company && company.addresses && company.addresses.length > 0) {
           const addressUrl = company.addresses[0].self;
           this.offerService
             .getAddress(addressUrl)
             .subscribe((address: AddressType) => {
+              console.log('Address updated', address);
+              this.mapLat = address.lat;
+              this.mapLng = address.lon;
+
               const searchRadiusInKM = 50;
               this.offerService.setOffersBySearchRadius(
                 searchRadiusInKM,
                 address,
               );
+
+              this.cdr.detectChanges();
             });
         }
       }),
     );
 
     this.subscription.add(
-      this.offerService.offers$.subscribe((offers) => {
-        this.offers = offers;
+      this.offerService.loaded$.subscribe((loaded) => {
+        console.log('Offers loaded:', loaded);
+        this.loaded = loaded;
+        this.cdr.detectChanges();
       }),
     );
-
-    this.offerService.loaded$.subscribe((loaded) => {
-      this.loaded = loaded;
-    });
   }
 
   getRecentMenus() {
