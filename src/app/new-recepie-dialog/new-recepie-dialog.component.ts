@@ -26,6 +26,8 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 import { CustomValidators } from '../shared/validators/custom-validators'; 
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoggingService } from '../shared/services/logging.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -46,7 +48,9 @@ import { LoggingService } from '../shared/services/logging.service';
     FormsModule,
     ToastModule,
     MultiSelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    FloatLabelModule,
+    OverlayPanelModule,
   ],
   providers: [MessageService],
 })
@@ -278,6 +282,10 @@ export class NewRecepieDialogComponent implements OnInit {
       return 'Lade Zutaten...';
     }
     return '';
+  }
+
+  getSelectedDiets() {
+    return this.dietOptions.filter(diet => this.selectedDiets[diet.value]);
   }
 
   onFilter(event: any, index: number) {
@@ -567,11 +575,25 @@ async handleRecipeImageUpload(event: any) {
   }
 
   toggleDiet(value: string) {
-    if (this.selectedDiets[value]) {
+    const selectedDiets = this.getSelectedDiets();
+    if (this.selectedDiets[value] && selectedDiets.length <= 5) {
       this.selectedDiets[value] = false;
     } else {
       this.selectedDiets[value] = true;
     }
+    if (selectedDiets.length == 5) {
+      this.selectedDiets[value] = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Limit erreicht',
+        detail: 'Sie können maximal 5 Tags auswählen.'
+      });
+    }
+  }
+
+  isCheckboxDisabled(value: string): boolean {
+    const selectedDiets = this.getSelectedDiets();
+    return selectedDiets.length >= 5 && !this.selectedDiets[value];
   }
 
   saveRecipe() {

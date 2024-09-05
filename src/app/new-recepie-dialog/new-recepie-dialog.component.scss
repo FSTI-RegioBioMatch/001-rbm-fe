@@ -75,7 +75,7 @@
   border: none;
   border-radius: 100px;
   height: min-content;
-  background-color: #E9FFC2;
+  background-color: var(--rbm-tea-green);
   cursor: pointer;
   position: relative;
 }
@@ -83,13 +83,13 @@
 ::ng-deep .diet-option-chip_checkbox {
   .p-checkbox-box {
     border-radius: 4px;
-    border: 2px solid #29784D;
-    background-color: #E9FFC2;
+    border: 2px solid var(--rbm-sea-green);
+    background-color: var(--rbm-tea-green);
   }
 
   .p-checkbox-box.p-highlight {
-    background-color: #29784D;
-    border-color: #29784D;
+    background-color: var(--rbm-sea-green);
+    border-color: var(--rbm-sea-green);
   }
 
   .p-checkbox-icon {
@@ -365,10 +365,92 @@
 
 
 
+::ng-deep .p-float-label {
+  height: 100%;
+}
 
 
 
+.custom-dropdown .p-dropdown {
+  width: 100% !important; /* Ensure the dropdown takes full width */
+  height: auto !important; /* Adjust height as needed */
+}
+
+.custom-dropdown .p-dropdown-panel {
+  max-height: 300px; /* Adjust the max height of the dropdown panel */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
 
 
+::ng-deep .p-float-label .p-inputtext::placeholder,
+::ng-deep .p-float-label .p-dropdown-label span {
+  opacity: 1; /* Standardmäßig ist die Opazität von Platzhaltern reduziert */
+}
 
+::ng-deep .p-float-label .p-inputtext:focus::placeholder,
+::ng-deep .p-float-label .p-inputtext:not(:placeholder-shown)::placeholder,
+::ng-deep .p-float-label .p-dropdown-label:focus span,
+::ng-deep .p-float-label .p-dropdown-label:not(:placeholder-shown) span {
+  transform: translateY(0) scale(1);
+  color: var(--rbm-sea-green-40);
+}
 
+::ng-deep .p-float-label .p-dropdown .p-placeholder {
+  opacity: 1 !important;
+}
+
+.alternatives {
+  padding-left: 10px;
+  border-left: 4px solid var(--rbm-sea-green-40);
+  border-radius: 10px;
+}
+
+.tag {
+  background-color: var(--rbm-tea-green-40);
+  color: #155724;
+  padding: 10px;
+  border-radius: 100px;
+  font-size: 18px;
+  flex: 1 1 30%;
+  box-sizing: border-box;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .p-overlaypanel {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 500px;
+  padding: 20px;
+
+  .p-overlaypanel-close {
+    top: 10px;
+    right: 1rem;
+  }
+}
+
+::ng-deep .p-overlaypanel::-webkit-scrollbar {
+  width: 8px; 
+  height: 8px;
+}
+
+::ng-deep .p-overlaypanel::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px; 
+}
+
+::ng-deep .p-overlaypanel::-webkit-scrollbar-thumb {
+  background: #29784D;
+  border-radius: 10px;
+}
+
+::ng-deep .p-overlaypanel::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::ng-deep .p-overlaypanel::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}

@@ -3145,18 +3145,18 @@ textarea {
 }
 
 // checkboy
-::ng-deep .p-checkbox-box {
+.p-checkbox-box {
   border-radius: 4px;
-  border: 2px solid #29784D;
-  background-color: #E9FFC2;
+  border: 2px solid var(--rbm-sea-green);
 }
 
-::ng-deep .p-checkbox-box.p-highlight {
-  background-color: #29784D;
-  border-color: #29784D;
+.p-checkbox-box.p-highlight {
+  background-color: var(--rbm-sea-green);
+  border-color: var(--rbm-sea-green);
+  background: var(--rbm-sea-green);
 }
 
-::ng-deep .p-checkbox-icon {
+.p-checkbox-icon {
   color: rgb(255, 255, 255);
 }
 
@@ -3373,7 +3373,6 @@ p-floatLabel {
   }
   span {
     font-size: 13px;
-    padding: 0;
   }
   .invalid_input_label {
     color: red;

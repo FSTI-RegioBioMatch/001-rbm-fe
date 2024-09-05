@@ -59,7 +59,6 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     TabViewModule,
     TooltipModule,
     MessageModule,
-    FloatLabelModule,
     SidebarComponent,
   ],
   providers: [MessageService, ConfirmationService],
