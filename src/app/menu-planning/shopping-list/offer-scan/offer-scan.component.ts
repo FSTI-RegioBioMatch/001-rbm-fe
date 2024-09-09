@@ -66,7 +66,7 @@ export class OfferScanComponent implements OnInit {
     if (!latLon) {
       return of(null);
     }
-    this.offerService.setOffersBySearchRadius(50, this.offerService.address);
+    //this.offerService.setOffersBySearchRadius(50, this.offerService.address);
 
     const { latMin, latMax, lonMin, lonMax } = this.geoService.getBoundingBox(
       20,
