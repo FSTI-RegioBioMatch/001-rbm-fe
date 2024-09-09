@@ -147,6 +147,7 @@ export class MenuPlanningComponent implements OnInit {
     { label: 'Wöchentlich', value: 'WEEKLY' },
     { label: 'Monatlich', value: 'MONTHLY' },
     { label: 'Jährlich', value: 'YEARLY' },
+    { label: 'Einmalig', value: 'ONCE' },
   ];
 
   ngOnInit(): void {
@@ -337,52 +338,16 @@ export class MenuPlanningComponent implements OnInit {
     const nextExecution = menuPlanData.nachsteAusfuhrung;
     const weekNumber = parseInt(nextExecution.split(' ')[0].replace('KW', ''), 10);
     const year = parseInt(nextExecution.split(' ')[1], 10);
-
+  
     const startDate = moment().year(year).isoWeek(weekNumber).isoWeekday(menuPlanData.wochentag);
     const repeatFrequency = menuPlanData.wiederholung;
-
-    let rule: RRule;
-    switch (repeatFrequency) {
-      case 'DAILY':
-        rule = new RRule({
-          freq: Frequency.DAILY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate(),
-        });
-        break;
-      case 'WEEKLY':
-        rule = new RRule({
-          freq: Frequency.WEEKLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate(),
-        });
-        break;
-      case 'MONTHLY':
-        rule = new RRule({
-          freq: Frequency.MONTHLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate(),
-          byweekday: [new Weekday(startDate.day() - 1)],
-          bysetpos: [Math.ceil(startDate.date() / 7)],
-        });
-        break;
-      case 'YEARLY':
-        rule = new RRule({
-          freq: Frequency.YEARLY,
-          dtstart: startDate.toDate(),
-          until: moment().year(year).endOf('year').toDate(),
-        });
-        break;
-      default:
-        return;
-    }
-
-    const dates = rule.all();
-    dates.forEach((date) => {
+  
+    if (repeatFrequency === 'ONCE') {
+      // For 'ONCE', we just create one event without using RRule
       this.events.push({
         id: uuidv4(),
         title: menuPlanData.name,
-        start: moment(date).startOf('day').toISOString(),
+        start: startDate.startOf('day').toISOString(),
         allDay: true,
         extendedProps: {
           description: menuPlanData.description,
@@ -394,11 +359,69 @@ export class MenuPlanningComponent implements OnInit {
           menuId: menuUuid,
         },
       });
-    });
-
+    } else {
+      // Logic for recurring events using RRule
+      let rule: RRule;
+      switch (repeatFrequency) {
+        case 'DAILY':
+          rule = new RRule({
+            freq: Frequency.DAILY,
+            dtstart: startDate.toDate(),
+            until: moment().year(year).endOf('year').toDate(),
+          });
+          break;
+        case 'WEEKLY':
+          rule = new RRule({
+            freq: Frequency.WEEKLY,
+            dtstart: startDate.toDate(),
+            until: moment().year(year).endOf('year').toDate(),
+          });
+          break;
+        case 'MONTHLY':
+          rule = new RRule({
+            freq: Frequency.MONTHLY,
+            dtstart: startDate.toDate(),
+            until: moment().year(year).endOf('year').toDate(),
+            byweekday: [new Weekday(startDate.day() - 1)],
+            bysetpos: [Math.ceil(startDate.date() / 7)],
+          });
+          break;
+        case 'YEARLY':
+          rule = new RRule({
+            freq: Frequency.YEARLY,
+            dtstart: startDate.toDate(),
+            until: moment().year(year).endOf('year').toDate(),
+          });
+          break;
+        default:
+          return;
+      }
+  
+      // Add events for recurring rules
+      const dates = rule.all();
+      dates.forEach((date) => {
+        this.events.push({
+          id: uuidv4(),
+          title: menuPlanData.name,
+          start: moment(date).startOf('day').toISOString(),
+          allDay: true,
+          extendedProps: {
+            description: menuPlanData.description,
+            location: menuPlanData.ort,
+            portions: menuPlanData.portions,
+            portionsVegetarisch: menuPlanData.portionsVegetarisch,
+            portionsVegan: menuPlanData.portionsVegan,
+            repeatFrequency: menuPlanData.wiederholung,
+            menuId: menuUuid,
+          },
+        });
+      });
+    }
+  
+    // Update the calendar with new events
     this.calendarOptions.events = [...this.events];
   }
-
+  
   setupCalendarOptions(): void {
     this.calendarOptions = {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin],
