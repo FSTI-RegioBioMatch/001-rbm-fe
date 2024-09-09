@@ -403,6 +403,9 @@ export class MenuPlanningComponent implements OnInit {
     this.calendarOptions = {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin],
         firstDay: 1,
+        weekNumbers: true,  // Enable week numbers
+  weekNumberCalculation: 'ISO',  // Use ISO week numbers
+  weekNumberFormat: { week: 'numeric' },  // Format the week number as numeric (optional)
         editable: true,
         droppable: true,
         events: this.events,
