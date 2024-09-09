@@ -374,7 +374,7 @@ export class NewRecepieDialogComponent implements OnInit {
       optional: [false],
       note: ['', CustomValidators.optionalMinLength(1)], // Note field
       alternatives: this.fb.array([]), // Array to hold alternative ingredients
-      ingredientOptions: [this.allIngredients] // Initialize with all ingredients
+      ingredientOptions: []
     });
   }
 
@@ -609,6 +609,7 @@ async handleRecipeImageUpload(event: any) {
     this.loading = true;
     this.form.disable(); // Disable the form
 
+
     const recipeData = this.form.value;
     recipeData.steps = recipeData.steps.map((step: any, index: number) => ({
       ...step,
@@ -619,6 +620,20 @@ async handleRecipeImageUpload(event: any) {
     );
     recipeData.recipeImage = this.recipeImage;
     recipeData.nearbuyId = '1234'; // Replace with actual nearbuy ID
+
+    recipeData.ingredients = recipeData.ingredients.map((ingredient: any) => {
+      // Remove ingredientOptions from the main ingredient
+      const { ingredientOptions, ...cleanedIngredient } = ingredient;
+  
+      return {
+          ...cleanedIngredient,
+          alternatives: ingredient.alternatives.map((alternative: any) => {
+              // Remove ingredientOptions from each alternative
+              const { ingredientOptions, ...cleanedAlternative } = alternative;
+              return cleanedAlternative;
+          }),
+      };
+  });
 
     this.recipeService.saveRecipe(recipeData).subscribe(
       (response) => {
