@@ -197,7 +197,9 @@
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">
         <div class="recipe-name">{{ recipe.recipeName }}</div>
-        <p-button class="add-button rbm-standard-pbtn-round" (click)="addRecipeToMenuPlan(recipe)">+</p-button>
+        <p-button [class]="isRecipeAdded(recipe) ? 'remove-button rbm-standard-pbtn-round' : 'add-button rbm-standard-pbtn-round'"
+        [label]="isRecipeAdded(recipe) ? '-' : '+'"
+        (click)="isRecipeAdded(recipe) ? removeRecipeFromMenuPlan(recipe) : addRecipeToMenuPlan(recipe)"></p-button>
       </div>
     </div>
 

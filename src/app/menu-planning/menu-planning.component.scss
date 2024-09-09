@@ -69,6 +69,7 @@
 
 .recipe-list-add {
   display: flex;
+  align-content: flex-start;
   flex-wrap: wrap; /* Ermöglicht das Umbruchverhalten */
   height: 100%;
   position: relative;

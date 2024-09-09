@@ -78,6 +78,7 @@ export class MenuPlanningComponent implements OnInit {
   calendarOptions: any;
   displayEventDialog: boolean = false;
   selectedEvent: any;
+  addedRecipes: Set<any> = new Set();
 
   currentPage: number = 0;
   pageSize: number = 20;
@@ -124,6 +125,10 @@ export class MenuPlanningComponent implements OnInit {
       container.scrollLeft -= 100;
     }
     event.preventDefault();
+  }
+
+  isRecipeAdded(recipe: any): boolean {
+    return this.addedRecipes.has(recipe);
   }
 
   weekDays = [
@@ -237,6 +242,11 @@ export class MenuPlanningComponent implements OnInit {
   }
 
   addRecipeToMenuPlan(recipe: any): void {
+    if (this.addedRecipes.has(recipe)) {
+      this.addedRecipes.delete(recipe);
+    } else {
+      this.addedRecipes.add(recipe);
+    }
     if (this.menuPlan.includes(recipe)) {
       return;
     }
@@ -246,6 +256,11 @@ export class MenuPlanningComponent implements OnInit {
   
   removeRecipeFromMenuPlan(recipe: any): void {
     const index = this.menuPlan.indexOf(recipe);
+    if (this.addedRecipes.has(recipe)) {
+      this.addedRecipes.delete(recipe);
+    } else {
+      this.addedRecipes.add(recipe);
+    }
     if (index > -1) {
       this.menuPlan.splice(index, 1);
     }
