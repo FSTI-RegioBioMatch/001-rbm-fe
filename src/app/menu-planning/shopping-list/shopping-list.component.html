@@ -7,10 +7,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-shoppingListItem>
-      <tr
-        (click)="onClickShoppingListItem(shoppingListItem)"
-        class="cursor-pointer hover:bg-black-alpha-10"
-      >
+      <tr (click)="onClickShoppingListItem(shoppingListItem)" class="cursor-pointer hover:bg-black-alpha-10">
         <td>{{ shoppingListItem.id }}</td>
         <td>{{ shoppingListItem.createdAt }}</td>
       </tr>

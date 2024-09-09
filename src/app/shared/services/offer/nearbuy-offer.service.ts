@@ -27,6 +27,7 @@ export class NearbuyOfferService {
     endLat: number,
     endLon: number,
   ) {
+    console.log('getOffersByRadius', startLat, startLon, endLat, endLon);
     return this.http.get<OfferType[]>(
       environment.NEARBUY_API +
         `/offers?limit=1000&lat1=${startLat}&lon1=${startLon}&lat2=${endLat}&lon2=${endLon}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`,

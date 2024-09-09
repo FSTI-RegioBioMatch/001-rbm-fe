@@ -1,50 +1,146 @@
 <div class="shopping-list-details p-m-3 p-shadow-3 p-p-4">
-    <h1>Shopping List Details</h1>
+    <h1>Shopping List and Offers</h1>
 
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-
     <p-message *ngIf="errorMessage" severity="error" text="{{ errorMessage }}"></p-message>
 
-    <div *ngIf="!loading && shoppingList">
-        <h2>{{ shoppingList.name }}</h2>
-        <p>Date Created: {{ shoppingList.createdAt | date:'shortDate' }}</p>
+    <div *ngIf="!loading && shoppingList" class="p-grid">
+        <!-- Shopping List on the Left -->
+        <div class="p-col-6">
+            <p-card header="{{ shoppingList?.name }}"
+                subheader="Date Created: {{ shoppingList?.createdAt | date:'shortDate' }}">
+                <h3>Ingredients</h3>
+                <p-accordion>
+                    <ng-container *ngFor="let ingredientName of ingredientNames">
+                        <p-accordionTab header="{{ getLocalizedLabel(ingredientName) }}">
+                            <ng-container *ngFor="let ingredient of shoppingList?.groupedShoppingList[ingredientName]">
+                                <p-panel header="{{ getLocalizedLabel(ingredient?.name) }}">
+                                    <p><strong>Total Amount:</strong> {{ ingredient?.totalAmount }} {{
+                                        getUnitLabel(ingredient?.unit) }}</p>
+                                    <p><strong>Category:</strong> {{ ingredient?.category }}</p>
+                                    <p><strong>Convertible:</strong> {{ ingredient?.convertible ? 'Yes' : 'No' }}</p>
+                                    <p><strong>Source Recipes:</strong> {{ ingredient?.sourceRecipes?.join(', ') }}</p>
 
-        <h3>Ingredients</h3>
-        <p-accordion>
-            <p-accordionTab *ngFor="let ingredientName of ingredientNames"
-                header="{{ getLocalizedLabel(ingredientName) }}">
-                <div *ngFor="let ingredient of shoppingList.groupedShoppingList[ingredientName]"
-                    class="p-grid p-align-center">
-                    <div class="p-col-8">
-                        <p><strong>Name:</strong> {{ getLocalizedLabel(ingredient.name) }}</p>
-                        <p><strong>Total Amount:</strong> {{ ingredient.totalAmount }} {{ getUnitLabel(ingredient.unit)
-                            }}</p>
-                        <p><strong>Category:</strong> {{ ingredient.category }}</p>
-                        <p *ngIf="ingredient.convertible"><strong>Convertible:</strong> Yes</p>
-                        <p *ngIf="!ingredient.convertible"><strong>Convertible:</strong> No</p>
-                        <p><strong>Source Recipes:</strong> {{ ingredient.sourceRecipes.join(', ') }}</p>
-                    </div>
-                    <div class="p-col-4">
-                        <ng-container *ngIf="getOfferForIngredient(ingredient.name).length > 0; else noOffers">
-                            <h4>Offers:</h4>
-                            <ul>
-                                <li *ngFor="let offer of getOfferForIngredient(ingredient.name)">
-                                    <p>
-                                        <strong>{{ offer?.company?.name }}</strong> -
-                                        {{ offer?.product.name }}:
-                                        {{ offer?.offerDetail?.pricePerUnit }} per unit
-                                    </p>
-                                </li>
-                            </ul>
-                        </ng-container>
-                        <ng-template #noOffers>
-                            <p>No offers available</p>
-                        </ng-template>
-                    </div>
-                </div>
-            </p-accordionTab>
-        </p-accordion>
+                                    <!-- Matching Offers Section -->
+                                    <p-accordion>
+                                        <p-accordionTab header="Matching Offers">
+                                            <ng-container *ngFor="let offer of offers">
+                                                <ng-container *ngIf="matchOfferToIngredient(ingredient.name, offer)">
+                                                    <h5>{{ offer?.company?.name }}</h5>
+                                                    <p><strong>Product Title:</strong> {{
+                                                        offer?.offerDetails?.productTitle }}</p>
+                                                    <p><strong>Price per Unit:</strong> €{{
+                                                        offer?.offerDetails?.pricePerUnit }}</p>
+                                                </ng-container>
+                                            </ng-container>
+                                        </p-accordionTab>
+                                    </p-accordion>
+                                </p-panel>
+                            </ng-container>
+                        </p-accordionTab>
+                    </ng-container>
+                </p-accordion>
+            </p-card>
+        </div>
 
-        <p-button label="Search for Offers" icon="pi pi-search" (click)="onClickGoToOffer()"></p-button>
+        <!-- Offers on the Right -->
+        <div class="p-col-6">
+            <p-card header="Available Offers">
+                <p-accordion>
+                    <ng-container *ngFor="let offer of offers">
+                        <p-accordionTab header="{{ offer?.company?.name }}">
+                            <p-panel header="Company Details">
+                                <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
+                                <p><strong>Verified:</strong> {{ offer?.company?.verified ? 'Yes' : 'No' }}</p>
+                                <p><strong>Address:</strong> {{ offer?.address?.city }}</p>
+                                <p><strong>Roles:</strong> {{ offer?.roles?.join(', ') }}</p>
+                            </p-panel>
+
+                            <p-panel header="Product Details">
+                                <p><strong>Start Date:</strong> {{ offer?.product?.dateStart }}</p>
+                                <p><strong>End Date:</strong> {{ offer?.product?.dateEnd }}</p>
+                                <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{
+                                    offer?.product?.unit }}</p>
+                                <p><strong>Permanent:</strong> {{ offer?.product?.isPermanent ? 'Yes' : 'No' }}</p>
+                            </p-panel>
+
+                            <p-panel header="Offer Details">
+                                <p><strong>Product Title:</strong> {{ offer?.offerDetails?.productTitle }}</p>
+                                <p><strong>Brand Name:</strong> {{ offer?.offerDetails?.brandName }}</p>
+                                <p><strong>Description:</strong> {{ offer?.offerDetails?.description }}</p>
+                                <p><strong>Min Amount:</strong> {{ offer?.offerDetails?.minAmount?.amount }} {{
+                                    offer?.offerDetails?.minAmount?.unit }}</p>
+                                <p><strong>Price per Unit:</strong> €{{ offer?.offerDetails?.pricePerUnit }}</p>
+                            </p-panel>
+
+                            <p-panel header="Graduated Prices">
+                                <ul>
+                                    <li *ngFor="let price of offer?.offerDetails?.graduatedPrices">
+                                        <p>Amount: {{ price?.amount }} - Price: €{{ price?.price }}</p>
+                                    </li>
+                                </ul>
+                            </p-panel>
+
+                            <p-panel header="Containers">
+                                <ul>
+                                    <li *ngFor="let container of offer?.offerDetails?.containers">
+                                        <p>Amount: {{ container?.amount }} {{ container?.unit }}</p>
+                                        <p><strong>Returnable:</strong> {{ container?.returnable ? 'Yes' : 'No' }}</p>
+                                    </li>
+                                </ul>
+                            </p-panel>
+
+                            <p-panel header="Product Traits, Weight, and Caliber">
+                                <h4>Product Traits</h4>
+                                <ul>
+                                    <li *ngFor="let trait of offer?.offerDetails?.productTraits">
+                                        <p>{{ trait?.trait }}: {{ trait?.description }}</p>
+                                    </li>
+                                </ul>
+
+                                <h4>Weight</h4>
+                                <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit }}
+                                </p>
+                                <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit }}
+                                </p>
+
+                                <h4>Caliber</h4>
+                                <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{ offer?.offerDetails?.caliber?.unit }}
+                                </p>
+                                <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{ offer?.offerDetails?.caliber?.unit }}
+                                </p>
+                            </p-panel>
+
+                            <p-panel header="OntoFood Type">
+                                <p><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}</p>
+                                <p><strong>Localized:</strong> {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}</p>
+                                <p><strong>Company:</strong> {{ offer?.ontoFoodType?.company ? 'Yes' : 'No' }}</p>
+                                <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No' }}
+                                </p>
+                                <p><strong>Supercategories:</strong></p>
+                                <ul>
+                                    <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
+                                        <a href="{{ category }}" target="_blank">View Supercategory</a>
+                                    </li>
+                                </ul>
+                            </p-panel>
+
+                            <p-panel header="Links">
+                                <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View
+                                        Offer</a></p>
+                                <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}" target="_blank">View
+                                        Company</a></p>
+                                <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}"
+                                        target="_blank">View Category</a></p>
+                                <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}"
+                                        target="_blank">Contact</a></p>
+                            </p-panel>
+                        </p-accordionTab>
+                    </ng-container>
+                </p-accordion>
+            </p-card>
+        </div>
     </div>
+
+    <p-button label="Search for Offers" icon="pi pi-search" (click)="onClickGoToOffer()"></p-button>
 </div>

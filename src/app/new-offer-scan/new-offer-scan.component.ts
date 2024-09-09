@@ -57,7 +57,19 @@ export class NewOfferScanComponent implements OnInit {
     if (!latLon) {
       return of(null);
     }
-    this.offerService.setOffersBySearchRadius(50, this.offerService.address);
+
+    // Check if address is set before fetching offers
+    const address = this.offerService.address;
+    if (address) {
+      this.offerService.setOffersBySearchRadius(50, address);
+    } else {
+      // Wait for the address to be set asynchronously
+      this.offerService.address$.subscribe(address => {
+        if (address) {
+          this.offerService.setOffersBySearchRadius(50, address);
+        }
+      });
+    }
 
     const { latMin, latMax, lonMin, lonMax } = this.geoService.getBoundingBox(20, latLon.lat, latLon.lon);
 
@@ -119,10 +131,7 @@ export class NewOfferScanComponent implements OnInit {
     } else {
       console.error('Shopping list or ingredients are not defined or empty.');
     }
-}
-
-
-  
+  }
 
   private loadRouterParams(): void {
     this.activatedRoute.params.subscribe((params) => {
@@ -138,88 +147,41 @@ export class NewOfferScanComponent implements OnInit {
 
   private compareWithShoppingList(ingredients: any[]): void {
     if (!this.results || !this.results.companies) {
-        console.error('Results or companies are not defined.');
-        return;
+      console.error('Results or companies are not defined.');
+      return;
     }
 
     ingredients.forEach((ingredient) => {
-        this.results?.companies.forEach((company) => {
-            company.products.forEach((product: ProductType) => {
-                const ingredientName = ingredient.name.toLowerCase();
-                const productCategory = product.category.label.toLowerCase();
-                
-                // Exact or partial match
-                if (this.isMatchingProduct(ingredientName, productCategory)) {
-                    this.matchedProducts.push({
-                        ...product,
-                        company: company.name // Adding company name for easier debugging and display
-                    });
-                }
+      this.results?.companies.forEach((company) => {
+        company.products.forEach((product: ProductType) => {
+          const ingredientName = ingredient.name.toLowerCase();
+          const productCategory = product.category.label.toLowerCase();
+
+          // Exact or partial match
+          if (this.isMatchingProduct(ingredientName, productCategory)) {
+            this.matchedProducts.push({
+              ...product,
+              company: company.name, // Adding company name for easier debugging and display
             });
-        });
-    });
-}
-
-
-private isMatchingProduct(ingredientName: string, productCategory: string): boolean {
-  // Exact match
-  if (ingredientName === productCategory) {
-      return true;
-  }
-
-  // Partial match (e.g., 'paprika' matches 'red paprika')
-  if (productCategory.includes(ingredientName)) {
-      return true;
-  }
-
-  // Implement any additional logic for unit conversion, etc.
-  
-  return false;
-}
-
-private calculateLevenshteinDistance(a: string, b: string): number {
-  const matrix = [];
-
-  for (let i = 0; i <= b.length; i++) {
-      matrix[i] = [i];
-  }
-
-  for (let j = 0; j <= a.length; j++) {
-      matrix[0][j] = j;
-  }
-
-  for (let i = 1; i <= b.length; i++) {
-      for (let j = 1; j <= a.length; j++) {
-          if (b.charAt(i - 1) === a.charAt(j - 1)) {
-              matrix[i][j] = matrix[i - 1][j - 1];
-          } else {
-              matrix[i][j] = Math.min(
-                  matrix[i - 1][j - 1] + 1, // substitution
-                  Math.min(matrix[i][j - 1] + 1, // insertion
-                  matrix[i - 1][j] + 1) // deletion
-              );
           }
-      }
+        });
+      });
+    });
   }
 
-  return matrix[b.length][a.length];
-}
+  private isMatchingProduct(ingredientName: string, productCategory: string): boolean {
+    // Exact match
+    if (ingredientName === productCategory) {
+      return true;
+    }
 
-matchedIngredientCompanies(ingredientName: string): any[] {
-  if (!this.results || !this.results.companies) {
-      return [];
+    // Partial match (e.g., 'paprika' matches 'red paprika')
+    if (productCategory.includes(ingredientName)) {
+      return true;
+    }
+
+    return false;
   }
-  return this.results.companies.filter(company =>
-      company.products.some(
-          (product: ProductType) => product.category.label.toLowerCase() === ingredientName.toLowerCase()
-      )
-  ).map(company => ({
-      label: company.name,
-      value: company
-  }));
-}
-
-
 
   private getShoppingList(): void {
     this.storeService.selectedCompanyContext$
@@ -230,44 +192,52 @@ matchedIngredientCompanies(ingredientName: string): any[] {
       .subscribe({
         next: (shoppingList) => {
           this.shoppingList = shoppingList;
-          // Extract ingredients from groupedShoppingList
           this.shoppingList.ingredients = this.extractIngredientsFromGroupedList(this.shoppingList.groupedShoppingList);
         },
         error: (error) => {
           console.error('Error fetching shopping list:', error);
         },
       });
-}
-private extractIngredientsFromGroupedList(groupedShoppingList: any): any[] {
-  if (!groupedShoppingList) {
-      return [];
   }
 
-  // Flatten all the arrays in the groupedShoppingList into a single array
-  return Object.values(groupedShoppingList).flat().map((ingredient: any) => {
-      return {
-          name: ingredient.name.toLowerCase(), // Ensure name is in lower case for accurate matching
-          unit: ingredient.unit,
-          totalAmount: ingredient.totalAmount,
-          sourceRecipes: ingredient.sourceRecipes,
-          category: ingredient.category,
-          processingBreakdown: ingredient.processingBreakdown,
-          convertible: ingredient.convertible
-      };
-  });
-}
+  private extractIngredientsFromGroupedList(groupedShoppingList: any): any[] {
+    if (!groupedShoppingList) {
+      return [];
+    }
 
+    return Object.values(groupedShoppingList)
+      .flat()
+      .map((ingredient: any) => ({
+        name: ingredient.name.toLowerCase(),
+        unit: ingredient.unit,
+        totalAmount: ingredient.totalAmount,
+        sourceRecipes: ingredient.sourceRecipes,
+        category: ingredient.category,
+        processingBreakdown: ingredient.processingBreakdown,
+        convertible: ingredient.convertible,
+      }));
+  }
 
+  matchedIngredientCompanies(ingredientName: string): any[] {
+    if (!this.results || !this.results.companies) {
+      return [];
+    }
+    return this.results.companies
+      .filter((company) =>
+        company.products.some((product: ProductType) => product.category.label.toLowerCase() === ingredientName.toLowerCase())
+      )
+      .map((company) => ({
+        label: company.name,
+        value: company,
+      }));
+  }
 
-
-  
-findCompanyProductPrice(rowIndex: number, label: string): string {
-  const product = this.selectedCompanies[rowIndex]?.products?.find(
+  findCompanyProductPrice(rowIndex: number, label: string): string {
+    const product = this.selectedCompanies[rowIndex]?.products?.find(
       (product: ProductType) => product.category.label.toLowerCase() === label.toLowerCase()
-  );
-  return product ? product.offerDetail.pricePerUnit : '';
-}
-
+    );
+    return product ? product.offerDetail.pricePerUnit : '';
+  }
 
   parseFloat(value: any): number {
     return parseFloat(value);

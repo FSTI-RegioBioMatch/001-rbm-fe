@@ -28,4 +28,5 @@ export type OfferType = {
     category: string;
   };
   ontoFoodType?: OntofoodType;
+  offerDetails?: any;
 };

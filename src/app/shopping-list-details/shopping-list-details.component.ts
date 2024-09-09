@@ -12,6 +12,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
+import { AddressType } from '../shared/types/address.type';
+import { PanelModule } from 'primeng/panel';
+import { CardModule } from 'primeng/card';
 
 interface IngredientUnit {
   label: string;
@@ -65,7 +68,10 @@ const ingredientUnits: IngredientUnit[] = [
     AccordionModule,
     ButtonModule,
     ProgressSpinnerModule,
-    MessageModule
+    MessageModule,
+    PanelModule,
+    CardModule,
+    AccordionModule,
   ],
   standalone: true,
   providers: [MessageService]
@@ -90,94 +96,95 @@ export class ShoppingListDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
+
+    // Subscribe to the company context and route parameters
     this.store.selectedCompanyContext$
-    .pipe(
-      filter(company => company !== null)
-    )
-    .subscribe({
-      next: (data) => {
-        this.route.paramMap.subscribe(params => {
+      .pipe(
+        filter(company => company !== null),
+        switchMap(() => this.route.paramMap),
+        switchMap(params => {
           const id = params.get('id');
           if (id) {
-            this.loadShoppingList(id);
+            return this.shoppingListService.getShoppingListById(id);
           } else {
             this.errorMessage = 'No shopping list ID provided';
             this.loading = false;
+            return [];
           }
-        });
-        this.nearbuyTestService.getData().subscribe({
-          next: (result) => {
-            this.localizationData = result; // Save localization data for later use
-          },
-          error: (err) => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Übersetzungen' });
-          }
-        });
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Menüplanung' });
-        console.error('Error loading menu plans', error);
-      }
-    });
-  }
-
-  private loadShoppingList(id: string): void {
-    this.storeService.selectedCompanyContext$
-      .pipe(
-        filter(company => company !== null),
-        switchMap(company => this.shoppingListService.getShoppingListById(id))
+        })
       )
       .subscribe({
         next: list => {
-          this.shoppingList = list;
-          this.ingredientNames = Object.keys(this.shoppingList.groupedShoppingList);
-          this.loadOffers();
-          this.loading = false;
+          if (list) {
+            this.shoppingList = list;
+            this.ingredientNames = Object.keys(this.shoppingList.groupedShoppingList);
+            this.loadOffers(); // Now load offers after the shopping list is fetched
+            this.loading = false;
+          }
         },
         error: error => {
-          console.error('Shopping list not found:', error);
+          console.error('Error fetching shopping list:', error);
           this.errorMessage = 'Shopping list not found';
           this.loading = false;
         }
       });
+
+    // Load localization data
+    this.nearbuyTestService.getData().subscribe({
+      next: result => {
+        this.localizationData = result; // Save localization data for later use
+      },
+      error: err => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim Laden der Übersetzungen' });
+      }
+    });
   }
 
   private loadOffers(): void {
-    if (this.shoppingList && this.shoppingList.groupedShoppingList) {
-      const ingredientNames = this.ingredientNames;
-
-      this.offerService.setOffersBySearchRadius(50, this.offerService.address); // Setting initial search radius and address
-      
-      this.offerService.offers$.subscribe({
-        next: offers => {
-          this.offers = offers.filter(offer =>
-            offer.ontoFoodType?.label && ingredientNames.includes(offer.ontoFoodType.label)
-          );
-        },
-        error: error => {
-          console.error('Error loading offers:', error);
-          this.errorMessage = 'Error loading offers';
+    // Check if the address is set before fetching offers
+    const address = this.offerService.address;
+    if (address) {
+      this.fetchOffers(address);
+    } else {
+      // Wait for the address to be set or fetch it asynchronously if needed
+      this.offerService.address$.subscribe(address => {
+        if (address) {
+          this.fetchOffers(address);
         }
       });
     }
   }
 
-  getOfferForIngredient(ingredientName: string): any[] {
-    return this.offers.filter(offer => offer.ontoFoodType?.label === ingredientName);
+  private fetchOffers(address: AddressType): void {
+    this.offerService.setOffersBySearchRadius(50, address); // Set initial search radius and address
+
+    this.offerService.offers$.subscribe({
+      next: offers => {
+        console.log('Offers loaded:', offers);
+        this.offers = offers;  // No mapping, just display all offers
+      },
+      error: error => {
+        console.error('Error loading offers:', error);
+        this.errorMessage = 'Error loading offers';
+      }
+    });
   }
 
   onClickGoToOffer() {
     const scanId = uuidv4();
     this.router.navigate([`/menu-planning/shopping-list/${this.shoppingList.id}/offer-scan/${scanId}`]);
   }
+
   getLocalizedLabel(ingredientName: string): string {
     const localizedItem = this.localizationData.find(item => item.value === ingredientName);
     return localizedItem ? localizedItem.displayLabel : ingredientName;
   }
+
   getUnitLabel(unitValue: string): string {
     const unit = ingredientUnits.find(u => u.value === unitValue);
     return unit ? unit.label : unitValue; // Return the label if found, else return the value itself
+  }
+  matchOfferToIngredient(ingredientName: string, offer: any): boolean {
+    return ingredientName.toLowerCase() === offer?.ontoFoodType?.label?.toLowerCase();
   }
 }

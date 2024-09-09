@@ -57,7 +57,7 @@ export class HistoryOfferService {
     dynamicParams.keys().forEach((key) => {
       params = params.set(key, dynamicParams.get(key)!);
     });
-
+    console.log('getProducts', params);
     return this.http.get<HistoricProductType[]>(
       `${environment.NEARBUY_API}/offers`,
       { params },
@@ -104,6 +104,7 @@ export class HistoryOfferService {
         }),
         switchMap((products: HistoricProductType[]) => {
           // Create observables for fetching OntofoodType details
+          console.log('products', products);
           const observables = products.map((product) =>
             this.http.get<OntofoodType>(product.links.category),
           );
