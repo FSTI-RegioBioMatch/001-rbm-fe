@@ -44,33 +44,33 @@
     </div>
 
     <div class="right">
-      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex; align-items: center;">
+      <div class="dings rbm_scrollbar">
         <div style="width: 50%;"><label>Energie in kcal:</label></div>
         <p *ngIf="!editMode">{{ recipe?.energie }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.energie" />
       </div>
-      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
-        <div style="width: 50%;"><label>Portionen:</label></div>
+      <div class="dings rbm_scrollbar">
+        <div style="min-width: 50%;"><label>Portionen:</label></div>
         <p *ngIf="!editMode">{{ recipe?.portionen }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.portionen" />
       </div>
-      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
-        <div style="width: 50%;"><label>Besonderheiten:</label></div>
+      <div class="dings rbm_scrollbar">
+        <div style="min-width: 50%;"><label>Besonderheiten:</label></div>
         <p *ngIf="!editMode">{{ recipe?.besonderheiten }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.besonderheiten" />
       </div>
-      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
-        <div style="width: 50%;"><label>Essensgäste:</label></div>
-        <p *ngIf="!editMode">{{ recipe?.essensgaeste }}</p>
+      <div class="dings rbm_scrollbar">
+        <div style="min-width: 50%;"><label>Essensgäste: </label></div>
+        <p *ngIf="!editMode" style="display: flex; flex-wrap: wrap;">{{ recipe?.essensgaeste }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.essensgaeste" />
       </div>
-      <div style="padding: 8px; border-bottom: 1px solid rgb(215, 215, 215);display: flex;align-items: center;">
-        <div style="width: 50%;"><label>Allergene:</label></div>
+      <div class="dings rbm_scrollbar">
+        <div style="min-width: 50%;"><label>Allergene: </label></div>
         <p *ngIf="!editMode">{{ recipe?.allergene }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.allergene" />
       </div>
-      <div style="padding: 8px; display: flex;align-items: center;;">
-        <div style="width: 50%;"><label>Saison:</label></div>
+      <div class="dings rbm_scrollbar">
+        <div style="min-width: 50%;"><label>Saison:</label></div>
         <p *ngIf="!editMode">{{ recipe?.saison }}</p>
         <input *ngIf="editMode" [(ngModel)]="recipe.saison" />
       </div>
