@@ -28,6 +28,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoggingService } from '../shared/services/logging.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel } from 'primeng/overlaypanel';
+
 
 @Component({
   selector: 'app-new-recepie-dialog',
@@ -574,28 +576,46 @@ async handleRecipeImageUpload(event: any) {
   clearAllUploadedImages(): void {
     this.stepImages = {}
   }
-
   toggleDiet(value: string) {
     const selectedDiets = this.getSelectedDiets();
-    if (this.selectedDiets[value] && selectedDiets.length <= 5) {
-      this.selectedDiets[value] = false;
-    } else {
-      this.selectedDiets[value] = true;
-    }
-    if (selectedDiets.length == 5) {
-      this.selectedDiets[value] = false;
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Limit erreicht',
-        detail: 'Sie können maximal 5 Tags auswählen.'
-      });
-    }
-  }
+    const isSelected = this.selectedDiets[value];
 
-  isCheckboxDisabled(value: string): boolean {
+    if (isSelected) {
+        this.selectedDiets[value] = false;
+    } else if (selectedDiets.length < 5) {
+        this.selectedDiets[value] = true;
+    } else {
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Limit erreicht',
+            detail: 'Sie können maximal 5 Tags auswählen.'
+        });
+    }
+}
+
+isCheckboxDisabled(value: string): boolean {
     const selectedDiets = this.getSelectedDiets();
     return selectedDiets.length >= 5 && !this.selectedDiets[value];
+}
+
+updateCheckboxStates(): void {
+  const selectedDiets = this.getSelectedDiets();
+  for (const diet in this.selectedDiets) {
+      if (selectedDiets.length >= 5 && !this.selectedDiets[diet]) {
+          this.selectedDiets[diet] = false;
+      }
   }
+}
+
+onOverlayOpen(): void {
+  this.updateCheckboxStates();
+}
+
+// Beispiel für das Öffnen des Overlays
+openOverlay(event: Event, overlayPanel: OverlayPanel): void {
+  this.onOverlayOpen();
+  overlayPanel.toggle(event);
+}
 
   saveRecipe() {
     if (this.form.invalid) {

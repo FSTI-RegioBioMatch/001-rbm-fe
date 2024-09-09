@@ -49,7 +49,7 @@
                                 <span>{{ diet.label }}</span>
                             </div>
                             <p-toast></p-toast>
-                            <button class="tag" (click)="op.toggle($event)">+/- Tags</button>
+                            <button class="tag"  (click)="openOverlay($event, op)">+/- Tags</button>
                     
                     
                             <p-overlayPanel #op [style]="{ width: '450px' }" [showCloseIcon]="true" [ngClass]="'rbm_scrollbar'">

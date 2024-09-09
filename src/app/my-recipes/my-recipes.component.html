@@ -54,7 +54,7 @@
     <div class="recipes" *ngIf="!loading">
 
       <div class="recipe-card" *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
-        <img [src]="recipe.recipeImage || 'assets/img/image_fallback.jpg'" height="150" width="300" />
+        <img [src]="recipe.recipeImage || 'assets/img/image_fallback-bg-green.png'" height="150" width="300" />
         <div class="recipe-info">
           <h3>
             {{ recipe.recipeName }}
