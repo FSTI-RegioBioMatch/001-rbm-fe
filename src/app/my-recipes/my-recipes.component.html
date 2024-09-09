@@ -2,16 +2,18 @@
   <div class="main-content">
     <div class="header">
       <h2>
-       Meine Rezepte
+        Meine Rezepte
       </h2>
       <p-button label="Neues Rezept anlegen" icon="pi pi-plus" (click)="openAddRecipeDialog()"></p-button>
-     </div>
+    </div>
 
     <p-dialog [(visible)]="displayAddRecipeDialog" modal="true" [style]="{width: '80vw', height: '90vh'}"
-      [contentStyle]="{overflow: 'auto'}" [resizable]="false" [draggable]="true" [maximizable]="true" [blockScroll]="true"
-      [closeOnEscape]="true" [dismissableMask]="true" [focusOnShow]="true" [header]="'Neues Rezept'">
+      [contentStyle]="{overflow: 'auto'}" [resizable]="false" [draggable]="true" [maximizable]="true"
+      [blockScroll]="true" [closeOnEscape]="true" [dismissableMask]="true" [focusOnShow]="true"
+      [header]="'Neues Rezept'">
 
-      <app-new-recepie-dialog (closeDialog)="onCloseAddRecipeDialog()"></app-new-recepie-dialog>
+      <app-new-recepie-dialog (recipeSaved)="onRecipeSaved()"
+        (closeDialog)="onCloseAddRecipeDialog()"></app-new-recepie-dialog>
 
     </p-dialog>
     <p-toast></p-toast>
@@ -22,8 +24,8 @@
       </div> <p></p>
     </div> -->
 
-    
-  
+
+
     <div class="filters mb-3 row gx-3 align-items-center">
 
       <div class="col-md-2 col-sm-6 filter-item">
@@ -35,12 +37,12 @@
         <input pInputText type="text" placeholder="Suche via Name" [(ngModel)]="searchName" (input)="onSearchChange()"
           class="form-control rbm-full-width" />
       </div>
-  
-      <div class="col-md-3 col-sm-6 filter-item rbm-width-20" >
+
+      <div class="col-md-3 col-sm-6 filter-item rbm-width-20">
         <p-calendar id="fromDate" [(ngModel)]="fromDate" dateFormat="yy-mm-dd" (onSelect)="onDateRangeChange()"
           showIcon="true" placeholder="Datum von" class="form-control"></p-calendar>
       </div>
-  
+
       <div class="col-md-3 col-sm-6 filter-item rbm-width-20">
         <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy-mm-dd" (onSelect)="onDateRangeChange()"
           showIcon="true" placeholder="Datum bis" class="form-control"></p-calendar>
@@ -50,40 +52,40 @@
       <p-progressSpinner></p-progressSpinner>
     </div>
     <div class="recipes" *ngIf="!loading">
-  
-    <div class="recipe-card"  *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
-     <img [src]="recipe.recipeImage || 'assets/img/image_fallback.jpg'" height="150"  width="300"/>
-     <div class="recipe-info">
-      <h3>
-        {{ recipe.recipeName }}
-      </h3>
-     </div>
-    </div>
 
-    <ng-template #noRecipes>
-      <div class="alert alert-info text-center" role="alert">
-        No recipes found.
+      <div class="recipe-card" *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
+        <img [src]="recipe.recipeImage || 'assets/img/image_fallback.jpg'" height="150" width="300" />
+        <div class="recipe-info">
+          <h3>
+            {{ recipe.recipeName }}
+          </h3>
+        </div>
       </div>
-    </ng-template>
 
-    
-   </div>
+      <ng-template #noRecipes>
+        <div class="alert alert-info text-center" role="alert">
+          No recipes found.
+        </div>
+      </ng-template>
+
+
+    </div>
 
     <div class="pagination-info text-end mt-3">
       {{ getFromToRange() }}
     </div>
 
     <p-paginator [rows]="pageSize" [totalRecords]="totalElements" [rowsPerPageOptions]="pageSizes"
-    (onPageChange)="onPageChange($event)"></p-paginator>
+      (onPageChange)="onPageChange($event)"></p-paginator>
 
     <div class="pagination-controls text-end mt-3">
-    <button pButton label="Vorherige Seite" icon="pi pi-chevron-left" class="p-button-secondary me-2" (click)="onPrevPage()"
-      [disabled]="currentPage === 0"></button>
-    <button pButton label="Nächste Seite" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
-      (click)="onNextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements"></button>
+      <button pButton label="Vorherige Seite" icon="pi pi-chevron-left" class="p-button-secondary me-2"
+        (click)="onPrevPage()" [disabled]="currentPage === 0"></button>
+      <button pButton label="Nächste Seite" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
+        (click)="onNextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements"></button>
     </div>
   </div>
- </div>
+</div>
 
 
 

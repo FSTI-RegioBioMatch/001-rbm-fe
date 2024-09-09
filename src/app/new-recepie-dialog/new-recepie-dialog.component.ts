@@ -55,7 +55,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
   providers: [MessageService],
 })
 export class NewRecepieDialogComponent implements OnInit {
-  @Output() closeDialog = new EventEmitter<void>();
   ingredientOptions: { label: string; value: string }[] = [];
   allIngredients: { label: string; value: string }[] = [];
   pageSize = 50; // Number of items to load at once
@@ -199,6 +198,8 @@ export class NewRecepieDialogComponent implements OnInit {
   form: FormGroup;
   stepImages: { [key: number]: string[] } = {}; // Store image URLs for each step
   showNote: { [key: number]: boolean } = {}; // Track visibility of note fields
+
+  @Output() recipeSaved = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -647,7 +648,9 @@ async handleRecipeImageUpload(event: any) {
         this.clearAllUploadedImages();
         this.form.reset(); // Reset the form
         this.form.enable(); // Re-enable the form
-        //this.closeDialog.emit(); // Close the dialog if needed
+        setTimeout(() => {
+          this.recipeSaved.emit();
+      }, 1200);
       },
       (error) => {
         console.error(error);

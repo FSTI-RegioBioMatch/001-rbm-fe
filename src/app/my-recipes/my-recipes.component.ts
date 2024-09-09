@@ -198,6 +198,11 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
     this.displayAddRecipeDialog = true;
   }
 
+  onRecipeSaved(): void {
+    this.onCloseAddRecipeDialog(); // Close the dialog
+    this.loadRecipes(); // Reload the recipes
+  }
+  
   onCloseAddRecipeDialog(): void {
     this.displayAddRecipeDialog = false;
   }
