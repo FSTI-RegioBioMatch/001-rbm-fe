@@ -17,9 +17,11 @@ import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component
 import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
+import { SeasonalCalendarComponent } from './dashboard2/components/seasonal-calendar/seasonal-calendar.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
+  { path: 'd/s', component: SeasonalCalendarComponent },
   {
     path: 'my-recipes',
     component: MyRecipesComponent,
@@ -46,7 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'menu-planning/my-menus/details/:id',
-    component: MenuPlanDetailsComponent
+    component: MenuPlanDetailsComponent,
   },
   // {
   //   path: 'menu-planning/shopping-list',
@@ -72,7 +74,7 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
-  }
+  },
 ];
 
 @NgModule({
