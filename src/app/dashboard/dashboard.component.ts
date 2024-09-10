@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { NgIf, NgFor, CommonModule } from '@angular/common';
-import { MapComponent } from './components/map/map.component';
+// import { MapComponent } from './components/map/map.component';
 import { NearOffersCardComponent } from './components/near-offers-card/near-offers-card.component';
 import { OfferService } from '../shared/services/offer.service';
 import { SupabaseService } from '../shared/services/supabase.service';
@@ -52,7 +52,7 @@ interface DashboardItem {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   imports: [
-    MapComponent,
+    // MapComponent,
     NearOffersCardComponent,
     NgOptimizedImage,
     NgFor,

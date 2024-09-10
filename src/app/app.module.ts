@@ -13,7 +13,6 @@ import {
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { ToolbarComponent } from './shared/toolbar/toolbar.component';
-import { MapComponent } from './dashboard/components/map/map.component';
 import { currentCompanyInterceptor } from './shared/interceptors/current-company.interceptor';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -24,6 +23,7 @@ import localeDe from '@angular/common/locales/de';
 import { PrimeNGConfig } from 'primeng/api';
 import { primengLocaleDe } from './primeng-locale-de'; // Import your custom German locale
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { MapComponent } from './dashboard2/components/map/map.component';
 
 
 function initializeKeycloak(keycloak: KeycloakService) {

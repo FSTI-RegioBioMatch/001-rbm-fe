@@ -16,9 +16,10 @@ import { ShoppingListDetailsComponent } from './shopping-list-details/shopping-l
 import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component';
 import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
+import { Dashboard2Component } from './dashboard2/dashboard2.component';
 
 const routes: Routes = [
-  { path: '', component: DashboardComponent },
+  { path: '', component: Dashboard2Component },
   {
     path: 'my-recipes',
     component: MyRecipesComponent,
