@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    component: Dashboard2Component,
   },
   {
     path: 'menu-planning',
