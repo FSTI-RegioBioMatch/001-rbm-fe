@@ -1,0 +1,25 @@
+<div class="pl-8 pr-8 container">
+  <div class="card">
+    <h2>Saisonkalender für Obst und Gemüse</h2>
+    <p-dropdown
+      [options]="months"
+      [(ngModel)]="selectedMonth"
+      (onChange)="updateProduceList()"
+    ></p-dropdown>
+    <div class="mt-4 mb-4"></div>
+    <p-table [value]="outputData" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Type</th>
+          <th>Name</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-fruit>
+        <tr>
+          <td>{{ fruit.type }}</td>
+          <td>{{ fruit.name }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
