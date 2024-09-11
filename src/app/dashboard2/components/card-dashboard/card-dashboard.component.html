@@ -1,0 +1,42 @@
+<div class="flex flex-column gap-4">
+  <div class="col-span-1 w-full">
+    <app-card-company [person]="person" [company]="company"></app-card-company>
+  </div>
+
+  <div class="col-span-1 w-full">
+    <p-card class="w-full h-full">
+      <div class="h-[400px]">
+        <app-map [lat]="mapLat" [lng]="mapLng" [offers]="offers"></app-map>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Table -->
+  <p-card>
+    <p-table
+      [value]="menuPlans"
+      selectionMode="single"
+      dataKey="code"
+      [scrollable]="true"
+      scrollHeight="flex"
+      [tableStyle]="{ 'min-width': '50rem' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Ort</th>
+          <th>Nächste Ausführung</th>
+          <th>Wiederholung</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-menuPlan>
+        <tr [pSelectableRow]="menuPlan">
+          <td>{{ menuPlan.name }}</td>
+          <td>{{ menuPlan.location }}</td>
+          <td>{{ menuPlan.nextExecution }}</td>
+          <td>{{ menuPlan.repeatFrequency }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
