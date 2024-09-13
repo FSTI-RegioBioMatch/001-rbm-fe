@@ -13,11 +13,14 @@
       <p-button (onClick)="showDialog()" label="Rezept Hinzufügen" />
       <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
 
-        <div *ngIf="menuPlan.length === 0 && !menuPlanForm.hasError('atLeastOneRecipe') || !(menuPlanForm.dirty || menuPlanForm.touched)" class="recipe-item placeholder">
-          <p *ngIf="!menuPlanForm.hasError('atLeastOneRecipe') || !(menuPlanForm.dirty || menuPlanForm.touched)">Keine Rezepte hinzugefügt</p>
+        <!-- Display message when no recipes are added and the form is clean -->
+        <div *ngIf="menuPlan.length === 0 && (!menuPlanForm.hasError('atLeastOneRecipe') || !(menuPlanForm.dirty || menuPlanForm.touched))" class="recipe-item placeholder">
+          <p>Keine Rezepte hinzugefügt</p>
         </div>
+
+        <!-- Display error message when no recipes are added and form has validation errors -->
         <div *ngIf="menuPlan.length === 0 && menuPlanForm.hasError('atLeastOneRecipe') && (menuPlanForm.dirty || menuPlanForm.touched)" class="recipe-item placeholder rbm-bg-error-10">
-          <p *ngIf="menuPlanForm.hasError('atLeastOneRecipe') && (menuPlanForm.dirty || menuPlanForm.touched)">Es muss mindestens ein Rezept hinzugefügt werden.</p>
+          <p>Es muss mindestens ein Rezept hinzugefügt werden.</p>
         </div>
 
         <div *ngFor="let recipe of menuPlan" class="recipe-item">
