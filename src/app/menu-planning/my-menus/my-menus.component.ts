@@ -18,6 +18,8 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { NearbuyTestService } from '../../shared/services/nearbuy-test.service';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { OfferService } from '../../shared/services/offer.service';
 
 interface IngredientUnit {
   label: string;
@@ -102,7 +104,8 @@ interface EnhancedIngredient {
     TooltipModule,
     ToastModule,
     ProgressSpinnerModule,
-    DialogModule
+    DialogModule,
+    MultiSelectModule
   ],
   providers: [MessageService],
   templateUrl: './my-menus.component.html',
@@ -121,13 +124,7 @@ export class MyMenusComponent implements OnInit {
   loadingLocalize = false;
   displayShoppingListDialog: boolean = false;
 
-  processingOptions = [
-    { label: 'Ganz', value: 'ganz' },
-    { label: 'Geschält', value: 'geschält' },
-    { label: 'Geschnitten', value: 'geschnitten' },
-    { label: 'Getrocknet', value: 'getrocknet' },
-    { label: 'Gewaschen', value: 'gewaschen' }
-  ];
+  processingOptions: { label: string, value: string }[] = [];
 
   constructor(
     private menuPlanService: NewMenuplanService,
@@ -136,13 +133,15 @@ export class MyMenusComponent implements OnInit {
     private shoppingListService: NewShoppingListService,
     private messageService: MessageService,
     private router: Router,
-    private nearbuyTestService: NearbuyTestService
+    private nearbuyTestService: NearbuyTestService,
+    private offerService: OfferService
   ) {}
 
 
 
   ngOnInit(): void {
     this.loading = true; // Set to true when loading menu plans
+    this.loadProcessingOptions(); // Load the processing options from the API
     this.store.selectedCompanyContext$
       .pipe(
         filter(company => company !== null),
@@ -163,6 +162,23 @@ export class MyMenusComponent implements OnInit {
           console.error('Error loading menu plans', error);
         }
       });
+  }
+
+  // Method to load processing options from the API
+  loadProcessingOptions(): void {
+    this.offerService.getLevelsOfProcessing().subscribe({
+      next: (data) => {
+        // Transform the response into the expected format for the dropdown
+        this.processingOptions = data.map((item: any) => ({
+          label: item.label,   // The label for the dropdown
+          value: item.label    // Use label or item.id if you want to use a unique ID as value
+        }));
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim Laden der Verarbeitungsoptionen' });
+        console.error('Error loading processing options:', err);
+      }
+    });
   }
 
   loadLocalizationData(): void {

@@ -20,7 +20,13 @@
                                     <p><strong>Category:</strong> {{ ingredient?.category }}</p>
                                     <p><strong>Convertible:</strong> {{ ingredient?.convertible ? 'Yes' : 'No' }}</p>
                                     <p><strong>Source Recipes:</strong> {{ ingredient?.sourceRecipes?.join(', ') }}</p>
-
+                                    <p><strong>Processing:</strong></p>
+                                    <ul>
+                                        <li
+                                            *ngFor="let processing of getProcessingBreakdown(ingredient?.processingBreakdown)">
+                                            {{ processing.label }}: {{ processing.amount }}
+                                        </li>
+                                    </ul>
                                     <!-- Matching Offers Section -->
                                     <p-accordion>
                                         <p-accordionTab header="Matching Offers">

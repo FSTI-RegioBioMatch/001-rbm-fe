@@ -14,6 +14,7 @@ import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component
 import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
+import { OrdersComponent } from './orders/orders.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -70,8 +71,10 @@ const routes: Routes = [
     path: 'register',
     component: RegisterComponent,
   },
+  {
+    path: 'orders', component: OrdersComponent
+  }
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

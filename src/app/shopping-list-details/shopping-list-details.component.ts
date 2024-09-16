@@ -187,4 +187,10 @@ export class ShoppingListDetailsComponent implements OnInit {
   matchOfferToIngredient(ingredientName: string, offer: any): boolean {
     return ingredientName.toLowerCase() === offer?.ontoFoodType?.label?.toLowerCase();
   }
+  getProcessingBreakdown(processingBreakdown: { [key: string]: number }): { label: string, amount: number }[] {
+    return Object.keys(processingBreakdown || {}).map(key => ({
+        label: key,
+        amount: processingBreakdown[key]
+    }));
+}
 }

@@ -8,8 +8,8 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class NearbuyTestService {
 
-  private apiUrl = 'https://api.staging.nearbuy-food.de/v1/ontofood'; // Your main API
-  private localizeUrl = 'https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/ontofood'; // Localize API
+  private apiUrl = 'https://api.staging.nearbuy-food.de/v1/ontofood';
+  private localizeUrl = 'https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/ontofood';
 
   constructor(private http: HttpClient) { }
 

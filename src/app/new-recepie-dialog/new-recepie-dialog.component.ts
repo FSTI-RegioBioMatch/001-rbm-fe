@@ -273,7 +273,6 @@ export class NewRecepieDialogComponent implements OnInit {
           new Date().toISOString(),                   // timestamp
           'currentUserId'                             // userId (replace with actual user ID if available)
         );
-
       },
     );
   }

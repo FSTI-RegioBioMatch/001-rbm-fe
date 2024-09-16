@@ -132,4 +132,17 @@ export class OfferService {
   getAddress(addressUrl: string): Observable<AddressType> {
     return this.http.get<AddressType>(addressUrl);
   }
+
+  getOrders (): Observable<any> {
+      return this.http.get<any>(`${environment.NEARBUY_API}/orders`);
+    }
+  getRecurringOrders (): Observable<any> {
+      return this.http.get<any>(`${environment.NEARBUY_API}/recurring_orders`);
+    }
+  getPriceRequests (): Observable<any> {
+      return this.http.get<any>(`${environment.NEARBUY_API}/price_requests`);
+    }
+    getLevelsOfProcessing (): Observable<any> {
+      return this.http.get<any>(`${environment.NEARBUY_API}/levels_of_processing`);
+    }
 }
