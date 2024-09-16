@@ -15,6 +15,7 @@ import { forkJoin, Observable } from 'rxjs';
 })
 export class OrdersComponent implements OnInit {
 
+  purchaseIntents: any[] = [];
   orders: any[] = [];
   recurringOrders: any[] = [];
   loadingOrders = false;
@@ -39,10 +40,11 @@ export class OrdersComponent implements OnInit {
         switchMap(() => this.getCombinedOrders())  // Call the new combined orders function
       )
       .subscribe({
-        next: ([ordersData, recurringOrdersData, price_requests]) => {
+        next: ([ordersData, recurringOrdersData, price_requests, purchase_Intents]) => {
           this.orders = ordersData;
           this.recurringOrders = recurringOrdersData;
           this.price_requests = price_requests;
+          this.purchaseIntents = purchase_Intents;
           this.loadingOrders = false;  // Stop loading after data is fetched
         },
         error: (error) => {
@@ -54,10 +56,11 @@ export class OrdersComponent implements OnInit {
   }
 
   // Combined function to get both orders and recurring orders
-  private getCombinedOrders(): Observable<[any, any, any]> {
+  private getCombinedOrders(): Observable<[any, any, any, any]> {
     const orders$ = this.offerService.getOrders();
     const recurringOrders$ = this.offerService.getRecurringOrders();
     const priceRequests$ = this.offerService.getPriceRequests();
-    return forkJoin([orders$, recurringOrders$, priceRequests$]);  // Execute both calls in parallel
+    const purchaseIntents$ = this.offerService.getPurchaseIntents();
+    return forkJoin([orders$, recurringOrders$, priceRequests$, purchaseIntents$]);  // Execute both calls in parallel
   }
 }

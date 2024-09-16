@@ -142,7 +142,10 @@ export class OfferService {
   getPriceRequests (): Observable<any> {
       return this.http.get<any>(`${environment.NEARBUY_API}/price_requests`);
     }
-    getLevelsOfProcessing (): Observable<any> {
+  getLevelsOfProcessing (): Observable<any> {
       return this.http.get<any>(`${environment.NEARBUY_API}/levels_of_processing`);
+    }
+  getPurchaseIntents (): Observable<any> {
+      return this.http.get<any>(`${environment.NEARBUY_API}/purchase_intents`);
     }
 }
