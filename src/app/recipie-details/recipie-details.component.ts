@@ -163,7 +163,7 @@ export class RecipieDetailsComponent implements OnInit {
         }),
         catchError(error => {
           console.error('Error fetching recipe:', error);
-          this.messageService.add({ severity: 'error', summary: 'Error fetching recipe', detail: error.message || 'Unknown error' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler beim Laden des Rezepts', detail: error.message || 'Unknown error' });
           this.router.navigate(['/my-recipes']);
           this.loading = false;
           return of(null);
@@ -172,7 +172,7 @@ export class RecipieDetailsComponent implements OnInit {
       .subscribe(recipe => {
         this.recipe = recipe;
         if (!this.recipe) {
-          this.messageService.add({ severity: 'error', summary: 'Recipe not found', detail: 'The requested recipe could not be found.' });
+          this.messageService.add({ severity: 'error', summary: 'Recipe nicht gefunden', detail: 'Das angegebene Rezept konnte nicht gefunden werden.' });
           this.router.navigate(['/my-recipes']);
         } else {
           // Fetch images for each step asynchronously
@@ -185,7 +185,8 @@ export class RecipieDetailsComponent implements OnInit {
                     return of([]);
                   } else {
                     console.error(`Error fetching images for step ${index}:`, error);
-                    this.messageService.add({ severity: 'error', summary: 'Error fetching images', detail: `Failed to fetch images for step ${index}` });
+                    this.messageService.add({ severity: 'error', summary: 'Fehler beim Abrufen der Bilder', 
+                    detail: `Die Bilder für den Schritt ${index} konnten nicht abgerufen werden` });
                     return of([]);
                   }
                 })
@@ -208,11 +209,11 @@ export class RecipieDetailsComponent implements OnInit {
     this.recipeService.updateRecipeById(this.recipeId, this.recipe).subscribe({
       next: () => {
         this.editMode = false;
-        this.messageService.add({ severity: 'success', summary: 'Recipe saved', detail: 'Recipe updated successfully' });
+        this.messageService.add({ severity: 'success', summary: 'Rezept gespeichert', detail: 'Rezept erfolgreich aktualisiert!' });
       },
       error: (err) => {
         console.error('Error saving recipe:', err);
-        this.messageService.add({ severity: 'error', summary: 'Error saving recipe', detail: 'Failed to update recipe' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler beim Speichern des Rezepts', detail: 'Rezept konnte nicht aktualisiert werden' });
         console.error('Full error response:', err);
       },
       complete: () => {
@@ -224,7 +225,7 @@ export class RecipieDetailsComponent implements OnInit {
 
   confirmDelete(): void {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this recipe?',
+      message: 'Rezept wirklich löschen?',
       header: 'Confirm Deletion',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
@@ -237,14 +238,14 @@ export class RecipieDetailsComponent implements OnInit {
     this.deleting = true; // Start deleting process
     this.recipeService.deleteRecipeById(this.recipeId).subscribe({
       next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Recipe deleted', detail: 'Recipe deleted successfully' });
+        this.messageService.add({ severity: 'success', summary: 'Rezept gelöscht', detail: 'Rezept wurde erfolgreich gelöscht' });
         setTimeout(() => {
           this.router.navigate(['/my-recipes']);
         }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
       },
       error: (err) => {
         console.error('Error deleting recipe:', err);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete recipe' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Rezept konnte nicht gelöscht werden' });
       },
       complete: () => {
         this.deleting = false; // End deleting process

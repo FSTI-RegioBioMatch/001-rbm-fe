@@ -158,7 +158,7 @@ export class MyMenusComponent implements OnInit {
         },
         error: (error) => {
           this.loading = false; // Set to false in case of an error
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Menüplanung' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim laden der Menüplanung' });
           console.error('Error loading menu plans', error);
         }
       });
@@ -175,7 +175,7 @@ export class MyMenusComponent implements OnInit {
         }));
       },
       error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim Laden der Verarbeitungsoptionen' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Verarbeitungsoptionen' });
         console.error('Error loading processing options:', err);
       }
     });
@@ -190,7 +190,7 @@ export class MyMenusComponent implements OnInit {
       },
       error: (err) => {
         this.loadingLocalize = false; // Set to false in case of an error
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Übersetzungen' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
         console.error('Error loading localization data', err);
       }
     });
@@ -241,7 +241,7 @@ loadRecipesWithIngredients(menuPlanId: string): void {
     const recipeRequests: Observable<Recipe | null>[] = menuPlan.recipes.map((recipe: { id: string }) =>
       this.recipeService.getRecipeById(recipe.id, false).pipe(
         catchError(error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: `Fehler beim Laden für Rezept ${recipe.id}` });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: `Fehler beim Laden für Rezept ${recipe.id}` });
           console.error(`Error fetching recipe ${recipe.id}:`, error);
           return of(null); // Handle errors gracefully
         })
@@ -274,7 +274,7 @@ loadRecipesWithIngredients(menuPlanId: string): void {
           }
         },
         error: (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim laden der Rezepte mit Zutaten' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Rezepte mit Zutaten' });
           console.error('Error loading recipes with ingredients', error);
         }
       });
@@ -593,7 +593,7 @@ loadRecipesWithIngredients(menuPlanId: string): void {
   }
   saveShoppingList(): void {
     if (this.isGroupedShoppingListEmpty()) {
-      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Einkaufszettel kann nicht leer sein'})
+      this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Einkaufszettel kann nicht leer sein'})
       return
     }
       
@@ -617,12 +617,12 @@ loadRecipesWithIngredients(menuPlanId: string): void {
     // Send to the backend via the service
     this.shoppingListService.saveShoppingList(shoppingListObject).subscribe(
       response => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Einkaufszettel gespeichert' });
+        this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einkaufszettel gespeichert' });
         this.displayShoppingListDialog = false
         this.groupedShoppingList = {}
       },
       error => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim speichern des Einkaufszettel' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Speichern des Einkaufszettel' });
       }
     );
   }

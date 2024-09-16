@@ -212,7 +212,7 @@ export class MenuPlanningComponent implements OnInit {
           }
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching recipes' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Rezepte konnten nicht abgerufen werden' });
           console.error('Error fetching recipes:', error);
           this.loading = false;
           this.recipesLoaded = true
@@ -270,7 +270,7 @@ export class MenuPlanningComponent implements OnInit {
 
   saveMenuPlan(): void {
     if (this.menuPlanForm.invalid || this.menuPlan.length === 0) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail:'Bitte mindestens ein Rezept hinzufügen' });
+      this.messageService.add({ severity: 'error', summary: 'Fehler', detail:'Bitte mindestens ein Rezept hinzufügen' });
       return;
     }
     this.loading = true;
@@ -318,7 +318,7 @@ export class MenuPlanningComponent implements OnInit {
     // Send to backend
     this.menuplanService.saveMenuPlan(menuPlanDataObject).subscribe(
       (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan saved successfully!' });
+        this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Menüplan wurde erfolgreich gespeichert!' });
         this.menuPlanForm.reset();
         this.menuPlanForm.enable();
         this.menuPlan = [];
@@ -326,7 +326,7 @@ export class MenuPlanningComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error saving Menu Plan' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüplan konnte nicht gespeichert werden' });
         this.menuPlanForm.enable();
         this.loading = false;
         console.error('Error saving Menu Plan:', error);
@@ -497,11 +497,11 @@ export class MenuPlanningComponent implements OnInit {
 
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
         (response) => {
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
+            this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einzelnes Menü wurde erfolgreich aktualisiert!' });
             this.updateCalendar();
         },
         (error) => {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating event' });
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einzelnes Menü konnte nicht aktualisiert werden' });
             console.error('Error updating event:', error);
             eventDropInfo.revert();
         }
@@ -520,19 +520,19 @@ export class MenuPlanningComponent implements OnInit {
   
 
   deleteSingleEvent(event: EventApi): void {
-    this.confirmDelete("Are you sure you want to delete this event?", () => {
+    this.confirmDelete("Einzelnes Menü wirklich löschen?", () => {
       const eventId = event.id;
       const menuId = event.extendedProps['menuId'];
       this.events = this.events.filter(e => e.id !== eventId);
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
         () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
+          this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einzelnes Menü erfolgreich gelöscht!' });
           this.updateCalendar();
           this.displayEventDialog = false;
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einzelnes Menü konnte nicht gelöscht werden' });
           console.error('Error deleting event:', error);
         }
       );
@@ -540,7 +540,7 @@ export class MenuPlanningComponent implements OnInit {
   }
   
   deleteAllEvents(menuId: string): void {
-    this.confirmDelete("Are you sure you want to delete all events in this menu plan? Doing so will also delete the menu plan.", () => {
+    this.confirmDelete("Möchten Sie alle einzelnen Menüs im Menüplan wirklich löschen? Dies löscht den gesamten Menüplan.", () => {
       this.events = this.events.filter(e => e.extendedProps['menuId'] !== menuId);
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteMenuPlan(menuId).subscribe(
@@ -548,10 +548,10 @@ export class MenuPlanningComponent implements OnInit {
 
           this.updateCalendar();
           this.displayEventDialog = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
+          this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Menüplan erfolgreich gelöscht!' });
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüplan konnte nicht gelöscht werden' });
           console.error('Error deleting Menu Plan:', error);
         }
       );
@@ -594,7 +594,7 @@ export class MenuPlanningComponent implements OnInit {
       },
       (error) => {
         this.calendarLoaded = true
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error fetching menu plans' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüpläne konnten nicht abgerufen werden' });
         console.error('Error fetching menu plans:', error);
       }
     );

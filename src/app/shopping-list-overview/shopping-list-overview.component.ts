@@ -75,7 +75,7 @@ export class ShoppingListOverviewComponent implements OnInit {
         },
         error: (error) => {
           this.loading = false;
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error loading shopping lists' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einkaufsliste konnte nicht geladen werden' });
           console.error('Error loading shopping lists:', error);
         }
       });

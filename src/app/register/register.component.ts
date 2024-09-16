@@ -54,7 +54,7 @@ export class RegisterComponent {
   saveUser(userData: UserType): void {
     this.userService.saveUser(userData).subscribe(
       () => {
-        this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Benutzer erfolgreich registriert!' });
+        this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Benutzer erfolgreich registriert!' });
       },
       (error) => {
         console.error('Fehler beim Speichern der Benutzerdaten', error);

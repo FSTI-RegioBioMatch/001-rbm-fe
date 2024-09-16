@@ -107,7 +107,7 @@ export class ShoppingListDetailsComponent implements OnInit {
           if (id) {
             return this.shoppingListService.getShoppingListById(id);
           } else {
-            this.errorMessage = 'No shopping list ID provided';
+            this.errorMessage = 'Es wurde keine Einkaufslisten-ID angegeben';
             this.loading = false;
             return [];
           }
@@ -124,7 +124,7 @@ export class ShoppingListDetailsComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching shopping list:', error);
-          this.errorMessage = 'Shopping list not found';
+          this.errorMessage = 'Einkaufsliste konnte nicht gefunden werden';
           this.loading = false;
         }
       });
@@ -135,7 +135,7 @@ export class ShoppingListDetailsComponent implements OnInit {
         this.localizationData = result; // Save localization data for later use
       },
       error: err => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Fehler beim Laden der Übersetzungen' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
       }
     });
   }
@@ -165,7 +165,7 @@ export class ShoppingListDetailsComponent implements OnInit {
       },
       error: error => {
         console.error('Error loading offers:', error);
-        this.errorMessage = 'Error loading offers';
+        this.errorMessage = 'Fehler beim Laden der Angebote';
       }
     });
   }

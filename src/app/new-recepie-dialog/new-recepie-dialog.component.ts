@@ -261,8 +261,8 @@ export class NewRecepieDialogComponent implements OnInit {
       (error) => {
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to fetch and map data.',
+          summary: 'Fehler',
+          detail: 'Daten konnten nicht abgerufen und zugewiesen werden.',
         });
         this.loadingIngredients = false;
         //console.error('Error fetching and mapping data:', error);
@@ -620,7 +620,7 @@ openOverlay(event: Event, overlayPanel: OverlayPanel): void {
     if (this.form.invalid) {
       this.messageService.add({
         severity: 'error',
-        summary: 'Error',
+        summary: 'Fehler',
         detail: 'Bitte fülle alle Felder aus.',
       });
       return;
@@ -659,7 +659,7 @@ openOverlay(event: Event, overlayPanel: OverlayPanel): void {
       (response) => {
         this.messageService.add({
           severity: 'success',
-          summary: 'Success',
+          summary: 'OK',
           detail: 'Rezept gespeichert!',
         });
         this.loading = false;
@@ -675,8 +675,8 @@ openOverlay(event: Event, overlayPanel: OverlayPanel): void {
         console.error(error);
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to save the recipe.',
+          summary: 'Fehler',
+          detail: 'Rezept konnte nicht gespeichert werden.',
         });
         const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
         this.logService.log(

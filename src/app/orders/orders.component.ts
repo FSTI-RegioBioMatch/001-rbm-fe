@@ -47,7 +47,7 @@ export class OrdersComponent implements OnInit {
         },
         error: (error) => {
           this.loadingOrders = false;  // Stop loading on error
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load orders' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Bestellungen konnten nicht geladen werden' });
           console.error('Error loading orders and recurring orders:', error);
         }
       });

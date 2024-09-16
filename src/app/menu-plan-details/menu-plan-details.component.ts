@@ -71,7 +71,7 @@ export class MenuPlanDetailsComponent implements OnInit {
     const menuPlanId = this.route.snapshot.paramMap.get('id');
 
     if (!menuPlanId) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No menu plan ID provided' });
+      this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Keine ID für den Menüplan angegeben' });
       this.loading = false;
       return;
     }
@@ -81,7 +81,7 @@ export class MenuPlanDetailsComponent implements OnInit {
       if (company && company.id) {
         this.fetchMenuPlanDetails(company.id, menuPlanId);
       } else {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No company selected' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kein Unternehmen angegeben' });
         this.loading = false;
       }
     });
@@ -110,7 +110,7 @@ export class MenuPlanDetailsComponent implements OnInit {
         this.loading = false;
       },
       (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch menu plan details' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüplandetails konnten nicht zugewiesen werden' });
         this.loading = false;
         console.error('Failed to fetch menu plan details:', error);
       }
@@ -189,11 +189,11 @@ export class MenuPlanDetailsComponent implements OnInit {
 
     this.menuplanService.updateEventInMenuPlan(menuId, updatedEventData.id, updatedEventData).subscribe(
       (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event updated successfully!' });
+        this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einzelnes Menü wurde erfolgreich aktualisiert!' });
         this.updateCalendar();
       },
       (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating event' });
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einzelnes Menü konnte nicht aktualisiert werden' });
         console.error('Error updating event:', error);
         eventDropInfo.revert();
       }
@@ -217,19 +217,19 @@ export class MenuPlanDetailsComponent implements OnInit {
   }
 
   deleteSingleEvent(event: EventApi): void {
-    this.confirmDelete("Are you sure you want to delete this event?", () => {
+    this.confirmDelete("Wirklich das einzelne Menü löschen?", () => {
       const eventId = event.id;
       const menuId = event.extendedProps['menuId'];
       this.events = this.events.filter(e => e.id !== eventId);
       this.calendarOptions.events = [...this.events];
       this.menuplanService.deleteEventFromMenuPlan(menuId, eventId).subscribe(
         () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Event deleted successfully!' });
+          this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einzelnes Menü wurde erfolgreich gelöscht!' });
           this.updateCalendar();
           this.displayEventDialog = false;
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting event' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einzelnes Menü konnte nicht gelöscht werden' });
           console.error('Error deleting event:', error);
         }
       );
@@ -245,13 +245,13 @@ export class MenuPlanDetailsComponent implements OnInit {
         () => {
           this.updateCalendar();
           this.displayEventDialog = false;
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Menu Plan deleted successfully!' });
+          this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Menüplan wurde erfolreich gelöscht!' });
           setTimeout(() => {
             this.router.navigate(['/menu-planning']);
           }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error deleting Menu Plan' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüplan konnte nicht gelöscht werden' });
           console.error('Error deleting Menu Plan:', error);
         }
       );

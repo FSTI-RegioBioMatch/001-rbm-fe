@@ -104,7 +104,7 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
           this.loading = false;
         },
         error => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch recipes.' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Rezepte konnten nicht abgerufen werden.' });
           console.error('Error fetching recipes:', error);
           const errorDetails = typeof error === 'object' && error !== null ? JSON.stringify(error) : String(error);
           this.logService.log(
