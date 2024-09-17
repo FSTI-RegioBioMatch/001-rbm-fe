@@ -44,7 +44,6 @@ export class ShoppingListOverviewComponent implements OnInit {
     private storeService: StoreService,
     private router: Router,
     private messageService: MessageService,
-    private addressService: AddressService // Inject the new service
   ) {
     this.searchForm = new FormGroup({
       name: new FormControl(''),
@@ -55,32 +54,27 @@ export class ShoppingListOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loading = true;
+      this.loading = true;
   
-    this.storeService.selectedCompanyContext$
-      .pipe(
-        filter(company => company !== null),  // Ensure company context is available
-        switchMap(company => {  
-          // Now that we have the company context and ID, fetch and set offers
-          return this.addressService.fetchCompanyContextAndSetOffers().pipe(
-            switchMap(() => this.shoppingListService.getAllShoppingLists()) // Fetch all shopping lists
-          );
-        })
-      )
-      .subscribe({
-        next: (lists) => {
-          this.shoppingLists = lists || [];
-          this.filteredShoppingLists = this.shoppingLists;
-          this.loading = false;
-        },
-        error: (error) => {
-          this.loading = false;
-          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einkaufsliste konnte nicht geladen werden' });
-          console.error('Error loading shopping lists:', error);
-        }
-      });
+      this.storeService.selectedCompanyContext$
+        .pipe(
+          filter(company => company !== null),  // Ensure company context is available
+          switchMap(company => this.shoppingListService.getAllShoppingLists()) // Fetch all shopping lists
+        )
+        .subscribe({
+          next: (lists) => {
+            this.shoppingLists = lists || [];
+            this.filteredShoppingLists = this.shoppingLists;
+            this.loading = false;
+          },
+          error: (error) => {
+            this.loading = false;
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einkaufsliste konnte nicht geladen werden' });
+            console.error('Error loading shopping lists:', error);
+          }
+        });
   
-    this.searchForm.valueChanges.subscribe(() => this.filterShoppingLists());
+      this.searchForm.valueChanges.subscribe(() => this.filterShoppingLists());
   }
   
 

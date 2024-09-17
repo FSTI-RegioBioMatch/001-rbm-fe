@@ -32,8 +32,9 @@ export class OfferService {
   private offersSubject = new BehaviorSubject<OfferType[]>([]);
   offers$ = this.offersSubject.asObservable();
 
-  // Cache for offers based on address and search radius
-  private offerCache = new Map<string, OfferType[]>();
+  // Cache for offers with a 1-hour TTL
+  private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
+  private offerCache = new Map<string, { data: OfferType[], timestamp: number }>();
 
   // Use BehaviorSubject to store and emit address
   setAddress(address: AddressType) {
@@ -45,22 +46,34 @@ export class OfferService {
     return this.addressSubject.value;
   }
 
+  // Method to generate a unique cache key based on address coordinates (not radius)
+  private generateCacheKey(address: AddressType): string {
+    return `${address.lat}-${address.lon}`;
+  }
+
   private getOffers(
     lon1: number,
     lat1: number,
     lon2: number,
     lat2: number,
+    cacheKey: string
   ): Observable<OfferType[]> {
-    const cacheKey = `${lon1}-${lat1}-${lon2}-${lat2}`;
-    if (this.offerCache.has(cacheKey)) {
-      return of(this.offerCache.get(cacheKey)!);
+    const cached = this.offerCache.get(cacheKey);
+
+    // Check if cache is valid (not expired)
+    if (cached && (Date.now() - cached.timestamp) < this.cacheTTL) {
+      console.log('Using cached offers');
+      return of(cached.data);
     }
 
     console.log('Fetching offers from API', lon1, lat1, lon2, lat2);
     return this.http.get<OfferType[]>(
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`
     ).pipe(
-      tap((offers) => this.offerCache.set(cacheKey, offers))
+      tap((offers) => {
+        // Cache the fetched offers with a timestamp
+        this.offerCache.set(cacheKey, { data: offers, timestamp: Date.now() });
+      })
     );
   }
 
@@ -79,14 +92,7 @@ export class OfferService {
       address.lon,
     );
 
-    const cacheKey = `${boundingBox.lonMin}-${boundingBox.latMin}-${boundingBox.lonMax}-${boundingBox.latMax}`;
-
-    if (this.offerCache.has(cacheKey)) {
-      // Use cached data if available
-      this.offersSubject.next(this.offerCache.get(cacheKey)!);
-      this.loadedSubject.next(true);
-      return;
-    }
+    const cacheKey = this.generateCacheKey(address);
 
     console.log("before getOffers");
 
@@ -95,6 +101,7 @@ export class OfferService {
       boundingBox.latMin,
       boundingBox.lonMax,
       boundingBox.latMax,
+      cacheKey // Pass cache key based on address (not radius)
     )
       .pipe(
         debounceTime(300), // Debounce to prevent spamming
@@ -127,8 +134,6 @@ export class OfferService {
               this.store.setOfferOntoFood(this.displayedFoodTypes);
 
               this.offersSubject.next(offers);
-              // Cache the offers after processing
-              this.offerCache.set(cacheKey, offers);
             })
           );
         }),
@@ -177,5 +182,10 @@ export class OfferService {
 
   getPurchaseIntents(): Observable<any> {
     return this.http.get<any>(`${environment.NEARBUY_API}/purchase_intents`);
+  }
+  
+  clearOfferCache() {
+    this.offerCache.clear(); // Clear the cache
+    console.log('Offer cache cleared');
   }
 }

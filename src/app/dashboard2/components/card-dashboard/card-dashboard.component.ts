@@ -70,19 +70,25 @@ export class CardDashboardComponent implements OnInit {
     this.store.selectedCompanyContext$.subscribe((company) => {
       if (company && company.addresses && company.addresses.length > 0) {
         const addressUrl = company.addresses[0].self;
+        // Fetch the address
         this.offerService
           .getAddress(addressUrl)
           .subscribe((address: AddressType) => {
             console.log('Address updated', address);
+            // Set the address in OfferService so it can be used later
+            this.offerService.setAddress(address);
             this.mapLat = address.lat;
             this.mapLng = address.lon;
-
+  
             const searchRadiusInKM = 50;
+            // Fetch the offers using the newly set address
             this.offerService.setOffersBySearchRadius(
               searchRadiusInKM,
               address,
             );
           });
+      } else {
+        console.error('No valid company address found');
       }
     });
   }

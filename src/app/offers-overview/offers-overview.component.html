@@ -5,6 +5,10 @@
     <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
 </div>
 
+{{ errorMessage }}
+<div class="actions">
+    <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
+  </div>
 <div class="p-col-6">
     <p-card header="Available Offers">
         <p-accordion>
@@ -91,10 +95,10 @@
                                 Offer</a></p>
                         <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}" target="_blank">View
                                 Company</a></p>
-                        <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}"
-                                target="_blank">View Category</a></p>
-                        <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}"
-                                target="_blank">Contact</a></p>
+                        <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}" target="_blank">View
+                                Category</a></p>
+                        <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}" target="_blank">Contact</a>
+                        </p>
                     </p-panel>
                 </p-accordionTab>
             </ng-container>

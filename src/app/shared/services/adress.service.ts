@@ -20,7 +20,8 @@ export class AddressService {
   fetchCompanyContextAndSetOffers(): Observable<any> {
     return this.store.selectedCompanyContext$.pipe(
       switchMap((company) => {
-        if (company) {
+        if (company && company.addresses && company.addresses.length > 0) {
+          // Fetch the address from the company's first address URL
           return this.requestService
             .doGetRequest(company.addresses[0].self)
             .pipe(
@@ -30,11 +31,14 @@ export class AddressService {
                   lat: address.lat,
                   lon: address.lon,
                 });
+                // Set the address in the OfferService to make it available for offer fetching
+                this.offerService.setAddress(address);
+                // Fetch offers using the newly set address
                 this.offerService.setOffersBySearchRadius(5, address);
               })
             );
         } else {
-          return of(null);
+          return of(null); // Handle case where company has no address
         }
       })
     );
