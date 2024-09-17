@@ -113,6 +113,9 @@ export class MenuPlanDetailsComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Menüplandetails konnten nicht zugewiesen werden' });
         this.loading = false;
         console.error('Failed to fetch menu plan details:', error);
+        setTimeout(() => {
+          this.router.navigate(['/menu-planning/my-menus']);
+        }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
       }
     );
   }
@@ -217,7 +220,15 @@ export class MenuPlanDetailsComponent implements OnInit {
   }
 
   deleteSingleEvent(event: EventApi): void {
-    this.confirmDelete("Wirklich das einzelne Menü löschen?", () => {
+    let msg = ""
+    let goBack = false
+    if (this.events.length === 1) {
+      msg = "Löschen des letzen Menus löscht auch den gesamten Menu plan. Menu wirklich löschen?"
+      goBack = true
+    } else {
+      msg = "Einzelnes Menu wirklich löschen?"
+    }
+    this.confirmDelete(msg, () => {
       const eventId = event.id;
       const menuId = event.extendedProps['menuId'];
       this.events = this.events.filter(e => e.id !== eventId);
@@ -227,6 +238,11 @@ export class MenuPlanDetailsComponent implements OnInit {
           this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Einzelnes Menü wurde erfolgreich gelöscht!' });
           this.updateCalendar();
           this.displayEventDialog = false;
+          if (goBack) {
+            setTimeout(() => {
+              this.router.navigate(['/menu-planning/my-menus']);
+            }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
+          }
         },
         error => {
           this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Einzelnes Menü konnte nicht gelöscht werden' });
@@ -247,7 +263,7 @@ export class MenuPlanDetailsComponent implements OnInit {
           this.displayEventDialog = false;
           this.messageService.add({ severity: 'success', summary: 'OK', detail: 'Menüplan wurde erfolreich gelöscht!' });
           setTimeout(() => {
-            this.router.navigate(['/menu-planning']);
+            this.router.navigate(['/menu-planning/my-menus']);
           }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
         },
         error => {

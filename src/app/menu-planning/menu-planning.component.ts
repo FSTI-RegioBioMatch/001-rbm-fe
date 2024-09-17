@@ -520,7 +520,19 @@ export class MenuPlanningComponent implements OnInit {
   
 
   deleteSingleEvent(event: EventApi): void {
-    this.confirmDelete("Einzelnes Menü wirklich löschen?", () => {
+    const menuId = event.extendedProps['menuId'];
+
+    // Filter all events that belong to the same menu plan
+    const menuPlanEvents = this.events.filter(e => e.extendedProps['menuId'] === menuId);
+  
+    // Check if there's only one event left for this menu plan
+    let msg = "";
+    if (menuPlanEvents.length === 1) {
+      msg = "Löschen des letzen Menus löscht auch den gesamten Menu plan. Menu wirklich löschen?";
+    } else {
+      msg = "Einzelnes Menu wirklich löschen?";
+    }
+    this.confirmDelete(msg, () => {
       const eventId = event.id;
       const menuId = event.extendedProps['menuId'];
       this.events = this.events.filter(e => e.id !== eventId);
