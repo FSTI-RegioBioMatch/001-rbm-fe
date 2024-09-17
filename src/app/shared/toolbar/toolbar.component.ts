@@ -40,6 +40,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   burgerMenuActive: boolean = true;
   menuItems: MenuItem[] = [];
   private routerSubscription: Subscription | undefined;
+  private burgerMenuSubscription: Subscription | undefined;
 
   constructor(
     private router: Router,
@@ -54,7 +55,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.updateActiveMenuItem();
       });
-    this.menuService.burgerMenuState$.subscribe(state => {
+
+    this.burgerMenuSubscription = this.menuService.burgerMenuState$.subscribe(state => {
       this.burgerMenuActive = state;
     });
   }
@@ -62,6 +64,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+    }
+    if (this.burgerMenuSubscription) {
+      this.burgerMenuSubscription.unsubscribe();
     }
   }
 
@@ -110,6 +115,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
       height: '30%',
     });
   }
+
   goToHome() {
     this.router.navigate(['/dashboard']);
   }
