@@ -123,7 +123,7 @@ export class MyMenusComponent implements OnInit {
   loadingRecipes = false;
   loadingLocalize = false;
   displayShoppingListDialog: boolean = false;
-
+  hoveredMenuPlanId: string | null = null;
   processingOptions: { label: string, value: string }[] = [];
 
   constructor(
@@ -634,5 +634,18 @@ loadRecipesWithIngredients(menuPlanId: string): void {
   uniqueSourceRecipes(recipes: string[]): string {
     // Use Set to remove duplicates and join them with commas
     return Array.from(new Set(recipes)).join(', ');
+  }
+  hidePortionDetails() {
+    this.hoveredMenuPlanId = null;
+  }
+
+  // Calculate the total portions (sum of regular, vegan, and vegetarian)
+  getTotalPortions(menuPlan: any): number {
+      return (menuPlan.portions || 0) + (menuPlan.portionsVegan || 0) + (menuPlan.portionsVegetarisch || 0);
+  }
+
+  // Show tooltip with portion details
+  showPortionDetails(menuPlan: any) {
+    this.hoveredMenuPlanId = menuPlan.id;
   }
 }

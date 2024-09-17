@@ -42,7 +42,22 @@
             <td>{{ menuPlan.nextExecution }}</td>
             <td>{{ menuPlan.weekday }}</td>
             <td>{{ menuPlan.location }}</td>
-            <td>{{ menuPlan.portions }}</td>
+            <td>
+                <span (mouseover)="showPortionDetails(menuPlan)" (mouseout)="hidePortionDetails()">
+                    {{ getTotalPortions(menuPlan) }}
+                </span>
+                <div class="portion-tooltip" *ngIf="hoveredMenuPlanId === menuPlan.id">
+                    <span *ngIf="menuPlan.portions > 0" class="portion-item">
+                        <i class="pi pi-users"></i> {{ menuPlan.portions }} Regular
+                    </span>
+                    <span *ngIf="menuPlan.portionsVegetarisch > 0" class="portion-item">
+                        <i class="pi pi-apple"></i> {{ menuPlan.portionsVegetarisch }} Vegetarisch
+                    </span>
+                    <span *ngIf="menuPlan.portionsVegan > 0" class="portion-item">
+                        <i class="pi pi-globe"></i> {{ menuPlan.portionsVegan }} Vegan
+                    </span>
+                </div>
+            </td>
             <td>{{ menuPlan.repeatFrequency }}</td>
             <td>
                 <button pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
