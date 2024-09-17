@@ -122,6 +122,7 @@ export class MyMenusComponent implements OnInit {
   loading = false;
   loadingRecipes = false;
   loadingLocalize = false;
+  loadingProcessingOptions = false;
   displayShoppingListDialog: boolean = false;
   hoveredMenuPlanId: string | null = null;
   processingOptions: { label: string, value: string }[] = [];
@@ -137,7 +138,13 @@ export class MyMenusComponent implements OnInit {
     private offerService: OfferService
   ) {}
 
-
+  repeatOptions = [
+    { label: 'Täglich', value: 'DAILY' },
+    { label: 'Wöchentlich', value: 'WEEKLY' },
+    { label: 'Monatlich', value: 'MONTHLY' },
+    { label: 'Jährlich', value: 'YEARLY' },
+    { label: 'Einmalig', value: 'ONCE' },
+  ];
 
   ngOnInit(): void {
     this.loading = true; // Set to true when loading menu plans
@@ -166,6 +173,7 @@ export class MyMenusComponent implements OnInit {
 
   // Method to load processing options from the API
   loadProcessingOptions(): void {
+    this.loadingProcessingOptions = true; // Set to true when loading processing options
     this.offerService.getLevelsOfProcessing().subscribe({
       next: (data) => {
         // Transform the response into the expected format for the dropdown
@@ -173,8 +181,10 @@ export class MyMenusComponent implements OnInit {
           label: item.label,   // The label for the dropdown
           value: item.label    // Use label or item.id if you want to use a unique ID as value
         }));
+        this.loadingProcessingOptions = false; // Set to false after successful loading
       },
       error: (err) => {
+        this.loadingProcessingOptions = false; // Set to false in case of an error
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Verarbeitungsoptionen' });
         console.error('Error loading processing options:', err);
       }
@@ -223,6 +233,8 @@ getLoadingMessage(): string {
     return 'Rezepte mit Zutaten werden geladen...';
   } else if (this.loadingLocalize) {
     return 'Übersetzungen werden geladen...';
+  } else if (this.loadingProcessingOptions) {
+    return 'Verarbeitungsoptionen werden geladen...';
   }
   return '';
 }
@@ -647,5 +659,9 @@ loadRecipesWithIngredients(menuPlanId: string): void {
   // Show tooltip with portion details
   showPortionDetails(menuPlan: any) {
     this.hoveredMenuPlanId = menuPlan.id;
+  }
+  getTranslatedRepeatFrequency(repeatFrequency: string): string {
+    const foundOption = this.repeatOptions.find(option => option.value === repeatFrequency);
+    return foundOption ? foundOption.label : repeatFrequency; // Return label if found, otherwise the value itself
   }
 }

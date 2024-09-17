@@ -26,7 +26,7 @@
             <th>Nächste Ausführung</th>
             <th>Wochentag</th>
             <th>Ort</th>
-            <th>Portionen</th>
+            <th>Portionen gesamt</th>
             <th>Wiederholung</th>
             <th>Einkaufen?</th>
             <th>Komponenten</th>
@@ -58,7 +58,7 @@
                     </span>
                 </div>
             </td>
-            <td>{{ menuPlan.repeatFrequency }}</td>
+            <td>{{ getTranslatedRepeatFrequency(menuPlan.repeatFrequency) }}</td>
             <td>
                 <button pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
             </td>
