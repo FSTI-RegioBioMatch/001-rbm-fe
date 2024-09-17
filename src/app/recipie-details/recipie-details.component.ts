@@ -153,13 +153,14 @@ export class RecipieDetailsComponent implements OnInit {
     this.storeService.selectedCompanyContext$
       .pipe(
         switchMap(company => {
-          if (company && company.id) {
-            // Fetch the recipe details without images
+          // console.log("fucc",company)
+          // if (company && company.id) {
+          //   // Fetch the recipe details without images
             return this.recipeService.getRecipeById(this.recipeId, false);
-          } else {
-            this.router.navigate(['/my-recipes']);
-            return of(null);
-          }
+          // } else {
+          //   this.router.navigate(['/my-recipes']);
+          //   return of(null);
+          // }
         }),
         catchError(error => {
           console.error('Error fetching recipe:', error);

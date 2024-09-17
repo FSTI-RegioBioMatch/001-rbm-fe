@@ -126,7 +126,6 @@ export class NewMenuplanService {
   getAllMenuPlans(): Observable<any[]> {
     return this.storeService.selectedCompanyContext$.pipe(
       switchMap((company) => {
-        console.log('Company:', company);
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }

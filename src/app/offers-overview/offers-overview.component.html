@@ -36,6 +36,12 @@
                         <p><strong>Min Amount:</strong> {{ offer?.offerDetails?.minAmount?.amount }} {{
                             offer?.offerDetails?.minAmount?.unit }}</p>
                         <p><strong>Price per Unit:</strong> €{{ offer?.offerDetails?.pricePerUnit }}</p>
+                        <p><strong>Verarbeitungen:</strong></p>
+                        <ul>
+                            <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
+                                <p>{{ processing?.label }}</p>
+                            </li>
+                        </ul>
                     </p-panel>
 
                     <p-panel header="Graduated Prices">
