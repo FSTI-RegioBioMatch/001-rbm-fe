@@ -2,7 +2,7 @@
     <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
     <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
     <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-    <p-button class="Last">Angebotsliste</p-button>
+    <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
 </div>
 
 <p-toast></p-toast>
@@ -32,7 +32,7 @@
     </form>
     <div *ngIf="loading" class="text-center">
         <p-progressSpinner></p-progressSpinner>
-      </div>
+    </div>
     <p-table [value]="filteredShoppingLists">
         <ng-template pTemplate="header">
             <tr>

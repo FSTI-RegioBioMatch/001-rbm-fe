@@ -15,6 +15,7 @@ import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
 import { OrdersComponent } from './orders/orders.component';
+import { OffersOverviewComponent } from './offers-overview/offers-overview.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -73,6 +74,9 @@ const routes: Routes = [
   },
   {
     path: 'orders', component: OrdersComponent
+  },
+  {
+    path: 'offers-overview', component: OffersOverviewComponent
   }
 ];
 @NgModule({

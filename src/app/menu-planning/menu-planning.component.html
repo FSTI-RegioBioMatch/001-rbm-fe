@@ -2,7 +2,7 @@
   <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
   <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
   <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-  <p-button class="last">Angebotsliste</p-button>
+  <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
 </div>
 <p-confirmDialog></p-confirmDialog>
 <div class="container">
@@ -14,12 +14,16 @@
       <div class="menu-plan-list rbm_scrollbar" (wheel)="onWheel($event)">
 
         <!-- Display message when no recipes are added and the form is clean -->
-        <div *ngIf="menuPlan.length === 0 && (!menuPlanForm.hasError('atLeastOneRecipe') || !(menuPlanForm.dirty || menuPlanForm.touched))" class="recipe-item placeholder">
+        <div
+          *ngIf="menuPlan.length === 0 && (!menuPlanForm.hasError('atLeastOneRecipe') || !(menuPlanForm.dirty || menuPlanForm.touched))"
+          class="recipe-item placeholder">
           <p>Keine Rezepte hinzugefügt</p>
         </div>
 
         <!-- Display error message when no recipes are added and form has validation errors -->
-        <div *ngIf="menuPlan.length === 0 && menuPlanForm.hasError('atLeastOneRecipe') && (menuPlanForm.dirty || menuPlanForm.touched)" class="recipe-item placeholder rbm-bg-error-10">
+        <div
+          *ngIf="menuPlan.length === 0 && menuPlanForm.hasError('atLeastOneRecipe') && (menuPlanForm.dirty || menuPlanForm.touched)"
+          class="recipe-item placeholder rbm-bg-error-10">
           <p>Es muss mindestens ein Rezept hinzugefügt werden.</p>
         </div>
 
@@ -40,76 +44,89 @@
       <form [formGroup]="menuPlanForm" class="menu-plan-form rbm-flex-column rbm-width-40">
         <div class="date-config">
           <div class="form-field">
-            <label for="wochentag" >Nächste Ausführung<span class="rbm-text-error rbm-text-s">*</span></label>
+            <label for="wochentag">Nächste Ausführung<span class="rbm-text-error rbm-text-s">*</span></label>
             <p-floatLabel>
               <p-dropdown id="nachsteAusfuhrung" formControlName="nachsteAusfuhrung"
-              [options]="nextExecutionOptions" ></p-dropdown>
-              <span *ngIf="menuPlanForm.get('nachsteAusfuhrung')?.hasError('required') && (menuPlanForm.get('nachsteAusfuhrung')?.touched || menuPlanForm.get('nachsteAusfuhrung')?.dirty)" class="invalid_input_label">Ausführung ist erforderlich</span>
+                [options]="nextExecutionOptions"></p-dropdown>
+              <span
+                *ngIf="menuPlanForm.get('nachsteAusfuhrung')?.hasError('required') && (menuPlanForm.get('nachsteAusfuhrung')?.touched || menuPlanForm.get('nachsteAusfuhrung')?.dirty)"
+                class="invalid_input_label">Ausführung ist erforderlich</span>
             </p-floatLabel>
           </div>
 
           <div class="form-field">
-            <label for="wochentag" >Wochentag<span class="rbm-text-error rbm-text-s">*</span></label>
+            <label for="wochentag">Wochentag<span class="rbm-text-error rbm-text-s">*</span></label>
             <p-floatLabel>
               <p-dropdown id="wochentag" formControlName="wochentag" [options]="weekDays"></p-dropdown>
-              <span *ngIf="menuPlanForm.get('wochentag')?.hasError('required') && (menuPlanForm.get('wochentag')?.touched || menuPlanForm.get('wochentag')?.dirty)" class="invalid_input_label">Wochentag ist erforderlich</span>
+              <span
+                *ngIf="menuPlanForm.get('wochentag')?.hasError('required') && (menuPlanForm.get('wochentag')?.touched || menuPlanForm.get('wochentag')?.dirty)"
+                class="invalid_input_label">Wochentag ist erforderlich</span>
             </p-floatLabel>
           </div>
 
           <div class="form-field">
-            <label for="wiederholung" >Wiederholung<span class="rbm-text-error rbm-text-s">*</span></label>
+            <label for="wiederholung">Wiederholung<span class="rbm-text-error rbm-text-s">*</span></label>
             <p-floatLabel>
               <p-dropdown id="wiederholung" formControlName="wiederholung" [options]="repeatOptions"></p-dropdown>
-              <span *ngIf="menuPlanForm.get('wiederholung')?.hasError('required') && (menuPlanForm.get('wiederholung')?.touched || menuPlanForm.get('wiederholung')?.dirty)" class="invalid_input_label">Wiederholung ist erforderlich</span>
+              <span
+                *ngIf="menuPlanForm.get('wiederholung')?.hasError('required') && (menuPlanForm.get('wiederholung')?.touched || menuPlanForm.get('wiederholung')?.dirty)"
+                class="invalid_input_label">Wiederholung ist erforderlich</span>
             </p-floatLabel>
           </div>
         </div>
         <br><br>
 
         <div class="rbm-flex-row rbm-gap-p8">
-        <div class="form-field rbm-width-50">
-          <p-floatLabel class="rbm-full-width">
-            <input id="name" type="text" formControlName="name" pInputText placeholder="Name" class="input-text rbm-full-width" />
-            <label for="name" >Name<span class="rbm-text-error rbm-text-s">*</span></label>
-            <span *ngIf="menuPlanForm.get('name')?.hasError('required') && (menuPlanForm.get('name')?.touched || menuPlanForm.get('name')?.dirty)" for="ort" class="invalid_input_label">Name ist erforderlich</span>
-          </p-floatLabel>
-        </div>
+          <div class="form-field rbm-width-50">
+            <p-floatLabel class="rbm-full-width">
+              <input id="name" type="text" formControlName="name" pInputText placeholder="Name"
+                class="input-text rbm-full-width" />
+              <label for="name">Name<span class="rbm-text-error rbm-text-s">*</span></label>
+              <span
+                *ngIf="menuPlanForm.get('name')?.hasError('required') && (menuPlanForm.get('name')?.touched || menuPlanForm.get('name')?.dirty)"
+                for="ort" class="invalid_input_label">Name ist erforderlich</span>
+            </p-floatLabel>
+          </div>
 
-        <div class="form-field rbm-width-50">
-          <p-floatLabel class="rbm-full-width">
-            <input id="ort" type="text" formControlName="ort" pInputText placeholder="Ort" class="input-text rbm-full-width" />
-            <label for="ort" >Ort<span class="rbm-text-error rbm-text-s">*</span></label>
-            <span *ngIf="menuPlanForm.get('ort')?.hasError('required') && (menuPlanForm.get('ort')?.touched || menuPlanForm.get('ort')?.dirty)" for="ort" class="invalid_input_label">Ort ist erforderlich</span>
-          </p-floatLabel>
+          <div class="form-field rbm-width-50">
+            <p-floatLabel class="rbm-full-width">
+              <input id="ort" type="text" formControlName="ort" pInputText placeholder="Ort"
+                class="input-text rbm-full-width" />
+              <label for="ort">Ort<span class="rbm-text-error rbm-text-s">*</span></label>
+              <span
+                *ngIf="menuPlanForm.get('ort')?.hasError('required') && (menuPlanForm.get('ort')?.touched || menuPlanForm.get('ort')?.dirty)"
+                for="ort" class="invalid_input_label">Ort ist erforderlich</span>
+            </p-floatLabel>
+          </div>
         </div>
-      </div>
-      <br>
+        <br>
 
         <div class="form-field description-field">
           <p-floatLabel>
             <textarea id="description" formControlName="description" pInputTextarea placeholder="Beschreibung"
-            class="textarea"></textarea>
+              class="textarea"></textarea>
             <!-- <label for="description">Beschreibung</label> -->
           </p-floatLabel>
         </div>
 
         <div class="form-field">
-          <label for="portions" >Portionen<span class="rbm-text-error rbm-text-s">*</span></label>
+          <label for="portions">Portionen<span class="rbm-text-error rbm-text-s">*</span></label>
           <p-floatLabel pTooltip="Mindestens einer der Portionen muss größer sein als 0">
             <div class="input-wrapper">
               <input id="portions" type="number" formControlName="portions" pInputText class="input-number" min="0" />
               <span class="suffix">Personen</span>
             </div>
             <span class="invalid_input_label"
-            *ngIf="menuPlanForm.get('portions')?.hasError('min') && (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portions')?.dirty)">
-            Portionen muss mindestens 0 sein.
-          </span>
+              *ngIf="menuPlanForm.get('portions')?.hasError('min') && (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portions')?.dirty)">
+              Portionen muss mindestens 0 sein.
+            </span>
           </p-floatLabel>
         </div>
-        <br *ngIf="menuPlanForm.get('portions')?.hasError('min') && (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portions')?.dirty)">
+        <br
+          *ngIf="menuPlanForm.get('portions')?.hasError('min') && (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portions')?.dirty)">
 
         <div class="form-field">
-          <label for="portionsVegetarisch" >Vegetarisch<span class="rbm-text-error rbm-text-s">*</span></label>
+          <label for="portionsVegetarisch">Vegetarisch<span class="rbm-text-error rbm-text-s">*</span></label>
           <p-floatLabel pTooltip="Mindestens einer der Portionen muss größer sein als 0">
             <div class="input-wrapper">
               <input id="portionsVegetarisch" type="number" formControlName="portionsVegetarisch" pInputText
@@ -117,15 +134,16 @@
               <span class="suffix">Personen</span>
             </div>
             <span class="invalid_input_label"
-            *ngIf="menuPlanForm.get('portionsVegetarisch')?.hasError('min') && (menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegetarisch')?.dirty)">
-            muss mindestens 0 sein.
-          </span>
+              *ngIf="menuPlanForm.get('portionsVegetarisch')?.hasError('min') && (menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegetarisch')?.dirty)">
+              muss mindestens 0 sein.
+            </span>
           </p-floatLabel>
         </div>
-        <br  *ngIf="menuPlanForm.get('portionsVegetarisch')?.hasError('min') && (menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegetarisch')?.dirty)">
+        <br
+          *ngIf="menuPlanForm.get('portionsVegetarisch')?.hasError('min') && (menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegetarisch')?.dirty)">
 
         <div class="form-field">
-          <label for="portionsVegan" >Vegan<span class="rbm-text-error rbm-text-s">*</span></label>
+          <label for="portionsVegan">Vegan<span class="rbm-text-error rbm-text-s">*</span></label>
           <p-floatLabel pTooltip="Mindestens einer der Portionen muss größer sein als 0">
             <div class="input-wrapper">
               <input id="portionsVegan" type="number" formControlName="portionsVegan" pInputText class="input-number"
@@ -133,9 +151,9 @@
               <span class="suffix">Personen</span>
             </div>
             <span class="invalid_input_label"
-            *ngIf="menuPlanForm.get('portionsVegan')?.hasError('min') && (menuPlanForm.get('portionsVegan')?.touched || menuPlanForm.get('portionsVegan')?.dirty)">
-            muss mindestens 0 sein.
-          </span>
+              *ngIf="menuPlanForm.get('portionsVegan')?.hasError('min') && (menuPlanForm.get('portionsVegan')?.touched || menuPlanForm.get('portionsVegan')?.dirty)">
+              muss mindestens 0 sein.
+            </span>
           </p-floatLabel>
         </div>
         <br>
@@ -146,7 +164,8 @@
              (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegan')?.touched)">
           Mindestens eine der Portionen muss größer als 0 sein.
         </div>
-        <br *ngIf="menuPlanForm.hasError('atLeastOnePortion') && 
+        <br
+          *ngIf="menuPlanForm.hasError('atLeastOnePortion') && 
         (menuPlanForm.get('portions')?.touched || menuPlanForm.get('portionsVegetarisch')?.touched || menuPlanForm.get('portionsVegan')?.touched)">
 
         <div class="form-field">
@@ -200,9 +219,10 @@
         <img [src]="recipe.recipeImage ? recipe.recipeImage : 'assets/default-image.png'" alt="{{ recipe.recipeName }}"
           class="recipe-image">
         <div class="recipe-name">{{ recipe.recipeName }}</div>
-        <p-button [class]="isRecipeAdded(recipe) ? 'remove-button rbm-standard-pbtn-round' : 'add-button rbm-standard-pbtn-round'"
-        [label]="isRecipeAdded(recipe) ? '-' : '+'"
-        (click)="isRecipeAdded(recipe) ? removeRecipeFromMenuPlan(recipe) : addRecipeToMenuPlan(recipe)"></p-button>
+        <p-button
+          [class]="isRecipeAdded(recipe) ? 'remove-button rbm-standard-pbtn-round' : 'add-button rbm-standard-pbtn-round'"
+          [label]="isRecipeAdded(recipe) ? '-' : '+'"
+          (click)="isRecipeAdded(recipe) ? removeRecipeFromMenuPlan(recipe) : addRecipeToMenuPlan(recipe)"></p-button>
       </div>
     </div>
 

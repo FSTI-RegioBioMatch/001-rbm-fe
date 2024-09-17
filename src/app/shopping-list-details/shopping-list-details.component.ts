@@ -71,7 +71,6 @@ const ingredientUnits: IngredientUnit[] = [
     MessageModule,
     PanelModule,
     CardModule,
-    AccordionModule,
   ],
   standalone: true,
   providers: [MessageService]
@@ -87,7 +86,6 @@ export class ShoppingListDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private shoppingListService: NewShoppingListService,
     private offerService: OfferService,
-    private storeService: StoreService,
     private router: Router,
     private store: StoreService,
     private messageService: MessageService,
