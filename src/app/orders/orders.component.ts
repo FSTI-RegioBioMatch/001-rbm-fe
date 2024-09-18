@@ -1,66 +1,66 @@
 import { Component, OnInit } from '@angular/core';
-import { StoreService } from '../shared/store/store.service';
-import { MessageService } from 'primeng/api';
-import { OfferService } from '../shared/services/offer.service';
-import { filter, switchMap } from 'rxjs/operators';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { OrderService } from '../shared/services/order.service';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [],
   templateUrl: './orders.component.html',
-  styleUrl: './orders.component.scss',
-  providers: [MessageService],
+  styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
+  orders: any[] = []; // Store the order details here
+  orderIds: string[] = []; // Store the extracted order IDs here
 
-  purchaseIntents: any[] = [];
-  orders: any[] = [];
-  recurringOrders: any[] = [];
-  loadingOrders = false;
-  price_requests:  any[] = [];;
-
-  constructor(
-    private store: StoreService,
-    private messageService: MessageService,
-    private offerService: OfferService,
-  ) { }
+  constructor(private orderService: OrderService) {}
 
   ngOnInit(): void {
-    this.loadingOrders = true; // Start loading
-    this.fetchOrdersAndRecurringOrders();
+    // Fetch the company orders which returns an array of order URLs
+    this.orderService.getCompanyOrders().subscribe({
+      next: (orderUrls) => {
+        console.log('Order URLs:', orderUrls);
+        
+        // Extract the order IDs from the URLs
+        this.orderIds = orderUrls.map((url: string) => this.extractOrderIdFromUrl(url));
+        
+        console.log('Extracted Order IDs:', this.orderIds);
+
+        // Fetch order details for each extracted order ID
+        this.fetchAllOrderDetails(this.orderIds);
+      },
+      error: (error) => {
+        console.error('Error fetching company orders:', error);
+      }
+    });
   }
 
-  // Function to fetch both orders and recurring orders
-  private fetchOrdersAndRecurringOrders(): void {
-    this.store.selectedCompanyContext$
-      .pipe(
-        filter(company => company !== null),  // Ensure there's a selected company
-        switchMap(() => this.getCombinedOrders())  // Call the new combined orders function
+  // Function to extract the order ID from the URL
+  private extractOrderIdFromUrl(orderUrl: string): string {
+    return orderUrl.split('/').pop() || '';
+  }
+
+  // Function to fetch the details for all orders by ID
+  private fetchAllOrderDetails(orderIds: string[]): void {
+    const orderDetailRequests = orderIds.map((orderId) =>
+      this.orderService.getOrderById(orderId).pipe(
+        catchError((error) => {
+          console.error(`Error fetching order ${orderId}:`, error);
+          return of(null); // Return null or an empty object if the request fails
+        })
       )
-      .subscribe({
-        next: ([ordersData, recurringOrdersData, price_requests, purchase_Intents]) => {
-          this.orders = ordersData;
-          this.recurringOrders = recurringOrdersData;
-          this.price_requests = price_requests;
-          this.purchaseIntents = purchase_Intents;
-          this.loadingOrders = false;  // Stop loading after data is fetched
-        },
-        error: (error) => {
-          this.loadingOrders = false;  // Stop loading on error
-          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Bestellungen konnten nicht geladen werden' });
-          console.error('Error loading orders and recurring orders:', error);
-        }
-      });
-  }
+    );
 
-  // Combined function to get both orders and recurring orders
-  private getCombinedOrders(): Observable<[any, any, any, any]> {
-    const orders$ = this.offerService.getOrders();
-    const recurringOrders$ = this.offerService.getRecurringOrders();
-    const priceRequests$ = this.offerService.getPriceRequests();
-    const purchaseIntents$ = this.offerService.getPurchaseIntents();
-    return forkJoin([orders$, recurringOrders$, priceRequests$, purchaseIntents$]);  // Execute both calls in parallel
+    // Using forkJoin to wait for all requests to complete, including the ones that fail
+    forkJoin(orderDetailRequests).subscribe({
+      next: (orderDetails) => {
+        // Filter out any failed (null) responses
+        this.orders = orderDetails.filter(order => order !== null);
+        console.log('Order Details:', this.orders);
+      },
+      error: (error) => {
+        console.error('Error fetching order details:', error);
+      }
+    });
   }
 }

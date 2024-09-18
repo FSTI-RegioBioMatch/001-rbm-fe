@@ -14,8 +14,9 @@ import { ShoppingListDetailsComponent } from './shopping-list-details/shopping-l
 import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
-import { OrdersComponent } from './orders/orders.component';
+import { PrPiOverviewComponent } from './pr-pi-overview/pr-pi-overview';
 import { OffersOverviewComponent } from './offers-overview/offers-overview.component';
+import { OrdersComponent } from './orders/orders.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -73,7 +74,10 @@ const routes: Routes = [
     component: RegisterComponent,
   },
   {
-    path: 'orders', component: OrdersComponent
+    path: 'pr-pi-overview', component: PrPiOverviewComponent
+  },
+  {
+    path:  'orders', component: OrdersComponent
   },
   {
     path: 'offers-overview', component: OffersOverviewComponent

@@ -185,7 +185,7 @@ export class ShoppingListDetailsComponent implements OnInit {
   }
   
   private fetchOffers(address: AddressType): void {
-    this.offerService.setOffersBySearchRadius(50, address); // Set initial search radius and address
+    this.offerService.setOffersBySearchRadius(250, address); // Set initial search radius and address
   
     this.offerService.offers$
       .pipe(take(1)) // Ensure only one subscription

@@ -1,0 +1,161 @@
+<div *ngIf="loadingOrders" class="loading-container">
+  <p>Loading orders...</p>
+</div>
+
+<div *ngIf="!loadingOrders">
+  <!-- Price Requests Section -->
+  <h3>Price Requests</h3>
+
+  <!-- Status Filter Dropdown for Price Requests -->
+  <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status" (onChange)="filterPriceRequests()"></p-dropdown>
+
+  <!-- Price Requests Table -->
+  <p-table [value]="filteredPriceRequests" [rows]="10" [responsiveLayout]="'scroll'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Date Created</th>
+        <th>Delivery Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-priceRequest>
+      <tr>
+        <td>{{ priceRequest.dateCreated | date }}</td>
+        <td>{{ priceRequest.deliveryDate | date }}</td>
+        <td>{{ priceRequest.amount.amount }} {{ priceRequest.amount.unit }}</td>
+        <td>{{ priceRequest.status }}</td>
+        <td>
+          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info" (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Purchase Intents Section with Status Filter -->
+  <h3>Purchase Intents</h3>
+
+  <!-- Status Filter Dropdown for Purchase Intents -->
+  <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status" (onChange)="filterPurchaseIntents()"></p-dropdown>
+
+  <!-- Purchase Intents Table -->
+  <p-table [value]="filteredPurchaseIntents" [rows]="10" [responsiveLayout]="'scroll'">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Date Created</th>
+        <th>Delivery Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-purchaseIntent>
+      <tr>
+        <td>{{ purchaseIntent.dateCreated | date }}</td>
+        <td>{{ purchaseIntent.deliveryDate | date }}</td>
+        <td>{{ purchaseIntent.amount.amount }} {{ purchaseIntent.amount.unit }}</td>
+        <td>{{ purchaseIntent.status }}</td>
+        <td>
+          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info" (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Price Request Details Section -->
+  <p-accordion *ngIf="selectedPriceRequest">
+    <p-accordionTab header="Price Request Details">
+      <p><strong>Date Created:</strong> {{ selectedPriceRequest.dateCreated | date }}</p>
+      <p><strong>Delivery Date:</strong> {{ selectedPriceRequest.deliveryDate | date }}</p>
+      <p><strong>Amount:</strong> {{ selectedPriceRequest.amount.amount }} {{ selectedPriceRequest.amount.unit }}</p>
+      <p><strong>Total Price:</strong> {{ selectedPriceRequest.totalPrice | currency }}</p>
+      <p><strong>Status:</strong> {{ selectedPriceRequest.status }}</p>
+    </p-accordionTab>
+
+    <p-accordionTab header="Offer Details" *ngIf="selectedPriceRequest.offer">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPriceRequest.offer.productTitle }}</ng-template>
+        <p><strong>Description:</strong> {{ selectedPriceRequest.offer.description }}</p>
+        <p><strong>Amount:</strong> {{ selectedPriceRequest.offer.totalAmount.amount }} {{ selectedPriceRequest.offer.totalAmount.unit }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Category Details" *ngIf="selectedPriceRequest.category">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPriceRequest.category.label }}</ng-template>
+        <p><strong>Supercategories:</strong> {{ selectedPriceRequest.category.links.supercategories | json }}</p>
+        <p><strong>Subcategories:</strong> {{ selectedPriceRequest.category.links.subcategories | json }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Buying Company Details" *ngIf="selectedPriceRequest.buyingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPriceRequest.buyingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPriceRequest.buyingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPriceRequest.buyingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Selling Company Details" *ngIf="selectedPriceRequest.sellingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPriceRequest.sellingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPriceRequest.sellingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPriceRequest.sellingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-footer>
+      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger" (click)="clearSelected()"></button>
+    </p-footer>
+  </p-accordion>
+
+  <!-- Purchase Intent Details Section -->
+  <p-accordion *ngIf="selectedPurchaseIntent">
+
+    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check" (onClick)="makePurchaseIntentOrder()"></p-button>
+    <p-accordionTab header="Purchase Intent Details">
+      <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
+      <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
+      <p><strong>Amount:</strong> {{ selectedPurchaseIntent.amount.amount }} {{ selectedPurchaseIntent.amount.unit }}</p>
+      <p><strong>Total Price:</strong> {{ selectedPurchaseIntent.totalPrice | currency }}</p>
+      <p><strong>Status:</strong> {{ selectedPurchaseIntent.status }}</p>
+    </p-accordionTab>
+
+    <p-accordionTab header="Offer Details" *ngIf="selectedPurchaseIntent.offer">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.offer.productTitle }}</ng-template>
+        <p><strong>Description:</strong> {{ selectedPurchaseIntent.offer.description }}</p>
+        <p><strong>Amount:</strong> {{ selectedPurchaseIntent.offer.totalAmount.amount }} {{ selectedPurchaseIntent.offer.totalAmount.unit }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Category Details" *ngIf="selectedPurchaseIntent.category">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.category.label }}</ng-template>
+        <p><strong>Supercategories:</strong> {{ selectedPurchaseIntent.category.links.supercategories | json }}</p>
+        <p><strong>Subcategories:</strong> {{ selectedPurchaseIntent.category.links.subcategories | json }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Buying Company Details" *ngIf="selectedPurchaseIntent.buyingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.buyingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPurchaseIntent.buyingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.buyingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Selling Company Details" *ngIf="selectedPurchaseIntent.sellingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.sellingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPurchaseIntent.sellingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.sellingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-footer>
+      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger" (click)="clearSelected()"></button>
+    </p-footer>
+  </p-accordion>
+</div>

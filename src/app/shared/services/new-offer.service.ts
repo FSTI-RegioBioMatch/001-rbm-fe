@@ -1,4 +1,4 @@
-import { BehaviorSubject, finalize, forkJoin, Observable, switchMap, tap, of, ObservedValuesFromArray } from "rxjs";
+import { finalize, forkJoin, Observable, switchMap, tap, of } from "rxjs";
 import { AddressType } from "../types/address.type";
 import { OfferType } from "../types/offer.type";
 import { OntofoodType } from "../types/ontofood.type";
@@ -9,44 +9,36 @@ import { StoreService } from "../store/store.service";
 import { Injectable } from "@angular/core";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class OfferService {
+export class NewOfferService {
+  private loaded = false;
+  private ontoFoodTypes: OntofoodType[] = [];
+  public displayedFoodTypes: OntofoodType[] = [];
+
+  private address: AddressType | null = null;
+  private offers: OfferType[] = [];
+
+  // Cache for offers with a 1-hour TTL
+  private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
+  private offerCache = new Map<string, { data: OfferType[], timestamp: number }>();
+
   constructor(
     private http: HttpClient,
     private geoService: GeoService,
     public store: StoreService,
   ) {}
 
-  private loadedSubject = new BehaviorSubject<boolean>(false);
-  loaded$ = this.loadedSubject.asObservable();
-
-  private ontoFoodTypes: OntofoodType[] = [];
-  public displayedFoodTypes: OntofoodType[] = [];
-
-  // Create BehaviorSubject for the address
-  private addressSubject = new BehaviorSubject<AddressType | null>(null);
-  address$ = this.addressSubject.asObservable();
-
-  private offersSubject = new BehaviorSubject<OfferType[]>([]);
-  offers$ = this.offersSubject.asObservable();
-
-  // Cache for offers with a 1-hour TTL
-  private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
-  private offerCache = new Map<string, { data: OfferType[], timestamp: number }>();
-
-  // Use BehaviorSubject to store and emit address
   setAddress(address: AddressType) {
-    this.addressSubject.next(address);
+    this.address = address;
   }
 
-  // Method to get the current value of the address
-  get address(): AddressType | null {
-    return this.addressSubject.value;
+  getAddress(): AddressType | null {
+    return this.address;
   }
 
-  // Method to generate a unique cache key based on address coordinates (not radius)
   private generateCacheKey(address: AddressType): string {
     return `${address.lat}-${address.lon}`;
   }
@@ -60,7 +52,6 @@ export class OfferService {
   ): Observable<OfferType[]> {
     const cached = this.offerCache.get(cacheKey);
 
-    // Check if cache is valid (not expired)
     if (cached && (Date.now() - cached.timestamp) < this.cacheTTL) {
       console.log('Using cached offers');
       return of(cached.data);
@@ -71,7 +62,6 @@ export class OfferService {
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`
     ).pipe(
       tap((offers) => {
-        // Cache the fetched offers with a timestamp
         this.offerCache.set(cacheKey, { data: offers, timestamp: Date.now() });
       })
     );
@@ -83,8 +73,8 @@ export class OfferService {
       return;
     }
 
-    this.setAddress(address); // Set the address via the BehaviorSubject
-    this.loadedSubject.next(false);
+    this.setAddress(address);
+    this.loaded = false;
 
     const boundingBox = this.geoService.getBoundingBox(
       searchRadiusInKM,
@@ -94,18 +84,16 @@ export class OfferService {
 
     const cacheKey = this.generateCacheKey(address);
 
-    console.log("before getOffers");
-
     this.getOffers(
       boundingBox.lonMin,
       boundingBox.latMin,
       boundingBox.lonMax,
       boundingBox.latMax,
-      cacheKey // Pass cache key based on address (not radius)
+      cacheKey
     )
       .pipe(
-        debounceTime(300), // Debounce to prevent spamming
-        distinctUntilChanged(), // Ensure only distinct requests
+        debounceTime(300),
+        distinctUntilChanged(),
         tap((offers) => this.store.setOffers(offers)),
         switchMap((offers: OfferType[]) => {
           const observables = offers.map((offer) =>
@@ -133,17 +121,17 @@ export class OfferService {
               this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
               this.store.setOfferOntoFood(this.displayedFoodTypes);
 
-              this.offersSubject.next(offers);
+              this.offers = offers;
             })
           );
         }),
-        finalize(() => this.loadedSubject.next(true)),
+        finalize(() => this.loaded = true),
       )
       .subscribe({
         next: () => {},
         error: (error) => {
           console.error('Error fetching offers:', error);
-          this.loadedSubject.next(true);
+          this.loaded = true;
         },
       });
   }
@@ -152,15 +140,15 @@ export class OfferService {
     return this.store.offers$;
   }
 
-  get loaded(): boolean {
-    return this.loadedSubject.value;
+  isLoaded(): boolean {
+    return this.loaded;
   }
 
   trackByFn(index: number, item: any): any {
     return item.id || index;
   }
 
-  getAddress(addressUrl: string): Observable<AddressType> {
+  getAddressFromUrl(addressUrl: string): Observable<AddressType> {
     return this.http.get<AddressType>(addressUrl);
   }
 
@@ -180,30 +168,12 @@ export class OfferService {
     return this.http.get<any>(`${environment.NEARBUY_API}/levels_of_processing`);
   }
 
-  getLocalizedLoP(): Observable<any> {
-    return this.http.get<any>(`https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/levelsOfProcessing`)
-  }
-
   getPurchaseIntents(): Observable<any> {
     return this.http.get<any>(`${environment.NEARBUY_API}/purchase_intents`);
   }
   
   clearOfferCache() {
-    this.offerCache.clear(); // Clear the cache
+    this.offerCache.clear();
     console.log('Offer cache cleared');
-  }
-
-    // Fetch individual price request details
-    getPriceRequestDetails(url: string): Observable<any> {
-      return this.http.get<any>(url);
-    }
-  
-    // Fetch individual purchase intent details
-    getPurchaseIntentDetails(url: string): Observable<any> {
-      return this.http.get<any>(url);
-    }
-      // Fetch related detail (for company, person, offer, etc.)
-  getRelatedDetail(url: string): Observable<any> {
-    return this.http.get<any>(url);
   }
 }
