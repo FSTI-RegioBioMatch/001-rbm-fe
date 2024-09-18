@@ -12,7 +12,9 @@ import { MessageService } from 'primeng/api';
 import { filter, of, switchMap, take } from 'rxjs';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 import { AddressType } from '../shared/types/address.type';
-
+import { FormsModule } from '@angular/forms';
+import { SliderModule } from 'primeng/slider';
+import { OrderService } from '../shared/services/order.service';
 @Component({
   selector: 'app-offers-overview',
   standalone: true,
@@ -24,8 +26,9 @@ import { AddressType } from '../shared/types/address.type';
     AccordionModule,
     ProgressSpinnerModule,
     PanelModule,
+    FormsModule,
     CardModule,
-
+    SliderModule
   ],
   providers: [MessageService],
   templateUrl: './offers-overview.component.html',
@@ -37,13 +40,14 @@ export class OffersOverviewComponent implements OnInit {
   loading = false;
   offers: any[] = [];  // Declare offers to store the list of offers
   errorMessage: string = ''; // Declare errorMessage for displaying errors
-
+  range: number = 50
   constructor(
     private offerService: OfferService,
     private store: StoreService,
     private messageService: MessageService,
     private router: Router,
-    private nearbuyTestService: NearbuyTestService
+    private nearbuyTestService: NearbuyTestService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
@@ -126,8 +130,7 @@ export class OffersOverviewComponent implements OnInit {
   }
   
   private fetchOffers(address: AddressType): void {
-    // Use the service method to set offers by the search radius
-    this.offerService.setOffersBySearchRadius(50, address); // Set initial search radius and address
+    this.offerService.setOffersBySearchRadius(this.range, address); // Set initial search radius and address
   
     // Subscribe to the offers and handle both cached or new offers
     this.offerService.offers$
@@ -140,7 +143,7 @@ export class OffersOverviewComponent implements OnInit {
           } else {
             console.log('No offers found, fetching new offers');
             // If no offers are available, trigger a new fetch
-            this.offerService.setOffersBySearchRadius(50, address);
+            this.offerService.setOffersBySearchRadius(this.range, address);
           }
           this.loading = false; // Stop loading once offers are fetched
         },
@@ -176,5 +179,51 @@ export class OffersOverviewComponent implements OnInit {
           }
         });
     }
+  }
+  makePriceRequest(offer: any): void {
+    console.log('Making price request for offer:', offer);
+
+    // Construct the PriceRequest object inline without importing a model
+    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+    const priceRequest = {
+      offerRef: offer.links.offer,  // Reference to the offer
+      message: `Requesting price for ${productName}`,  // Custom message
+      deliveryDate: '2024-12-12',  // Example delivery date, this can be dynamic
+      containers: [],  // Using containers from the offer
+      totalAmount: offer.offerDetails.totalAmount  // Total amount from the offer
+    };
+
+    // Send the price request using the OrderService
+    this.orderService.createPriceRequest(priceRequest).subscribe(
+      response => {
+        console.log('Price Request successfully created:', response);
+      },
+      error => {
+        console.error('Error creating Price Request:', error);
+      }
+    );
+  }
+  // Method to make a purchase intent
+  makePurchaseIntent(offer: any): void {
+    console.log('Making purchase intent for offer:', offer);
+    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+    // Construct the PurchaseIntent object inline without importing a model
+    const purchaseIntent = {
+      offerRef: offer.offerDetails.id,  // Reference to the offer
+      deliveryDate: '2024-12-12',  // Example delivery date, can be dynamic
+      message: `Purchase intent for ${productName}`,  // Custom message
+      containers: [],
+      totalAmount: offer.offerDetails.totalAmount  // Total amount from the offer
+    };
+
+    // Send the purchase intent using the OrderService
+    this.orderService.createPurchaseIntent(purchaseIntent).subscribe(
+      response => {
+        console.log('Purchase Intent successfully created:', response);
+      },
+      error => {
+        console.error('Error creating Purchase Intent:', error);
+      }
+    );
   }
 }

@@ -10,7 +10,7 @@ import { RecipieDetailsComponent } from './recipie-details/recipie-details.compo
 import { MyMenusComponent } from './menu-planning/my-menus/my-menus.component';
 import { ShoppingListOverviewComponent } from './shopping-list-overview/shopping-list-overview.component';
 import { ShoppingListDetailsComponent } from './shopping-list-details/shopping-list-details.component';
-import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component';
+// import { NewOfferScanComponent } from './new-offer-scan/new-offer-scan.component';
 import { RegisterComponent } from './register/register.component';
 import { MenuPlanDetailsComponent } from './menu-plan-details/menu-plan-details.component';
 import { Dashboard2Component } from './dashboard2/dashboard2.component';
@@ -60,10 +60,10 @@ const routes: Routes = [
     path: 'menu-planning/shopping-list/:id',
     component: ShoppingListDetailedComponent,
   },
-  {
-    path: 'menu-planning/shopping-list/:id/offer-scan/:scanId',
-    component: NewOfferScanComponent,
-  },
+  // {
+  //   path: 'menu-planning/shopping-list/:id/offer-scan/:scanId',
+  //   component: NewOfferScanComponent,
+  // },
   {
     path: 'recipe-details/:id',
     component: RecipieDetailsComponent,

@@ -8,12 +8,30 @@
 {{ errorMessage }}
 <div class="actions">
     <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
-  </div>
+</div>
+
+<p-slider [(ngModel)]="range" [min]="0" [max]="250" [step]="1"></p-slider>
+<p>Selected Range: {{ range }} km</p>
+
 <div class="p-col-6">
     <p-card header="Available Offers">
         <p-accordion>
             <ng-container *ngFor="let offer of offers">
-                <p-accordionTab header="{{ offer?.company?.name }}">
+                <p-accordionTab
+                    header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{offer.offerDetails?.id}}">
+
+                    <div>
+                        <!-- If offerDetails.pricePerUnit exists, show "Make Purchase Intent" button -->
+                        <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Make Purchase Intent"
+                            (onClick)="makePurchaseIntent(offer)">
+                        </p-button>
+
+                        <!-- If offerDetails.pricePerUnit does not exist, show "Make Price Request" button -->
+                        <p-button *ngIf="!offer?.offerDetails?.pricePerUnit" label="Make Price Request"
+                            (onClick)="makePriceRequest(offer)">
+                        </p-button>
+                    </div>
+
                     <p-panel header="Company Details">
                         <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
                         <p><strong>Verified:</strong> {{ offer?.company?.verified ? 'Yes' : 'No' }}</p>
