@@ -323,4 +323,81 @@ export class PrPiOverviewComponent implements OnInit {
         }
       });
     }
+    makePriceRequestOrder() {
+      console.log("Will turn price request into an order for ", this.selectedPriceRequest);
+    
+      // Ensure we have a selected price request with the required status
+      if (!this.selectedPriceRequest || this.selectedPriceRequest.status !== 'PRICE_ADDED') {
+        console.error("No valid price request selected or price request is not in PRICE_ADDED status");
+        return;
+      }
+    
+      const { buyingCompany, sellingCompany } = this.selectedPriceRequest;
+    
+      // Function to fetch the MAIN address for a company
+      const fetchMainAddress = (company: { addresses: any[] }) => {
+        if (company && company.addresses && company.addresses.length > 0) {
+          const mainAddressUrl = company.addresses.find((addr: { type: string }) => addr.type === 'MAIN')?.self;
+          if (mainAddressUrl) {
+            return this.offerService.getRelatedDetail(mainAddressUrl); // Fetch the address details
+          }
+        }
+        return of(null); // Return null if no MAIN address found
+      };
+    
+      // Fetch the MAIN address for both buying and selling company
+      forkJoin({
+        buyingCompanyMainAddress: fetchMainAddress(buyingCompany),
+        sellingCompanyMainAddress: fetchMainAddress(sellingCompany)
+      }).subscribe({
+        next: (addresses) => {
+          console.log("Buying Company MAIN Address: ", addresses.buyingCompanyMainAddress);
+          console.log("Selling Company MAIN Address: ", addresses.sellingCompanyMainAddress);
+    
+          // Ensure addresses have all required fields (fill empty fields if necessary)
+          const invoiceAddress = {
+            type: 'INVOICE',
+            name: addresses.buyingCompanyMainAddress?.name || 'fallback Name',
+            street: addresses.buyingCompanyMainAddress?.street || 'fallback Street',
+            zipcode: addresses.buyingCompanyMainAddress?.zipcode || '00000',
+            city: addresses.buyingCompanyMainAddress?.city || 'fallback City'
+          };
+    
+          const deliveryAddress = {
+            type: 'INVOICE',
+            name: addresses.sellingCompanyMainAddress?.name || 'fallback Name',
+            street: addresses.sellingCompanyMainAddress?.street || 'fallback Street',
+            zipcode: addresses.sellingCompanyMainAddress?.zipcode || '00000',
+            city: addresses.sellingCompanyMainAddress?.city || 'fallback City'
+          };
+    
+          // Prepare the order payload
+          const orderPayload = {
+            invoiceAddress: invoiceAddress,
+            deliveryAddress: deliveryAddress,
+            paymentType: 'ON_ACCOUNT' // Assuming "ON_ACCOUNT" as the payment type
+          };
+    
+          // Extract the priceRequestId from the full URL
+          const priceRequestId = this.selectedPriceRequest.links.self.split('/').pop(); // Extract the UUID
+    
+          // Send the POST request to turn the price request into an order
+          this.orderService.addOrderToPriceRequest(priceRequestId, orderPayload)
+            .subscribe({
+              next: (response: any) => {
+                console.log('Order created successfully:', response);
+                this.messageService.add({ severity: 'success', summary: 'Order Created', detail: 'The price request has been turned into an order successfully.' });
+              },
+              error: (error: any) => {
+                console.error('Error turning price request into an order:', error);
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create the order.' });
+              }
+            });
+        },
+        error: (error) => {
+          console.error("Error fetching main addresses: ", error);
+        }
+      });
+    }
+    
 }

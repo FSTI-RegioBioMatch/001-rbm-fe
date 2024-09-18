@@ -65,6 +65,8 @@
 
   <!-- Price Request Details Section -->
   <p-accordion *ngIf="selectedPriceRequest">
+    <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check" (onClick)="makePriceRequestOrder()"></p-button>
+
     <p-accordionTab header="Price Request Details">
       <p><strong>Date Created:</strong> {{ selectedPriceRequest.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPriceRequest.deliveryDate | date }}</p>
