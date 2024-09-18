@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -70,23 +70,48 @@ export class OrderService {
   addOrderToPriceRequest(priceRequestId: string, orderData: OrderWriteView): Observable<any> {
     return this.http.post(`${this.apiUrl}/price_requests/${priceRequestId}/orders`, orderData);
   }
+
+  // ORDER SECTION
+
+  // Fetch the current company's orders with date filter
+  getCompanyOrders(dateFrom?: string, dateUntil?: string): Observable<string[]> {
+    let params = new HttpParams();
+    if (dateFrom) {
+      params = params.set('dateFrom', dateFrom);
+    }
+    if (dateUntil) {
+      params = params.set('dateUntil', dateUntil);
+    }
+
+    return this.http.get<string[]>(`${this.apiUrl}/orders`, { params });
+  }
+
+  // Fetch a specific order by ID
+  getOrderById(orderId: string): Observable<OrderDetail> {
+    return this.http.get<OrderDetail>(`${this.apiUrl}/orders/${orderId}`);
+  }
+
+  // Update order status (e.g., mark it as completed)
+  updateOrderStatus(orderId: string, isCompleted: boolean, completed: boolean): Observable<any> {
+    return this.http.put(`${this.apiUrl}/orders/${orderId}`, { isCompleted, completed });
+  }
 }
+
+// MODELS
 
 // PURCHASE INTENT MODELS
 
-// Define the interface for PurchaseIntent
 export interface PurchaseIntent {
   offerRef: string;
   deliveryDate: string; // Format should be 'YYYY-MM-DD'
   message: string;
-  containers: any[]; // You can further define the structure if needed
+  containers: any[];
   totalAmount: {
     amount: number;
-    unit: string; // Example: 'Liter'
+    unit: string;
   };
 }
 
-// Define the interface for PurchaseIntentDetail
 export interface PurchaseIntentDetail {
   dateCreated: string;
   deliveryDate: string;
@@ -111,16 +136,14 @@ export interface PurchaseIntentDetail {
   };
 }
 
-// Define the enum for PurchaseIntentStatus
 export type PurchaseIntentStatus = "PENDING" | "ACCEPTED" | "COMPLETED" | "CANCELED_BY_BUYER" | "CANCELED_BY_SELLER" | "REJECTED";
 
 // PRICE REQUEST MODELS
 
-// Define the interface for PriceRequest
 export interface PriceRequest {
   offerRef: string;
   message: string;
-  deliveryDate: string; // Format should be 'YYYY-MM-DD'
+  deliveryDate: string;
   containers: any[];
   totalAmount: {
     amount: number;
@@ -128,7 +151,6 @@ export interface PriceRequest {
   };
 }
 
-// Define the interface for PriceRequestDetail
 export interface PriceRequestDetail {
   dateCreated: string;
   deliveryDate: string;
@@ -154,24 +176,49 @@ export interface PriceRequestDetail {
   };
 }
 
-// Define the enum for PriceRequestStatus
 export type PriceRequestStatus = "PENDING" | "PRICE_ADDED" | "COMPLETED" | "CANCELED_BY_BUYER" | "CANCELED_BY_SELLER" | "REJECTED";
 
 // ORDER MODELS
 
-// Define the interface for OrderWriteView (for both Purchase Intent and Price Request orders)
 export interface OrderWriteView {
   invoiceAddress: OrderAddressWriteView;
   deliveryAddress: OrderAddressWriteView;
   paymentType: string; // Example: "ON_ACCOUNT"
 }
 
-// Define the interface for OrderAddressWriteView
 export interface OrderAddressWriteView {
-  type: string;  // Example: "INVOICE"
+  type: string;
   name: string;
   suffix?: string;
   street: string;
   zipcode: string;
   city: string;
+}
+
+export interface OrderDetail {
+  amount: {
+    amount: number;
+    unit: string;
+  };
+  dateCreated: string;
+  totalPrice: number;
+  pricePerUnit: number;
+  productLabel: string;
+  payment: string; // Example: "ON_ACCOUNT"
+  containers: any[];
+  addresses: any[];
+  levelsOfProcessing: any[];
+  status: string;
+  isCompleted: boolean;
+  links: {
+    self: string;
+    offer: string;
+    category: string;
+    buyingPerson: string;
+    buyingCompany: string;
+    sellingPerson: string;
+    sellingCompany: string;
+    invoice: string;
+  };
+  completed: boolean;
 }
