@@ -123,6 +123,7 @@ export class MyMenusComponent implements OnInit {
   loadingRecipes = false;
   loadingLocalize = false;
   loadingProcessingOptions = false;
+  loadingLocalizedProcessing = false;
   displayShoppingListDialog: boolean = false;
   hoveredMenuPlanId: string | null = null;
   processingOptions: { label: string, value: string }[] = [];
@@ -171,6 +172,7 @@ export class MyMenusComponent implements OnInit {
       });
   }
 
+
   // Method to load processing options from the API
   loadProcessingOptions(): void {
     this.loadingProcessingOptions = true; // Set to true when loading processing options
@@ -182,6 +184,27 @@ export class MyMenusComponent implements OnInit {
           value: item.label    // Use label or item.id if you want to use a unique ID as value
         }));
         this.loadingProcessingOptions = false; // Set to false after successful loading
+
+        this.loadingLocalizedProcessing = true;
+        this.offerService.getLocalizedLoP().subscribe({
+          next: (data) => {
+            this.processingOptions = this.processingOptions.map((item: any) => {
+              const localizedLabel = data[item.label]; 
+               // Match the label with the localized data using the key
+              return {
+                label: localizedLabel ? localizedLabel : item.label,  // Use localized label if available, otherwise fallback to original label
+                value: item.label  // Keep the original value or use item.id if needed
+              };
+            });
+            this.loadingLocalizedProcessing = false;
+          },
+          error: (err) => {
+            this.loadingLocalizedProcessing = false;
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
+            console.error('Error loading localized data:', err);
+          }
+        })
+
       },
       error: (err) => {
         this.loadingProcessingOptions = false; // Set to false in case of an error
@@ -231,7 +254,7 @@ getLoadingMessage(): string {
     return 'Lade Menüpläne...';
   } else if (this.loadingRecipes) {
     return 'Rezepte mit Zutaten werden geladen...';
-  } else if (this.loadingLocalize) {
+  } else if (this.loadingLocalize || this.loadingLocalizedProcessing) {
     return 'Übersetzungen werden geladen...';
   } else if (this.loadingProcessingOptions) {
     return 'Verarbeitungsoptionen werden geladen...';

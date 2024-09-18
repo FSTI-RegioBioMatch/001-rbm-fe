@@ -1,4 +1,4 @@
-import { BehaviorSubject, finalize, forkJoin, Observable, switchMap, tap, of } from "rxjs";
+import { BehaviorSubject, finalize, forkJoin, Observable, switchMap, tap, of, ObservedValuesFromArray } from "rxjs";
 import { AddressType } from "../types/address.type";
 import { OfferType } from "../types/offer.type";
 import { OntofoodType } from "../types/ontofood.type";
@@ -178,6 +178,10 @@ export class OfferService {
 
   getLevelsOfProcessing(): Observable<any> {
     return this.http.get<any>(`${environment.NEARBUY_API}/levels_of_processing`);
+  }
+
+  getLocalizedLoP(): Observable<any> {
+    return this.http.get<any>(`https://api.locize.app/ad439f20-6ec0-41f8-af94-ebd3cf1b9b90/latest/de/levelsOfProcessing`)
   }
 
   getPurchaseIntents(): Observable<any> {
