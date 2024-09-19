@@ -21,7 +21,7 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import  { CheckboxModule } from 'primeng/checkbox';
-import { MappedOffersIngredientsService } from '../shared/services/offer-to-order.service';
+import { OfferToOrderService } from '../shared/services/offer-to-order.service';
 
 interface IngredientUnit {
   label: string;
@@ -103,7 +103,7 @@ export class ShoppingListDetailsComponent implements OnInit {
     private store: StoreService,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
-    private mappedOffersIngredientsService: MappedOffersIngredientsService
+    private offerToOrderService: OfferToOrderService
   ) {}
 
   ngOnInit(): void {
@@ -301,12 +301,15 @@ export class ShoppingListDetailsComponent implements OnInit {
           shoppingListId: this.shoppingList.id
         };
         console.log(JSON.stringify(shoppingListToOrder, null, 2));
-        this.mappedOffersIngredientsService.createMappedOffersIngredients(shoppingListToOrder).subscribe({
+        this.offerToOrderService.createMappedOffersIngredients(shoppingListToOrder).subscribe({
           next: response => {
             console.log('Response:', response);
             this.messageService.add({severity: 'success', summary: 'Erfolgreich',
               detail: 'Die Einkaufsliste wurde erfolgreich verarbeitet'
             });
+            setTimeout(() => {
+              this.router.navigate(['/shoppinglist-to-order-details', response.id]);
+            }, 1200); // Delay of 1.2 seconds to allow the toast to be visible
           },
           error: err => {
             console.error('Error processing shopping list:', err);

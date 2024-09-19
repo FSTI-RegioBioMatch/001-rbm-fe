@@ -1,0 +1,106 @@
+<div *ngFor="let item of shoppingListToOrderObject?.mappedOffersIngredients" class="ingredient-container">
+  <h2>{{ item?.ingredient[0]?.name }}</h2>
+  <p><strong>Total Amount:</strong> {{ item?.ingredient[0]?.totalInLargestUnit }}</p>
+  <p><strong>Unit:</strong> {{ item?.ingredient[0]?.unit }}</p>
+  <p><strong>Source Recipes:</strong> {{ item?.ingredient[0]?.sourceRecipes?.join(', ') }}</p>
+  <p><strong>Category:</strong> {{ item?.ingredient[0]?.category }}</p>
+  
+  <!-- Offers Section -->
+  <div *ngIf="item?.offers?.length > 0; else noOffers">
+    <h3>Offers:</h3>
+    <div *ngFor="let offerItem of item?.offers" class="offer-details">
+      <h4>{{ offerItem?.offer?.company?.name }} - {{ getLocalizedLabel(offerItem?.offer?.ontoFoodType?.label) }}</h4>
+      <p><strong>Description:</strong> {{ offerItem?.offer?.offerDetails?.description }}</p>
+      <p><strong>Brand Name:</strong> {{ offerItem?.offer?.offerDetails?.brandName }}</p>
+      <p><strong>Total Amount:</strong> {{ offerItem?.offer?.product?.totalAmount }} {{ offerItem?.offer?.product?.unit }}</p>
+      <p><strong>Price per Unit:</strong> €{{ offerItem?.offer?.offerDetails?.pricePerUnit }}</p>
+      <p><strong>Min Amount:</strong> {{ offerItem?.offer?.offerDetails?.minAmount?.amount }} {{ offerItem?.offer?.offerDetails?.minAmount?.unit }}</p>
+      <p><strong>Graduated Prices:</strong></p>
+      <ul>
+        <li *ngFor="let price of offerItem?.offer?.offerDetails?.graduatedPrices">
+          {{ price?.amount }} units - €{{ price?.price }} each
+        </li>
+      </ul>
+      
+      <h4>Company Details:</h4>
+      <p><strong>Verified:</strong> {{ offerItem?.offer?.company?.verified ? 'Yes' : 'No' }}</p>
+      <p><strong>Address:</strong> {{ offerItem?.offer?.address?.city }}</p>
+      <p><strong>Roles:</strong> {{ offerItem?.offer?.roles?.join(', ') }}</p>
+      
+      <div>
+        <p-button *ngIf="offerItem?.offer?.offerDetails?.pricePerUnit" label="Make Purchase Intent"
+          (onClick)="makePurchaseIntent(offerItem?.offer)">
+        </p-button>
+
+        <p-button *ngIf="!offerItem?.offer?.offerDetails?.pricePerUnit" label="Make Price Request"
+          (onClick)="makePriceRequest(offerItem?.offer)">
+        </p-button>
+      </div>
+    </div>
+  </div>
+  <ng-template #noOffers>
+    <p>No offers available for this ingredient.</p>
+  </ng-template>
+
+  <!-- Purchase Intents Section -->
+  <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents">
+    <h3>Purchase Intents:</h3>
+    <ul>
+      <li *ngFor="let intent of item?.purchaseIntents">
+        <p><strong>Intent ID:</strong> {{ intent?.links?.self?.split('/')?.pop() }}</p>
+        <p><strong>Date Created:</strong> {{ intent?.dateCreated | date }}</p>
+        <p><strong>Delivery Date:</strong> {{ intent?.deliveryDate | date }}</p>
+        <p><strong>Total Price:</strong> €{{ intent?.totalPrice }}</p>
+        <p><strong>Status:</strong> {{ intent?.status }}</p>
+        <p-button *ngIf="intent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
+          (onClick)="makePurchaseIntentOrder(intent)">
+        </p-button>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noPurchaseIntents>
+    <p>No purchase intents available for this ingredient.</p>
+  </ng-template>
+
+  <!-- Price Requests Section -->
+  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests">
+    <h3>Price Requests:</h3>
+    <ul>
+      <li *ngFor="let request of item?.priceRequests">
+        <p><strong>Request ID:</strong> {{ request?.links?.self?.split('/')?.pop() }}</p>
+        <p><strong>Date Created:</strong> {{ request?.dateCreated | date }}</p>
+        <p><strong>Delivery Date:</strong> {{ request?.deliveryDate | date }}</p>
+        <p><strong>Status:</strong> {{ request?.status }}</p>
+        <p-button *ngIf="request.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
+          (onClick)="makePriceRequestOrder(request)">
+        </p-button>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noPriceRequests>
+    <p>No price requests available for this ingredient.</p>
+  </ng-template>
+
+  <!-- Orders Section -->
+  <div *ngIf="item?.orders?.length > 0; else noOrders">
+    <h3>Orders:</h3>
+    <ul>
+      <li *ngFor="let order of item?.orders">
+        <p><strong>Order ID:</strong> {{ order?.links?.self?.split('/')?.pop() }}</p>
+        <p><strong>Date Created:</strong> {{ order?.dateCreated | date }}</p>
+        <p><strong>Status:</strong> {{ order?.status }}</p>
+        <p><strong>Product:</strong> {{ order?.productLabel }}</p>
+        <p><strong>Total Price:</strong> €{{ order?.totalPrice }}</p>
+        <p><strong>Amount:</strong> {{ order?.amount?.amount }} {{ order?.amount?.unit }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noOrders>
+    <p>No orders available for this ingredient.</p>
+  </ng-template>
+
+  <!-- No Data Available for Ingredient -->
+  <p *ngIf="!item?.offers?.length && !item?.purchaseIntents?.length && !item?.priceRequests?.length && !item?.orders?.length">
+    No offers, purchase intents, price requests, or orders available for this ingredient.
+  </p>
+</div>

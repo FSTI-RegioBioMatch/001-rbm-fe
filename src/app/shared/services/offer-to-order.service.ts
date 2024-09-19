@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 // Mapped Offers Ingredients Models
 export interface MappedOffersIngredient {
+  mappedOffersIngredients: any;
   ingredient: Ingredient[];
   offers: OfferWrapper[];
   status: string;
@@ -150,13 +151,20 @@ export interface OfferLinks {
   contact: string;
   latestTradeItem?: any;
 }
-
+export interface ShoppingListTrackModel {
+  id?: string;
+  shoppingListId: string;
+  purchaseIntedIds: string[];
+  priceRequestIds: string[];
+  orderIds: string[];
+}
 @Injectable({
   providedIn: 'root'
 })
-export class MappedOffersIngredientsService {
+export class OfferToOrderService {
 
   private apiUrl = environment.API_CORE;
+  private nearbuyUrl = environment.NEARBUY_API
 
   constructor(private http: HttpClient) { }
 
@@ -190,4 +198,53 @@ export class MappedOffersIngredientsService {
   deleteMappedOffersIngredientsById(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/mapped-offers-ingredients/${id}`);
   }
+  getOfferById(id:string) {
+    return this.http.get(`${this.nearbuyUrl}/offers/${id}`);
+  }
+    // Create a new ShoppingListTrackModel
+    createShoppingListTrack(shoppingListTrackData: ShoppingListTrackModel): Observable<ShoppingListTrackModel> {
+      console.log("new here")
+      return this.http.post<ShoppingListTrackModel>(`${this.apiUrl}/shopping-list-track`, shoppingListTrackData);
+    }
+  
+    // Update a ShoppingListTrackModel by ID
+    updateShoppingListTrack(id: string, shoppingListTrackData: ShoppingListTrackModel): Observable<ShoppingListTrackModel> {
+      return this.http.put<ShoppingListTrackModel>(`${this.apiUrl}/shopping-list-track/${id}`, shoppingListTrackData);
+    }
+    getOrCreateShoppingListTrack(shoppingListId: string): Observable<ShoppingListTrackModel> {
+      return this.http.get<ShoppingListTrackModel[]>(`${this.apiUrl}/shopping-list-track/shopping-list/${shoppingListId}`)
+        .pipe(
+          switchMap((tracks: ShoppingListTrackModel[]) => {
+            if (!tracks || tracks.length === 0) {
+              // If response is null, empty array or undefined, create a new track
+              const newTrack: ShoppingListTrackModel = {
+                shoppingListId: shoppingListId,
+                purchaseIntedIds: [],
+                priceRequestIds: [],
+                orderIds: []
+              };
+              return this.createShoppingListTrack(newTrack);
+            } else {
+              // Return the first track found (or adjust based on business logic)
+              return of(tracks[0]);
+            }
+          }),
+          catchError(error => {
+            // Check if error status is 404, indicating the track is not found
+            if (error.status === 404) {
+              const newTrack: ShoppingListTrackModel = {
+                shoppingListId: shoppingListId,
+                purchaseIntedIds: [],
+                priceRequestIds: [],
+                orderIds: []
+              };
+              return this.createShoppingListTrack(newTrack);
+            } else {
+              // If other errors, rethrow the error or handle it accordingly
+              console.error('Error fetching ShoppingListTrack:', error);
+              return throwError(() => error);
+            }
+          })
+        );
+    }
 }
