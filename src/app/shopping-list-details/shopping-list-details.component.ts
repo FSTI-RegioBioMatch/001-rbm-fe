@@ -21,6 +21,7 @@ import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import  { CheckboxModule } from 'primeng/checkbox';
+import { MappedOffersIngredientsService } from '../shared/services/offer-to-order.service';
 
 interface IngredientUnit {
   label: string;
@@ -101,7 +102,8 @@ export class ShoppingListDetailsComponent implements OnInit {
     private router: Router,
     private store: StoreService,
     private messageService: MessageService,
-    private nearbuyTestService: NearbuyTestService
+    private nearbuyTestService: NearbuyTestService,
+    private mappedOffersIngredientsService: MappedOffersIngredientsService
   ) {}
 
   ngOnInit(): void {
@@ -259,7 +261,7 @@ export class ShoppingListDetailsComponent implements OnInit {
           selected: false
         }));
   
-      const status = matchedOffers.length > 0 ? 'offers-found' : 'no-offers';
+      const status = matchedOffers.length > 0 ? 'OFFERS_FOUND' : 'NO_OFFERS';
       const selected = matchedOffers.some(offerItem => offerItem.selected);
   
       return { ingredient, offers: matchedOffers, status, selected };
@@ -292,9 +294,27 @@ export class ShoppingListDetailsComponent implements OnInit {
         return {
             ...mapping,
             offers: mapping.offers.filter(offer => offer.selected)
+          };
+        });
+        const shoppingListToOrder = {
+          mappedOffersIngredients: this.shoppingListSummary,
+          shoppingListId: this.shoppingList.id
         };
-    });
-    console.log(JSON.stringify(this.shoppingListSummary, null, 2));
-}
+        console.log(JSON.stringify(shoppingListToOrder, null, 2));
+        this.mappedOffersIngredientsService.createMappedOffersIngredients(shoppingListToOrder).subscribe({
+          next: response => {
+            console.log('Response:', response);
+            this.messageService.add({severity: 'success', summary: 'Erfolgreich',
+              detail: 'Die Einkaufsliste wurde erfolgreich verarbeitet'
+            });
+          },
+          error: err => {
+            console.error('Error processing shopping list:', err);
+            this.messageService.add({severity: 'error', summary: 'Fehler',
+              detail: 'Fehler beim Verarbeiten der Einkaufsliste'
+            });
+          }
+        })
+  }
   
 }

@@ -171,9 +171,9 @@
                 Anzeige
                 <div *ngFor="let item of ingredientOfferMapping">
                     <ng-container *ngFor="let ingredient of item.ingredient">
-                    <p *ngIf="item.status === 'offers-found' && item.selected === true" class="valid-offer">{{ ingredient?.name }}</p>
-                    <p *ngIf="item.status === 'offers-found' && item.selected === false" class="unselected-offer">{{ ingredient?.name }}</p>
-                    <p *ngIf="item.status === 'no-offers'" class="invalid-offer">{{ ingredient?.name }}</p>
+                    <p *ngIf="item.status === 'OFFERS_FOUND' && item.selected" class="valid-offer">{{ ingredient?.name }}</p>
+                    <p *ngIf="item.status === 'OFFERS_FOUND' && !item.selected" class="unselected-offer">{{ ingredient?.name }}</p>
+                    <p *ngIf="item.status === 'NO_OFFERS'" class="invalid-offer">{{ ingredient?.name }}</p>
                 </ng-container>
                     <ng-container *ngFor="let offerItem of item.offers">
                         <p *ngIf="offerItem.selected">SELECTED: {{ offerItem.offer.offerDetails.id }}</p>
@@ -187,3 +187,4 @@
 
     <p-button label="Search for Offers" icon="pi pi-search" (click)="onClickGoToOffer()"></p-button>
 </div>
+<p-toast></p-toast>
