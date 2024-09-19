@@ -255,7 +255,7 @@ export class PrPiOverviewComponent implements OnInit {
       // Ensure we have a selected purchase intent with the required status
       if (!this.selectedPurchaseIntent || this.selectedPurchaseIntent.status !== 'ACCEPTED') {
         console.error("No valid purchase intent selected or purchase intent is not in ACCEPTED status");
-        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht wurde nicht ausgewählt oder ist noch nicht im AKZEPTIERT Status'})
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht wurde nicht ausgewählt oder ist noch nicht im AKZEPTIERT Status'});
         return;
       }
     
@@ -422,11 +422,11 @@ export class PrPiOverviewComponent implements OnInit {
       this.orderService.updatePurchaseIntentStatus(priceRequestId, "ACCEPTED").subscribe({
         next: (response: any) => {
           console.log('Purchase intent accepted successfully:', response);
-          this.messageService.add({ severity: 'success', summary: 'Purchase Intent accepted', detail: 'The purchase intent has been accepted successfully.' });
+          this.messageService.add({ severity: 'success', summary: 'Kaufabsicht angenommen', detail: 'Die Kaufabsicht wurde erfolgreich angenommen.'});
         },
         error: (error: any) => {
           console.error('Error accepting purchase intent:', error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to accept the purchase intent.' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht konnte nicht angenommen werden'});
         }
       })
     }
@@ -436,17 +436,18 @@ export class PrPiOverviewComponent implements OnInit {
       // Ensure we have a selected purchase intent with the required status
       if (!this.selectedPurchaseIntent || this.selectedPurchaseIntent.status !== 'PENDING') {
         console.error("No valid purchase intent selected or purchase intent is not in PENDING status");
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Keine gültige Kaufabsicht ausgewählt'})
         return;
       }
       const priceRequestId = this.selectedPurchaseIntent.links.self.split('/').pop(); // Extract the UUID
       this.orderService.updatePurchaseIntentStatus(priceRequestId, "REJECTED").subscribe({
         next: (response: any) => {
           console.log('Purchase intent declined successfully:', response);
-          this.messageService.add({ severity: 'success', summary: 'Purchase Intent Declined', detail: 'The purchase intent has been declined successfully.' });
+          this.messageService.add({ severity: 'success', summary: 'Kaufabsicht abgelehnt', detail: 'Kaufabsicht wurde erfolgreich abgelehnt' });
         },
         error: (error: any) => {
           console.error('Error declining purchase intent:', error);
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to decline the purchase intent.' });
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht konnte nicht abgelehnt werden' });
         }
       })
     }

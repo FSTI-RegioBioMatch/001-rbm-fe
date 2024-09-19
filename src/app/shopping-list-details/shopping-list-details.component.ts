@@ -88,7 +88,6 @@ export class ShoppingListDetailsComponent implements OnInit {
   ingredientNames: string[] = [];
   offers: any[] = [];
   loading = true;
-  errorMessage = '';
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
   constructor(
@@ -114,7 +113,9 @@ export class ShoppingListDetailsComponent implements OnInit {
           if (id) {
             return this.shoppingListService.getShoppingListById(id);
           } else {
-            this.errorMessage = 'Es wurde keine Einkaufslisten-ID angegeben';
+            this.messageService.add({severity: 'error', summary: 'Fehler',
+              detail: 'Es wurde keine Einkaufslisten-ID angegeben'
+            })
             this.loading = false;
             return [];
           }
@@ -130,7 +131,7 @@ export class ShoppingListDetailsComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching shopping list:', error);
-          this.errorMessage = 'Einkaufsliste konnte nicht gefunden werden';
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Einkaufsliste'})
           this.loading = false;
         }
       });
@@ -171,12 +172,16 @@ export class ShoppingListDetailsComponent implements OnInit {
               this.offerService.setAddress(address);
               this.fetchOffers(address);
             } else {
-              this.errorMessage = 'Address not available';
+              this.messageService.add({severity: 'error', summary: 'Fehler',
+                detail: 'Adresse nicht verfügbar'
+              })
               this.loading = false;
             }
           },
           error: err => {
-            this.errorMessage = 'Error loading address';
+            this.messageService.add({severity: 'error', summary: 'Fehler',
+              detail: 'Adresse konnte nicht geladen werden'
+            });
             console.error('Error loading address:', err);
             this.loading = false;
           }
@@ -203,7 +208,6 @@ export class ShoppingListDetailsComponent implements OnInit {
         error: error => {
           this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Angebote'})
           console.error('Error loading offers:', error);
-          this.errorMessage = 'Error loading offers';
           this.loading = false;  // Stop loading on error
         }
       });

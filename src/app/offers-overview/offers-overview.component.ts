@@ -41,7 +41,6 @@ export class OffersOverviewComponent implements OnInit {
   localizationData: { displayLabel: string; value: string }[] = [];
   loading = false;
   offers: any[] = []; // Declare offers to store the list of offers
-  errorMessage: string = ''; // Declare errorMessage for displaying errors
   range: number = 50; // Example range for filtering offers by distance
 
   constructor(
@@ -115,12 +114,12 @@ export class OffersOverviewComponent implements OnInit {
               this.offerService.setAddress(address);
               this.fetchOffers(address);
             } else {
-              this.errorMessage = 'Address not available';
+              this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Adresse konnte nicht gefunden werden'});
               this.loading = false;
             }
           },
           error: err => {
-            this.errorMessage = 'Error loading address';
+            this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Adresse konnte nicht geladen werden'});
             console.error('Error loading address:', err);
             this.loading = false;
           }
@@ -139,7 +138,7 @@ export class OffersOverviewComponent implements OnInit {
         },
         error: error => {
           console.error('Error loading offers:', error);
-          this.errorMessage = 'Error loading offers';
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Angebote konnten nicht geladen werden'})
           this.loading = false; // Stop loading on error
         }
       });
