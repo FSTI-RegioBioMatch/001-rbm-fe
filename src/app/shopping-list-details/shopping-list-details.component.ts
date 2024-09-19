@@ -220,13 +220,6 @@ export class ShoppingListDetailsComponent implements OnInit {
       });
   }
   
-  
-
-  onClickGoToOffer() {
-    const scanId = uuidv4();
-    this.router.navigate([`/menu-planning/shopping-list/${this.shoppingList.id}/offer-scan/${scanId}`]);
-  }
-
   getLocalizedLabel(ingredientName: string): string {
     const localizedItem = this.localizationData.find(item => item.value === ingredientName);
     return localizedItem ? localizedItem.displayLabel : ingredientName;

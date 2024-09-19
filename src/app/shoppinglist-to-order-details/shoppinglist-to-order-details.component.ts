@@ -393,6 +393,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     } else {
       console.log('No price requests, purchase intents, or orders to map.');
     }
+    console.log(this.shoppingListToOrderObject)
   }
   
   
