@@ -58,7 +58,8 @@ export class OrderService {
 
   // Set price for a Price Request
   setPriceForPriceRequest(priceRequestId: string, pricePerUnit: number, status: PriceRequestStatus): Observable<any> {
-    return this.http.put(`${this.apiUrl}/price_requests/${priceRequestId}/price`, { pricePerUnit, status });
+    const payload = { status, pricePerUnit };
+    return this.http.put(`${this.apiUrl}/price_requests/${priceRequestId}/price`, payload);
   }
 
   // Update the Price Request's status

@@ -2,12 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OrderService } from '../shared/services/order.service';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss']
+  styleUrls: ['./orders.component.scss'],
+  imports: [
+    CommonModule,
+    TableModule,
+    ToastModule,
+    
+  ]
 })
 export class OrdersComponent implements OnInit {
   orders: any[] = []; // Store the order details here

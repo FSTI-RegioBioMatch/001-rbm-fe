@@ -1,1 +1,24 @@
-<p>orders works!</p>
+<p-table [value]="orders" responsiveLayout="scroll" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Order ID</th>
+            <th>Product Label</th>
+            <th>Amount</th>
+            <th>Price Per Unit</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Date Created</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+        <tr>
+            <td>{{ order.links.self.split('/').pop() }}</td>
+            <td>{{ order.productLabel }}</td>
+            <td>{{ order.amount.amount }} {{ order.amount.unit }}</td>
+            <td>{{ order.pricePerUnit }}</td>
+            <td>{{ order.totalPrice }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.dateCreated | date: 'short' }}</td>
+        </tr>
+    </ng-template>
+</p-table>
