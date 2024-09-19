@@ -191,14 +191,17 @@ export class ShoppingListDetailsComponent implements OnInit {
       .subscribe({
         next: offers => {
           if (offers.length > 0) {
+            //this.messageService.add({severity: 'info', summary: 'Laden', detail: 'Angebote wurden geladen'});
             console.log('Offers loaded:', offers);
             this.offers = offers;  // Store the offers
           } else {
+            //this.messageService.add({severity: 'info', summary: 'Keine Angebote', detail: 'Es konnten keine Angebote gefunden werden'});
             console.log('No offers found');
           }
           this.loading = false;  // Stop loading once offers are fetched
         },
         error: error => {
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Angebote'})
           console.error('Error loading offers:', error);
           this.errorMessage = 'Error loading offers';
           this.loading = false;  // Stop loading on error
