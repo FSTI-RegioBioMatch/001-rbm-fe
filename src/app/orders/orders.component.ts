@@ -2,18 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OrderService } from '../shared/services/order.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
+  imports: [ToastModule],
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss']
+  styleUrls: ['./orders.component.scss'],
+  providers: [MessageService]
 })
 export class OrdersComponent implements OnInit {
   orders: any[] = []; // Store the order details here
   orderIds: string[] = []; // Store the extracted order IDs here
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     // Fetch the company orders which returns an array of order URLs
@@ -30,6 +37,7 @@ export class OrdersComponent implements OnInit {
         this.fetchAllOrderDetails(this.orderIds);
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Bestellungen des Unternehmens konnten nicht abgerufen werden'});
         console.error('Error fetching company orders:', error);
       }
     });
@@ -45,6 +53,7 @@ export class OrdersComponent implements OnInit {
     const orderDetailRequests = orderIds.map((orderId) =>
       this.orderService.getOrderById(orderId).pipe(
         catchError((error) => {
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Abrufen der Bestellungen'});
           console.error(`Error fetching order ${orderId}:`, error);
           return of(null); // Return null or an empty object if the request fails
         })
@@ -59,6 +68,7 @@ export class OrdersComponent implements OnInit {
         console.log('Order Details:', this.orders);
       },
       error: (error) => {
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Bestellungsdetails konnten nicht abgerufen werden'});
         console.error('Error fetching order details:', error);
       }
     });

@@ -12,6 +12,8 @@ import { OfferService } from '../../../shared/services/offer.service';
 import { StoreService } from '../../../shared/store/store.service';
 import { NewMenuplanService } from '../../../shared/services/new-menuplan.service';
 import { OfferType } from '../../../shared/types/offer.type';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-card-dashboard',
@@ -22,7 +24,9 @@ import { OfferType } from '../../../shared/types/offer.type';
     MapComponent,
     PrimeTemplate,
     TableModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './card-dashboard.component.html',
   styleUrl: './card-dashboard.component.scss',
 })
@@ -39,6 +43,7 @@ export class CardDashboardComponent implements OnInit {
     public offerService: OfferService,
     private store: StoreService,
     private menuPlanningService: NewMenuplanService,
+    private messageService: MessageService,
   ) {}
 
   ngOnInit() {
@@ -62,6 +67,7 @@ export class CardDashboardComponent implements OnInit {
   private getMenuPlans() {
     this.menuPlanningService.getAllMenuPlans().subscribe((menuPlans) => {
       this.menuPlans = menuPlans;
+      this.messageService.add({severity: 'info', summary: 'OK', detail: 'Menüpläne wurden aktualisiert'});
       console.log('Menu plans updated', menuPlans);
     });
   }
@@ -74,6 +80,7 @@ export class CardDashboardComponent implements OnInit {
         this.offerService
           .getAddress(addressUrl)
           .subscribe((address: AddressType) => {
+            this.messageService.add({severity: 'info', summary: 'OK', detail: 'Addresse wurde aktualisiert'});
             console.log('Address updated', address);
             // Set the address in OfferService so it can be used later
             this.offerService.setAddress(address);
@@ -88,6 +95,7 @@ export class CardDashboardComponent implements OnInit {
             );
           });
       } else {
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Keine gültige Unternehmensaddresse gefunden'});
         console.error('No valid company address found');
       }
     });
@@ -95,12 +103,14 @@ export class CardDashboardComponent implements OnInit {
 
   private getCurrentPersonAndCompanyContext() {
     this.store.person$.subscribe((person) => {
+      this.messageService.add({severity: 'info', summary: 'OK', detail: 'Person wurde aktualisiert'});
       console.log('Person updated', person);
       this.person = person;
     });
 
     this.store.selectedCompanyContext$.subscribe((company) => {
       this.company = company;
+      this.messageService.add({severity: 'info', summary: 'OK', detail: 'Unternehmen wurde aktualisiert'});
       console.log('Company updated', company);
     });
   }
