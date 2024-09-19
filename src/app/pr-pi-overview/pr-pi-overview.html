@@ -7,7 +7,8 @@
   <h3>Price Requests</h3>
 
   <!-- Status Filter Dropdown for Price Requests -->
-  <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status" (onChange)="filterPriceRequests()"></p-dropdown>
+  <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status"
+    (onChange)="filterPriceRequests()"></p-dropdown>
 
   <!-- Price Requests Table -->
   <p-table [value]="filteredPriceRequests" [rows]="10" [responsiveLayout]="'scroll'">
@@ -27,7 +28,8 @@
         <td>{{ priceRequest.amount.amount }} {{ priceRequest.amount.unit }}</td>
         <td>{{ priceRequest.status }}</td>
         <td>
-          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info" (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
+          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+            (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
         </td>
       </tr>
     </ng-template>
@@ -37,7 +39,8 @@
   <h3>Purchase Intents</h3>
 
   <!-- Status Filter Dropdown for Purchase Intents -->
-  <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status" (onChange)="filterPurchaseIntents()"></p-dropdown>
+  <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status"
+    (onChange)="filterPurchaseIntents()"></p-dropdown>
 
   <!-- Purchase Intents Table -->
   <p-table [value]="filteredPurchaseIntents" [rows]="10" [responsiveLayout]="'scroll'">
@@ -57,7 +60,8 @@
         <td>{{ purchaseIntent.amount.amount }} {{ purchaseIntent.amount.unit }}</td>
         <td>{{ purchaseIntent.status }}</td>
         <td>
-          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info" (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
+          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+            (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
         </td>
       </tr>
     </ng-template>
@@ -65,15 +69,36 @@
 
   <!-- Price Request Details Section -->
   <p-accordion *ngIf="selectedPriceRequest">
-  <!-- Show "Make Order" button if the current company is the buyer -->
-  <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" 
-            label="Make Order" icon="pi pi-check" (onClick)="makePriceRequestOrder()">
-  </p-button>
-  
-  <!-- Show "Preis vorschlagen" button if the current company is the seller -->
-  <p-button *ngIf="selectedPriceRequest.status === 'PENDING'" 
-            label="Preis vorschlagen" icon="pi pi-check" (onClick)="makePriceOffer()">
-  </p-button>
+    <!-- Show "Make Order" button if the current company is the buyer -->
+    <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
+      (onClick)="makePriceRequestOrder()">
+    </p-button>
+
+    <!-- Show "Preis vorschlagen" button if the current company is the seller -->
+    <p-button *ngIf="selectedPriceRequest.status === 'PENDING'" label="Preis vorschlagen"
+      (click)="openPriceOfferDialog()" icon="pi pi-dollar"></p-button>
+
+    <!-- Price Offer Dialog -->
+    <p-dialog header="Set Price Offer" [(visible)]="priceOfferDialogVisible" [modal]="true" [closable]="true"
+      [responsive]="true">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="totalPrice">Total Price (€)</label>
+          <input id="totalPrice" type="number" [(ngModel)]="totalPrice" placeholder="Enter total price"
+            class="p-inputtext p-component" />
+        </div>
+        <div class="p-field">
+          <p>Price per Unit: {{ calculatedPricePerUnit | number:'1.2-2' }} €/kg</p>
+        </div>
+      </div>
+      <p-footer>
+        <button pButton type="button" label="Submit" icon="pi pi-check" (click)="makePriceOffer()"
+          [disabled]="!totalPrice"></button>
+        <button pButton type="button" label="Cancel" icon="pi pi-times" class="p-button-secondary"
+          (click)="closePriceOfferDialog()"></button>
+      </p-footer>
+    </p-dialog>
+
     <p-accordionTab header="Price Request Details">
       <p><strong>Date Created:</strong> {{ selectedPriceRequest.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPriceRequest.deliveryDate | date }}</p>
@@ -86,7 +111,8 @@
       <p-card>
         <ng-template pTemplate="header">{{ selectedPriceRequest.offer.productTitle }}</ng-template>
         <p><strong>Description:</strong> {{ selectedPriceRequest.offer.description }}</p>
-        <p><strong>Amount:</strong> {{ selectedPriceRequest.offer.totalAmount.amount }} {{ selectedPriceRequest.offer.totalAmount.unit }}</p>
+        <p><strong>Amount:</strong> {{ selectedPriceRequest.offer.totalAmount.amount }} {{
+          selectedPriceRequest.offer.totalAmount.unit }}</p>
       </p-card>
     </p-accordionTab>
 
@@ -115,31 +141,33 @@
     </p-accordionTab>
 
     <p-footer>
-      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger" (click)="clearSelected()"></button>
+      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger"
+        (click)="clearSelected()"></button>
     </p-footer>
   </p-accordion>
 
   <!-- Purchase Intent Details Section -->
   <p-accordion *ngIf="selectedPurchaseIntent">
 
-    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" 
-    label="Make Order" icon="pi pi-check" (onClick)="makePurchaseIntentOrder()">
+    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
+      (onClick)="makePurchaseIntentOrder()">
     </p-button>
 
     <!-- Show "Kaufanfrage annehmen" button if the current company is the seller -->
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" 
-        label="Kaufanfrage annehmen" icon="pi pi-check" (onClick)="acceptPurchaseIntend()">
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage annehmen" icon="pi pi-check"
+      (onClick)="acceptPurchaseIntend()">
     </p-button>
 
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" 
-    label="Kaufanfrage ablehnen" icon="pi pi-check" (onClick)="declinePurchaseIntend()">
-</p-button>
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage ablehnen" icon="pi pi-check"
+      (onClick)="declinePurchaseIntend()">
+    </p-button>
 
 
     <p-accordionTab header="Purchase Intent Details">
       <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
-      <p><strong>Amount:</strong> {{ selectedPurchaseIntent.amount.amount }} {{ selectedPurchaseIntent.amount.unit }}</p>
+      <p><strong>Amount:</strong> {{ selectedPurchaseIntent.amount.amount }} {{ selectedPurchaseIntent.amount.unit }}
+      </p>
       <p><strong>Total Price:</strong> {{ selectedPurchaseIntent.totalPrice | currency }}</p>
       <p><strong>Status:</strong> {{ selectedPurchaseIntent.status }}</p>
     </p-accordionTab>
@@ -148,7 +176,8 @@
       <p-card>
         <ng-template pTemplate="header">{{ selectedPurchaseIntent.offer.productTitle }}</ng-template>
         <p><strong>Description:</strong> {{ selectedPurchaseIntent.offer.description }}</p>
-        <p><strong>Amount:</strong> {{ selectedPurchaseIntent.offer.totalAmount.amount }} {{ selectedPurchaseIntent.offer.totalAmount.unit }}</p>
+        <p><strong>Amount:</strong> {{ selectedPurchaseIntent.offer.totalAmount.amount }} {{
+          selectedPurchaseIntent.offer.totalAmount.unit }}</p>
       </p-card>
     </p-accordionTab>
 
@@ -177,7 +206,8 @@
     </p-accordionTab>
 
     <p-footer>
-      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger" (click)="clearSelected()"></button>
+      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger"
+        (click)="clearSelected()"></button>
     </p-footer>
   </p-accordion>
 </div>

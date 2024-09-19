@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OrderService } from '../shared/services/order.service';
-import { MessageService } from 'primeng/api';
+import { CommonModule, DatePipe } from '@angular/common';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [ToastModule],
+  imports: [ToastModule, DatePipe, TableModule, CommonModule],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
   providers: [MessageService]

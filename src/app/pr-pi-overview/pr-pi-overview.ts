@@ -14,6 +14,7 @@ import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { OrderService, PriceRequestStatus, PurchaseIntentStatus } from '../shared/services/order.service';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-pr-pi-overview',
@@ -30,7 +31,8 @@ import { ToastModule } from 'primeng/toast';
     TabViewModule,
     ButtonModule,
     PaginatorModule,
-    ToastModule
+    ToastModule,
+    DialogModule
   ]
 })
 export class PrPiOverviewComponent implements OnInit {
@@ -46,6 +48,9 @@ export class PrPiOverviewComponent implements OnInit {
   selectedPurchaseIntentStatus: PurchaseIntentStatus | null = null;
   selectedPriceRequestStatus: PriceRequestStatus | null = null;
 
+  priceOfferDialogVisible: boolean = false;
+  totalPrice: number | null = null;
+  calculatedPricePerUnit: number | null = null;
 
   priceRequestStatuses = [
     { label: 'All', value: null },
@@ -406,7 +411,35 @@ export class PrPiOverviewComponent implements OnInit {
       });
     }
 
-    makePriceOffer(){}
+    openPriceOfferDialog() {
+      if (!this.selectedPriceRequest) {
+        this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please select a price request first.' });
+        return;
+      }
+      this.totalPrice = null;
+      this.calculatedPricePerUnit = null;
+      this.priceOfferDialogVisible = true;
+    }
+  
+    // Method to close the price offer dialog
+    closePriceOfferDialog() {
+      this.priceOfferDialogVisible = false;
+      this.resetPriceOfferForm();
+    }
+  
+    // Method to reset the price offer form
+    resetPriceOfferForm() {
+      this.totalPrice = null;
+      this.calculatedPricePerUnit = null;
+    }
+  
+    // Method to calculate price per unit when total price changes
+    calculatePricePerUnit(): void {
+      if (this.totalPrice && this.selectedPriceRequest) {
+        const amountInKg = this.selectedPriceRequest.amount.amount;
+        this.calculatedPricePerUnit = this.totalPrice / amountInKg;
+      }
+    }
 
     acceptPurchaseIntend()
     {
@@ -451,4 +484,41 @@ export class PrPiOverviewComponent implements OnInit {
         }
       })
     }
+      // Watch for changes in total price and update price per unit
+  ngOnChanges(): void {
+    this.calculatePricePerUnit();
+  }
+
+  // Method to make a price offer for a selected price request
+  makePriceOffer() {
+    if (!this.selectedPriceRequest || !this.totalPrice) {
+      this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please enter a total price.' });
+      return;
+    }
+
+    // Calculate price per unit
+    const amountInKg = this.selectedPriceRequest.amount.amount;
+    const pricePerUnit = this.totalPrice / amountInKg;
+
+    // Prepare payload
+    const offerPayload = {
+      status: 'PRICE_ADDED',
+      pricePerUnit: pricePerUnit
+    };
+
+    const priceRequestId = this.selectedPriceRequest.links.self.split('/').pop(); // Extract the UUID
+
+    this.orderService.setPriceForPriceRequest(priceRequestId, pricePerUnit, 'PRICE_ADDED')
+      .subscribe({
+        next: (response: any) => {
+          console.log('Price offer set successfully:', response);
+          this.messageService.add({ severity: 'success', summary: 'Price Set', detail: 'The price has been set successfully.' });
+          this.closePriceOfferDialog(); // Close the dialog after success
+        },
+        error: (error: any) => {
+          console.error('Error setting price:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to set the price.' });
+        }
+      });
+  }
 }
