@@ -19,6 +19,7 @@ import { of } from 'rxjs';
 import { NewOfferService } from '../shared/services/new-offer.service';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
 
 interface IngredientUnit {
   label: string;
@@ -76,7 +77,8 @@ const ingredientUnits: IngredientUnit[] = [
     PanelModule,
     CardModule,
     SliderModule,
-    FormsModule
+    FormsModule,
+    ToastModule,
   ],
   standalone: true,
   providers: [MessageService]

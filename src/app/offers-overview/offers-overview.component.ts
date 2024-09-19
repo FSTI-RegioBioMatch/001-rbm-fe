@@ -15,6 +15,7 @@ import { AddressType } from '../shared/types/address.type';
 import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 import { OrderService } from '../shared/services/order.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-offers-overview',
@@ -30,6 +31,7 @@ import { OrderService } from '../shared/services/order.service';
     FormsModule,
     CardModule,
     SliderModule,
+    ToastModule,
   ],
   providers: [MessageService],
   templateUrl: './offers-overview.component.html',
