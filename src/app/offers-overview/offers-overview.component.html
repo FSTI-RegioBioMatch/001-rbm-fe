@@ -10,6 +10,8 @@
     <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
 </div>
 
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
 <p-slider [(ngModel)]="range" [min]="0" [max]="250" [step]="1"></p-slider>
 <p>Selected Range: {{ range }} km</p>
 

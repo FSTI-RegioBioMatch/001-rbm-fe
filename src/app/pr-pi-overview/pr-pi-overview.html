@@ -65,8 +65,15 @@
 
   <!-- Price Request Details Section -->
   <p-accordion *ngIf="selectedPriceRequest">
-    <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check" (onClick)="makePriceRequestOrder()"></p-button>
-
+  <!-- Show "Make Order" button if the current company is the buyer -->
+  <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" 
+            label="Make Order" icon="pi pi-check" (onClick)="makePriceRequestOrder()">
+  </p-button>
+  
+  <!-- Show "Preis vorschlagen" button if the current company is the seller -->
+  <p-button *ngIf="selectedPriceRequest.status === 'PENDING'" 
+            label="Preis vorschlagen" icon="pi pi-check" (onClick)="makePriceOffer()">
+  </p-button>
     <p-accordionTab header="Price Request Details">
       <p><strong>Date Created:</strong> {{ selectedPriceRequest.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPriceRequest.deliveryDate | date }}</p>
@@ -115,7 +122,20 @@
   <!-- Purchase Intent Details Section -->
   <p-accordion *ngIf="selectedPurchaseIntent">
 
-    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check" (onClick)="makePurchaseIntentOrder()"></p-button>
+    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" 
+    label="Make Order" icon="pi pi-check" (onClick)="makePurchaseIntentOrder()">
+    </p-button>
+
+    <!-- Show "Kaufanfrage annehmen" button if the current company is the seller -->
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" 
+        label="Kaufanfrage annehmen" icon="pi pi-check" (onClick)="acceptPurchaseIntend()">
+    </p-button>
+
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" 
+    label="Kaufanfrage ablehnen" icon="pi pi-check" (onClick)="declinePurchaseIntend()">
+</p-button>
+
+
     <p-accordionTab header="Purchase Intent Details">
       <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
@@ -161,3 +181,4 @@
     </p-footer>
   </p-accordion>
 </div>
+<p-toast></p-toast>

@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
 import { GeoService } from "./geo.service";
 import { StoreService } from "../store/store.service";
 import { Injectable } from "@angular/core";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map } from "rxjs/operators";
 
 
 @Injectable({
@@ -23,7 +23,11 @@ export class NewOfferService {
 
   // Cache for offers with a 1-hour TTL
   private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
-  private offerCache = new Map<string, { data: OfferType[], timestamp: number }>();
+  private offerCache = new Map<string, { 
+    data: OfferType[], 
+    timestamp: number, 
+    boundingBox: { latMin: number, latMax: number, lonMin: number, lonMax: number } 
+  }>();
 
   constructor(
     private http: HttpClient,
@@ -51,90 +55,115 @@ export class NewOfferService {
     cacheKey: string
   ): Observable<OfferType[]> {
     const cached = this.offerCache.get(cacheKey);
-
+  
     if (cached && (Date.now() - cached.timestamp) < this.cacheTTL) {
-      console.log('Using cached offers');
-      return of(cached.data);
+      // Refetch if the bounding boxes are different (regardless of size)
+      if (this.isNewBoundingBoxDifferent(cached.boundingBox, { lon1, lat1, lon2, lat2 })) {
+        console.log('Bounding box has changed, refetching...');
+        this.offerCache.delete(cacheKey);
+      } else {
+        console.log('Using cached offers');
+        return of(cached.data);
+      }
     }
-
+  
     console.log('Fetching offers from API', lon1, lat1, lon2, lat2);
     return this.http.get<OfferType[]>(
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`
     ).pipe(
       tap((offers) => {
-        this.offerCache.set(cacheKey, { data: offers, timestamp: Date.now() });
+        // Cache the new data along with the bounding box
+        this.offerCache.set(cacheKey, { 
+          data: offers, 
+          timestamp: Date.now(), 
+          boundingBox: { 
+            lonMin: lon1,  // Correct value
+            latMin: lat1,  // Correct value
+            lonMax: lon2,  // Correct value
+            latMax: lat2   // Correct value
+          } 
+        });
       })
     );
   }
-
-  setOffersBySearchRadius(searchRadiusInKM: number, address: AddressType) {
+  
+  
+  private isNewBoundingBoxDifferent(oldBox: any, newBox: any, tolerance: number = 0.00001): boolean {
+    // Return true if the bounding box is different by more than the tolerance
+    return (
+      Math.abs(oldBox.latMin - newBox.latMin) > tolerance ||
+      Math.abs(oldBox.latMax - newBox.latMax) > tolerance ||
+      Math.abs(oldBox.lonMin - newBox.lonMin) > tolerance ||
+      Math.abs(oldBox.lonMax - newBox.lonMax) > tolerance
+    );
+  }
+  
+  setOffersBySearchRadius(searchRadiusInKM: number, address: AddressType): Observable<OfferType[]> {
     if (!address) {
       console.error('Address is not provided');
-      return;
+      return of([]);  // Return empty observable if no address
     }
-
+  
     this.setAddress(address);
     this.loaded = false;
-
+  
+    // Get the bounding box from the geoService
     const boundingBox = this.geoService.getBoundingBox(
       searchRadiusInKM,
       address.lat,
-      address.lon,
+      address.lon
     );
-
+  
+    // Extract the bounding box values explicitly
+    const { lonMin, latMin, lonMax, latMax } = boundingBox;
+  
     const cacheKey = this.generateCacheKey(address);
-
-    this.getOffers(
-      boundingBox.lonMin,
-      boundingBox.latMin,
-      boundingBox.lonMax,
-      boundingBox.latMax,
+  
+    return this.getOffers(
+      lonMin,  // Correct usage after extracting values
+      latMin,  // Correct usage after extracting values
+      lonMax,  // Correct usage after extracting values
+      latMax,  // Correct usage after extracting values
       cacheKey
-    )
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        tap((offers) => this.store.setOffers(offers)),
-        switchMap((offers: OfferType[]) => {
-          const observables = offers.map((offer) =>
-            forkJoin({
-              ontoFoodType: this.http.get<OntofoodType>(offer.links.category),
-              offerDetails: this.http.get<any>(offer.links.offer),
-            })
-          );
-
-          return forkJoin(observables).pipe(
-            tap((responses) => {
-              this.ontoFoodTypes = [];
-
-              responses.forEach((response, index) => {
-                const { ontoFoodType, offerDetails } = response;
-
-                if (!this.ontoFoodTypes.some((type) => type.label === ontoFoodType.label)) {
-                  this.ontoFoodTypes.push(ontoFoodType);
-                }
-
-                offers[index].ontoFoodType = ontoFoodType;
-                offers[index].offerDetails = offerDetails;
-              });
-
-              this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
-              this.store.setOfferOntoFood(this.displayedFoodTypes);
-
-              this.offers = offers;
-            })
-          );
-        }),
-        finalize(() => this.loaded = true),
-      )
-      .subscribe({
-        next: () => {},
-        error: (error) => {
-          console.error('Error fetching offers:', error);
-          this.loaded = true;
-        },
-      });
+    ).pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((offers: OfferType[]) => {
+        const observables = offers.map((offer) =>
+          forkJoin({
+            ontoFoodType: this.http.get<OntofoodType>(offer.links.category),
+            offerDetails: this.http.get<any>(offer.links.offer),
+          })
+        );
+  
+        return forkJoin(observables).pipe(
+          tap((responses) => {
+            this.ontoFoodTypes = [];
+  
+            responses.forEach((response, index) => {
+              const { ontoFoodType, offerDetails } = response;
+  
+              if (!this.ontoFoodTypes.some((type) => type.label === ontoFoodType.label)) {
+                this.ontoFoodTypes.push(ontoFoodType);
+              }
+  
+              offers[index].ontoFoodType = ontoFoodType;
+              offers[index].offerDetails = offerDetails;
+            });
+  
+            this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
+            this.store.setOfferOntoFood(this.displayedFoodTypes);
+  
+            this.offers = offers;
+          }),
+          finalize(() => this.loaded = true),
+          map(() => offers)  // Return the fully processed offers
+        );
+      })
+    );
   }
+  
+  
 
   getOffersObservable(): Observable<OfferType[]> {
     return this.store.offers$;

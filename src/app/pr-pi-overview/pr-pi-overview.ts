@@ -13,6 +13,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { OrderService, PriceRequestStatus, PurchaseIntentStatus } from '../shared/services/order.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-pr-pi-overview',
@@ -28,7 +29,8 @@ import { OrderService, PriceRequestStatus, PurchaseIntentStatus } from '../share
     TabMenuModule,
     TabViewModule,
     ButtonModule,
-    PaginatorModule
+    PaginatorModule,
+    ToastModule
   ]
 })
 export class PrPiOverviewComponent implements OnInit {
@@ -38,7 +40,7 @@ export class PrPiOverviewComponent implements OnInit {
   loadingOrders = false;
   selectedPriceRequest: any | null = null;
   selectedPurchaseIntent: any | null = null;
-
+  currentCompany: any;
   filteredPurchaseIntents: any[] = [];
   filteredPriceRequests: any[] = [];
   selectedPurchaseIntentStatus: PurchaseIntentStatus | null = null;
@@ -399,5 +401,48 @@ export class PrPiOverviewComponent implements OnInit {
         }
       });
     }
+
+    makePriceOffer(){}
+
+    acceptPurchaseIntend()
+    {
+      console.log("kaufanfrage annehmen ", this.selectedPurchaseIntent);
     
+      // Ensure we have a selected purchase intent with the required status
+      if (!this.selectedPurchaseIntent || this.selectedPurchaseIntent.status !== 'PENDING') {
+        console.error("No valid purchase intent selected or purchase intent is not in PENDING status");
+        return;
+      }
+      const priceRequestId = this.selectedPurchaseIntent.links.self.split('/').pop(); // Extract the UUID
+      this.orderService.updatePurchaseIntentStatus(priceRequestId, "ACCEPTED").subscribe({
+        next: (response: any) => {
+          console.log('Purchase intent accepted successfully:', response);
+          this.messageService.add({ severity: 'success', summary: 'Purchase Intent accepted', detail: 'The purchase intent has been accepted successfully.' });
+        },
+        error: (error: any) => {
+          console.error('Error accepting purchase intent:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to accept the purchase intent.' });
+        }
+      })
+    }
+    declinePurchaseIntend(){
+      console.log("kaufanfrage ablehnen ", this.selectedPurchaseIntent);
+    
+      // Ensure we have a selected purchase intent with the required status
+      if (!this.selectedPurchaseIntent || this.selectedPurchaseIntent.status !== 'PENDING') {
+        console.error("No valid purchase intent selected or purchase intent is not in PENDING status");
+        return;
+      }
+      const priceRequestId = this.selectedPurchaseIntent.links.self.split('/').pop(); // Extract the UUID
+      this.orderService.updatePurchaseIntentStatus(priceRequestId, "REJECTED").subscribe({
+        next: (response: any) => {
+          console.log('Purchase intent declined successfully:', response);
+          this.messageService.add({ severity: 'success', summary: 'Purchase Intent Declined', detail: 'The purchase intent has been declined successfully.' });
+        },
+        error: (error: any) => {
+          console.error('Error declining purchase intent:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to decline the purchase intent.' });
+        }
+      })
+    }
 }

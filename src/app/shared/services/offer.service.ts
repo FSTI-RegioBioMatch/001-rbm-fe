@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
 import { GeoService } from "./geo.service";
 import { StoreService } from "../store/store.service";
 import { Injectable } from "@angular/core";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { catchError, debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +35,7 @@ export class OfferService {
   // Cache for offers with a 1-hour TTL
   private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
   private offerCache = new Map<string, { data: OfferType[], timestamp: number }>();
-
+  private inFlightRequests = new Map<string, Observable<OfferType[]>>();
   // Use BehaviorSubject to store and emit address
   setAddress(address: AddressType) {
     this.addressSubject.next(address);
@@ -66,15 +66,30 @@ export class OfferService {
       return of(cached.data);
     }
 
+    // Check if the same request is already in-flight
+    if (this.inFlightRequests.has(cacheKey)) {
+      return this.inFlightRequests.get(cacheKey)!;
+    }
+
     console.log('Fetching offers from API', lon1, lat1, lon2, lat2);
-    return this.http.get<OfferType[]>(
+
+    const request$ = this.http.get<OfferType[]>(
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`
     ).pipe(
       tap((offers) => {
         // Cache the fetched offers with a timestamp
         this.offerCache.set(cacheKey, { data: offers, timestamp: Date.now() });
+        this.inFlightRequests.delete(cacheKey); // Remove from in-flight requests after completion
+      }),
+      finalize(() => {
+        this.inFlightRequests.delete(cacheKey); // Ensure cleanup on error/finalization
       })
     );
+
+    // Store the in-flight request to prevent duplicates
+    this.inFlightRequests.set(cacheKey, request$);
+
+    return request$;
   }
 
   setOffersBySearchRadius(searchRadiusInKM: number, address: AddressType) {
@@ -94,58 +109,66 @@ export class OfferService {
 
     const cacheKey = this.generateCacheKey(address);
 
-    console.log("before getOffers");
-
+    // Delay and debounce the offer fetching logic to avoid spamming requests
     this.getOffers(
       boundingBox.lonMin,
       boundingBox.latMin,
       boundingBox.lonMax,
       boundingBox.latMax,
-      cacheKey // Pass cache key based on address (not radius)
-    )
-      .pipe(
-        debounceTime(300), // Debounce to prevent spamming
-        distinctUntilChanged(), // Ensure only distinct requests
-        tap((offers) => this.store.setOffers(offers)),
-        switchMap((offers: OfferType[]) => {
-          const observables = offers.map((offer) =>
-            forkJoin({
-              ontoFoodType: this.http.get<OntofoodType>(offer.links.category),
-              offerDetails: this.http.get<any>(offer.links.offer),
+      cacheKey
+    ).pipe(
+      debounceTime(500), // Debounce to prevent rapid successive calls
+      distinctUntilChanged(), // Only proceed with distinct changes
+      switchMap((offers: OfferType[]) => {
+        const observables = offers.map((offer) => 
+          // Fetch ontoFoodType and offerDetails for each offer in parallel
+          forkJoin({
+            ontoFoodType: this.http.get<OntofoodType>(offer.links.category).pipe(
+              catchError((error) => {
+                console.error(`Failed to load ontoFoodType for offer ${offer}:`, error);
+                return of(null); // Return null if this specific request fails
+              })
+            ),
+            offerDetails: this.http.get<any>(offer.links.offer).pipe(
+              catchError((error) => {
+                console.error(`Failed to load offerDetails for offer ${offer}:`, error);
+                return of(null); // Return null if this specific request fails
+              })
+            )
+          }).pipe(
+            tap(({ ontoFoodType, offerDetails }) => {
+              // If both ontoFoodType and offerDetails are successfully fetched, update the offer
+              if (ontoFoodType && offerDetails) {
+                offer.ontoFoodType = ontoFoodType;
+                offer.offerDetails = offerDetails;
+              } else {
+                console.warn(`Skipping offer ${offer} due to missing data.`);
+              }
             })
-          );
+          )
+        );
 
-          return forkJoin(observables).pipe(
-            tap((responses) => {
-              this.ontoFoodTypes = [];
+        return forkJoin(observables).pipe(
+          tap(() => {
+            // Filter out any offers that didn't get their details
+            const validOffers = offers.filter(offer => offer.ontoFoodType && offer.offerDetails);
+            this.ontoFoodTypes = Array.from(
+              new Set(validOffers.map(offer => offer.ontoFoodType).filter((ontoFoodType): ontoFoodType is OntofoodType => !!ontoFoodType))
+            ).slice(0, 5);            
 
-              responses.forEach((response, index) => {
-                const { ontoFoodType, offerDetails } = response;
-
-                if (!this.ontoFoodTypes.some((type) => type.label === ontoFoodType.label)) {
-                  this.ontoFoodTypes.push(ontoFoodType);
-                }
-
-                offers[index].ontoFoodType = ontoFoodType;
-                offers[index].offerDetails = offerDetails;
-              });
-
-              this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
-              this.store.setOfferOntoFood(this.displayedFoodTypes);
-
-              this.offersSubject.next(offers);
-            })
-          );
-        }),
-        finalize(() => this.loadedSubject.next(true)),
-      )
-      .subscribe({
-        next: () => {},
-        error: (error) => {
-          console.error('Error fetching offers:', error);
-          this.loadedSubject.next(true);
-        },
-      });
+            this.store.setOfferOntoFood(this.ontoFoodTypes);
+            this.offersSubject.next(validOffers); // Update with valid offers only
+          })
+        );
+      }),
+      finalize(() => this.loadedSubject.next(true))
+    ).subscribe({
+      next: () => {},
+      error: (error) => {
+        console.error('Error fetching offers:', error);
+        this.loadedSubject.next(true);
+      }
+    });
   }
 
   getOffersObservable(): Observable<OfferType[]> {

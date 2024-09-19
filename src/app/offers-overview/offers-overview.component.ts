@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { OfferService } from '../shared/services/offer.service';
+import { NewOfferService } from '../shared/services/new-offer.service';
 import { StoreService } from '../shared/store/store.service';
 import { MessageService } from 'primeng/api';
 import { filter, of, switchMap, take } from 'rxjs';
@@ -15,6 +15,7 @@ import { AddressType } from '../shared/types/address.type';
 import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 import { OrderService } from '../shared/services/order.service';
+
 @Component({
   selector: 'app-offers-overview',
   standalone: true,
@@ -28,21 +29,21 @@ import { OrderService } from '../shared/services/order.service';
     PanelModule,
     FormsModule,
     CardModule,
-    SliderModule
+    SliderModule,
   ],
   providers: [MessageService],
   templateUrl: './offers-overview.component.html',
-  styleUrl: './offers-overview.component.scss'
+  styleUrls: ['./offers-overview.component.scss'],
 })
 export class OffersOverviewComponent implements OnInit {
-
   localizationData: { displayLabel: string; value: string }[] = [];
   loading = false;
-  offers: any[] = [];  // Declare offers to store the list of offers
+  offers: any[] = []; // Declare offers to store the list of offers
   errorMessage: string = ''; // Declare errorMessage for displaying errors
-  range: number = 50
+  range: number = 50; // Example range for filtering offers by distance
+
   constructor(
-    private offerService: OfferService,
+    private offerService: NewOfferService,
     private store: StoreService,
     private messageService: MessageService,
     private router: Router,
@@ -53,14 +54,15 @@ export class OffersOverviewComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
 
-    // Subscribe to the company context and route parameters
+    // Subscribe to the company context and load offers
     this.store.selectedCompanyContext$
       .pipe(
-        filter(company => company !== null) // Ensure company context is not null
+        filter(company => company !== null),
+        take(1)
       )
       .subscribe({
         next: () => {
-          this.loadOffers(); // Now load offers after the shopping list is fetched
+          this.loadOffers();
         },
         error: error => {
           this.loading = false;
@@ -71,7 +73,7 @@ export class OffersOverviewComponent implements OnInit {
     // Load localization data
     this.nearbuyTestService.getData().subscribe({
       next: result => {
-        this.localizationData = result; // Save localization data for later use
+        this.localizationData = result;
       },
       error: err => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
@@ -79,43 +81,38 @@ export class OffersOverviewComponent implements OnInit {
     });
   }
 
+  // Helper method to get localized label for ingredient
   getLocalizedLabel(ingredientName: string): string {
     const localizedItem = this.localizationData.find(item => item.value === ingredientName);
     return localizedItem ? localizedItem.displayLabel : ingredientName;
   }
 
+  // Method to load offers, leveraging caching logic
   private loadOffers(): void {
-    // Check if the address is already set
-    const address = this.offerService.address;
-    
+    const address = this.offerService.getAddress();
+
     if (address) {
-      // Address is already set, fetch offers from cache or new
       this.fetchOffers(address);
     } else {
-      // Address is not set, fetch it asynchronously from the company context
       this.store.selectedCompanyContext$
         .pipe(
-          filter(company => company !== null),  // Ensure company context is not null
-          switchMap((company) => {
-            // Fetch the address based on the company context
+          filter(company => company !== null),
+          switchMap(company => {
             if (company && company.addresses && company.addresses.length > 0) {
               const addressUrl = company.addresses[0].self;
-              return this.offerService.getAddress(addressUrl); // Fetch address from the URL
+              return this.offerService.getAddressFromUrl(addressUrl);
             } else {
-              return of(null); // Return null if no address is available
+              return of(null);
             }
           }),
-          take(1) // Only take the first valid address emission
+          take(1)
         )
         .subscribe({
           next: (address: AddressType | null) => {
             if (address) {
-              // Set the address in the OfferService
               this.offerService.setAddress(address);
-              // Fetch the offers once the address is available
               this.fetchOffers(address);
             } else {
-              // Handle the case where no address is available
               this.errorMessage = 'Address not available';
               this.loading = false;
             }
@@ -128,102 +125,74 @@ export class OffersOverviewComponent implements OnInit {
         });
     }
   }
-  
+
+  // Fetch offers based on the current address
   private fetchOffers(address: AddressType): void {
-    this.offerService.setOffersBySearchRadius(this.range, address); // Set initial search radius and address
-  
-    // Subscribe to the offers and handle both cached or new offers
-    this.offerService.offers$
+    this.offerService.setOffersBySearchRadius(this.range, address)
       .pipe(take(1)) // Ensure only one subscription
       .subscribe({
-        next: (offers) => {
-          if (offers && offers.length > 0) {
-            console.log('Offers loaded from cache or new fetch:', offers);
-            this.offers = offers; // Store the offers
-          } else {
-            console.log('No offers found, fetching new offers');
-            // If no offers are available, trigger a new fetch
-            this.offerService.setOffersBySearchRadius(this.range, address);
-          }
+        next: offers => {
+          this.offers = offers; // Store the offers
           this.loading = false; // Stop loading once offers are fetched
         },
-        error: (error) => {
+        error: error => {
           console.error('Error loading offers:', error);
           this.errorMessage = 'Error loading offers';
           this.loading = false; // Stop loading on error
         }
       });
   }
-  clearCacheAndReload(): void {
-    // Clear the cache
-    this.offerService.clearOfferCache();
-  
-    // Reload the offers
-    const address = this.offerService.address;
-    if (address) {
-      this.fetchOffers(address);
-    } else {
-      this.offerService.address$
-        .pipe(take(1)) // Ensure we only subscribe once
-        .subscribe({
-          next: (address) => {
-            if (address) {
-              this.fetchOffers(address);
-            } else {
-              this.errorMessage = 'No address available';
-            }
-          },
-          error: (err) => {
-            this.errorMessage = 'Error loading address';
-            console.error('Error loading address:', err);
-          }
-        });
-    }
-  }
-  makePriceRequest(offer: any): void {
-    console.log('Making price request for offer:', offer);
 
-    // Construct the PriceRequest object inline without importing a model
+  // Clear the cache and reload offers
+  clearCacheAndReload(): void {
+    this.loading = true
+    this.offerService.clearOfferCache(); // Clear the cache
+    this.loadOffers(); // Reload the offers
+  }
+
+  // Method to make a price request for a specific offer
+  makePriceRequest(offer: any): void {
     const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
     const priceRequest = {
-      offerRef: offer.links.offer,  // Reference to the offer
-      message: `Requesting price for ${productName}`,  // Custom message
-      deliveryDate: '2024-12-12',  // Example delivery date, this can be dynamic
-      containers: [],  // Using containers from the offer
-      totalAmount: offer.offerDetails.totalAmount  // Total amount from the offer
+      offerRef: offer.links.offer, // Reference to the offer
+      message: `Requesting price for ${productName}`,
+      deliveryDate: '2024-12-12', // Example delivery date, can be dynamic
+      containers: [], // Add relevant containers if needed
+      totalAmount: offer.offerDetails.totalAmount, // Use total amount from the offer
     };
 
-    // Send the price request using the OrderService
-    this.orderService.createPriceRequest(priceRequest).subscribe(
-      response => {
+    this.orderService.createPriceRequest(priceRequest).subscribe({
+      next: response => {
+        this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Preisanfrage erfolgreich gesendet' });
         console.log('Price Request successfully created:', response);
       },
-      error => {
+      error: error => {
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Preisanfrage konnte nicht gesendet werden' });
         console.error('Error creating Price Request:', error);
       }
-    );
+    });
   }
-  // Method to make a purchase intent
+
+  // Method to make a purchase intent for a specific offer
   makePurchaseIntent(offer: any): void {
-    console.log('Making purchase intent for offer:', offer);
     const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
-    // Construct the PurchaseIntent object inline without importing a model
     const purchaseIntent = {
-      offerRef: offer.offerDetails.id,  // Reference to the offer
-      deliveryDate: '2024-12-12',  // Example delivery date, can be dynamic
-      message: `Purchase intent for ${productName}`,  // Custom message
-      containers: [],
-      totalAmount: offer.offerDetails.totalAmount  // Total amount from the offer
+      offerRef: offer.offerDetails.id, // Reference to the offer
+      deliveryDate: '2024-12-12', // Example delivery date, can be dynamic
+      message: `Purchase intent for ${productName}`,
+      containers: [], // Add relevant containers if needed
+      totalAmount: offer.offerDetails.totalAmount, // Use total amount from the offer
     };
 
-    // Send the purchase intent using the OrderService
-    this.orderService.createPurchaseIntent(purchaseIntent).subscribe(
-      response => {
+    this.orderService.createPurchaseIntent(purchaseIntent).subscribe({
+      next: response => {
+        this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Kaufabsicht erfolgreich gesendet' });
         console.log('Purchase Intent successfully created:', response);
       },
-      error => {
+      error: error => {
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht konnte nicht gesendet werden' });
         console.error('Error creating Purchase Intent:', error);
       }
-    );
+    });
   }
 }

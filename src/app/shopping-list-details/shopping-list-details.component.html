@@ -1,9 +1,16 @@
 <div class="shopping-list-details p-m-3 p-shadow-3 p-p-4">
     <h1>Shopping List and Offers</h1>
 
-    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
     <p-message *ngIf="errorMessage" severity="error" text="{{ errorMessage }}"></p-message>
-
+    <div class="actions">
+        <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
+    </div>
+    
+    <p-progressSpinner *ngIf="loading"></p-progressSpinner>
+    
+    <p-slider [(ngModel)]="range" [min]="0" [max]="250" [step]="1"></p-slider>
+    <p>Selected Range: {{ range }} km</p>
+    
     <div *ngIf="!loading && shoppingList" class="p-grid">
         <!-- Shopping List on the Left -->
         <div class="p-col-6">

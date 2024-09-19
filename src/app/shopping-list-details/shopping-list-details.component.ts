@@ -16,6 +16,9 @@ import { AddressType } from '../shared/types/address.type';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { of } from 'rxjs';
+import { NewOfferService } from '../shared/services/new-offer.service';
+import { SliderModule } from 'primeng/slider';
+import { FormsModule } from '@angular/forms';
 
 interface IngredientUnit {
   label: string;
@@ -72,6 +75,8 @@ const ingredientUnits: IngredientUnit[] = [
     MessageModule,
     PanelModule,
     CardModule,
+    SliderModule,
+    FormsModule
   ],
   standalone: true,
   providers: [MessageService]
@@ -82,11 +87,12 @@ export class ShoppingListDetailsComponent implements OnInit {
   offers: any[] = [];
   loading = true;
   errorMessage = '';
+  range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
   constructor(
     private route: ActivatedRoute,
     private shoppingListService: NewShoppingListService,
-    private offerService: OfferService,
+    private offerService: NewOfferService,
     private router: Router,
     private store: StoreService,
     private messageService: MessageService,
@@ -118,7 +124,6 @@ export class ShoppingListDetailsComponent implements OnInit {
             this.shoppingList = list;
             this.ingredientNames = Object.keys(this.shoppingList.groupedShoppingList);
             this.loadOffers(); // Now load offers after the shopping list is fetched
-            this.loading = false;
           }
         },
         error: error => {
@@ -140,37 +145,30 @@ export class ShoppingListDetailsComponent implements OnInit {
   }
 
   private loadOffers(): void {
-    // Check if the address is already set
-    const address = this.offerService.address;
-    
+    const address = this.offerService.getAddress();
+  
     if (address) {
-      // Address is already set, fetch offers
       this.fetchOffers(address);
     } else {
-      // Address is not set, fetch it asynchronously
       this.store.selectedCompanyContext$
         .pipe(
-          filter(company => company !== null),  // Ensure company context is not null
+          filter(company => company !== null),
           switchMap((company) => {
-            // Fetch the address based on the company context
             if (company && company.addresses && company.addresses.length > 0) {
               const addressUrl = company.addresses[0].self;
-              return this.offerService.getAddress(addressUrl); // Fetch address from the URL
+              return this.offerService.getAddressFromUrl(addressUrl);
             } else {
-              return of(null); // Return null if no address is available
+              return of(null);
             }
           }),
-          take(1) // Only take the first valid address emission
+          take(1)
         )
         .subscribe({
           next: (address: AddressType | null) => {
             if (address) {
-              // Set the address in the OfferService
               this.offerService.setAddress(address);
-              // Fetch the offers once the address is available
               this.fetchOffers(address);
             } else {
-              // Handle the case where no address is available
               this.errorMessage = 'Address not available';
               this.loading = false;
             }
@@ -184,24 +182,29 @@ export class ShoppingListDetailsComponent implements OnInit {
     }
   }
   
-  private fetchOffers(address: AddressType): void {
-    this.offerService.setOffersBySearchRadius(250, address); // Set initial search radius and address
   
-    this.offerService.offers$
-      .pipe(take(1)) // Ensure only one subscription
+  private fetchOffers(address: AddressType): void {
+    this.offerService.setOffersBySearchRadius(this.range, address)
+      .pipe(take(1))  // Ensure only one subscription and wait for offers to be set
       .subscribe({
         next: offers => {
-          console.log('Offers loaded:', offers);
-          this.offers = offers; // Store the offers
-          this.loading = false; // Stop loading once offers are fetched
+          if (offers.length > 0) {
+            console.log('Offers loaded:', offers);
+            this.offers = offers;  // Store the offers
+          } else {
+            console.log('No offers found');
+          }
+          this.loading = false;  // Stop loading once offers are fetched
         },
         error: error => {
           console.error('Error loading offers:', error);
           this.errorMessage = 'Error loading offers';
-          this.loading = false; // Stop loading on error
+          this.loading = false;  // Stop loading on error
         }
       });
   }
+  
+  
 
   onClickGoToOffer() {
     const scanId = uuidv4();
@@ -225,5 +228,10 @@ export class ShoppingListDetailsComponent implements OnInit {
         label: key,
         amount: processingBreakdown[key]
     }));
-}
+  }
+  clearCacheAndReload(): void {
+    this.loading = true
+    this.offerService.clearOfferCache(); // Clear the cache
+    this.loadOffers(); // Reload the offers
+  }
 }
