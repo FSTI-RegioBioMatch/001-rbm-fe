@@ -20,6 +20,7 @@ import { NewOfferService } from '../shared/services/new-offer.service';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import  { CheckboxModule } from 'primeng/checkbox';
 
 interface IngredientUnit {
   label: string;
@@ -79,6 +80,7 @@ const ingredientUnits: IngredientUnit[] = [
     SliderModule,
     FormsModule,
     ToastModule,
+    CheckboxModule
   ],
   standalone: true,
   providers: [MessageService]
@@ -87,6 +89,8 @@ export class ShoppingListDetailsComponent implements OnInit {
   shoppingList: any;
   ingredientNames: string[] = [];
   offers: any[] = [];
+  ingredientOfferMapping: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
+  shoppingListSummary: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
   loading = true;
   errorMessage = '';
   range: number = 50;
@@ -193,6 +197,7 @@ export class ShoppingListDetailsComponent implements OnInit {
           if (offers.length > 0) {
             console.log('Offers loaded:', offers);
             this.offers = offers;  // Store the offers
+            this.matchIngredientsToOffers();
           } else {
             console.log('No offers found');
           }
@@ -236,4 +241,53 @@ export class ShoppingListDetailsComponent implements OnInit {
     this.offerService.clearOfferCache(); // Clear the cache
     this.loadOffers(); // Reload the offers
   }
+
+  private matchIngredientsToOffers(): void {
+    this.ingredientOfferMapping = this.ingredientNames.map(ingredient => {
+      const matchedOffers = this.offers
+        .filter(offer => this.matchOfferToIngredient(ingredient, offer))
+        .map(offer => ({
+          offer,
+          selected: false
+        }));
+    
+      const status = matchedOffers.length > 0 ? 'offers-found' : 'no-offers';
+      const selected = matchedOffers.some(offerItem => offerItem.selected);
+    
+      return { ingredient, offers: matchedOffers, status, selected };
+    });
+  
+    // console.log('Matched Ingredients and Offers (JSON):', JSON.stringify(this.ingredientOfferMapping, null, 2));
+  }
+
+  toggleOfferSelection(ingredientName: string, offerId: string, isChecked: boolean): void {
+    const ingredientMapping = this.ingredientOfferMapping.find(item => item.ingredient === ingredientName);
+    if (ingredientMapping) {
+      // Wenn das Angebot ausgewählt wird, alle anderen Angebote abwählen
+      if (isChecked) {
+        ingredientMapping.offers.forEach(o => o.selected = o.offer.offerDetails.id === offerId);
+      } else {
+        // Wenn das Angebot abgewählt wird, nur dieses Angebot abwählen
+        const offer = ingredientMapping.offers.find(o => o.offer.offerDetails.id === offerId);
+        if (offer) {
+          offer.selected = false;
+        }
+      }
+      // Aktualisieren Sie den ausgewählten Zustand der Zutat
+      ingredientMapping.selected = ingredientMapping.offers.some(o => o.selected);
+    }
+  }
+
+  // For testing
+
+  createSummary(): void {
+    this.shoppingListSummary = this.ingredientOfferMapping.map(mapping => {
+        return {
+            ...mapping,
+            offers: mapping.offers.filter(offer => offer.selected)
+        };
+    });
+    console.log(JSON.stringify(this.shoppingListSummary, null, 2));
+}
+  
 }
