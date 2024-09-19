@@ -290,7 +290,7 @@ export class PrPiOverviewComponent implements OnInit {
           };
 
           const deliveryAddress = {
-            type: 'INVOICE',
+            type: 'DELIVERY',
             name: addresses.sellingCompanyMainAddress?.name || 'fallback Name',
             street: addresses.sellingCompanyMainAddress?.street || 'fallback Street',
             zipcode: addresses.sellingCompanyMainAddress?.zipcode || '00000',
@@ -366,7 +366,7 @@ export class PrPiOverviewComponent implements OnInit {
           };
     
           const deliveryAddress = {
-            type: 'INVOICE',
+            type: 'DELIVERY',
             name: addresses.sellingCompanyMainAddress?.name || 'fallback Name',
             street: addresses.sellingCompanyMainAddress?.street || 'fallback Street',
             zipcode: addresses.sellingCompanyMainAddress?.zipcode || '00000',
