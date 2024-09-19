@@ -20,6 +20,7 @@ import { NewOfferService } from '../shared/services/new-offer.service';
 import { SliderModule } from 'primeng/slider';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
+import  { CheckboxModule } from 'primeng/checkbox';
 
 interface IngredientUnit {
   label: string;
@@ -79,6 +80,7 @@ const ingredientUnits: IngredientUnit[] = [
     SliderModule,
     FormsModule,
     ToastModule,
+    CheckboxModule
   ],
   standalone: true,
   providers: [MessageService]
@@ -87,8 +89,9 @@ export class ShoppingListDetailsComponent implements OnInit {
   shoppingList: any;
   ingredientNames: string[] = [];
   offers: any[] = [];
+  ingredientOfferMapping: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
+  shoppingListSummary: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
   loading = true;
-  errorMessage = '';
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
   constructor(
@@ -114,7 +117,9 @@ export class ShoppingListDetailsComponent implements OnInit {
           if (id) {
             return this.shoppingListService.getShoppingListById(id);
           } else {
-            this.errorMessage = 'Es wurde keine Einkaufslisten-ID angegeben';
+            this.messageService.add({severity: 'error', summary: 'Fehler',
+              detail: 'Es wurde keine Einkaufslisten-ID angegeben'
+            })
             this.loading = false;
             return [];
           }
@@ -130,7 +135,7 @@ export class ShoppingListDetailsComponent implements OnInit {
         },
         error: error => {
           console.error('Error fetching shopping list:', error);
-          this.errorMessage = 'Einkaufsliste konnte nicht gefunden werden';
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Einkaufsliste'})
           this.loading = false;
         }
       });
@@ -171,12 +176,16 @@ export class ShoppingListDetailsComponent implements OnInit {
               this.offerService.setAddress(address);
               this.fetchOffers(address);
             } else {
-              this.errorMessage = 'Address not available';
+              this.messageService.add({severity: 'error', summary: 'Fehler',
+                detail: 'Adresse nicht verfügbar'
+              })
               this.loading = false;
             }
           },
           error: err => {
-            this.errorMessage = 'Error loading address';
+            this.messageService.add({severity: 'error', summary: 'Fehler',
+              detail: 'Adresse konnte nicht geladen werden'
+            });
             console.error('Error loading address:', err);
             this.loading = false;
           }
@@ -191,16 +200,19 @@ export class ShoppingListDetailsComponent implements OnInit {
       .subscribe({
         next: offers => {
           if (offers.length > 0) {
+            //this.messageService.add({severity: 'info', summary: 'Laden', detail: 'Angebote wurden geladen'});
             console.log('Offers loaded:', offers);
             this.offers = offers;  // Store the offers
+            this.matchIngredientsToOffers();
           } else {
+            //this.messageService.add({severity: 'info', summary: 'Keine Angebote', detail: 'Es konnten keine Angebote gefunden werden'});
             console.log('No offers found');
           }
           this.loading = false;  // Stop loading once offers are fetched
         },
         error: error => {
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Angebote'})
           console.error('Error loading offers:', error);
-          this.errorMessage = 'Error loading offers';
           this.loading = false;  // Stop loading on error
         }
       });
@@ -236,4 +248,53 @@ export class ShoppingListDetailsComponent implements OnInit {
     this.offerService.clearOfferCache(); // Clear the cache
     this.loadOffers(); // Reload the offers
   }
+
+  private matchIngredientsToOffers(): void {
+    this.ingredientOfferMapping = this.ingredientNames.map(ingredient => {
+      const matchedOffers = this.offers
+        .filter(offer => this.matchOfferToIngredient(ingredient, offer))
+        .map(offer => ({
+          offer,
+          selected: false
+        }));
+    
+      const status = matchedOffers.length > 0 ? 'offers-found' : 'no-offers';
+      const selected = matchedOffers.some(offerItem => offerItem.selected);
+    
+      return { ingredient, offers: matchedOffers, status, selected };
+    });
+  
+    // console.log('Matched Ingredients and Offers (JSON):', JSON.stringify(this.ingredientOfferMapping, null, 2));
+  }
+
+  toggleOfferSelection(ingredientName: string, offerId: string, isChecked: boolean): void {
+    const ingredientMapping = this.ingredientOfferMapping.find(item => item.ingredient === ingredientName);
+    if (ingredientMapping) {
+      // Wenn das Angebot ausgewählt wird, alle anderen Angebote abwählen
+      if (isChecked) {
+        ingredientMapping.offers.forEach(o => o.selected = o.offer.offerDetails.id === offerId);
+      } else {
+        // Wenn das Angebot abgewählt wird, nur dieses Angebot abwählen
+        const offer = ingredientMapping.offers.find(o => o.offer.offerDetails.id === offerId);
+        if (offer) {
+          offer.selected = false;
+        }
+      }
+      // Aktualisieren Sie den ausgewählten Zustand der Zutat
+      ingredientMapping.selected = ingredientMapping.offers.some(o => o.selected);
+    }
+  }
+
+  // For testing
+
+  createSummary(): void {
+    this.shoppingListSummary = this.ingredientOfferMapping.map(mapping => {
+        return {
+            ...mapping,
+            offers: mapping.offers.filter(offer => offer.selected)
+        };
+    });
+    console.log(JSON.stringify(this.shoppingListSummary, null, 2));
+}
+  
 }

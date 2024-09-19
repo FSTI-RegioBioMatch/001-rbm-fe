@@ -299,12 +299,14 @@ loadRecipesWithIngredients(menuPlanId: string): void {
           // Log which recipes are missing ingredients for debugging
           recipes.forEach(recipe => {
             if (recipe !== null && (!recipe.ingredients || recipe.ingredients.length === 0)) {
+              this.messageService.add({severity: 'warn', summary: 'Hinweis', detail: 'Ein Rezept in einem Menüplan kann nicht mehr gefunden werden'})
               console.log(`Recipe ${recipe.id} in menu plan ${menuPlanId} has no ingredients.`);
             }
           });
 
           // Log if no recipes were found for a menu plan
           if (recipes.length === 0) {
+            this.messageService.add({severity: 'info', summary: 'Hinweis', detail: 'Für den angegebenen Menüplan konnten keine Rezepte gefunden werden'})
             console.log(`No recipes found for menu plan ${menuPlanId}.`);
           }
         },
@@ -314,6 +316,7 @@ loadRecipesWithIngredients(menuPlanId: string): void {
         }
       });
   } else {
+    this.messageService.add({severity: 'info', summary: 'Hinweis', detail: 'Der angegebene Menüplan konnte nicht gefunden werden'})
     console.log(`No menu plan found for ID ${menuPlanId}.`);
     this.loadingRecipes = false; // If menuPlan is not found, reset the loading state
   }

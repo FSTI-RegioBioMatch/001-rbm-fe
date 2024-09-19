@@ -1,7 +1,6 @@
 <div class="shopping-list-details p-m-3 p-shadow-3 p-p-4">
     <h1>Shopping List and Offers</h1>
 
-    <p-message *ngIf="errorMessage" severity="error" text="{{ errorMessage }}"></p-message>
     <div class="actions">
         <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
     </div>
@@ -37,13 +36,23 @@
                                     <!-- Matching Offers Section -->
                                     <p-accordion>
                                         <p-accordionTab header="Matching Offers">
-                                            <ng-container *ngFor="let offer of offers">
-                                                <ng-container *ngIf="matchOfferToIngredient(ingredient.name, offer)">
-                                                    <h5>{{ offer?.company?.name }}</h5>
+                                            <ng-container *ngFor="let item of ingredientOfferMapping">
+                                                <ng-container *ngFor="let offerItem of item.offers">
+                                                    <ng-container *ngIf="matchOfferToIngredient(ingredient.name, offerItem.offer)">
+                                                    <h5>{{ offerItem.offer?.company?.name }}</h5>
                                                     <p><strong>Product Title:</strong> {{
-                                                        offer?.offerDetails?.productTitle }}</p>
+                                                        offerItem?.offer?.offerDetails?.productTitle }}</p>
                                                     <p><strong>Price per Unit:</strong> €{{
-                                                        offer?.offerDetails?.pricePerUnit }}</p>
+                                                        offerItem?.offer?.offerDetails?.pricePerUnit }}</p>
+                                                    <p>{{ offerItem?.offer?.offerDetails?.id }}</p>
+                                                 
+                                                    <p-checkbox 
+                                                    [(ngModel)]="offerItem.selected" 
+                                                    [binary]="true" 
+                                                    inputId="binary" 
+                                                    (onChange)="toggleOfferSelection(item.ingredient, offerItem.offer.offerDetails.id, $event.checked)">
+                                                  </p-checkbox>
+                                                    </ng-container>
                                                 </ng-container>
                                             </ng-container>
                                         </p-accordionTab>
@@ -57,7 +66,7 @@
         </div>
 
         <!-- Offers on the Right -->
-        <div class="p-col-6">
+        <div class="rbm-flex-row">
             <p-card header="Available Offers">
                 <p-accordion>
                     <ng-container *ngFor="let offer of offers">
@@ -158,6 +167,19 @@
                     </ng-container>
                 </p-accordion>
             </p-card>
+            <div class="rbm-flex-column rbm-padding-m">
+                Anzeige
+                <div *ngFor="let item of ingredientOfferMapping">
+                    <p *ngIf="item.status === 'offers-found' && item.selected === true" class="valid-offer">{{ item.ingredient }}</p>
+                    <p *ngIf="item.status === 'offers-found' && item.selected === false" class="unselected-offer">{{ item.ingredient }}</p>
+                    <p *ngIf="item.status === 'no-offers'" class="invalid-offer">{{ item.ingredient }}</p>
+                    <ng-container *ngFor="let offerItem of item.offers">
+                        <p *ngIf="offerItem.selected">SELECTED: {{ offerItem.offer.offerDetails.id }}</p>
+
+                    </ng-container>
+                </div>
+                    <button (click)="createSummary()">print</button>
+            </div>
         </div>
     </div>
 

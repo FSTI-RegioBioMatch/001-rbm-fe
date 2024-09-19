@@ -29,3 +29,15 @@
     }
   }
   
+
+  .invalid-offer {
+    color: var(--rbm-error);
+  }
+
+  .valid-offer {
+    color: green;
+  }
+
+  .unselected-offer {
+    color: orange;
+  }
