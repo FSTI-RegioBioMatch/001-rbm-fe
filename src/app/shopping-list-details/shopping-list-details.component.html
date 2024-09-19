@@ -170,9 +170,11 @@
             <div class="rbm-flex-column rbm-padding-m">
                 Anzeige
                 <div *ngFor="let item of ingredientOfferMapping">
-                    <p *ngIf="item.status === 'offers-found' && item.selected === true" class="valid-offer">{{ item.ingredient }}</p>
-                    <p *ngIf="item.status === 'offers-found' && item.selected === false" class="unselected-offer">{{ item.ingredient }}</p>
-                    <p *ngIf="item.status === 'no-offers'" class="invalid-offer">{{ item.ingredient }}</p>
+                    <ng-container *ngFor="let ingredient of item.ingredient">
+                    <p *ngIf="item.status === 'offers-found' && item.selected === true" class="valid-offer">{{ ingredient?.name }}</p>
+                    <p *ngIf="item.status === 'offers-found' && item.selected === false" class="unselected-offer">{{ ingredient?.name }}</p>
+                    <p *ngIf="item.status === 'no-offers'" class="invalid-offer">{{ ingredient?.name }}</p>
+                </ng-container>
                     <ng-container *ngFor="let offerItem of item.offers">
                         <p *ngIf="offerItem.selected">SELECTED: {{ offerItem.offer.offerDetails.id }}</p>
 

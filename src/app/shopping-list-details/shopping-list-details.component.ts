@@ -89,8 +89,8 @@ export class ShoppingListDetailsComponent implements OnInit {
   shoppingList: any;
   ingredientNames: string[] = [];
   offers: any[] = [];
-  ingredientOfferMapping: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
-  shoppingListSummary: { ingredient: string; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
+  ingredientOfferMapping: { ingredient: any; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
+  shoppingListSummary: { ingredient: any; offers: { offer: any, selected: boolean }[], status: string, selected: boolean }[] = [];
   loading = true;
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
@@ -250,22 +250,22 @@ export class ShoppingListDetailsComponent implements OnInit {
   }
 
   private matchIngredientsToOffers(): void {
-    this.ingredientOfferMapping = this.ingredientNames.map(ingredient => {
+    this.ingredientOfferMapping = this.ingredientNames.map(ingredientName => {
+      const ingredient = this.shoppingList.groupedShoppingList[ingredientName];
       const matchedOffers = this.offers
-        .filter(offer => this.matchOfferToIngredient(ingredient, offer))
+        .filter(offer => this.matchOfferToIngredient(ingredientName, offer))
         .map(offer => ({
           offer,
           selected: false
         }));
-    
+  
       const status = matchedOffers.length > 0 ? 'offers-found' : 'no-offers';
       const selected = matchedOffers.some(offerItem => offerItem.selected);
-    
+  
       return { ingredient, offers: matchedOffers, status, selected };
     });
-  
-    // console.log('Matched Ingredients and Offers (JSON):', JSON.stringify(this.ingredientOfferMapping, null, 2));
   }
+
 
   toggleOfferSelection(ingredientName: string, offerId: string, isChecked: boolean): void {
     const ingredientMapping = this.ingredientOfferMapping.find(item => item.ingredient === ingredientName);
