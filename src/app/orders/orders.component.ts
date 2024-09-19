@@ -12,7 +12,8 @@ import { MessageService } from 'primeng/api';
   standalone: true,
   imports: [ToastModule, DatePipe, TableModule, CommonModule],
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss']
+  styleUrls: ['./orders.component.scss'],
+  providers: [MessageService]
 })
 export class OrdersComponent implements OnInit {
   orders: any[] = []; // Store the order details here
