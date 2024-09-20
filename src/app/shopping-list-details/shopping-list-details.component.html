@@ -6,7 +6,8 @@
     </div>
     
     <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-    
+    <p-confirmDialog></p-confirmDialog>
+
     <p-slider [(ngModel)]="range" [min]="0" [max]="250" [step]="1"></p-slider>
     <p>Selected Range: {{ range }} km</p>
     
@@ -78,10 +79,35 @@
 
                     </ng-container>
                 </div>
-                    <button (click)="createSummary()">print</button>
+                    <button *ngIf="canCreateNew" (click)="createSummary()">print</button>
             </div>
         </div>
     </div>
 
 </div>
 <p-toast></p-toast>
+
+<p-dialog
+  header="Angebot auswählen"
+  [(visible)]="showOfferSelectionDialog"
+  modal="modal"
+  [closable]="false"
+>
+  <p>Bitte wählen Sie ein Angebot aus der Liste unten aus:</p>
+  <ul>
+    <li *ngFor="let offer of offerDataList">
+      <!-- Customize the display as needed -->
+      <button (click)="navigateToOffer(offer.id)">
+        Angebot ID: {{ offer.id }}
+      </button>
+    </li>
+  </ul>
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Schließen"
+      (click)="showOfferSelectionDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>

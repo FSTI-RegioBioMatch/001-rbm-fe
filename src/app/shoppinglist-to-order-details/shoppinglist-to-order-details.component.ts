@@ -54,21 +54,20 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
           if (id) {
             // Fetch shopping list details and localization data simultaneously
             return forkJoin({
-              shoppingListToOrderObject: this.offerToOrderService.getMappedOffersIngredientsById(id).pipe(catchError(error => {
-                console.error('Error fetching shopping list to order object:', error);
-                this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Einkaufsliste' });
-                return of(null); // Return null on error
-              })),
-              localizationData: this.nearbuyTestService.getData().pipe(catchError(error => {
-                console.error('Error fetching localization data:', error);
-                this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Lokalisierungsdaten' });
-                return of([]); // Return an empty array on error
-              })),
-              shoppingListTrack: this.offerToOrderService.getOrCreateShoppingListTrack(id).pipe(catchError(error => {
-                console.error('Error fetching or creating shopping list track:', error);
-                this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden oder Erstellen des Einkaufstracks' });
-                return of(null); // Return null on error
-              }))
+              shoppingListToOrderObject: this.offerToOrderService.getMappedOffersIngredientsById(id).pipe(
+                catchError(error => {
+                  console.error('Error fetching shopping list to order object:', error);
+                  this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Einkaufsliste' });
+                  return of(null); // Return null on error
+                })
+              ),
+              localizationData: this.nearbuyTestService.getData().pipe(
+                catchError(error => {
+                  console.error('Error fetching localization data:', error);
+                  this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Lokalisierungsdaten' });
+                  return of([]); // Return an empty array on error
+                })
+              )
             });
           } else {
             this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Es wurde keine ID angegeben' });
@@ -83,7 +82,31 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
   
           this.shoppingListToOrderObject = result.shoppingListToOrderObject;
           this.localizationData = result.localizationData;
-          this.shoppingListTrack = result.shoppingListTrack;
+  
+          // Now that we have the shoppingListToOrderObject, fetch the shopping list track
+          return this.offerToOrderService.getOrCreateShoppingListTrack(this.shoppingListToOrderObject.shoppingListId).pipe(
+            map(shoppingListTrack => ({
+              ...result,
+              shoppingListTrack // Add shoppingListTrack to the result
+            })),
+            catchError(error => {
+              console.error('Error fetching or creating shopping list track:', error);
+              this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden oder Erstellen des Einkaufstracks' });
+              return of({
+                ...result,
+                shoppingListTrack: null // Return result with null shoppingListTrack on error
+              });
+            })
+          );
+        }),
+        switchMap(result => {
+          if (!result || !result.shoppingListToOrderObject) {
+            return of(null);
+          }
+  
+          this.shoppingListToOrderObject = result.shoppingListToOrderObject;
+          this.localizationData = result.localizationData;
+
   
           // Fetch offer details with error handling
           const offerDetailObservables: Observable<any>[] = [];
@@ -142,6 +165,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
         }
       });
   }
+  
   
 
   getLocalizedLabel(ingredientName: string): string {

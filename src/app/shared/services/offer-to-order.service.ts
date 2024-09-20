@@ -173,6 +173,10 @@ export class OfferToOrderService {
     return this.http.post(`${this.apiUrl}/mapped-offers-ingredients`, mappedOffersIngredientsData);
   }
 
+  getMappedOffersFromShoppinglistId(shoppingListId:string ): Observable<any> {
+    return this.http.get(`${this.apiUrl}/mapped-offers-ingredients/shopping-list/${shoppingListId}`);
+  }
+
   // Fetch Mapped Offers Ingredients by Company ID with pagination
   getMappedOffersIngredientsByCompanyId(companyId: string, page: number = 0, size: number = 10, sort: string = 'shoppingListId,asc'): Observable<MappedOffersIngredient[]> {
     let params = new HttpParams()
@@ -212,6 +216,7 @@ export class OfferToOrderService {
       return this.http.put<ShoppingListTrackModel>(`${this.apiUrl}/shopping-list-track/${id}`, shoppingListTrackData);
     }
     getOrCreateShoppingListTrack(shoppingListId: string): Observable<ShoppingListTrackModel> {
+      console.log("to check list id ", shoppingListId)
       return this.http.get<ShoppingListTrackModel[]>(`${this.apiUrl}/shopping-list-track/shopping-list/${shoppingListId}`)
         .pipe(
           switchMap((tracks: ShoppingListTrackModel[]) => {
@@ -223,6 +228,7 @@ export class OfferToOrderService {
                 priceRequestIds: [],
                 orderIds: []
               };
+              console.log("new list track")
               return this.createShoppingListTrack(newTrack);
             } else {
               // Return the first track found (or adjust based on business logic)
@@ -238,6 +244,7 @@ export class OfferToOrderService {
                 priceRequestIds: [],
                 orderIds: []
               };
+              console.log("new list track")
               return this.createShoppingListTrack(newTrack);
             } else {
               // If other errors, rethrow the error or handle it accordingly
@@ -247,4 +254,10 @@ export class OfferToOrderService {
           })
         );
     }
+    getByShoppinglistId(id: string): Observable<ShoppingListTrackModel[]>
+    {
+      return this.http.get<ShoppingListTrackModel[]>(`${this.apiUrl}/shopping-list-track/shopping-list/${id}`)
+    }
+
+    
 }

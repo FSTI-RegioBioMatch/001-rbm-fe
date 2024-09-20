@@ -10,7 +10,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { NearbuyTestService } from '../shared/services/nearbuy-test.service';
 import { AddressType } from '../shared/types/address.type';
 import { PanelModule } from 'primeng/panel';
@@ -22,6 +22,9 @@ import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import  { CheckboxModule } from 'primeng/checkbox';
 import { OfferToOrderService } from '../shared/services/offer-to-order.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 interface IngredientUnit {
   label: string;
@@ -81,10 +84,12 @@ const ingredientUnits: IngredientUnit[] = [
     SliderModule,
     FormsModule,
     ToastModule,
+    DialogModule,
+    ConfirmDialogModule,
     CheckboxModule
   ],
   standalone: true,
-  providers: [MessageService]
+  providers: [MessageService, ConfirmationService]
 })
 export class ShoppingListDetailsComponent implements OnInit {
   shoppingList: any;
@@ -95,6 +100,10 @@ export class ShoppingListDetailsComponent implements OnInit {
   loading = true;
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
+  canCreateNew: boolean = false;
+
+  offerDataList: any[] = [];
+showOfferSelectionDialog: boolean = false;
   constructor(
     private route: ActivatedRoute,
     private shoppingListService: NewShoppingListService,
@@ -103,7 +112,9 @@ export class ShoppingListDetailsComponent implements OnInit {
     private store: StoreService,
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
-    private offerToOrderService: OfferToOrderService
+    private offerToOrderService: OfferToOrderService,
+    private sanitizer: DomSanitizer,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -133,6 +144,7 @@ export class ShoppingListDetailsComponent implements OnInit {
             this.shoppingList = list;
             this.ingredientNames = Object.keys(this.shoppingList.groupedShoppingList);
             this.loadOffers(); // Now load offers after the shopping list is fetched
+            this.checkIfShoppinglistHasOngoing()
           }
         },
         error: error => {
@@ -151,6 +163,85 @@ export class ShoppingListDetailsComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
       }
     });
+  }
+
+  checkIfShoppinglistHasOngoing() {
+    if (!this.shoppingList || !this.shoppingList.id) {
+      console.error('Shopping list or shopping list ID is undefined.');
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Fehler',
+        detail: 'Einkaufslisten-ID ist nicht verfügbar.',
+      });
+      return;
+    }
+  
+    this.offerToOrderService.getByShoppinglistId(this.shoppingList.id).subscribe({
+      next: (result) => {
+        console.log('result', result);
+        if (result.length > 0) {
+          const shoppingListId = this.shoppingList?.id ?? 'default-id';
+          
+          // Display a warning message
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warnung',
+            detail:
+              'Die Einkaufsliste wurde bereits verarbeitet. Bitte wählen Sie ein Angebot aus.',
+          });
+  
+          // Fetch the mapped offers
+          this.offerToOrderService
+            .getMappedOffersFromShoppinglistId(shoppingListId)
+            .subscribe({
+              next: (data) => {
+                if (Array.isArray(data) && data.length > 0) {
+                  // Store the data and show the selection dialog
+                  this.offerDataList = data;
+                  this.showOfferSelectionDialog = true;
+                } else {
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Fehler',
+                    detail: 'Keine Angebotsdaten gefunden.',
+                  });
+                }
+              },
+              error: (err) => {
+                console.error('Error fetching mapped offers:', err);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Fehler',
+                  detail: 'Fehler beim Laden der Angebotsdaten.',
+                });
+              },
+            });
+  
+          this.canCreateNew = false;
+        } else {
+          this.canCreateNew = true;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching shopping list:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Fehler',
+          detail: 'Fehler beim Laden der Einkaufsliste',
+        });
+        this.loading = false;
+      },
+    });
+  }
+  
+  // Method to navigate to the selected offer
+  navigateToOffer(offerId: string) {
+    this.router.navigate(['/shoppinglist-to-order-details', offerId]);
+    this.showOfferSelectionDialog = false;
+  }
+  
+  navigateToOrder(orderId: string) {
+    this.router.navigate(['/shoppinglist-to-order-details', orderId]);
   }
 
   private loadOffers(): void {
