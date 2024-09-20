@@ -120,46 +120,51 @@ export class NewOfferService {
     const cacheKey = this.generateCacheKey(address);
   
     return this.getOffers(
-      lonMin,  // Correct usage after extracting values
-      latMin,  // Correct usage after extracting values
-      lonMax,  // Correct usage after extracting values
-      latMax,  // Correct usage after extracting values
+      lonMin,
+      latMin,
+      lonMax,
+      latMax,
       cacheKey
     ).pipe(
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((offers: OfferType[]) => {
+        if (offers.length === 0) {
+          return of([]);
+        }
+        
         const observables = offers.map((offer) =>
           forkJoin({
             ontoFoodType: this.http.get<OntofoodType>(offer.links.category),
             offerDetails: this.http.get<any>(offer.links.offer),
           })
         );
-  
+    
         return forkJoin(observables).pipe(
           tap((responses) => {
             this.ontoFoodTypes = [];
-  
+    
             responses.forEach((response, index) => {
               const { ontoFoodType, offerDetails } = response;
-  
+    
               if (!this.ontoFoodTypes.some((type) => type.label === ontoFoodType.label)) {
                 this.ontoFoodTypes.push(ontoFoodType);
               }
-  
+    
               offers[index].ontoFoodType = ontoFoodType;
               offers[index].offerDetails = offerDetails;
             });
-  
+    
             this.displayedFoodTypes = this.ontoFoodTypes.slice(0, 5);
             this.store.setOfferOntoFood(this.displayedFoodTypes);
-  
+    
             this.offers = offers;
           }),
           finalize(() => this.loaded = true),
           map(() => offers)  // Return the fully processed offers
         );
-      })
+      }),
+      finalize(() => this.loaded = true) // Ensure loaded is set to true after stream ends
     );
   }
   
