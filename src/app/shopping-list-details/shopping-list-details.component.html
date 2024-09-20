@@ -79,7 +79,11 @@
 
                     </ng-container>
                 </div>
-                    <button *ngIf="canCreateNew" (click)="createSummary()">print</button>
+                <p *ngIf="hasOrdersRunning"> Es gibt bereits mind. eine laufende bestellung</p>
+                <button *ngIf="hasOrdersRunning" (click)="openshowOfferSelectionDialog()">Zeigen</button>
+                <button (click)="createSummary()">
+                    {{ getButtonLabel() }}
+                  </button>
             </div>
         </div>
     </div>

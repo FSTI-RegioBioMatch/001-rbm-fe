@@ -11,6 +11,7 @@ import { OfferService } from '../shared/services/offer.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-shoppinglist-to-order-details',
@@ -20,7 +21,8 @@ import { ToastModule } from 'primeng/toast';
   imports: [
     CommonModule,
     ButtonModule,
-    ToastModule
+    ToastModule,
+    ProgressSpinnerModule
   ],
   standalone: true
 })
@@ -234,6 +236,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
       this.offerToOrderService.updateShoppingListTrack(track.id, track).subscribe({
         next: () => {
           console.log('ShoppingListTrack successfully updated');
+          this.ngOnInit()
         },
         error: error => {
           console.error('Error updating ShoppingListTrack:', error);

@@ -100,7 +100,7 @@ export class ShoppingListDetailsComponent implements OnInit {
   loading = true;
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
-  canCreateNew: boolean = false;
+  hasOrdersRunning: boolean = false;
 
   offerDataList: any[] = [];
 showOfferSelectionDialog: boolean = false;
@@ -217,9 +217,9 @@ showOfferSelectionDialog: boolean = false;
               },
             });
   
-          this.canCreateNew = false;
+          this.hasOrdersRunning = true;
         } else {
-          this.canCreateNew = true;
+          this.hasOrdersRunning = false;
         }
       },
       error: (err) => {
@@ -402,6 +402,33 @@ showOfferSelectionDialog: boolean = false;
             });
           }
         })
+  }
+  openshowOfferSelectionDialog()
+  {
+    this.showOfferSelectionDialog = true;
+  }
+  getButtonLabel(): string {
+    const hasOffersFound = this.ingredientOfferMapping.some(
+      (item) => item.status === 'OFFERS_FOUND'
+    );
+  
+    const hasSelectedItems = this.ingredientOfferMapping.some(
+      (item) => item.status === 'OFFERS_FOUND' && item.selected
+    );
+  
+    const allNoOffers = this.ingredientOfferMapping.every(
+      (item) => item.status === 'NO_OFFERS'
+    );
+  
+    if (hasOffersFound && hasSelectedItems) {
+      return 'Bestellen';
+    } else if (hasOffersFound && !hasSelectedItems) {
+      return 'Ohne Angebote weiter';
+    } else if (allNoOffers) {
+      return 'Keine Angebote gefunden. Trotzdem bestellen?';
+    }
+  
+    return 'Bestellen'; // Fallback-Text
   }
   
 }

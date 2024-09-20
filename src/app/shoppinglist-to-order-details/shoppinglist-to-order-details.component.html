@@ -1,3 +1,6 @@
+
+<p-progressSpinner *ngIf="loading"></p-progressSpinner>
+
 <div *ngFor="let item of shoppingListToOrderObject?.mappedOffersIngredients" class="ingredient-container">
   <h2>{{ item?.ingredient[0]?.name }}</h2>
   <p><strong>Total Amount:</strong> {{ item?.ingredient[0]?.totalInLargestUnit }}</p>
