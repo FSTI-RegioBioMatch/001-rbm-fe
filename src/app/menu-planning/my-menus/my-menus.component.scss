@@ -63,3 +63,14 @@
 .portion-item:last-child {
   margin-bottom: 0; /* Remove spacing after the last item */
 }
+.alternative-note {
+  color: blue;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.optional-note {
+  color: green;
+  font-weight: bold;
+  margin-right: 5px;
+}

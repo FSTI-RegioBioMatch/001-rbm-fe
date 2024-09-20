@@ -76,16 +76,37 @@
             <td colspan="9">
                 <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
                     <h5>{{ recipe.recipeName }}</h5>
+                    
+                    <!-- Main Ingredient -->
                     <div *ngFor="let ingredient of recipe.ingredients" class="ingredient-item">
-                        <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
-                            getLocalizedLabel(ingredient.name) }}</span>
-                        <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing"
-                            placeholder="Verarbeitung auswählen">
-                        </p-multiSelect>
-                        <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
+                        <div>
+                            <!-- Check if ingredient is optional -->
+                            <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold;">Optional:</span>
+                            <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span>
+                            <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
+                            </p-multiSelect>
+                            <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
+                        </div>
+                  
+                        <!-- Ingredient Alternatives -->
+                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0" class="ingredient-alternatives">
+                            <div *ngFor="let alternative of ingredient.alternatives" class="alternative-item">
+                                <!-- Check if alternative is optional -->
+                                <span style="font-style: italic; color: blue;">
+                                    Alternative: 
+                                    <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold;">Optional:</span>
+                                    {{ alternative.amount }} {{ getUnitLabel(alternative.unit) }} {{ getLocalizedLabel(alternative.name) }}
+                                </span>
+                                <p-multiSelect [options]="processingOptions" [(ngModel)]="alternative.processing" placeholder="Verarbeitung auswählen">
+                                </p-multiSelect>
+                                <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(alternative)"></button>
+                            </div>
+                        </div>
                     </div>
+                    
                     <div *ngIf="recipe.ingredients.length === 0">Keine Zutaten</div>
                 </div>
+                
                 <div *ngIf="recipesWithIngredients[menuPlan.id].length === 0">Keine Rezepte</div>
             </td>
         </tr>
@@ -95,47 +116,50 @@
 <p-dialog [(visible)]="displayShoppingListDialog" [modal]="true" [header]="'Einkaufsliste'" [closable]="true">
     <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
         <ng-template pTemplate="header">
-            <tr>
-                <th>Name</th>
-                <th>Menge (Gesamt)</th>
-                <th>Menge (Einzel)</th>
-                <th>Einheit</th>
-                <th>Verarbeitung</th>
-                <th>Rezept</th>
-                <th>Aktionen</th>
-            </tr>
+          <tr>
+            <th>Name</th>
+            <th>Menge (Gesamt)</th>
+            <th>Menge (Einzel)</th>
+            <th>Einheit</th>
+            <th>Verarbeitung</th>
+            <th>Rezept</th>
+            <th>Aktionen</th>
+          </tr>
         </ng-template>
         <ng-template pTemplate="body" let-groupName>
-            <tr>
-                <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
-            </tr>
-            <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
-                <td></td>
-                <td><strong>{{ item.totalInLargestUnit }}</strong></td>
-                <td>
-                    <div *ngFor="let process of getProcessingTypes(item)">
-                        <input pInputText type="number" [value]="item.processingBreakdown[process]"
-                            (change)="updateAmount(item, process, $event)" />
-                        <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
-                            {{ item.errorMessages[process] }}
-                        </div>
-                    </div>
-                </td>
-                <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
-                <td>
-                    <div *ngFor="let process of getProcessingTypes(item)">
-                        <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
-                    </div>
-                </td>
-                <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
-                <td>
-                    <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
-                        <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
-                    </div>
-                </td>
-            </tr>
+          <tr>
+            <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
+          </tr>
+          <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
+            <td>
+              <span *ngIf="item.isAlternative" class="alternative-note">Alternative</span>
+              <span *ngIf="item.optional" class="optional-note">Optional</span>
+            </td>
+            <td><strong>{{ item.totalInLargestUnit }}</strong></td>
+            <td>
+              <div *ngFor="let process of getProcessingTypes(item)">
+                <input pInputText type="number" [value]="item.processingBreakdown[process]"
+                  (change)="updateAmount(item, process, $event)" />
+                <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
+                  {{ item.errorMessages[process] }}
+                </div>
+              </div>
+            </td>
+            <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
+            <td>
+              <div *ngFor="let process of getProcessingTypes(item)">
+                <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
+              </div>
+            </td>
+            <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
+            <td>
+              <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
+                <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
+              </div>
+            </td>
+          </tr>
         </ng-template>
-    </p-table>
+      </p-table>
     <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"
         [disabled]="isGroupedShoppingListEmpty()"></button>
 </p-dialog>
