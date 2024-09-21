@@ -19,13 +19,6 @@
       border-bottom: 1px solid #e1e1e1;
     }
   
-    .ingredient-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 5px;
-    }
-  
     .p-dropdown {
       width: 150px;
     }
@@ -73,4 +66,104 @@
   color: green;
   font-weight: bold;
   margin-right: 5px;
+}
+
+
+button:hover {
+  border: 1px solid var(--rbm-sea-green);
+}
+
+
+
+.tr-item:hover  {
+  background-color: rgba(239, 237, 237, 0.616);
+}
+
+::ng-deep .p-datatable-table {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  button {
+    border-radius: 5px;
+    border: 1px solid white;
+  }
+}
+
+.table-checkbox {
+  appearance: none; /* Entfernt die Standard-Checkbox-Stile */
+  width: 5px;
+  height: 5px;
+  padding: 7px;
+  background-color: var(--rbm-light);
+  border: 1.5px solid #c0c0c0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+.table-checkbox:hover {
+  cursor: pointer;
+}
+
+.table-checkbox:checked {
+  background-color: var(--rbm-sea-green);
+  border-color: var(--rbm-sea-green);
+  box-shadow: none;
+}
+
+
+.einkaufsliste-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  margin-top: 60px;
+
+  button {
+    border-radius: 5px;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  right {
+    align-items: flex-end;
+    button {
+      width: fit-content;
+    }
+  }
+  left {
+    align-items: flex-start;
+    padding: 0;
+  }
+}
+.grouplist {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.normal-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid var(--rbm-sea-green);
+  border-radius: 8px;
+}
+
+.alternative-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid var(--rbm-sea-green);
+  border-radius: 8px;
 }

@@ -6,11 +6,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { Button  } from 'primeng/button';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [ToastModule, DatePipe, TableModule, CommonModule],
+  imports: [ToastModule, DatePipe, TableModule, CommonModule, Button],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
   providers: [MessageService]
