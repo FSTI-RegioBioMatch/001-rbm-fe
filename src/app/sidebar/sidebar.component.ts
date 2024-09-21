@@ -51,6 +51,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
     ]},
     { path: '/my-recipes', icon: 'pi pi-book', label: 'Meine Rezepte', related: ['/recipe-details/'] },
     { path: '/menu-planning/my-menus', icon: 'pi pi-clipboard', label: 'Meine Menüs',  related: ['/menu-planning'] },
+    { path: '/orders', icon: 'pi pi-shopping-cart', label: 'Bestelllungen',  related: ['/offers-overview', '/pr-pi-overview'] },
     { path: '', icon: 'pi pi-shop', label: 'Marktplatz' },
     { path: '', icon: 'pi pi-objects-column', label: 'Bereich X Y' },
   ];

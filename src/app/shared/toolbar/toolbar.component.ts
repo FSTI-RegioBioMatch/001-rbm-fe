@@ -88,6 +88,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         routerLink: '/menu-planning',
       },
       {
+        label: 'Bestellungen',
+        icon: 'pi pi-fw pi-shopping-cart',
+        routerLink: '/orders',
+      },
+      {
         label: 'Marktplatz',
         icon: 'pi pi-fw pi-shopping-cart',
         routerLink: '',

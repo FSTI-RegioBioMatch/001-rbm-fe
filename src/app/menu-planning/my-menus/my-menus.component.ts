@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NearbuyTestService } from '../../shared/services/nearbuy-test.service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OfferService } from '../../shared/services/offer.service';
+import { CardModule } from 'primeng/card';
 
 interface IngredientUnit {
   label: string;
@@ -115,7 +116,8 @@ interface EnhancedIngredient {
     ToastModule,
     ProgressSpinnerModule,
     DialogModule,
-    MultiSelectModule
+    MultiSelectModule,
+    CardModule
   ],
   providers: [MessageService],
   templateUrl: './my-menus.component.html',
@@ -137,6 +139,8 @@ export class MyMenusComponent implements OnInit {
   displayShoppingListDialog: boolean = false;
   hoveredMenuPlanId: string | null = null;
   processingOptions: { label: string, value: string }[] = [];
+  expandedConfigurationModal: boolean = false;
+  selectedMenuPlanId: string | null = null;
 
   constructor(
     private menuPlanService: NewMenuplanService,
@@ -249,8 +253,11 @@ export class MyMenusComponent implements OnInit {
   toggleExpandMenuPlan(menuPlanId: string): void {
     if (this.expandedMenuPlanId === menuPlanId) {
       this.expandedMenuPlanId = null;
+      this.expandedConfigurationModal = false;
     } else {
       this.expandedMenuPlanId = menuPlanId;
+      this.expandedConfigurationModal = true;
+      this.selectedMenuPlanId = menuPlanId;
     }
   }
 

@@ -1191,6 +1191,9 @@
   border-color: var(--rbm-error);
 }
 /* Fluid Spacing */
+.rbm-padding-p8 {
+  padding: 8px;
+}
 .rbm-padding-4xs {
   padding: 0.33rem;
   padding: var(--rbm-space-4xs);
@@ -1895,7 +1898,7 @@
   margin-left: 3.05rem;
   margin-left: var(--rbm-space-4xl);
 }
-.rbm-marin-none {
+.rbm-margin-none {
   margin: 0;
 }
 .rbm-margin-left-none {
@@ -3509,3 +3512,4 @@ p-floatLabel {
   outline-style: none;
   outline-width: 0;
 }
+
