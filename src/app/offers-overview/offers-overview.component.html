@@ -22,16 +22,18 @@
                     header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{offer.offerDetails?.id}}">
 
                     <div>
-                        <!-- If offerDetails.pricePerUnit exists, show "Make Purchase Intent" button -->
-                        <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Make Purchase Intent"
-                            (onClick)="makePurchaseIntent(offer)">
+                        <p-button
+                          *ngIf="offer?.offerDetails?.pricePerUnit"
+                          label="Kaufabsicht erstellen"
+                          (onClick)="openRequestDialog(offer, 'purchaseIntent')">
                         </p-button>
-
-                        <!-- If offerDetails.pricePerUnit does not exist, show "Make Price Request" button -->
-                        <p-button *ngIf="!offer?.offerDetails?.pricePerUnit" label="Make Price Request"
-                            (onClick)="makePriceRequest(offer)">
+                      
+                        <p-button
+                          *ngIf="!offer?.offerDetails?.pricePerUnit"
+                          label="Preisanfrage erstellen"
+                          (onClick)="openRequestDialog(offer, 'priceRequest')">
                         </p-button>
-                    </div>
+                      </div>
 
                     <p-panel header="Company Details">
                         <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
@@ -130,3 +132,42 @@
         </p-accordion>
     </p-card>
 </div>
+
+
+<p-toast></p-toast>
+
+<p-dialog [(visible)]="showRequestDialog" header="Anfrage Details hinzufügen" [modal]="true" [closable]="false">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="deliveryDate">Lieferdatum</label>
+      <input type="date" id="deliveryDate" [(ngModel)]="requestData.deliveryDate" pInputText />
+    </div>
+    <div class="p-field">
+      <label for="message">Nachricht</label>
+      <textarea id="message" rows="3" [(ngModel)]="requestData.message" pInputTextarea></textarea>
+    </div>
+    <div class="p-field">
+      <label for="totalAmount">Gesamtmenge</label>
+      <input 
+        type="number" 
+        id="totalAmount" 
+        [(ngModel)]="requestData.totalAmount" 
+        [min]="selectedOffer?.offerDetails?.minAmount?.amount || 0" 
+        [max]="selectedOffer?.offerDetails?.totalAmount || 0" 
+        [step]="0.01" 
+        pInputText 
+        (keypress)="preventInvalidChars($event)"
+      />
+      <p>Verfügbare Menge: {{ selectedOffer?.offerDetails?.totalAmount?.amount }} {{ selectedOffer?.offerDetails?.totalAmount?.unit }}</p>
+      <p>Mindestmenge: {{ selectedOffer?.offerDetails?.minAmount?.amount }} {{ selectedOffer?.offerDetails?.minAmount?.unit }}</p>
+    </div>
+    <div class="p-field">
+      <label for="pricePerUnit">Preis pro Einheit:</label>
+      <p>{{ requestData.pricePerUnit !== 'N/A' ? '€' + requestData.pricePerUnit : 'Auf Anfrage' }}</p>
+    </div>
+  </div>
+  <p-footer>
+    <button type="button" pButton icon="pi pi-times" label="Abbrechen" (click)="cancelRequest()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Senden" (click)="submitRequest()"></button>
+  </p-footer>
+</p-dialog>
