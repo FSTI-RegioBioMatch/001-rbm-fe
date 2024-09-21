@@ -3548,3 +3548,15 @@ p-floatLabel {
   }
 }
 
+// Loading Screen 
+.rbm-loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(203, 203, 203, 0.427);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
