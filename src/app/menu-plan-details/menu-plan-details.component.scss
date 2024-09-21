@@ -1,3 +1,10 @@
+::ng-deep .menu-plan-detail {
+  button {
+    border-radius: 7px;
+  }
+}
+
+
 ::ng-deep full-calendar {
     table {
       width: 100% !important;
@@ -6,3 +13,165 @@
       width: 100% !important;
     }
   }
+
+.calendar-box {
+  padding: 14px;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--rbm-willow-green);
+}
+
+  .recipes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .recipe-card {
+    border-radius: 8px;
+    border: 1px solid #ececec;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.128);
+    cursor: pointer;
+  
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.336);
+    }
+  
+    .card-img-top {
+      width: 100%;
+      height: 50vh;
+      object-fit: cover;
+    }
+  
+    .card-body {
+      padding: 10px;
+      background-color: #fff;
+      position: relative;
+  
+      .card-title {
+        margin-bottom: 0;
+      }
+  
+      .action-dropdown {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+  
+        .pi-ellipsis-h {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .recipe-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: calc(33.333% - 20px);
+    position: relative;
+}
+.recipe-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.recipe-card .recipe-info {
+    padding: 10px;
+}
+.recipe-card .recipe-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+.recipe-card .recipe-info .icons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+}
+.recipe-card .recipe-info .icons i {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+
+.portion-cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.portion-card {
+  flex: 1;
+  background-color: #f8f9fa;;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.portion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.portion-card .title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #343a40;
+  margin-bottom: 10px;
+}
+
+.portion-card .amount {
+  font-size: 2em;
+  font-weight: bold;
+  color: var(--rbm-sea-green);
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.info-card {
+  flex: 1;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: center;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.info-card .icon {
+  font-size: 3em;
+  color: var(--rbm-sea-green);
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.info-card p {
+  margin: 0;
+  font-size: 1.1em;
+}

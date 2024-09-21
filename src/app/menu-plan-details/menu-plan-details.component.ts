@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StoreService } from '../shared/store/store.service';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -18,6 +18,7 @@ import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular
 import moment from 'moment';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TabViewModule } from 'primeng/tabview';
 
 @Component({
   selector: 'app-menu-plan-details',
@@ -31,7 +32,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ToastModule,
     ProgressSpinnerModule,
     DialogModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    TabViewModule,
+    RouterLink
   ],
   providers: [MessageService, ConfirmationService],
 })
@@ -64,6 +67,10 @@ export class MenuPlanDetailsComponent implements OnInit {
       .subscribe(() => {
         this.loadMenuPlan();
       });
+  }
+
+  viewRecipe(recipeId: string) {
+    this.router.navigate(['/recipe-details', recipeId]);
   }
 
   private loadMenuPlan(): void {
