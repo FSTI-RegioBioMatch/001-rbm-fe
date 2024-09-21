@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StoreService } from '../shared/store/store.service';
 import { NewMenuplanService } from '../shared/services/new-menuplan.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -34,6 +34,7 @@ import { TabViewModule } from 'primeng/tabview';
     DialogModule,
     ConfirmDialogModule,
     TabViewModule,
+    RouterLink
   ],
   providers: [MessageService, ConfirmationService],
 })
