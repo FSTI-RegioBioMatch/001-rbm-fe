@@ -26,7 +26,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
-interface IngredientUnit {
+export interface IngredientUnit {
   label: string;
   value: string;
 }

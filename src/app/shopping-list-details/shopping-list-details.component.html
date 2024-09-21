@@ -150,9 +150,22 @@
             <strong>Produktname:</strong>
             {{ offerItem.offer?.offerDetails?.productTitle }}
           </p>
-          <p>
-            <strong>Preis pro Einheit:</strong>
+        <p>
+          <strong>Preis pro Einheit:</strong>
+          <span *ngIf="offerItem.offer?.offerDetails?.pricePerUnit !== undefined && offerItem.offer?.offerDetails?.pricePerUnit !== null">
             €{{ offerItem.offer?.offerDetails?.pricePerUnit }}
+          </span>
+          <span *ngIf="offerItem.offer?.offerDetails?.pricePerUnit === undefined || offerItem.offer?.offerDetails?.pricePerUnit === null">
+            Auf Anfrage
+          </span>
+        </p>
+          <p>
+            <strong>Gesamte Menge:</strong>
+            {{ offerItem.offer?.offerDetails?.totalAmount?.amount }} {{ offerItem.offer?.offerDetails?.totalAmount?.unit }}
+          </p>
+          <p>
+            <strong>Mindestmenge:</strong>
+            {{ offerItem.offer?.offerDetails?.minAmount?.amount }} {{ offerItem.offer?.offerDetails?.minAmount?.unit }}
           </p>
         </label>
       </div>

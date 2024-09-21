@@ -2,11 +2,33 @@
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
 <div *ngFor="let item of shoppingListToOrderObject?.mappedOffersIngredients" class="ingredient-container">
-  <h2>{{ item?.ingredient[0]?.name }}</h2>
-  <p><strong>Total Amount:</strong> {{ item?.ingredient[0]?.totalInLargestUnit }}</p>
-  <p><strong>Unit:</strong> {{ item?.ingredient[0]?.unit }}</p>
-  <p><strong>Source Recipes:</strong> {{ item?.ingredient[0]?.sourceRecipes?.join(', ') }}</p>
-  <p><strong>Category:</strong> {{ item?.ingredient[0]?.category }}</p>
+<!-- Display the Ingredient and Total Amounts -->
+  <h2>{{ getLocalizedLabel(getIngredientName(item)) }}</h2>
+  <p>
+    <strong>Gesamtmenge:</strong>
+    <ng-container *ngFor="let totalItem of getTotalAmountsPerUnitArrayFromItem(item); let i = index">
+      {{ totalItem.totalAmount }} {{ getUnitLabel(totalItem.unit) }}<span *ngIf="i < getTotalAmountsPerUnitArrayFromItem(item).length - 1">, </span>
+    </ng-container>
+    .
+  </p>
+
+  <!-- Expandable Processing Breakdown -->
+  <p-accordion>
+    <p-accordionTab header="Aufschlüsselung">
+      <ul>
+        <li *ngFor="let breakdownItem of getProcessingBreakdownFromItem(item)">
+          {{ breakdownItem.label }}: {{ breakdownItem.amount }} {{ getUnitLabel(breakdownItem.unit) }}
+        </li>
+      </ul>
+    </p-accordionTab>
+    <p-accordionTab header="Anfragen und Kaufabsichten">
+      <ul>
+        <li *ngFor="let request of getAggregatedRequestsAndIntents(item)">
+          {{ request.amount }} {{ getUnitLabel(request.unit) }} - {{ request.status }}
+        </li>
+      </ul>
+    </p-accordionTab>
+  </p-accordion>
   
   <!-- Offers Section -->
   <div *ngIf="item?.offers?.length > 0; else noOffers">
@@ -55,6 +77,7 @@
         <p><strong>Delivery Date:</strong> {{ intent?.deliveryDate | date }}</p>
         <p><strong>Total Price:</strong> €{{ intent?.totalPrice }}</p>
         <p><strong>Status:</strong> {{ intent?.status }}</p>
+        <p><Strong>Angefragt:</Strong>{{ intent?.amount.amount }} {{ intent?.amount.unit }}</p>
         <p-button *ngIf="intent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
           (onClick)="makePurchaseIntentOrder(intent)">
         </p-button>
@@ -74,6 +97,7 @@
         <p><strong>Date Created:</strong> {{ request?.dateCreated | date }}</p>
         <p><strong>Delivery Date:</strong> {{ request?.deliveryDate | date }}</p>
         <p><strong>Status:</strong> {{ request?.status }}</p>
+        <p><Strong>Angefragt:</Strong>{{ request?.amount.amount }} {{ request?.amount.unit }}</p>
         <p-button *ngIf="request.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
           (onClick)="makePriceRequestOrder(request)">
         </p-button>

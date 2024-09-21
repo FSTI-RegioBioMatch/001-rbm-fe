@@ -12,6 +12,46 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { AccordionModule } from 'primeng/accordion';
+import { IngredientUnit } from '../shopping-list-details/shopping-list-details.component';
+
+
+const ingredientUnits: IngredientUnit[] = [
+  { label: 'Gramm', value: 'g' },
+  { label: 'Kilogramm', value: 'kg' },
+  { label: 'Liter', value: 'l' },
+  { label: 'Milliliter', value: 'ml' },
+  { label: 'Stück', value: 'pcs' },
+  { label: 'Teelöffel', value: 'tsp' },
+  { label: 'Esslöffel', value: 'tbsp' },
+  { label: 'Tassen', value: 'cup' },
+  { label: 'Pfund', value: 'lb' },
+  { label: 'Unzen', value: 'oz' },
+  { label: 'Pakete', value: 'pkg' },
+  { label: 'Scheiben', value: 'slices' },
+  { label: 'Prisen', value: 'pinch' },
+  { label: 'Dosen', value: 'cans' },
+  { label: 'Flaschen', value: 'bottles' },
+  { label: 'Gläser', value: 'jars' },
+  { label: 'Zentiliter', value: 'cl' },
+  { label: 'Milligramm', value: 'mg' },
+  { label: 'Dekagramm', value: 'dag' },
+  { label: 'Gallonen', value: 'gallon' },
+  { label: 'Pints', value: 'pint' },
+  { label: 'Quarts', value: 'quart' },
+  { label: 'Stangen', value: 'sticks' },
+  { label: 'Blätter', value: 'leaves' },
+  { label: 'Becher', value: 'beaker' },
+  { label: 'Kellen', value: 'ladle' },
+  { label: 'Zweige', value: 'sprigs' },
+  { label: 'Köpfe', value: 'heads' },
+  { label: 'Zehen', value: 'cloves' },
+  { label: 'Schalen', value: 'peels' },
+  { label: 'Hände', value: 'hands' },
+  { label: 'Bündel', value: 'bunches' },
+  { label: 'Blöcke', value: 'blocks' },
+  { label: 'Körner', value: 'grains' },
+];
 
 @Component({
   selector: 'app-shoppinglist-to-order-details',
@@ -22,10 +62,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     CommonModule,
     ButtonModule,
     ToastModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    AccordionModule
   ],
   standalone: true
 })
+
+
 export class ShoppinglistToOrderDetailsComponent implements OnInit {
 
   loading = false;
@@ -628,10 +671,109 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     });
   }
   
-private removePriceRequest(priceRequest: any) {
-  if (this.shoppingListTrack && this.shoppingListTrack.priceRequestIds) { // Check for null or undefined
-    const priceRequestId = priceRequest.links.self.split('/').pop();
-    this.shoppingListTrack.priceRequestIds = this.shoppingListTrack.priceRequestIds.filter(id => id !== priceRequestId);
+  private removePriceRequest(priceRequest: any) {
+    if (this.shoppingListTrack && this.shoppingListTrack.priceRequestIds) { // Check for null or undefined
+      const priceRequestId = priceRequest.links.self.split('/').pop();
+      this.shoppingListTrack.priceRequestIds = this.shoppingListTrack.priceRequestIds.filter(id => id !== priceRequestId);
+    }
   }
-}
+  getIngredientName(item: any): string {
+    return item?.ingredient[0]?.name || 'Unknown Ingredient';
+  }
+
+  getTotalAmountsPerUnitArrayFromItem(item: any): { unit: string; totalAmount: number }[] {
+    const totalAmountsPerUnit: { [unit: string]: number } = {};
+  
+    item?.ingredient?.forEach((ingredient: any) => {
+      const unit = ingredient.unit;
+      if (!totalAmountsPerUnit[unit]) {
+        totalAmountsPerUnit[unit] = 0;
+      }
+      totalAmountsPerUnit[unit] += ingredient.totalAmount;
+    });
+  
+    return Object.keys(totalAmountsPerUnit).map(unit => ({
+      unit,
+      totalAmount: totalAmountsPerUnit[unit],
+    }));
+  }
+  getProcessingBreakdownFromItem(item: any): { label: string; unit: string; amount: number }[] {
+    const combinedProcessingBreakdown: { [label: string]: { [unit: string]: number } } = {};
+  
+    item?.ingredient?.forEach((ingredient: any) => {
+      const processingBreakdown = ingredient.processingBreakdown || {};
+      const unit = ingredient.unit;
+  
+      for (const [label, amount] of Object.entries(processingBreakdown)) {
+        if (!combinedProcessingBreakdown[label]) {
+          combinedProcessingBreakdown[label] = {};
+        }
+        if (!combinedProcessingBreakdown[label][unit]) {
+          combinedProcessingBreakdown[label][unit] = 0;
+        }
+        combinedProcessingBreakdown[label][unit] += amount as number;
+      }
+    });
+  
+    // Convert combinedProcessingBreakdown to an array
+    const breakdownArray: { label: string; unit: string; amount: number }[] = [];
+    for (const [label, unitAmounts] of Object.entries(combinedProcessingBreakdown)) {
+      for (const [unit, amount] of Object.entries(unitAmounts)) {
+        breakdownArray.push({
+          label,
+          unit,
+          amount,
+        });
+      }
+    }
+  
+    return breakdownArray;
+  }
+  getUnitLabel(unitValue: string): string {
+    const unit = ingredientUnits.find(u => u.value === unitValue);
+    return unit ? unit.label : unitValue; // Return the label if found, else return the value itself
+  }
+  getAggregatedRequestsAndIntents(item: any): { amount: number; unit: string; status: string }[] {
+    const aggregation: { [unit: string]: { [status: string]: number } } = {};
+  
+    // Aggregate price requests
+    item?.priceRequests?.forEach((request: any) => {
+      const unit = request.amount.unit;
+      const status = request.status;
+      const amount = request.amount.amount;
+  
+      if (!aggregation[unit]) {
+        aggregation[unit] = {};
+      }
+      if (!aggregation[unit][status]) {
+        aggregation[unit][status] = 0;
+      }
+      aggregation[unit][status] += amount;
+    });
+  
+    // Aggregate purchase intents
+    item?.purchaseIntents?.forEach((intent: any) => {
+      const unit = intent.amount.unit;
+      const status = intent.status;
+      const amount = intent.amount.amount;
+  
+      if (!aggregation[unit]) {
+        aggregation[unit] = {};
+      }
+      if (!aggregation[unit][status]) {
+        aggregation[unit][status] = 0;
+      }
+      aggregation[unit][status] += amount;
+    });
+  
+    // Convert the aggregated data to an array format
+    const aggregatedArray: { amount: number; unit: string; status: string }[] = [];
+    Object.entries(aggregation).forEach(([unit, statusMap]) => {
+      Object.entries(statusMap).forEach(([status, amount]) => {
+        aggregatedArray.push({ amount, unit, status });
+      });
+    });
+  
+    return aggregatedArray;
+  }
 }
