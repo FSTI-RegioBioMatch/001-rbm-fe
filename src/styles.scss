@@ -3302,6 +3302,81 @@ p-table {
   }
 }
 
+.p-datatable-gridlines {
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 8px 16px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    border-bottom: 2px solid #e1e1e1;
+  }
+
+  td {
+    border-bottom: 1px solid #e1e1e1;
+  }
+
+  .p-dropdown {
+    width: 150px;
+  }
+
+  .p-button {
+    margin-left: 10px;
+  }
+}
+.invalid-input {
+  border-color: red;
+}
+
+.tr-item:hover  {
+  /* background-color: rgba(239, 237, 237, 0.616); */
+  background-color: var(--rbm-willow-green-40);
+}
+
+
+.p-datatable-table {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--rbm-willow-green);
+  button {
+    border-radius: 5px;
+    border: 1px solid white;
+  }
+}
+
+.table-checkbox {
+  appearance: none; /* Entfernt die Standard-Checkbox-Stile */
+  width: 5px;
+  height: 5px;
+  padding: 7px;
+  background-color: var(--rbm-light);
+  border: 1.5px solid #c0c0c0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+.table-checkbox:hover {
+  cursor: pointer;
+}
+
+.table-checkbox:checked {
+  background-color: var(--rbm-sea-green);
+  border-color: var(--rbm-sea-green);
+  box-shadow: none;
+}
+
 // p-floatLabel dings
 
 .p-float-label {
