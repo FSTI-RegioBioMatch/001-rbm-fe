@@ -7,8 +7,8 @@
 
 <p-toast></p-toast>
 
-<div *ngIf="loading || loadingRecipes || loadingLocalize" class="text-center">
-  <p>{{ getLoadingMessage() }}</p>
+<p>{{ getLoadingMessage() }}</p>
+<div *ngIf="loading || loadingRecipes || loadingLocalize" class="text-center rbm-loading-screen">
   <p-progressSpinner></p-progressSpinner>
 </div>
 
