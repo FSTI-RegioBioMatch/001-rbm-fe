@@ -776,4 +776,39 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
   
     return aggregatedArray;
   }
+  getAggregatedOrders(item: any): { amount: number; unit: string; status: string; totalPrice: number }[] {
+    const aggregation: { [unit: string]: { [status: string]: { totalPrice: number, amount: number } } } = {};
+  
+    // Aggregate orders
+    item?.orders?.forEach((order: any) => {
+      const unit = order.amount.unit;
+      const status = order.status;
+      const amount = order.amount.amount;
+      const totalPrice = order.totalPrice || 0;
+  
+      if (!aggregation[unit]) {
+        aggregation[unit] = {};
+      }
+      if (!aggregation[unit][status]) {
+        aggregation[unit][status] = { totalPrice: 0, amount: 0 };
+      }
+      aggregation[unit][status].totalPrice += totalPrice;
+      aggregation[unit][status].amount += amount;
+    });
+  
+    // Convert the aggregated data to an array format
+    const aggregatedArray: { amount: number; unit: string; status: string; totalPrice: number }[] = [];
+    Object.entries(aggregation).forEach(([unit, statusMap]) => {
+      Object.entries(statusMap).forEach(([status, values]) => {
+        aggregatedArray.push({ 
+          amount: values.amount, 
+          unit, 
+          status, 
+          totalPrice: values.totalPrice 
+        });
+      });
+    });
+  
+    return aggregatedArray;
+  }
 }
