@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { v4 as uuidv4 } from 'uuid';
 import { NewShoppingListService } from '../shared/services/new-shopping-list.service';
-import { OfferService } from '../shared/services/offer.service';
 import { StoreService } from '../shared/store/store.service';
-import { AccordionModule } from 'primeng/accordion';
+import { Accordion, AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
@@ -22,7 +20,6 @@ import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import  { CheckboxModule } from 'primeng/checkbox';
 import { OfferToOrderService } from '../shared/services/offer-to-order.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
@@ -108,6 +105,7 @@ const ingredientUnits: IngredientUnit[] = [
   providers: [MessageService, ConfirmationService]
 })
 export class ShoppingListDetailsComponent implements OnInit {
+  @ViewChild('accordion') accordion!: Accordion;
   shoppingList: any;
   ingredientNames: string[] = [];
   offers: any[] = [];
@@ -614,6 +612,18 @@ export class ShoppingListDetailsComponent implements OnInit {
       }
     }
   }
+  scrollToAccordionTab(ingredientName: string): void {
+    this.selectedIngredientName = ingredientName;
+    const index = this.ingredientNames.findIndex(name => name === ingredientName);
+    if (index >= 0) {
+      setTimeout(() => {
+        this.accordion.tabs[index].selected = true; // Open the tab
+      }, 100); // Delay for accordion to be available
+    }
+  }
   
-  
+  onAccordionTabChange(event: any, index: number): void {
+    const selectedTab = this.accordion.tabs[index];
+    this.selectedIngredientName = selectedTab.header ?? '';
+  }
 }

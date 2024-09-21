@@ -17,9 +17,13 @@
             <p-card header="{{ shoppingList?.name }}"
                 subheader="Date Created: {{ shoppingList?.createdAt | date:'shortDate' }}">
                 <h3>Ingredients</h3>
-                <p-accordion>
-                    <ng-container *ngFor="let ingredientName of ingredientNames">
-                      <p-accordionTab header="{{ getLocalizedLabel(ingredientName) }}">
+                <p-accordion #accordion>
+                    <ng-container *ngFor="let ingredientName of ingredientNames; let i = index">
+                      <p-accordionTab
+                      header="{{ getLocalizedLabel(ingredientName) }}"
+                      [ngClass]="{ 'highlighted-tab': hasOffersForIngredient(ingredientName) }"
+                      [selected]="ingredientName === selectedIngredientName"
+                      (selectedChange)="onAccordionTabChange($event, i)">
                         <!-- Display Total Amounts per Unit -->
                         <div *ngFor="let item of getTotalAmountsPerUnitArray(ingredientName)">
                           <p>
@@ -51,25 +55,37 @@
             </p-card>
         </div>
 
-            <div class="rbm-flex-column rbm-padding-m">
-                Anzeige
-                <div *ngFor="let item of ingredientOfferMapping">
-                    <ng-container *ngFor="let ingredient of item.ingredient">
-                    <p *ngIf="item.status === 'OFFERS_FOUND' && item.selected" class="valid-offer">{{ ingredient?.name }}</p>
-                    <p *ngIf="item.status === 'OFFERS_FOUND' && !item.selected" class="unselected-offer">{{ ingredient?.name }}</p>
-                    <p *ngIf="item.status === 'NO_OFFERS'" class="invalid-offer">{{ ingredient?.name }}</p>
-                </ng-container>
-                    <ng-container *ngFor="let offerItem of item.offers">
-                        <p *ngIf="offerItem.selected">SELECTED: {{ offerItem.offer.offerDetails.id }}</p>
-
-                    </ng-container>
-                </div>
-                <p *ngIf="hasOrdersRunning"> Es gibt bereits mind. eine laufende bestellung</p>
-                <button *ngIf="hasOrdersRunning" (click)="openshowOfferSelectionDialog()">Zeigen</button>
-                <button (click)="createSummary()">
-                    {{ getButtonLabel() }}
-                  </button>
-            </div>
+        <div class="rbm-flex-column rbm-padding-m">
+          <h3>Anzeige</h3>
+          <div *ngFor="let item of ingredientOfferMapping">
+            <ng-container *ngIf="item.ingredient.length > 0">
+              <p 
+                *ngIf="item.status === 'OFFERS_FOUND' && item.selected" 
+                class="valid-offer"
+                (click)="scrollToAccordionTab(item.ingredient[0]?.name)">
+                {{ getLocalizedLabel(item.ingredient[0]?.name) }}
+              </p>
+              <p 
+                *ngIf="item.status === 'OFFERS_FOUND' && !item.selected" 
+                class="unselected-offer"
+                (click)="scrollToAccordionTab(item.ingredient[0]?.name)">
+                {{ getLocalizedLabel(item.ingredient[0]?.name) }}
+              </p>
+              <p 
+                *ngIf="item.status === 'NO_OFFERS'" 
+                class="invalid-offer">
+                {{ getLocalizedLabel(item.ingredient[0]?.name) }}
+              </p>
+            </ng-container>
+            <ng-container *ngFor="let offerItem of item.offers">
+              <p *ngIf="offerItem.selected">Angebot von: {{ offerItem.offer.company.name }} ({{ offerItem.offer.company.label }})</p>
+            </ng-container>
+          </div>
+          <p *ngIf="hasOrdersRunning"> Es gibt bereits mind. eine laufende bestellung</p>
+          <button *ngIf="hasOrdersRunning" (click)="openshowOfferSelectionDialog()">Zeigen</button>
+          <button (click)="createSummary()">
+              {{ getButtonLabel() }}
+            </button>
         </div>
     </div>
 
