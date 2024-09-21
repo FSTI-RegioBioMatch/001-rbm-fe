@@ -145,7 +145,14 @@
           inputId="{{ 'offer_' + offerItem.offer.offerDetails.id }}"
         ></p-checkbox>
         <label for="{{ 'offer_' + offerItem.offer.offerDetails.id }}">
-          <h5>{{ offerItem.offer?.company?.name }}</h5>
+          <h5>
+            {{ offerItem.offer?.company?.name }}
+            <ng-container [ngSwitch]="getProcessingMatchType(offerItem)">
+              <span *ngSwitchCase="'exact'" class="pi pi-check" style="color: green; margin-left: 5px;" title="Exakte Übereinstimmung"></span>
+              <span *ngSwitchCase="'partial'" class="pi pi-exclamation-triangle" style="color: orange; margin-left: 5px;" title="Teilweise Übereinstimmung"></span>
+              <span *ngSwitchCase="'none'" class="pi pi-times" style="color: red; margin-left: 5px;" title="Keine Übereinstimmung"></span>
+            </ng-container>
+          </h5>
           <p>
             <strong>Produktname:</strong>
             {{ offerItem.offer?.offerDetails?.productTitle }}
@@ -167,6 +174,14 @@
             <strong>Mindestmenge:</strong>
             {{ offerItem.offer?.offerDetails?.minAmount?.amount }} {{ offerItem.offer?.offerDetails?.minAmount?.unit }}
           </p>
+          <div *ngIf="offerItem.offer?.offerDetails?.levelsOfProcessing?.length > 0">
+            <p><strong>Verarbeitungen:</strong></p>
+            <ul>
+              <li *ngFor="let processing of offerItem.offer?.offerDetails?.levelsOfProcessing">
+                {{ getLocalizedLabel(processing.label) }}
+              </li>
+            </ul>
+          </div>
         </label>
       </div>
       <hr />

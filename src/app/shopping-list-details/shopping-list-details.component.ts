@@ -545,4 +545,75 @@ export class ShoppingListDetailsComponent implements OnInit {
       ingredientMapping.selected = ingredientMapping.offers.some(o => o.selected);
     }
   }
+  getProcessingBreakdownLabelsForIngredient(ingredientName: string): string[] {
+    const combinedProcessingBreakdown = this.getCombinedProcessingBreakdown(ingredientName);
+    const processingBreakdownItems = this.getProcessingBreakdown(combinedProcessingBreakdown);
+    let labels: string[] = [];
+  
+    processingBreakdownItems.forEach(item => {
+      // Split labels by comma and trim spaces
+      const splitLabels = item.label.split(',').map(label => label.trim());
+      labels = labels.concat(splitLabels);
+    });
+  
+    // Filter out 'n/a' and empty strings, remove duplicates
+    const filteredLabels = labels
+      .filter(label => label.toLowerCase() !== 'n/a' && label !== '')
+      .map(label => label.toUpperCase().trim());
+  
+    return Array.from(new Set(filteredLabels));
+  }
+  getProcessingMatchType(offerItem: any): 'exact' | 'partial' | 'none' {
+    // Access levelsOfProcessing from offerDetails or fullDetails
+    const levelsOfProcessing = offerItem.offer?.offerDetails?.levelsOfProcessing ||
+                               offerItem.offer?.offerDetails?.fullDetails?.levelsOfProcessing;
+  
+    // Get the processing breakdown labels for the selected ingredient
+    const processingBreakdownLabels = this.getProcessingBreakdownLabelsForIngredient(this.selectedIngredientName);
+  
+    // Normalize the labels for comparison
+    const normalizedIngredientLabels = processingBreakdownLabels.map(label => label.trim().toUpperCase());
+    const offerProcessingLabels = levelsOfProcessing?.map((lp: any) => lp.label.trim().toUpperCase()) || [];
+  
+    const ingredientRequiresProcessing = normalizedIngredientLabels.length > 0;
+    const offerHasProcessing = offerProcessingLabels.length > 0;
+  
+    if (!ingredientRequiresProcessing) {
+      // Ingredient does not require any processing
+      if (!offerHasProcessing) {
+        // Offer is also unprocessed
+        return 'exact';
+      } else {
+        // Offer is processed but ingredient doesn't require processing
+        return 'none';
+      }
+    } else {
+      // Ingredient requires specific processing
+      if (!offerHasProcessing) {
+        // Ingredient requires processing but offer is unprocessed
+        return 'none';
+      } else {
+        // Both have processing levels, proceed with matching logic
+        const processingBreakdownSet = new Set(normalizedIngredientLabels);
+        const offerProcessingSet = new Set(offerProcessingLabels);
+  
+        const isExactMatch = processingBreakdownSet.size === offerProcessingSet.size &&
+                             [...processingBreakdownSet].every(label => offerProcessingSet.has(label));
+  
+        if (isExactMatch) {
+          return 'exact';
+        }
+  
+        const hasPartialMatch = [...processingBreakdownSet].some(label => offerProcessingSet.has(label));
+  
+        if (hasPartialMatch) {
+          return 'partial';
+        }
+  
+        return 'none';
+      }
+    }
+  }
+  
+  
 }

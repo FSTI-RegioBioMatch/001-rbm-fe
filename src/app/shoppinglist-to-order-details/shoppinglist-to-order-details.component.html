@@ -40,6 +40,7 @@
       <p><strong>Total Amount:</strong> {{ offerItem?.offer?.product?.totalAmount }} {{ offerItem?.offer?.product?.unit }}</p>
       <p><strong>Price per Unit:</strong> €{{ offerItem?.offer?.offerDetails?.pricePerUnit }}</p>
       <p><strong>Min Amount:</strong> {{ offerItem?.offer?.offerDetails?.minAmount?.amount }} {{ offerItem?.offer?.offerDetails?.minAmount?.unit }}</p>
+      
       <p><strong>Graduated Prices:</strong></p>
       <ul>
         <li *ngFor="let price of offerItem?.offer?.offerDetails?.graduatedPrices">
