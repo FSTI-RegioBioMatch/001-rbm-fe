@@ -19,50 +19,35 @@
                 <h3>Ingredients</h3>
                 <p-accordion>
                     <ng-container *ngFor="let ingredientName of ingredientNames">
-                        <p-accordionTab header="{{ getLocalizedLabel(ingredientName) }}">
-                            <ng-container *ngFor="let ingredient of shoppingList?.groupedShoppingList[ingredientName]">
-                                <p-panel header="{{ getLocalizedLabel(ingredient?.name) }}">
-                                    <p><strong>Total Amount:</strong> {{ ingredient?.totalAmount }} {{
-                                        getUnitLabel(ingredient?.unit) }}</p>
-                                    <p><strong>Category:</strong> {{ ingredient?.category }}</p>
-                                    <p><strong>Convertible:</strong> {{ ingredient?.convertible ? 'Yes' : 'No' }}</p>
-                                    <p><strong>Source Recipes:</strong> {{ ingredient?.sourceRecipes?.join(', ') }}</p>
-                                    <p><strong>Processing:</strong></p>
-                                    <ul>
-                                        <li
-                                            *ngFor="let processing of getProcessingBreakdown(ingredient?.processingBreakdown)">
-                                            {{ processing.label }}: {{ processing.amount }}
-                                        </li>
-                                    </ul>
-                                    <!-- Matching Offers Section -->
-                                    <p-accordion>
-                                        <p-accordionTab header="Matching Offers">
-                                            <ng-container *ngFor="let item of ingredientOfferMapping">
-                                                <ng-container *ngFor="let offerItem of item.offers">
-                                                    <ng-container *ngIf="matchOfferToIngredient(ingredient.name, offerItem.offer)">
-                                                    <h5>{{ offerItem.offer?.company?.name }}</h5>
-                                                    <p><strong>Product Title:</strong> {{
-                                                        offerItem?.offer?.offerDetails?.productTitle }}</p>
-                                                    <p><strong>Price per Unit:</strong> €{{
-                                                        offerItem?.offer?.offerDetails?.pricePerUnit }}</p>
-                                                    <p>{{ offerItem?.offer?.offerDetails?.id }}</p>
-                                                 
-                                                    <p-checkbox 
-                                                    [(ngModel)]="offerItem.selected" 
-                                                    [binary]="true" 
-                                                    inputId="binary" 
-                                                    (onChange)="toggleOfferSelection(item.ingredient, offerItem.offer.offerDetails.id, $event.checked)">
-                                                  </p-checkbox>
-                                                    </ng-container>
-                                                </ng-container>
-                                            </ng-container>
-                                        </p-accordionTab>
-                                    </p-accordion>
-                                </p-panel>
-                            </ng-container>
-                        </p-accordionTab>
+                      <p-accordionTab header="{{ getLocalizedLabel(ingredientName) }}">
+                        <!-- Display Total Amounts per Unit -->
+                        <div *ngFor="let item of getTotalAmountsPerUnitArray(ingredientName)">
+                          <p>
+                            <strong>Total Amount:</strong>
+                            {{ item.totalAmount }} {{ getUnitLabel(item.unit) }}
+                          </p>
+                        </div>
+                  
+                        <!-- Display Combined Processing Breakdowns -->
+                        <p><strong>Processing Breakdown:</strong></p>
+                        <ul>
+                          <li *ngFor="let item of getProcessingBreakdown(getCombinedProcessingBreakdown(ingredientName))">
+                            {{ item.label }}: {{ item.amount }} {{ getUnitLabel(item.unit) }}
+                          </li>
+                        </ul>
+                  
+                        <!-- Button to Open Offers Dialog -->
+                        <button
+                        pButton
+                        label="Select Offers"
+                        (click)="openOfferSelectionDialog(ingredientName)"
+                        [disabled]="!hasOffersForIngredient(ingredientName)"
+                      >
+                      </button>
+                      </p-accordionTab>
                     </ng-container>
-                </p-accordion>
+                  </p-accordion>
+                  
             </p-card>
         </div>
 
@@ -93,7 +78,7 @@
 
 <p-dialog
   header="Angebot auswählen"
-  [(visible)]="showOfferSelectionDialog"
+  [(visible)]="showRunningOrdersDialog"
   modal="modal"
   [closable]="false"
 >
@@ -111,7 +96,76 @@
       type="button"
       pButton
       label="Schließen"
-      (click)="showOfferSelectionDialog = false"
+      (click)="showRunningOrdersDialog = false"
+    ></button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog
+  header="Angebote auswählen"
+  [(visible)]="showOfferSelectionDialog"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '50vw' }"
+>
+  <!-- Display the Ingredient and Total Amount -->
+  <p>
+    <strong>Sie suchen nach:</strong> {{ getLocalizedLabel(selectedIngredientName) }},
+    insgesamt
+    <ng-container *ngFor="let item of getTotalAmountsPerUnitArray(selectedIngredientName); let i = index">
+      {{ item.totalAmount }} {{ getUnitLabel(item.unit) }}<span *ngIf="i < getTotalAmountsPerUnitArray(selectedIngredientName).length - 1">, </span>
+    </ng-container>
+    .
+  </p>
+
+  <!-- Expandable Processing Breakdown -->
+  <p-accordion>
+    <p-accordionTab header="Aufschlüsselung">
+      <ul>
+        <li
+          *ngFor="let item of getProcessingBreakdown(getCombinedProcessingBreakdown(selectedIngredientName))"
+        >
+          {{ item.label }}: {{ item.amount }} {{ getUnitLabel(item.unit) }}
+        </li>
+      </ul>
+    </p-accordionTab>
+  </p-accordion>
+
+  <!-- Existing Offer Selection Content -->
+  <p *ngIf="selectedIngredientOffers.length > 0">Verfügbare Angebote:</p>
+  <p *ngIf="selectedIngredientOffers.length === 0">Keine Angebote für diese Zutat verfügbar.</p>
+
+  <div *ngIf="selectedIngredientOffers.length > 0">
+    <div *ngFor="let offerItem of selectedIngredientOffers">
+      <div class="p-field-checkbox">
+        <p-checkbox
+          [(ngModel)]="offerItem.selected"
+          (ngModelChange)="onOfferSelectionChange()"
+          [binary]="true"
+          inputId="{{ 'offer_' + offerItem.offer.offerDetails.id }}"
+        ></p-checkbox>
+        <label for="{{ 'offer_' + offerItem.offer.offerDetails.id }}">
+          <h5>{{ offerItem.offer?.company?.name }}</h5>
+          <p>
+            <strong>Produktname:</strong>
+            {{ offerItem.offer?.offerDetails?.productTitle }}
+          </p>
+          <p>
+            <strong>Preis pro Einheit:</strong>
+            €{{ offerItem.offer?.offerDetails?.pricePerUnit }}
+          </p>
+        </label>
+      </div>
+      <hr />
+    </div>
+  </div>
+
+  <p-footer>
+    <button
+      type="button"
+      pButton
+      label="Schließen"
+      (click)="closeOfferSelectionDialog()"
     ></button>
   </p-footer>
 </p-dialog>

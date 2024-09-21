@@ -30,7 +30,23 @@ interface IngredientUnit {
   label: string;
   value: string;
 }
+interface Ingredient {
+  unit: string;
+  totalAmount: number;
+  processingBreakdown: { [label: string]: number };
+}
 
+interface TotalAmountsPerUnit {
+  [unit: string]: number;
+}
+
+interface ProcessingBreakdownPerUnit {
+  [unit: string]: number;
+}
+
+interface CombinedProcessingBreakdown {
+  [label: string]: ProcessingBreakdownPerUnit;
+}
 // Define the units array
 const ingredientUnits: IngredientUnit[] = [
   { label: 'Gramm', value: 'g' },
@@ -103,7 +119,11 @@ export class ShoppingListDetailsComponent implements OnInit {
   hasOrdersRunning: boolean = false;
 
   offerDataList: any[] = [];
-showOfferSelectionDialog: boolean = false;
+
+  showRunningOrdersDialog: boolean = false;
+  showOfferSelectionDialog: boolean = false;
+  selectedIngredientName: string = '';
+  selectedIngredientOffers: { offer: any; selected: boolean }[] = [];
   constructor(
     private route: ActivatedRoute,
     private shoppingListService: NewShoppingListService,
@@ -113,8 +133,6 @@ showOfferSelectionDialog: boolean = false;
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
     private offerToOrderService: OfferToOrderService,
-    private sanitizer: DomSanitizer,
-    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -145,6 +163,8 @@ showOfferSelectionDialog: boolean = false;
             this.ingredientNames = Object.keys(this.shoppingList.groupedShoppingList);
             this.loadOffers(); // Now load offers after the shopping list is fetched
             this.checkIfShoppinglistHasOngoing()
+
+            console.log("shoppinglist", this.shoppingList)
           }
         },
         error: error => {
@@ -198,7 +218,7 @@ showOfferSelectionDialog: boolean = false;
                 if (Array.isArray(data) && data.length > 0) {
                   // Store the data and show the selection dialog
                   this.offerDataList = data;
-                  this.showOfferSelectionDialog = true;
+                  this.showRunningOrdersDialog = true;
                 } else {
                   this.messageService.add({
                     severity: 'error',
@@ -237,7 +257,7 @@ showOfferSelectionDialog: boolean = false;
   // Method to navigate to the selected offer
   navigateToOffer(offerId: string) {
     this.router.navigate(['/shoppinglist-to-order-details', offerId]);
-    this.showOfferSelectionDialog = false;
+    this.showRunningOrdersDialog = false;
   }
   
   navigateToOrder(orderId: string) {
@@ -323,11 +343,20 @@ showOfferSelectionDialog: boolean = false;
   matchOfferToIngredient(ingredientName: string, offer: any): boolean {
     return ingredientName.toLowerCase() === offer?.ontoFoodType?.label?.toLowerCase();
   }
-  getProcessingBreakdown(processingBreakdown: { [key: string]: number }): { label: string, amount: number }[] {
-    return Object.keys(processingBreakdown || {}).map(key => ({
-        label: key,
-        amount: processingBreakdown[key]
-    }));
+  getProcessingBreakdown(combinedProcessingBreakdown: CombinedProcessingBreakdown): { label: string, unit: string, amount: number }[] {
+    const breakdownArray: { label: string, unit: string, amount: number }[] = [];
+  
+    for (const [label, unitAmounts] of Object.entries(combinedProcessingBreakdown)) {
+      for (const [unit, amount] of Object.entries(unitAmounts)) {
+        breakdownArray.push({
+          label,
+          unit,
+          amount
+        });
+      }
+    }
+  
+    return breakdownArray;
   }
   clearCacheAndReload(): void {
     this.loading = true
@@ -350,6 +379,7 @@ showOfferSelectionDialog: boolean = false;
   
       return { ingredient, offers: matchedOffers, status, selected };
     });
+    console.log("gemappte liste: ", this.ingredientOfferMapping)
   }
 
 
@@ -405,7 +435,7 @@ showOfferSelectionDialog: boolean = false;
   }
   openshowOfferSelectionDialog()
   {
-    this.showOfferSelectionDialog = true;
+    this.showRunningOrdersDialog = true;
   }
   getButtonLabel(): string {
     const hasOffersFound = this.ingredientOfferMapping.some(
@@ -430,5 +460,89 @@ showOfferSelectionDialog: boolean = false;
   
     return 'Bestellen'; // Fallback-Text
   }
+  getTotalAmountsPerUnit(ingredientName: string): TotalAmountsPerUnit {
+    const ingredients = this.shoppingList?.groupedShoppingList[ingredientName] as Ingredient[];
+    if (!ingredients) return {};
   
+    const totalAmountsPerUnit: TotalAmountsPerUnit = {};
+    ingredients.forEach((ingredient: Ingredient) => {
+      const unit = ingredient.unit;
+      if (!totalAmountsPerUnit[unit]) {
+        totalAmountsPerUnit[unit] = 0;
+      }
+      totalAmountsPerUnit[unit] += ingredient.totalAmount;
+    });
+  
+    return totalAmountsPerUnit; // e.g., { 'kg': 234, 'pcs': 300 }
+  }
+  
+  // Method to get total amounts per unit as an array for easier iteration in the template
+  getTotalAmountsPerUnitArray(ingredientName: string): { unit: string; totalAmount: number }[] {
+    const totalAmountsPerUnit = this.getTotalAmountsPerUnit(ingredientName);
+    return Object.keys(totalAmountsPerUnit).map(unit => {
+      return { unit, totalAmount: totalAmountsPerUnit[unit] };
+    });
+  }
+  
+  // Method to get combined processing breakdowns for an ingredient
+  getCombinedProcessingBreakdown(ingredientName: string): CombinedProcessingBreakdown {
+    const ingredients = this.shoppingList?.groupedShoppingList[ingredientName] as Ingredient[];
+    if (!ingredients) return {};
+  
+    const combinedProcessingBreakdown: CombinedProcessingBreakdown = {};
+  
+    ingredients.forEach((ingredient: Ingredient) => {
+      const processingBreakdown = ingredient.processingBreakdown;
+      const unit = ingredient.unit;
+  
+      for (const [label, amount] of Object.entries(processingBreakdown)) {
+        if (!combinedProcessingBreakdown[label]) {
+          combinedProcessingBreakdown[label] = {};
+        }
+        if (!combinedProcessingBreakdown[label][unit]) {
+          combinedProcessingBreakdown[label][unit] = 0;
+        }
+        combinedProcessingBreakdown[label][unit] += amount;
+      }
+    });
+  
+    return combinedProcessingBreakdown; // e.g., { 'CUT,PEELED': { 'kg': 150, 'l': 100 }, 'n/a': { 'kg': 84 } }
+  }
+
+  hasOffersForIngredient(ingredientName: string): boolean {
+    const mapping = this.ingredientOfferMapping.find(mapping =>
+      mapping.ingredient.some((ing: any) => ing.name === ingredientName)
+    );
+    return (mapping?.offers?.length ?? 0) > 0;
+  }
+
+  openOfferSelectionDialog(ingredientName: string): void {
+    this.selectedIngredientName = ingredientName;
+  
+    // Adjust the find method to compare the ingredient names correctly
+    const ingredientMapping = this.ingredientOfferMapping.find(mapping =>
+      mapping.ingredient.some((ing: any) => ing.name === ingredientName)
+    );
+  
+    if (ingredientMapping) {
+      this.selectedIngredientOffers = ingredientMapping.offers;
+      this.showOfferSelectionDialog = true;
+    } else {
+      // Handle case where no mapping is found
+      this.selectedIngredientOffers = [];
+      this.showOfferSelectionDialog = true;
+    }
+  }
+  closeOfferSelectionDialog(): void {
+    this.showOfferSelectionDialog = false;
+  }
+  onOfferSelectionChange(): void {
+    const ingredientMapping = this.ingredientOfferMapping.find(mapping =>
+      mapping.ingredient.some((ing: any) => ing.name === this.selectedIngredientName)
+    );
+  
+    if (ingredientMapping) {
+      ingredientMapping.selected = ingredientMapping.offers.some(o => o.selected);
+    }
+  }
 }
