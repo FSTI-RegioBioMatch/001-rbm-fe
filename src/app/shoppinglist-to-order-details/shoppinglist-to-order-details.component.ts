@@ -14,6 +14,8 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AccordionModule } from 'primeng/accordion';
 import { IngredientUnit } from '../shopping-list-details/shopping-list-details.component';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 const ingredientUnits: IngredientUnit[] = [
@@ -63,7 +65,10 @@ const ingredientUnits: IngredientUnit[] = [
     ButtonModule,
     ToastModule,
     ProgressSpinnerModule,
-    AccordionModule
+    DialogModule,
+    AccordionModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   standalone: true
 })
@@ -76,6 +81,17 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
   localizationData: { displayLabel: string; value: string }[] = [];
   shoppingListTrack: ShoppingListTrackModel | null = null; // Track model
   loadingOrders = false;
+
+  showRequestDialog: boolean = false;
+  requestType: 'priceRequest' | 'purchaseIntent' | undefined;
+  selectedOffer: any = null;
+  requestData: any = {
+    deliveryDate: '',
+    message: '',
+    totalAmount: '',
+    pricePerUnit: '',
+    unit: '',
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -218,14 +234,52 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     return localizedItem ? localizedItem.displayLabel : ingredientName;
   }
 
-  makePriceRequest(offer: any): void {
-    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+  openRequestDialog(offer: any, requestType: 'priceRequest' | 'purchaseIntent'): void {
+    this.selectedOffer = offer;
+    this.requestType = requestType;
+    this.requestData.message = `Anfrage für ${this.getLocalizedLabel(offer.ontoFoodType.label)}`; // Default message in German
+    this.requestData.totalAmount = offer.offerDetails.minAmount?.amount || offer.offerDetails.totalAmount; // Set default amount to minimum or total available
+    this.requestData.pricePerUnit = offer.offerDetails.pricePerUnit || 'N/A';
+    this.requestData.unit = offer.offerDetails.unit;
+    this.showRequestDialog = true;
+  }
+
+  cancelRequest(): void {
+    this.showRequestDialog = false;
+  }
+
+  submitRequest(): void {
+    const enteredAmount = parseFloat(this.requestData.totalAmount);
+    
+    // Validate the entered amount
+  
+    // Check if delivery date is entered, add more validation
+    if (!this.requestData.deliveryDate) {
+      this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Bitte ein Lieferdatum angeben.' });
+      return;
+    }
+  
+    // Submit the request based on the request type
+    if (this.requestType === 'priceRequest') {
+      this.makePriceRequest(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
+    } else if (this.requestType === 'purchaseIntent') {
+      this.makePurchaseIntent(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
+    }
+  
+    // Close the dialog
+    this.showRequestDialog = false;
+  }
+
+  makePriceRequest(offer: any, deliveryDate: string, message: string, totalAmount: number): void {
     const priceRequest = {
       offerRef: offer.links.offer,
-      message: `Requesting price for ${productName}`,
-      deliveryDate: '2024-12-12',
+      message: message,
+      deliveryDate: deliveryDate,
       containers: [],
-      totalAmount: offer.offerDetails.totalAmount
+      totalAmount: {
+        amount: totalAmount, // Use user-entered amount
+        unit: offer.product.unit // Use the unit from offer details
+      }
     };
 
     this.orderService.createPriceRequest(priceRequest).subscribe({
@@ -246,14 +300,16 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     });
   }
 
-  makePurchaseIntent(offer: any): void {
-    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+  makePurchaseIntent(offer: any, deliveryDate: string, message: string, totalAmount: number): void {
     const purchaseIntent = {
       offerRef: offer.offerDetails.id,
-      deliveryDate: '2024-12-12',
-      message: `Purchase intent for ${productName}`,
+      deliveryDate: deliveryDate,
+      message: message,
       containers: [],
-      totalAmount: offer.offerDetails.totalAmount
+      totalAmount: {
+        amount: totalAmount, // Use user-entered amount
+        unit: offer.product.unit // Use the unit from offer details
+      }
     };
 
     this.orderService.createPurchaseIntent(purchaseIntent).subscribe({
@@ -810,5 +866,12 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     });
   
     return aggregatedArray;
+  }
+
+  preventInvalidChars(event: KeyboardEvent): void {
+    // Prevent entering non-digit characters, except for '.', ',' and control keys
+    if (!/[0-9.,]/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      event.preventDefault();
+    }
   }
 }

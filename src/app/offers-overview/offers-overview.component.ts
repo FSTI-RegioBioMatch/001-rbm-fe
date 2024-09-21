@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 import { OrderService } from '../shared/services/order.service';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-offers-overview',
@@ -32,6 +33,7 @@ import { ToastModule } from 'primeng/toast';
     CardModule,
     SliderModule,
     ToastModule,
+    DialogModule
   ],
   providers: [MessageService],
   templateUrl: './offers-overview.component.html',
@@ -42,7 +44,16 @@ export class OffersOverviewComponent implements OnInit {
   loading = false;
   offers: any[] = []; // Declare offers to store the list of offers
   range: number = 50; // Example range for filtering offers by distance
-
+  showRequestDialog: boolean = false;
+  requestType: 'priceRequest' | 'purchaseIntent' | undefined;
+  selectedOffer: any = null;
+  requestData: any = {
+    deliveryDate: '',
+    message: '',
+    totalAmount: '',
+    pricePerUnit: '',
+    unit: '',
+  };
   constructor(
     private offerService: NewOfferService,
     private store: StoreService,
@@ -152,20 +163,64 @@ export class OffersOverviewComponent implements OnInit {
   }
 
   // Method to make a price request for a specific offer
-  makePriceRequest(offer: any): void {
-    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+  openRequestDialog(offer: any, requestType: 'priceRequest' | 'purchaseIntent'): void {
+    this.selectedOffer = offer;
+    this.requestType = requestType;
+    this.requestData.message = `Anfrage für ${this.getLocalizedLabel(offer.ontoFoodType.label)}`; // Default message in German
+    this.requestData.totalAmount = offer.offerDetails.minAmount?.amount || offer.offerDetails.totalAmount; // Set default amount to minimum or total available
+    this.requestData.pricePerUnit = offer.offerDetails.pricePerUnit || 'N/A';
+    this.requestData.unit = offer.offerDetails.unit;
+    this.showRequestDialog = true;
+  }
+
+  cancelRequest(): void {
+    this.showRequestDialog = false;
+  }
+
+  submitRequest(): void {
+    const enteredAmount = parseFloat(this.requestData.totalAmount);
+    
+    // Validate the entered amount
+  
+    // Check if delivery date is entered, add more validation
+    if (!this.requestData.deliveryDate) {
+      this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Bitte ein Lieferdatum angeben.' });
+      return;
+    }
+  
+    // Submit the request based on the request type
+    if (this.requestType === 'priceRequest') {
+      this.makePriceRequest(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
+    } else if (this.requestType === 'purchaseIntent') {
+      this.makePurchaseIntent(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
+    }
+  
+    // Close the dialog
+    this.showRequestDialog = false;
+  }
+
+  makePriceRequest(offer: any, deliveryDate: string, message: string, totalAmount: number): void {
     const priceRequest = {
-      offerRef: offer.links.offer, // Reference to the offer
-      message: `Requesting price for ${productName}`,
-      deliveryDate: '2024-12-12', // Example delivery date, can be dynamic
-      containers: [], // Add relevant containers if needed
-      totalAmount: offer.offerDetails.totalAmount, // Use total amount from the offer
+      offerRef: offer.links.offer,
+      message: message,
+      deliveryDate: deliveryDate,
+      containers: [],
+      totalAmount: {
+        amount: totalAmount, // Use user-entered amount
+        unit: offer.product.unit // Use the unit from offer details
+      }
     };
 
     this.orderService.createPriceRequest(priceRequest).subscribe({
       next: response => {
         this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Preisanfrage erfolgreich gesendet' });
-        console.log('Price Request successfully created:', response);
+        // const priceRequestId = response.links.self.split('/').pop();
+        // if (priceRequestId && this.shoppingListTrack) {
+        //   if (!this.shoppingListTrack.priceRequestIds.includes(priceRequestId)) {
+        //     this.shoppingListTrack.priceRequestIds.push(priceRequestId);
+        //     this.updateShoppingListTrack(this.shoppingListTrack);
+        //   }
+        // }
       },
       error: error => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Preisanfrage konnte nicht gesendet werden' });
@@ -174,26 +229,39 @@ export class OffersOverviewComponent implements OnInit {
     });
   }
 
-  // Method to make a purchase intent for a specific offer
-  makePurchaseIntent(offer: any): void {
-    const productName = this.getLocalizedLabel(offer.ontoFoodType.label);
+  makePurchaseIntent(offer: any, deliveryDate: string, message: string, totalAmount: number): void {
     const purchaseIntent = {
-      offerRef: offer.offerDetails.id, // Reference to the offer
-      deliveryDate: '2024-12-12', // Example delivery date, can be dynamic
-      message: `Purchase intent for ${productName}`,
-      containers: [], // Add relevant containers if needed
-      totalAmount: offer.offerDetails.totalAmount, // Use total amount from the offer
+      offerRef: offer.offerDetails.id,
+      deliveryDate: deliveryDate,
+      message: message,
+      containers: [],
+      totalAmount: {
+        amount: totalAmount, // Use user-entered amount
+        unit: offer.product.unit // Use the unit from offer details
+      }
     };
 
     this.orderService.createPurchaseIntent(purchaseIntent).subscribe({
       next: response => {
         this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Kaufabsicht erfolgreich gesendet' });
-        console.log('Purchase Intent successfully created:', response);
+        // const purchaseIntentId = response.links.self.split('/').pop();
+        // if (purchaseIntentId && this.shoppingListTrack) {
+        //   if (!this.shoppingListTrack.purchaseIntedIds.includes(purchaseIntentId)) {
+        //     this.shoppingListTrack.purchaseIntedIds.push(purchaseIntentId);
+        //     this.updateShoppingListTrack(this.shoppingListTrack);
+        //   }
+        // }
       },
       error: error => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht konnte nicht gesendet werden' });
         console.error('Error creating Purchase Intent:', error);
       }
     });
+  }
+  preventInvalidChars(event: KeyboardEvent): void {
+    // Prevent entering non-digit characters, except for '.', ',' and control keys
+    if (!/[0-9.,]/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+      event.preventDefault();
+    }
   }
 }
