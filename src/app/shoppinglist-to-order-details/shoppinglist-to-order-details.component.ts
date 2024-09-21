@@ -81,7 +81,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
   localizationData: { displayLabel: string; value: string }[] = [];
   shoppingListTrack: ShoppingListTrackModel | null = null; // Track model
   loadingOrders = false;
-
+  ingredientStatusMap: { [ingredientId: string]: { mainStatus: string, subStatus: string } } = {};
   showRequestDialog: boolean = false;
   requestType: 'priceRequest' | 'purchaseIntent' | undefined;
   selectedOffer: any = null;
@@ -520,6 +520,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
       console.log('No price requests, purchase intents, or orders to map.');
     }
     console.log(this.shoppingListToOrderObject)
+    this.evaluateIngredientStatuses()
   }
   
   
@@ -873,5 +874,93 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     if (!/[0-9.,]/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       event.preventDefault();
     }
+  }
+  private evaluateIngredientStatuses(): void {
+    this.shoppingListToOrderObject.mappedOffersIngredients.forEach((ingredient: any, index: number) => {
+      let ingredientId = ingredient.id || ingredient.ingredient?.[0]?.name || `generated-id-${index}`;
+  
+      if (!ingredient.id) {
+        console.warn(`Ingredient missing ID. Generating unique ID for ingredient: ${ingredient.ingredient?.[0]?.name}`, ingredient);
+        ingredient.id = ingredientId;
+      }
+  
+      // Aggregate data from all offers
+      let aggregatedOrders: any[] = [];
+      let aggregatedIntents: any[] = [];
+      let aggregatedRequests: any[] = [];
+  
+      if (ingredient.offers && ingredient.offers.length > 0) {
+        ingredient.offers.forEach((offer: any) => {
+          if (offer.orders) {
+            aggregatedOrders = [...aggregatedOrders, ...offer.orders];
+          }
+          if (offer.purchaseIntents) {
+            aggregatedIntents = [...aggregatedIntents, ...offer.purchaseIntents];
+          }
+          if (offer.priceRequests) {
+            aggregatedRequests = [...aggregatedRequests, ...offer.priceRequests];
+          }
+        });
+      }
+  
+      // Initialize with default main and sub-status
+      let mainStatus = 'OFFERS_AVAILABLE';
+      let subStatus = 'OFFERS_FOUND';
+  
+      // 1. Check aggregated orders first
+      if (aggregatedOrders.length > 0) {
+        const pendingOrders = aggregatedOrders.filter((order: any) => order.status === 'PENDING');
+        const completedOrders = aggregatedOrders.filter((order: any) => order.status === 'INVOICE_ADDED' || order.status === 'COMPLETED');
+  
+        if (completedOrders.length > 0) {
+          mainStatus = 'ORDER_PLACED';
+          subStatus = completedOrders.length > 1 ? 'MULTIPLE_ORDERS_COMPLETED' : 'SINGLE_ORDER_COMPLETED';
+        } else if (pendingOrders.length > 0) {
+          mainStatus = 'ORDER_PLACED';
+          subStatus = pendingOrders.length > 1 ? 'MULTIPLE_ORDERS_PENDING' : 'SINGLE_ORDER_PENDING';
+        }
+      }
+      // 2. Check aggregated purchase intents and price requests
+      else if (aggregatedIntents.length > 0 || aggregatedRequests.length > 0) {
+        mainStatus = 'REQUESTS_OR_INTENTS';
+  
+        const pendingIntents = aggregatedIntents.filter((intent: any) => intent.status === 'PENDING');
+        const pendingRequests = aggregatedRequests.filter((pr: any) => pr.status === 'PENDING');
+  
+        const totalPending = pendingIntents.length + pendingRequests.length;
+  
+        if (totalPending > 1) {
+          subStatus = 'MULTIPLE_REQUESTS_OR_INTENTS_PENDING';
+        } else if (totalPending === 1) {
+          subStatus = 'SINGLE_REQUEST_OR_INTENT_PENDING';
+        } else {
+          subStatus = 'ALL_REQUESTS_OR_INTENTS_COMPLETED';
+        }
+      }
+      // 3. Check if there are any offers available
+      else if (ingredient.offers && ingredient.offers.length > 0) {
+        mainStatus = 'OFFERS_AVAILABLE';
+        subStatus = 'OFFERS_FOUND';
+      }
+      // 4. Default to no offers if no intents, requests, or orders are found
+      else {
+        mainStatus = 'NO_OFFERS';
+        subStatus = 'NO_OFFERS_FOUND';
+      }
+  
+      // Update the status map with main and sub-status
+      this.ingredientStatusMap[ingredientId] = { mainStatus, subStatus };
+    });
+  
+    console.log('Ingredient statuses:', this.ingredientStatusMap);
+  }
+
+  // You can use this method to get the main and sub-status of an ingredient wherever needed
+  getIngredientMainStatus(ingredientId: string): string {
+    return this.ingredientStatusMap[ingredientId]?.mainStatus || 'NO_OFFERS';
+  }
+
+  getIngredientSubStatus(ingredientId: string): string {
+    return this.ingredientStatusMap[ingredientId]?.subStatus || 'NO_OFFERS';
   }
 }

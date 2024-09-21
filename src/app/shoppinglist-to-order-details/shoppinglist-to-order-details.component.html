@@ -9,8 +9,16 @@
     <ng-container *ngFor="let totalItem of getTotalAmountsPerUnitArrayFromItem(item); let i = index">
       {{ totalItem.totalAmount }} {{ getUnitLabel(totalItem.unit) }}<span *ngIf="i < getTotalAmountsPerUnitArrayFromItem(item).length - 1">, </span>
     </ng-container>
-    .
-  </p>
+    <div class="status-display">
+      <p>
+        <strong>Main Status:</strong> 
+        <span class="main-status" [ngClass]="getIngredientMainStatus(item.id)">{{ getIngredientMainStatus(item.id) }}</span>
+      </p>
+      <p>
+        <strong>Sub-Status:</strong> 
+        <span class="sub-status">{{ getIngredientSubStatus(item.id) }}</span>
+      </p>
+    </div>
 
   <!-- Expandable Processing Breakdown -->
   <p-accordion>
