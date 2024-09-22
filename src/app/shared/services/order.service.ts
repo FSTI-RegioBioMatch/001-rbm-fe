@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, switchMap, timer } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -36,7 +36,9 @@ export class OrderService {
 
   // Turn a Purchase Intent into an Order
   turnPurchaseIntentIntoOrder(purchaseIntentId: string, orderData: OrderWriteView): Observable<any> {
-    return this.http.post(`${this.apiUrl}/purchase_intents/${purchaseIntentId}/orders`, orderData);
+    return timer(1000).pipe(
+      switchMap(() => this.http.post(`${this.apiUrl}/purchase_intents/${purchaseIntentId}/orders`, orderData))
+    );
   }
 
   // PRICE REQUEST SECTION
@@ -69,7 +71,9 @@ export class OrderService {
 
   // Add an Order to a Price Request
   addOrderToPriceRequest(priceRequestId: string, orderData: OrderWriteView): Observable<any> {
-    return this.http.post(`${this.apiUrl}/price_requests/${priceRequestId}/orders`, orderData);
+    return timer(1000).pipe(
+      switchMap(() => this.http.post(`${this.apiUrl}/price_requests/${priceRequestId}/orders`, orderData))
+    );
   }
 
   // ORDER SECTION

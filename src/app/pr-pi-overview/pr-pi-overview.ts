@@ -16,6 +16,7 @@ import { OrderService, PriceRequestStatus, PurchaseIntentStatus } from '../share
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PersonType } from '../shared/types/person.type';
 
 @Component({
   selector: 'app-pr-pi-overview',
@@ -44,7 +45,7 @@ export class PrPiOverviewComponent implements OnInit {
   loadingOrders = false;
   selectedPriceRequest: any | null = null;
   selectedPurchaseIntent: any | null = null;
-  currentCompany: any;
+  me: any;
   filteredPurchaseIntents: any[] = [];
   filteredPriceRequests: any[] = [];
   selectedPurchaseIntentStatus: PurchaseIntentStatus | null = null;
@@ -74,16 +75,32 @@ export class PrPiOverviewComponent implements OnInit {
     { label: 'Canceled by Seller', value: 'CANCELED_BY_SELLER' },
     { label: 'Rejected', value: 'REJECTED' },
   ];
+  companyId: string | undefined;
 
   constructor(
     private store: StoreService,
     private messageService: MessageService,
     private offerService: OfferService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private storeService: StoreService
   ) {}
 
   ngOnInit(): void {
     this.loadingOrders = true; // Start loading
+    this.storeService.selectedCompanyContext$.subscribe({
+      next: (company) => {
+        if (company && company.id) {
+          this.companyId = company.id;
+        } else {
+          console.error('No company selected or company ID is missing');
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Keine Firma ausgewählt oder Firmen-ID fehlt' });
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching company context:', error);
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Abrufen des Firmenkontexts' });
+      }
+    });
     this.fetchOrdersAndRecurringOrders();
   }
 
@@ -177,7 +194,6 @@ export class PrPiOverviewComponent implements OnInit {
               buyingCompany: relatedData.buyingCompany$,
               sellingCompany: relatedData.sellingCompany$
             };
-            console.log(this.selectedPriceRequest)
             this.loadingDialog = false
           },
           error: (error) => {
@@ -220,7 +236,6 @@ export class PrPiOverviewComponent implements OnInit {
               buyingCompany: relatedData.buyingCompany$,
               sellingCompany: relatedData.sellingCompany$
             };
-            console.log(this.selectedPurchaseIntent)
             this.loadingDialog = false
           },
           error: (error) => {
@@ -497,6 +512,30 @@ export class PrPiOverviewComponent implements OnInit {
         }
       })
     }
+
+    declinePriceRequest(){
+      console.log("Preisanfrage ablehnen ", this.selectedPriceRequest);
+    
+      // Ensure we have a selected purchase intent with the required status
+      console.log(this.selectedPriceRequest)
+      if (!this.selectedPriceRequest) {
+        this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Keine gültige Preisanfrage ausgewählt'})
+        return;
+      }
+     //we have export type PriceRequestStatus = "PENDING" | "PRICE_ADDED" | "COMPLETED" | "CANCELED_BY_BUYER" | "CANCELED_BY_SELLER" | "REJECTED";
+      const priceRequestId = this.selectedPriceRequest.links.self.split('/').pop(); // Extract the UUID
+      this.orderService.updatePriceRequestStatus(priceRequestId, 'REJECTED').subscribe({
+        next: (response: any) => {
+          console.log('Purchase intent declined successfully:', response);
+          this.messageService.add({ severity: 'success', summary: 'Preisanfrage abgelehnt', detail: 'Preisanfrage wurde erfolgreich abgelehnt' });
+        },
+        error: (error: any) => {
+          console.error('Error declining purchase intent:', error);
+          this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Preisanfrage konnte nicht abgelehnt werden' });
+        }
+      })
+    }
+    
       // Watch for changes in total price and update price per unit
   ngOnChanges(): void {
     this.calculatePricePerUnit();
@@ -533,5 +572,21 @@ export class PrPiOverviewComponent implements OnInit {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to set the price.' });
         }
       });
+  }
+
+  // Helper function to check if the user is the buyer
+  isBuyer(data: any): boolean {
+    if (!this.companyId || !data || !data.buyingCompany) {
+      return false;
+    }
+    return data.buyingCompany.id === this.companyId;
+  }
+
+  // Helper function to check if the user is the seller
+  isSeller(data: any): boolean {
+    if (!this.companyId || !data || !data.sellingCompany) {
+      return false;
+    }
+    return data.sellingCompany.id === this.companyId;
   }
 }

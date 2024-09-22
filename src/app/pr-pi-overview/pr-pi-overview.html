@@ -86,20 +86,20 @@
   <!-- Purchase Intent Details Section -->
   <p-accordion *ngIf="selectedPurchaseIntent">
 
-    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
+    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED' && isBuyer(selectedPurchaseIntent)" label="Make Order" icon="pi pi-check"
       (onClick)="makePurchaseIntentOrder()">
     </p-button>
 
     <!-- Show "Kaufanfrage annehmen" button if the current company is the seller -->
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage annehmen" icon="pi pi-check"
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING' && isSeller(selectedPurchaseIntent)" label="Kaufanfrage annehmen" icon="pi pi-check"
       (onClick)="acceptPurchaseIntend()">
     </p-button>
 
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage ablehnen" icon="pi pi-check"
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING' && isSeller(selectedPurchaseIntent)" label="Kaufanfrage ablehnen" icon="pi pi-check"
       (onClick)="declinePurchaseIntend()">
     </p-button>
 
-
+    
     <p-accordionTab header="Purchase Intent Details">
       <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
       <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
@@ -153,13 +153,16 @@
 <p-dialog header="Price request Details" [(visible)]="selectedPriceRequest" [modal]="true" [closable]="true">
   <p-accordion *ngIf="selectedPriceRequest">
     <!-- Show "Make Order" button if the current company is the buyer -->
-    <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
+    <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED' && isBuyer(selectedPriceRequest)" label="Make Order" icon="pi pi-check"
       (onClick)="makePriceRequestOrder()">
     </p-button>
 
     <!-- Show "Preis vorschlagen" button if the current company is the seller -->
-    <p-button *ngIf="selectedPriceRequest.status === 'PENDING'" label="Preis vorschlagen"
+    <p-button *ngIf="selectedPriceRequest.status === 'PENDING' && isSeller(selectedPriceRequest)" label="Preis vorschlagen"
       (click)="openPriceOfferDialog()" icon="pi pi-dollar"></p-button>
+
+    <p-button *ngIf="selectedPriceRequest.status === 'PENDING' && isSeller(selectedPriceRequest)" label="Ablehnen"
+      (click)="declinePriceRequest()" icon="pi pi-dollar"></p-button>
 
     <!-- Price Offer Dialog -->
     <p-dialog header="Set Price Offer" [(visible)]="priceOfferDialogVisible" [modal]="true" [closable]="true"

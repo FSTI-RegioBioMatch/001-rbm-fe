@@ -16,8 +16,9 @@ import { AccordionModule } from 'primeng/accordion';
 import { IngredientUnit } from '../shopping-list-details/shopping-list-details.component';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-
+import { MenuItem } from 'primeng/api';
+import { StepperModule } from 'primeng/stepper';
+import { StepsModule } from 'primeng/steps';
 const ingredientUnits: IngredientUnit[] = [
   { label: 'Gramm', value: 'g' },
   { label: 'Kilogramm', value: 'kg' },
@@ -68,7 +69,10 @@ const ingredientUnits: IngredientUnit[] = [
     DialogModule,
     AccordionModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StepperModule,
+    StepsModule
+    
   ],
   standalone: true
 })
@@ -92,6 +96,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     pricePerUnit: '',
     unit: '',
   };
+
 
   constructor(
     private route: ActivatedRoute,
