@@ -15,6 +15,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { OrderService, PriceRequestStatus, PurchaseIntentStatus } from '../shared/services/order.service';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-pr-pi-overview',
@@ -30,6 +31,7 @@ import { DialogModule } from 'primeng/dialog';
     TabMenuModule,
     TabViewModule,
     ButtonModule,
+    ProgressSpinnerModule,
     PaginatorModule,
     ToastModule,
     DialogModule
@@ -47,6 +49,7 @@ export class PrPiOverviewComponent implements OnInit {
   filteredPriceRequests: any[] = [];
   selectedPurchaseIntentStatus: PurchaseIntentStatus | null = null;
   selectedPriceRequestStatus: PriceRequestStatus | null = null;
+  loadingDialog = false;
 
   priceOfferDialogVisible: boolean = false;
   totalPrice: number | null = null;
@@ -151,6 +154,8 @@ export class PrPiOverviewComponent implements OnInit {
 
   // Fetch details and related information (offer, category, buyingCompany, sellingCompany) for a Price Request
   fetchPriceRequestDetails(url: string): void {
+    this.clearSelected()
+    this.loadingDialog = true
     this.offerService.getPriceRequestDetails(url).subscribe({
       next: (details) => {
         const { links } = details;
@@ -173,22 +178,27 @@ export class PrPiOverviewComponent implements OnInit {
               sellingCompany: relatedData.sellingCompany$
             };
             console.log(this.selectedPriceRequest)
+            this.loadingDialog = false
           },
           error: (error) => {
             this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Verknüpfte Daten konnten nicht geladen werden' });
             console.error('Error fetching related details:', error);
+            this.loadingDialog = false
           }
         });
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Preis-Anfrage Details konnten nicht geladen werden' });
         console.error('Error fetching price request details:', error);
+        this.loadingDialog = false
       }
     });
   }
 
   // Fetch details and related information (offer, category, buyingCompany, sellingCompany) for a Purchase Intent
   fetchPurchaseIntentDetails(url: string): void {
+    this.clearSelected()
+    this.loadingDialog = true;
     this.offerService.getPurchaseIntentDetails(url).subscribe({
       next: (details) => {
         const { links } = details;
@@ -211,16 +221,19 @@ export class PrPiOverviewComponent implements OnInit {
               sellingCompany: relatedData.sellingCompany$
             };
             console.log(this.selectedPurchaseIntent)
+            this.loadingDialog = false
           },
           error: (error) => {
             this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Verknüpfte Daten konnten nicht geladen werden' });
             console.error('Error fetching related details:', error);
+            this.loadingDialog = false
           }
         });
       },
       error: (error) => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht Details konnten nicht geladen werden' });
         console.error('Error fetching purchase intent details:', error);
+        this.loadingDialog = false
       }
     });
   }

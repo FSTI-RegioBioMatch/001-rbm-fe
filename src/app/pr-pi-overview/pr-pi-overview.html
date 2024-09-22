@@ -3,9 +3,14 @@
   <p-button routerLink="/pr-pi-overview">Preisanfragen</p-button>
 </div>
 
-<div *ngIf="loadingOrders" class="loading-container">
-  <p>Loading orders...</p>
+<div *ngIf="loadingOrders" class="loading-container rbm-loading-screen">
+  <p-progressSpinner></p-progressSpinner>
 </div>
+
+<div *ngIf="loadingDialog" class="loading-container rbm-loading-screen">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+
 
 <div *ngIf="!loadingOrders">
   <!-- Price Requests Section -->
@@ -72,7 +77,79 @@
     </ng-template>
   </p-table>
 
-  <!-- Price Request Details Section -->
+</div>
+<p-toast></p-toast>
+
+<p-dialog header="Purchase Intent Details" [(visible)]="selectedPurchaseIntent" [modal]="true" [closable]="true"
+  [responsive]="true">
+  <!-- Purchase Intent Details Section -->
+  <p-accordion *ngIf="selectedPurchaseIntent">
+
+    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
+      (onClick)="makePurchaseIntentOrder()">
+    </p-button>
+
+    <!-- Show "Kaufanfrage annehmen" button if the current company is the seller -->
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage annehmen" icon="pi pi-check"
+      (onClick)="acceptPurchaseIntend()">
+    </p-button>
+
+    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage ablehnen" icon="pi pi-check"
+      (onClick)="declinePurchaseIntend()">
+    </p-button>
+
+
+    <p-accordionTab header="Purchase Intent Details">
+      <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
+      <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
+      <p><strong>Amount:</strong> {{ selectedPurchaseIntent.amount.amount }} {{ selectedPurchaseIntent.amount.unit }}
+      </p>
+      <p><strong>Total Price:</strong> {{ selectedPurchaseIntent.totalPrice | currency }}</p>
+      <p><strong>Status:</strong> {{ selectedPurchaseIntent.status }}</p>
+    </p-accordionTab>
+
+    <p-accordionTab header="Offer Details" *ngIf="selectedPurchaseIntent.offer">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.offer.productTitle }}</ng-template>
+        <p><strong>Description:</strong> {{ selectedPurchaseIntent.offer.description }}</p>
+        <p><strong>Amount:</strong> {{ selectedPurchaseIntent.offer.totalAmount.amount }} {{
+          selectedPurchaseIntent.offer.totalAmount.unit }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Category Details" *ngIf="selectedPurchaseIntent.category">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.category.label }}</ng-template>
+        <p><strong>Supercategories:</strong> {{ selectedPurchaseIntent.category.links.supercategories | json }}</p>
+        <p><strong>Subcategories:</strong> {{ selectedPurchaseIntent.category.links.subcategories | json }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Buying Company Details" *ngIf="selectedPurchaseIntent.buyingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.buyingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPurchaseIntent.buyingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.buyingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-accordionTab header="Selling Company Details" *ngIf="selectedPurchaseIntent.sellingCompany">
+      <p-card>
+        <ng-template pTemplate="header">{{ selectedPurchaseIntent.sellingCompany.name }}</ng-template>
+        <p><strong>Email:</strong> {{ selectedPurchaseIntent.sellingCompany.email }}</p>
+        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.sellingCompany.phone }}</p>
+      </p-card>
+    </p-accordionTab>
+
+    <p-footer>
+      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger"
+        (click)="clearSelected()"></button>
+    </p-footer>
+  </p-accordion>
+</p-dialog>
+
+
+<p-dialog header="Price request Details" [(visible)]="selectedPriceRequest" [modal]="true" [closable]="true">
   <p-accordion *ngIf="selectedPriceRequest">
     <!-- Show "Make Order" button if the current company is the buyer -->
     <p-button *ngIf="selectedPriceRequest.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
@@ -150,70 +227,4 @@
         (click)="clearSelected()"></button>
     </p-footer>
   </p-accordion>
-
-  <!-- Purchase Intent Details Section -->
-  <p-accordion *ngIf="selectedPurchaseIntent">
-
-    <p-button *ngIf="selectedPurchaseIntent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
-      (onClick)="makePurchaseIntentOrder()">
-    </p-button>
-
-    <!-- Show "Kaufanfrage annehmen" button if the current company is the seller -->
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage annehmen" icon="pi pi-check"
-      (onClick)="acceptPurchaseIntend()">
-    </p-button>
-
-    <p-button *ngIf="selectedPurchaseIntent.status === 'PENDING'" label="Kaufanfrage ablehnen" icon="pi pi-check"
-      (onClick)="declinePurchaseIntend()">
-    </p-button>
-
-
-    <p-accordionTab header="Purchase Intent Details">
-      <p><strong>Date Created:</strong> {{ selectedPurchaseIntent.dateCreated | date }}</p>
-      <p><strong>Delivery Date:</strong> {{ selectedPurchaseIntent.deliveryDate | date }}</p>
-      <p><strong>Amount:</strong> {{ selectedPurchaseIntent.amount.amount }} {{ selectedPurchaseIntent.amount.unit }}
-      </p>
-      <p><strong>Total Price:</strong> {{ selectedPurchaseIntent.totalPrice | currency }}</p>
-      <p><strong>Status:</strong> {{ selectedPurchaseIntent.status }}</p>
-    </p-accordionTab>
-
-    <p-accordionTab header="Offer Details" *ngIf="selectedPurchaseIntent.offer">
-      <p-card>
-        <ng-template pTemplate="header">{{ selectedPurchaseIntent.offer.productTitle }}</ng-template>
-        <p><strong>Description:</strong> {{ selectedPurchaseIntent.offer.description }}</p>
-        <p><strong>Amount:</strong> {{ selectedPurchaseIntent.offer.totalAmount.amount }} {{
-          selectedPurchaseIntent.offer.totalAmount.unit }}</p>
-      </p-card>
-    </p-accordionTab>
-
-    <p-accordionTab header="Category Details" *ngIf="selectedPurchaseIntent.category">
-      <p-card>
-        <ng-template pTemplate="header">{{ selectedPurchaseIntent.category.label }}</ng-template>
-        <p><strong>Supercategories:</strong> {{ selectedPurchaseIntent.category.links.supercategories | json }}</p>
-        <p><strong>Subcategories:</strong> {{ selectedPurchaseIntent.category.links.subcategories | json }}</p>
-      </p-card>
-    </p-accordionTab>
-
-    <p-accordionTab header="Buying Company Details" *ngIf="selectedPurchaseIntent.buyingCompany">
-      <p-card>
-        <ng-template pTemplate="header">{{ selectedPurchaseIntent.buyingCompany.name }}</ng-template>
-        <p><strong>Email:</strong> {{ selectedPurchaseIntent.buyingCompany.email }}</p>
-        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.buyingCompany.phone }}</p>
-      </p-card>
-    </p-accordionTab>
-
-    <p-accordionTab header="Selling Company Details" *ngIf="selectedPurchaseIntent.sellingCompany">
-      <p-card>
-        <ng-template pTemplate="header">{{ selectedPurchaseIntent.sellingCompany.name }}</ng-template>
-        <p><strong>Email:</strong> {{ selectedPurchaseIntent.sellingCompany.email }}</p>
-        <p><strong>Phone:</strong> {{ selectedPurchaseIntent.sellingCompany.phone }}</p>
-      </p-card>
-    </p-accordionTab>
-
-    <p-footer>
-      <button pButton type="button" label="Close" icon="pi pi-times" class="p-button-danger"
-        (click)="clearSelected()"></button>
-    </p-footer>
-  </p-accordion>
-</div>
-<p-toast></p-toast>
+</p-dialog>
