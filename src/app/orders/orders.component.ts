@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Button  } from 'primeng/button';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
@@ -18,12 +18,14 @@ import { RouterLink } from '@angular/router';
   providers: [MessageService]
 })
 export class OrdersComponent implements OnInit {
+
   orders: any[] = []; // Store the order details here
   orderIds: string[] = []; // Store the extracted order IDs here
 
   constructor(
     private orderService: OrderService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -77,4 +79,9 @@ export class OrdersComponent implements OnInit {
       }
     });
   }
+  gotoDetails(order: any) {
+    console.log(order);
+    const orderId = order.links.self.split('/').pop();
+    this.router.navigate(["order-details", orderId])
+    }
 }

@@ -14,6 +14,7 @@
             <th>Total Price</th>
             <th>Status</th>
             <th>Date Created</th>
+            <th>Details</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-order>
@@ -25,6 +26,10 @@
             <td>{{ order.totalPrice }}</td>
             <td>{{ order.status }}</td>
             <td>{{ order.dateCreated | date: 'short' }}</td>
+            <td>
+                <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+                  (click)="gotoDetails(order)"></button>
+              </td>
         </tr>
     </ng-template>
 </p-table>

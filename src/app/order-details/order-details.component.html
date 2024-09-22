@@ -1,0 +1,62 @@
+<div class="order-details" *ngIf="orderDetails || offerDetails; else loadingTemplate">
+    <h2 class="title">Bestelldetails</h2>
+    <div class="order-info p-card p-shadow-3" *ngIf="orderDetails">
+      <p><i class="pi pi-tag icon"></i> <strong>Produkt:</strong> {{ orderDetails.productLabel }}</p>
+      <p><i class="pi pi-weight icon"></i> <strong>Menge:</strong> {{ orderDetails.amount.amount }} {{ orderDetails.amount.unit }}</p>
+      <p><i class="pi pi-dollar icon"></i> <strong>Gesamtpreis:</strong> {{ orderDetails.totalPrice | currency:'EUR' }}</p>
+      <p><i class="pi pi-money-bill icon"></i> <strong>Preis pro Einheit:</strong> {{ orderDetails.pricePerUnit | currency:'EUR' }}</p>
+      <p><i class="pi pi-calendar icon"></i> <strong>Erstellungsdatum:</strong> {{ getFormattedDate(orderDetails.dateCreated) }}</p>
+      <p><i class="pi pi-info-circle icon"></i> <strong>Status:</strong> {{ orderDetails.status }}</p>
+      <p><i class="pi pi-check icon"></i> <strong>Abgeschlossen:</strong> {{ orderDetails.isCompleted ? 'Ja' : 'Nein' }}</p>
+    </div>
+  
+    <h3 class="title">Adresse Flussdiagramm</h3>
+    <div class="address-flow p-card p-shadow-3">
+      <div *ngIf="orderDetails.addresses" class="flow-diagram">
+        <div class="flow-item" *ngFor="let address of orderDetails.addresses">
+          <div class="flow-content">
+            <div class="icon-box" [ngClass]="getAddressTypeClass(address.type)">
+              <ng-container [ngSwitch]="address.type">
+                <i *ngSwitchCase="'INVOICE'" class="pi pi-file-invoice"></i>
+                <i *ngSwitchCase="'DELIVERY'" class="pi pi-truck"></i>
+                <i *ngSwitchCase="'SELLER'" class="pi pi-building"></i>
+              </ng-container>
+            </div>
+            <div class="address-info">
+              <p><strong>{{ getAddressTypeTranslation(address.type) }}</strong></p>
+              <p>{{ address.name || 'N/A' }}</p>
+              <p>{{ address.street }}</p>
+              <p>{{ address.zipcode }}, {{ address.city }}</p>
+            </div>
+          </div>
+          <i *ngIf="orderDetails.addresses.indexOf(address) < orderDetails.addresses.length - 1"
+             class="pi pi-arrow-right flow-arrow"></i>
+        </div>
+      </div>
+    </div>
+  
+    <h2 *ngIf="offerDetails" class="title">Angebotsdetails</h2>
+    <div class="offer-info p-card p-shadow-3" *ngIf="offerDetails">
+      <p><i class="pi pi-briefcase icon"></i> <strong>Produktname:</strong> {{ offerDetails.productTitle }}</p>
+      <p><i class="pi pi-check-circle icon"></i> <strong>Aktiv:</strong> {{ offerDetails.active ? 'Ja' : 'Nein' }}</p>
+      <p><i class="pi pi-calendar icon"></i> <strong>Erstellungsdatum:</strong> {{ getFormattedDate(offerDetails.dateCreated) }}</p>
+      <p><i class="pi pi-calendar-plus icon"></i> <strong>Gültig ab:</strong> {{ getFormattedDate(offerDetails.dateFrom) }}</p>
+      <p><i class="pi pi-calendar-minus icon"></i> <strong>Gültig bis:</strong> {{ getFormattedDate(offerDetails.dateEnd) }}</p>
+      <p><i class="pi pi-money-bill icon"></i> <strong>Preis pro Einheit:</strong> {{ offerDetails.pricePerUnit | currency:'EUR' }}</p>
+      <p><i class="pi pi-weight icon"></i> <strong>Gesamtmenge:</strong> {{ offerDetails.totalAmount.amount }} {{ offerDetails.totalAmount.unit }}</p>
+  
+      <h3>Verarbeitungsebenen</h3>
+      <ul class="levels-list">
+        <li *ngFor="let lop of offerDetails.levelsOfProcessing">
+          <i class="pi pi-cog"></i> {{ lop.label }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <ng-template #loadingTemplate>
+    <p class="loading-text"><i class="pi pi-spinner pi-spin"></i> Bestell- und Angebotsdetails werden geladen...</p>
+    <p-progressSpinner></p-progressSpinner>
+  </ng-template>
+  
+  <p-toast></p-toast>

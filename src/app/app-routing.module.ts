@@ -18,6 +18,7 @@ import { PrPiOverviewComponent } from './pr-pi-overview/pr-pi-overview';
 import { OffersOverviewComponent } from './offers-overview/offers-overview.component';
 import { OrdersComponent } from './orders/orders.component';
 import { ShoppinglistToOrderDetailsComponent } from './shoppinglist-to-order-details/shoppinglist-to-order-details.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -83,6 +84,9 @@ const routes: Routes = [
   },
   {
     path: 'offers-overview', component: OffersOverviewComponent
+  },
+  {
+    path: 'order-details/:id', component: OrderDetailsComponent
   }
 ];
 @NgModule({
