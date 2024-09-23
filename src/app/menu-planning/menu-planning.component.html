@@ -120,7 +120,7 @@
           </div>
         
           <!-- Display Portions by Tag -->
-          <div class="portions-by-tag" *ngIf="tagPortions.length > 0">
+          <div class="portions-by-tag" *ngIf="tagPortions?.length && tagPortions.length > 0">
             <h3>Portionen nach Tag</h3>
             <ul>
               <li *ngFor="let tag of tagPortions" [pTooltip]="getTooltipContent(menuPlan, tag.name)" tooltipPosition="right">
@@ -132,12 +132,12 @@
             </ul>
           </div>
         
-          <div class="no-tags" *ngIf="tagPortions.length === 0">
+          <div class="no-tags" *ngIf="tagPortions?.length && tagPortions.length === 0">
             <p>Keine Tags vorhanden.</p>
           </div>
         
           <!-- Display Portions by Tag Combination -->
-          <div class="portions-by-combination" *ngIf="combinedTagPortions.length > 0">
+          <div class="portions-by-combination" *ngIf="combinedTagPortions?.length && combinedTagPortions.length > 0">
             <h3>Portionen nach Tag-Kombination</h3>
             <ul>
               <li *ngFor="let combination of combinedTagPortions" [pTooltip]="getTooltipContent(menuPlan, null, combination.tags)" tooltipPosition="right">
@@ -149,7 +149,7 @@
             </ul>
           </div>
         
-          <div class="no-combination" *ngIf="combinedTagPortions.length === 0">
+          <div class="no-combination" *ngIf="combinedTagPortions?.length && combinedTagPortions.length === 0">
             <p>Keine Tag-Kombinationen vorhanden.</p>
           </div>
         </div>

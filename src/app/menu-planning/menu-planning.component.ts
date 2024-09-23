@@ -295,27 +295,46 @@ export class MenuPlanningComponent implements OnInit {
   // Function to calculate portions for each tag
   calculateTagPortions(): void {
     const tagMap = new Map<string, number>();
-
-    // Iterate through each recipe and accumulate portions for each tag
-    this.menuPlan.forEach(recipe => {
-      recipe.essensgaeste.forEach((tag: string) => {
-        const currentPortions = tagMap.get(tag) || 0;
-        tagMap.set(tag, currentPortions + Number(recipe.portionen));
+  
+    // Check if menuPlan exists and is an array
+    if (Array.isArray(this.menuPlan) && this.menuPlan.length > 0) {
+      // Iterate through each recipe and accumulate portions for each tag
+      this.menuPlan.forEach(recipe => {
+        // Check if recipe and essensgaeste are valid
+        if (recipe && Array.isArray(recipe.essensgaeste) && recipe.portionen != null) {
+          recipe.essensgaeste.forEach((tag: string) => {
+            // Ensure tag is a non-empty string and portionen is a valid number
+            if (tag && typeof tag === 'string') {
+              const currentPortions = tagMap.get(tag) || 0;
+              tagMap.set(tag, currentPortions + Number(recipe.portionen));
+            }
+          });
+        } else {
+          console.warn('Invalid recipe or essensgaeste in menuPlan:', recipe);
+        }
       });
-    });
-
+    }
+  
     // Convert map to array for display in template
     this.tagPortions = Array.from(tagMap, ([name, portions]) => ({ name, portions }));
   }
   calculateCombinedTagPortions(): void {
     const combinationMap = new Map<string, number>();
   
-    // Iterate through each recipe and create combinations of tags
-    this.menuPlan.forEach(recipe => {
-      const sortedTags = recipe.essensgaeste.sort().join(', '); // Create a unique key for tag combination
-      const currentPortions = combinationMap.get(sortedTags) || 0;
-      combinationMap.set(sortedTags, currentPortions + Number(recipe.portionen));
-    });
+    // Check if menuPlan exists and is an array
+    if (Array.isArray(this.menuPlan) && this.menuPlan.length > 0) {
+      // Iterate through each recipe and create combinations of tags
+      this.menuPlan.forEach(recipe => {
+        // Check if recipe and essensgaeste are valid
+        if (recipe && Array.isArray(recipe.essensgaeste) && recipe.portionen != null) {
+          const sortedTags = recipe.essensgaeste.filter((tag: any) => tag && typeof tag === 'string').sort().join(', ');
+          const currentPortions = combinationMap.get(sortedTags) || 0;
+          combinationMap.set(sortedTags, currentPortions + Number(recipe.portionen));
+        } else {
+          console.warn('Invalid recipe or essensgaeste in menuPlan:', recipe);
+        }
+      });
+    }
   
     // Convert map to array for display in template
     this.combinedTagPortions = Array.from(combinationMap, ([tags, portions]) => ({ tags: tags.split(', '), portions }));
@@ -665,37 +684,58 @@ export class MenuPlanningComponent implements OnInit {
     );
   }
   // Collect all tags from essensgaeste
-  collectAllTags() {
+  collectAllTags(): void {
+    // Initialize an empty array for all tags
     let allTags: string[] = [];
-
-    // Collect all tags from all recipes
-    this.menuPlan.forEach(recipe => {
-      allTags = [...allTags, ...recipe.essensgaeste];
-    });
-
+  
+    // Check if menuPlan exists and is an array
+    if (Array.isArray(this.menuPlan) && this.menuPlan.length > 0) {
+      // Iterate over each recipe
+      this.menuPlan.forEach(recipe => {
+        // Check if recipe and essensgaeste exist and are valid arrays
+        if (recipe && Array.isArray(recipe.essensgaeste)) {
+          // Concatenate all valid tags into allTags
+          allTags = [...allTags, ...recipe.essensgaeste];
+        }
+      });
+    }
+  
     // Remove duplicates and update allTags
     this.allTags = Array.from(new Set(allTags));
   }
+  
   
   getFormattedTags(tags: string[]): string {
     // Filter out empty tags and join them into a string
     const filteredTags = tags.filter(tag => tag.trim() !== '').join(', ');
     return filteredTags || 'Ohne Tags'; // Return 'Ohne Tags' if no valid tags are present
   }
-  getTooltipContent(recipes: any[], tagName?: string  | null,  combinationTags?: string[]): string {
+  getTooltipContent(recipes: any[] | null, tagName?: string | null, combinationTags?: string[] | null): string {
+    // Check if the recipes array is valid
+    if (!recipes || !Array.isArray(recipes) || recipes.length === 0) {
+      return 'Keine Rezepte vorhanden';
+    }
+  
     if (tagName) {
-      // Tooltip content for single tag
-      const filteredRecipes = recipes.filter(recipe => recipe.essensgaeste.includes(tagName));
-      return filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
-    } else if (combinationTags) {
-      // Tooltip content for tag combination
-      const filteredTags = combinationTags.filter(tag => tag.trim() !== '');
-      const filteredRecipes = recipes.filter(recipe =>
+      // Check if tagName is valid and filter recipes based on the tag
+      const filteredRecipes = recipes.filter(recipe => 
+        recipe?.essensgaeste && Array.isArray(recipe.essensgaeste) && recipe.essensgaeste.includes(tagName)
+      );
+      return filteredRecipes.length > 0 
+        ? filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n')
+        : 'Keine Rezepte für diesen Tag gefunden';
+    } else if (combinationTags && combinationTags.length > 0) {
+      // Check if combinationTags is valid and filter recipes based on the tag combination
+      const filteredTags = combinationTags.filter(tag => tag && tag.trim() !== '');
+      const filteredRecipes = recipes.filter(recipe => 
+        recipe?.essensgaeste && Array.isArray(recipe.essensgaeste) && 
         filteredTags.every(tag => recipe.essensgaeste.includes(tag))
       );
-      return filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
+      return filteredRecipes.length > 0
+        ? filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n')
+        : 'Keine Rezepte für diese Tag-Kombination gefunden';
     } else {
-      // Tooltip content for total portions
+      // Tooltip content for total portions when no tag or combination is provided
       return recipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
     }
   }
