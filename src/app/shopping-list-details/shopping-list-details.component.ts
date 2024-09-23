@@ -376,7 +376,6 @@ export class ShoppingListDetailsComponent implements OnInit {
   }
   clearCacheAndReload(): void {
     this.loading = true
-    this.offerService.clearOfferCache(); // Clear the cache
     this.loadOffers(); // Reload the offers
   }
 

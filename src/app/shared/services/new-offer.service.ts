@@ -21,14 +21,6 @@ export class NewOfferService {
   private address: AddressType | null = null;
   private offers: OfferType[] = [];
 
-  // Cache for offers with a 1-hour TTL
-  private cacheTTL = 60 * 60 * 1000; // 1 hour in milliseconds
-  private offerCache = new Map<string, { 
-    data: OfferType[], 
-    timestamp: number, 
-    boundingBox: { latMin: number, latMax: number, lonMin: number, lonMax: number } 
-  }>();
-
   constructor(
     private http: HttpClient,
     private geoService: GeoService,
@@ -51,41 +43,14 @@ export class NewOfferService {
     lon1: number,
     lat1: number,
     lon2: number,
-    lat2: number,
-    cacheKey: string
+    lat2: number
   ): Observable<OfferType[]> {
-    const cached = this.offerCache.get(cacheKey);
-  
-    if (cached && (Date.now() - cached.timestamp) < this.cacheTTL) {
-      // Refetch if the bounding boxes are different (regardless of size)
-      if (this.isNewBoundingBoxDifferent(cached.boundingBox, { lon1, lat1, lon2, lat2 })) {
-        console.log('Bounding box has changed, refetching...');
-        this.offerCache.delete(cacheKey);
-      } else {
-        console.log('Using cached offers');
-        return of(cached.data);
-      }
-    }
-  
     console.log('Fetching offers from API', lon1, lat1, lon2, lat2);
     return this.http.get<OfferType[]>(
       `${environment.NEARBUY_API}/offers?limit=1000&lat1=${lat1}&lon1=${lon1}&lat2=${lat2}&lon2=${lon2}&companyName=&showOnlyFavourites=false&showOwnData=false&format=SEARCH_RESULT`
-    ).pipe(
-      tap((offers) => {
-        // Cache the new data along with the bounding box
-        this.offerCache.set(cacheKey, { 
-          data: offers, 
-          timestamp: Date.now(), 
-          boundingBox: { 
-            lonMin: lon1,  // Correct value
-            latMin: lat1,  // Correct value
-            lonMax: lon2,  // Correct value
-            latMax: lat2   // Correct value
-          } 
-        });
-      })
     );
   }
+  
   
   
   private isNewBoundingBoxDifferent(oldBox: any, newBox: any, tolerance: number = 0.00001): boolean {
@@ -117,14 +82,11 @@ export class NewOfferService {
     // Extract the bounding box values explicitly
     const { lonMin, latMin, lonMax, latMax } = boundingBox;
   
-    const cacheKey = this.generateCacheKey(address);
-  
     return this.getOffers(
       lonMin,
       latMin,
       lonMax,
-      latMax,
-      cacheKey
+      latMax
     ).pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -168,7 +130,6 @@ export class NewOfferService {
     );
   }
   
-  
 
   getOffersObservable(): Observable<OfferType[]> {
     return this.store.offers$;
@@ -204,10 +165,5 @@ export class NewOfferService {
 
   getPurchaseIntents(): Observable<any> {
     return this.http.get<any>(`${environment.NEARBUY_API}/purchase_intents`);
-  }
-  
-  clearOfferCache() {
-    this.offerCache.clear();
-    console.log('Offer cache cleared');
   }
 }
