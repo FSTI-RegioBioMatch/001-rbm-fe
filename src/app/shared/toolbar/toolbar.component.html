@@ -39,11 +39,12 @@
         <img src="assets/img/marketplace.png" alt="Marketplace icon" />
       </button>
       <p-avatar 
-        label="P"  
-        size="large" 
-        shape="circle"
-        pTooltip="Profile: John Doe" 
-        tooltipPosition="bottom"/>
+      icon="pi pi-user"  
+      size="large" 
+      shape="circle"
+      tooltipPosition="bottom"
+      (click)="goToProfileSelf()"
+      [style.cursor]="'pointer'"></p-avatar>
       <!-- <span class="user-name-container user-name">John Doe</span> -->
     </div>
   </div>

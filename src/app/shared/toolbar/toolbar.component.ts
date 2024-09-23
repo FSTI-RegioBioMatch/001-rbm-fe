@@ -124,4 +124,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   goToHome() {
     this.router.navigate(['/dashboard']);
   }
+  goToProfileSelf()
+  {
+    this.router.navigate(['/my-profile']);
+  }
 }
