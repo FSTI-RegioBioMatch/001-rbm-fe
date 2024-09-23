@@ -22,6 +22,10 @@ import  { CheckboxModule } from 'primeng/checkbox';
 import { OfferToOrderService } from '../shared/services/offer-to-order.service';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { StepperModule } from 'primeng/stepper';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { MeterGroupModule } from 'primeng/metergroup';
+import { TabViewModule } from 'primeng/tabview';
 
 export interface IngredientUnit {
   label: string;
@@ -44,6 +48,15 @@ interface ProcessingBreakdownPerUnit {
 interface CombinedProcessingBreakdown {
   [label: string]: ProcessingBreakdownPerUnit;
 }
+
+interface MeterItem {
+  label: string;
+  value: number;
+  icon: string;
+  color: string;
+  size: number;
+}
+
 // Define the units array
 const ingredientUnits: IngredientUnit[] = [
   { label: 'Gramm', value: 'g' },
@@ -99,7 +112,11 @@ const ingredientUnits: IngredientUnit[] = [
     ToastModule,
     DialogModule,
     ConfirmDialogModule,
-    CheckboxModule
+    CheckboxModule,
+    StepperModule,
+    ToggleButtonModule,
+    MeterGroupModule,
+    TabViewModule
   ],
   standalone: true,
   providers: [MessageService, ConfirmationService]
@@ -115,6 +132,7 @@ export class ShoppingListDetailsComponent implements OnInit {
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
   hasOrdersRunning: boolean = false;
+  active: number | undefined = 0;
 
   offerDataList: any[] = [];
 
@@ -626,4 +644,43 @@ export class ShoppingListDetailsComponent implements OnInit {
     const selectedTab = this.accordion.tabs[index];
     this.selectedIngredientName = selectedTab.header ?? '';
   }
+
+  getTotalIngredientsCount(): number {
+    return this.ingredientOfferMapping.reduce((total, item) => {
+      if (item.ingredient[0]?.name === this.ingredientNames[0]) {
+        return total + item.ingredient.length;
+      }
+      return total;
+    }, 0);
+  }
+  
+  getOffersFoundSelectedCount(): number {
+    return this.ingredientOfferMapping.filter(item => item.status === 'OFFERS_FOUND' && item.selected).length;
+  }
+  
+  getOffersFoundUnselectedCount(): number {
+    return this.ingredientOfferMapping.filter(item => item.status === 'OFFERS_FOUND' && !item.selected).length;
+  }
+  
+  getNoOffersCount(): number {
+    return this.ingredientOfferMapping.filter(item => item.status === 'NO_OFFERS').length;
+  }
+  
+  getMeterItems(): MeterItem[] {
+    const total = this.getTotalIngredientsCount();
+    console.log('Total Ingredients Count:', total);
+    const items = [
+      { label: 'Ausgewählt', value: this.getOffersFoundSelectedCount(), icon: 'pi pi-check', color: 'green', size: (this.getOffersFoundSelectedCount() / total) * 100 },
+      { label: 'Verfügbar', value: this.getOffersFoundUnselectedCount(), icon: 'pi pi-pencil', color: 'orange', size: (this.getOffersFoundUnselectedCount() / total) * 100 },
+      { label: 'keine Angebote', value: this.getNoOffersCount(), icon: 'pi pi-ban',  color: 'red', size: (this.getNoOffersCount() / total) * 100 }
+    ];
+    console.log('Meter Items:', items);
+    return items;
+  }
+
+  hasNoUnselectedOffers(): boolean {
+    return this.ingredientOfferMapping.every(item => item.status !== 'OFFERS_FOUND' || item.selected);
+  }
+
+ 
 }
