@@ -1,0 +1,55 @@
+<div class="profile-container" *ngIf="!loading && user_profile">
+    <!-- User Details Section -->
+    <div class="card user-details-card">
+        <div class="user-info">
+            <img class="profile-picture" src="https://via.placeholder.com/100" alt="User Photo">
+            <h2>{{ user_profile.firstname }} {{ user_profile.lastname }}</h2>
+            <p><i class="pi pi-envelope"></i> <strong>Email:</strong> {{ user_profile.email }}</p>
+            <p><i class="pi pi-check-circle"></i> <strong>Message Terms Status:</strong> {{
+                user_profile.messageTermsStatus }}</p>
+            <p><i class="pi pi-eye"></i> <strong>Tracking Enabled:</strong> {{ user_profile.trackingEnabled ? 'Yes' :
+                'No' }}</p>
+        </div>
+    </div>
+
+    <!-- Employments and Company Details Section -->
+    <div class="employment-container">
+        <h3><i class="pi pi-briefcase"></i> Employments</h3>
+        <ng-container *ngIf="employments.length > 0; else noEmployments">
+            <div *ngFor="let employment of employments" class="card employment-card">
+                <h4><i class="pi pi-user"></i> Employment Status: {{ employment.status }}</h4>
+                <!-- Iterate over companies separately -->
+                <ng-container *ngFor="let company of companies">
+                    <div *ngIf="employment.links.company.endsWith(company.id)" class="company-details">
+                        <h4><i class="pi pi-building"></i> {{ company.name }}</h4>
+                        <p><strong>Company Address:</strong></p>
+                        <ul *ngIf="companyAddresses[company.id]">
+                            <li><strong>Street:</strong> {{ companyAddresses[company.id].street }}</li>
+                            <li><strong>Zipcode:</strong> {{ companyAddresses[company.id].zipcode }}</li>
+                            <li><strong>City:</strong> {{ companyAddresses[company.id].city }}</li>
+                            <li><strong>Country:</strong> {{ companyAddresses[company.id].country.toUpperCase() }}</li>
+                            <li><strong>Type:</strong> {{ companyAddresses[company.id].type }}</li>
+                        </ul>
+                        <p><strong>Email:</strong> {{ company.email || 'N/A' }}</p>
+                        <p><strong>Phone:</strong> {{ company.phone || 'N/A' }}</p>
+                        <p><strong>Tax ID:</strong> {{ company.taxId || 'N/A' }}</p>
+                        <p><strong>Verified:</strong> {{ company.verified ? 'Yes' : 'No' }}</p>
+                        <p><strong>Website:</strong>
+                            <a *ngIf="company.web" href="{{ company.web }}" target="_blank">{{ company.web }}</a>
+                            <span *ngIf="!company.web">N/A</span>
+                        </p>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+        <ng-template #noEmployments>
+            <p>No employments found for this user.</p>
+        </ng-template>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div *ngIf="loading" class="loading-spinner">
+    <p><i class="pi pi-spinner pi-spin"></i> Loading user data...</p>
+</div>
+<p-toast></p-toast>

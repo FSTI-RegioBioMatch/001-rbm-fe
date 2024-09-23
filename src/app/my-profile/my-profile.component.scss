@@ -1,0 +1,102 @@
+/* Root container for the entire profile page */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 900px;
+    border-radius: 8px;
+  }
+  
+  /* Card styles for user details and employment */
+  .card {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  /* Hover effect for cards */
+  .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* User details card specific styles */
+  .user-details-card {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+  
+  /* Profile picture styling */
+  .profile-picture {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  
+  /* User information styling */
+  .user-info h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+  }
+  
+  .user-info p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  /* Employment container styling */
+  .employment-container {
+    width: 100%;
+  }
+  
+  /* Employment card styling */
+  .employment-card h4 {
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .employment-card ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 14px;
+  }
+  
+  .employment-card ul li {
+    margin: 5px 0;
+  }
+  
+  /* Company details specific styling */
+  .company-details {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Loading spinner styling */
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 18px;
+    color: #555;
+  }
+  
+  .loading-spinner p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  

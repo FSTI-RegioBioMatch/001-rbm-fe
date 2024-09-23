@@ -19,6 +19,7 @@ import { OffersOverviewComponent } from './offers-overview/offers-overview.compo
 import { OrdersComponent } from './orders/orders.component';
 import { ShoppinglistToOrderDetailsComponent } from './shoppinglist-to-order-details/shoppinglist-to-order-details.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -87,6 +88,9 @@ const routes: Routes = [
   },
   {
     path: 'order-details/:id', component: OrderDetailsComponent
+  },
+  {
+    path: 'my-profile', component: MyProfileComponent
   }
 ];
 @NgModule({
