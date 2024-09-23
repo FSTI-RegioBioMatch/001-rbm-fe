@@ -1,6 +1,6 @@
 <div class="shopping-list-details p-m-3 p-shadow-3 p-p-4">
-    <h1>Shopping List and Offers</h1>
-    <p>Date Created: {{ shoppingList?.createdAt | date:'shortDate' }}</p>
+    <h1>Einkaufsliste</h1>
+    <p>Angelegt am: {{ shoppingList?.createdAt | date:'longDate' }}</p>
 
 <div class="rbm-flex-row" *ngIf="!loading && shoppingList">
     <p-stepper orientation="vertical" class="rbm-width-50">
@@ -33,33 +33,34 @@
         <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
           <div class="rbm-flex-column">
               <div class="rbm-flex-column rbm-padding-m rbm-gap-4xs">
+
                 <div *ngFor="let item of getTotalAmountsPerUnitArray(ingredientName)" class="amountCard">
                   <p>
-                    <strong>Total Amount:</strong>
+                    <strong>Gesamt:</strong>
                     {{ item.totalAmount }} {{ getUnitLabel(item.unit) }}
                   </p>
                   <!-- Display Combined Processing Breakdowns -->
-                  <p><strong>Processing Breakdown:</strong></p>
+                  <p><strong>Verarbeitung:</strong></p>
                   <ul>
                     <li *ngFor="let item of getProcessingBreakdown(getCombinedProcessingBreakdown(ingredientName))">
-                      {{ item.label }}: {{ item.amount }} {{ getUnitLabel(item.unit) }}
+                      {{ item.amount }} {{ getUnitLabel(item.unit) }} {{ getLocalizedLabelLOP(item.label) }} 
                     </li>
                   </ul>
-            
-                  <!-- Button to Open Offers Dialog -->
-                  <button
-                    pButton
-                    label="Select Offers"
-                    (click)="openOfferSelectionDialog(ingredientName)"
-                    [disabled]="!hasOffersForIngredient(ingredientName)"
-                  >
-                  </button>
                 </div>
+                
+                <!-- Button to Open Offers Dialog -->
+                <button
+                  pButton
+                  label="Angebote Auswählen"
+                  (click)="openOfferSelectionDialog(ingredientName)"
+                  [disabled]="!hasOffersForIngredient(ingredientName)"
+                >
+                </button>
               </div>
           </div>
           <div class="rbm-flex-row rbm-gap-p5">
-              <p-button label="Back" severity="secondary" (onClick)="prevCallback.emit()" />
-              <p-button label="Next" (onClick)="nextCallback.emit()" />
+              <p-button label="Zurück" severity="secondary" (onClick)="prevCallback.emit()" />
+              <p-button label="Weiter" (onClick)="nextCallback.emit()" />
           </div>
       </ng-template>
       </p-stepperPanel>
@@ -71,7 +72,7 @@
     <p-card class="reichweite-toolbar">
       <p>Reichweite anpassen: {{ range }} km</p>
       <p-slider [(ngModel)]="range" [min]="1" [max]="250" [step]="1"></p-slider>
-      <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
+      <button pButton label="Angebote neu laden" (click)="clearCacheAndReload()"></button>
     </p-card>
     <p-meterGroup [value]="getMeterItems()" labelPosition="start">
       <ng-template pTemplate="label">
@@ -151,25 +152,29 @@
     </p-tabView>
     <div class="fixed-bottom-toolbar">
     <p *ngIf="hasOrdersRunning"> Es gibt bereits mind. eine laufende bestellung</p>
-    <button *ngIf="hasOrdersRunning" (click)="openshowOfferSelectionDialog()">Zeigen</button>
-    <button (click)="createSummary()">
-        {{ getButtonLabel() }}
+    <button pButton *ngIf="hasOrdersRunning" (click)="openshowOfferSelectionDialog()" label="Laufende anzeigen"></button>
+    <br>
+    <button pButton (click)="createSummary()" label="{{getButtonLabel()}}">
       </button>
     </div> 
   </div>
 </div>
 </div>
 
+<div *ngIf="loading" class="text-center rbm-loading-screen">
+  <p-progressSpinner></p-progressSpinner>
+</div>
+
 
 <p-toast></p-toast>
 
 <p-dialog
-  header="Angebot auswählen"
+  header="Laufende Bestellungen"
   [(visible)]="showRunningOrdersDialog"
   modal="modal"
   [closable]="false"
 >
-  <p>Bitte wählen Sie ein Angebot aus der Liste unten aus:</p>
+  <p>Die folgenden Vorgänge sind bereits mit dieser Einkaufsliste verbunden:</p>
   <ul>
     <li *ngFor="let offer of offerDataList">
       <!-- Customize the display as needed -->
@@ -212,7 +217,7 @@
         <li
           *ngFor="let item of getProcessingBreakdown(getCombinedProcessingBreakdown(selectedIngredientName))"
         >
-          {{ item.label }}: {{ item.amount }} {{ getUnitLabel(item.unit) }}
+          {{ item.amount }} {{ getUnitLabel(item.unit) }}  {{ getLocalizedLabelLOP(item.label) }}
         </li>
       </ul>
     </p-accordionTab>
@@ -255,17 +260,17 @@
         </p>
           <p>
             <strong>Gesamte Menge:</strong>
-            {{ offerItem.offer?.offerDetails?.totalAmount?.amount }} {{ offerItem.offer?.offerDetails?.totalAmount?.unit }}
+            {{ offerItem.offer?.offerDetails?.totalAmount?.amount }} {{ getLocalizedLabelUnit(offerItem.offer?.offerDetails?.totalAmount?.unit) }}
           </p>
           <p>
             <strong>Mindestmenge:</strong>
-            {{ offerItem.offer?.offerDetails?.minAmount?.amount }} {{ offerItem.offer?.offerDetails?.minAmount?.unit }}
+            {{ offerItem.offer?.offerDetails?.minAmount?.amount }} {{ getLocalizedLabelUnit(offerItem.offer?.offerDetails?.minAmount?.unit) }}
           </p>
           <div *ngIf="offerItem.offer?.offerDetails?.levelsOfProcessing?.length > 0">
             <p><strong>Verarbeitungen:</strong></p>
             <ul>
               <li *ngFor="let processing of offerItem.offer?.offerDetails?.levelsOfProcessing">
-                {{ getLocalizedLabel(processing.label) }}
+                {{ getLocalizedLabelLOP(processing.label) }}
               </li>
             </ul>
           </div>

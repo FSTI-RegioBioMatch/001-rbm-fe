@@ -92,7 +92,7 @@
                             <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span> 
                             <div class="rbm-flex-row">
                               <!-- Check if ingredient is optional -->
-                                <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
+                                <p-multiSelect [selectedItemsLabel]="'{0} Elemente ausgewählt'" [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
                                 </p-multiSelect>
                               
                               <div>

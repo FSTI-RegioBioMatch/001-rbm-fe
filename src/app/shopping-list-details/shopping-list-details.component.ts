@@ -26,6 +26,7 @@ import { StepperModule } from 'primeng/stepper';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { MeterGroupModule } from 'primeng/metergroup';
 import { TabViewModule } from 'primeng/tabview';
+import { LocalizeService } from '../shared/services/localize.service';
 
 export interface IngredientUnit {
   label: string;
@@ -131,6 +132,8 @@ export class ShoppingListDetailsComponent implements OnInit {
   loading = true;
   range: number = 50;
   localizationData: { displayLabel: string; value: string }[] = [];
+  localizationDataUnits: { [key: string]: string } = {};
+  localizationDataLOP: { [key: string]: string } = {};
   hasOrdersRunning: boolean = false;
   active: number | undefined = 0;
 
@@ -149,6 +152,7 @@ export class ShoppingListDetailsComponent implements OnInit {
     private messageService: MessageService,
     private nearbuyTestService: NearbuyTestService,
     private offerToOrderService: OfferToOrderService,
+    private localizeService: LocalizeService
   ) {}
 
   ngOnInit(): void {
@@ -199,6 +203,23 @@ export class ShoppingListDetailsComponent implements OnInit {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
       }
     });
+    this.localizeService.getLevelsOfProcessing().subscribe({
+      next: result => {
+        this.localizationDataLOP = result; // Save localization data for later use
+      },
+      error: err => {
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
+      }
+    });
+    this.localizeService.getUnits().subscribe({
+      next: result => {
+        this.localizationDataUnits = result; // Save localization data for later use
+      },
+      error: err => {
+        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
+      }
+    });
+
   }
 
   checkIfShoppinglistHasOngoing() {
@@ -223,7 +244,7 @@ export class ShoppingListDetailsComponent implements OnInit {
             severity: 'warn',
             summary: 'Warnung',
             detail:
-              'Die Einkaufsliste wurde bereits verarbeitet. Bitte wählen Sie ein Angebot aus.',
+              'Zu dieser Einkaufsliste wurden laufende Vorgänge gefunden.',
           });
   
           // Fetch the mapped offers
@@ -352,6 +373,40 @@ export class ShoppingListDetailsComponent implements OnInit {
     return localizedItem ? localizedItem.displayLabel : ingredientName;
   }
 
+  getLocalizedLabelLOP(levelsOfProcessing: string): string {
+    if (!levelsOfProcessing || !this.localizationDataLOP) {
+      return ''; // Return empty string if no translation is available or input is empty
+    }
+  
+    // Split by commas and trim each label
+    const labels = levelsOfProcessing.split(',').map(label => label.trim());
+  
+    // Translate each label individually, falling back to the original label if no translation is found
+    const translatedLabels = labels
+      .map(label => this.localizationDataLOP[label] || label)
+      .filter(label => label.toLowerCase() !== 'n/a' && label !== ''); // Filter out 'n/a' and empty labels
+  
+    // Join the translated labels back with a comma separator
+    return translatedLabels.length > 0 ? translatedLabels.join(', ') : ''; // Return empty string if no valid labels
+  }
+
+
+  getLocalizedLabelUnit(unit: string): string {
+    if (!unit || !this.localizationDataUnits) {
+      return unit; // Return original value if no translation is available or input is empty
+    }
+  
+    // Split by commas and trim each label
+    const labels = unit.split(',').map(label => label.trim());
+  
+    // Translate each label individually, falling back to the original label if no translation is found
+    const translatedLabels = labels.map(label => this.localizationDataUnits[label] || label);
+  
+    // Join the translated labels back with a comma separator
+    return translatedLabels.join(', ');
+  }
+
+
   getUnitLabel(unitValue: string): string {
     const unit = ingredientUnits.find(u => u.value === unitValue);
     return unit ? unit.label : unitValue; // Return the label if found, else return the value itself
@@ -377,6 +432,7 @@ export class ShoppingListDetailsComponent implements OnInit {
   clearCacheAndReload(): void {
     this.loading = true
     this.loadOffers(); // Reload the offers
+    
   }
 
   private matchIngredientsToOffers(): void {
@@ -532,6 +588,7 @@ export class ShoppingListDetailsComponent implements OnInit {
   }
 
   openOfferSelectionDialog(ingredientName: string): void {
+
     this.selectedIngredientName = ingredientName;
   
     // Adjust the find method to compare the ingredient names correctly
@@ -667,19 +724,15 @@ export class ShoppingListDetailsComponent implements OnInit {
   
   getMeterItems(): MeterItem[] {
     const total = this.getTotalIngredientsCount();
-    console.log('Total Ingredients Count:', total);
     const items = [
       { label: 'Ausgewählt', value: this.getOffersFoundSelectedCount(), icon: 'pi pi-check', color: 'green', size: (this.getOffersFoundSelectedCount() / total) * 100 },
       { label: 'Verfügbar', value: this.getOffersFoundUnselectedCount(), icon: 'pi pi-pencil', color: 'orange', size: (this.getOffersFoundUnselectedCount() / total) * 100 },
       { label: 'keine Angebote', value: this.getNoOffersCount(), icon: 'pi pi-ban',  color: 'red', size: (this.getNoOffersCount() / total) * 100 }
     ];
-    console.log('Meter Items:', items);
     return items;
   }
 
   hasNoUnselectedOffers(): boolean {
     return this.ingredientOfferMapping.every(item => item.status !== 'OFFERS_FOUND' || item.selected);
   }
-
- 
 }
