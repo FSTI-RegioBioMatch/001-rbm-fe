@@ -109,6 +109,51 @@
           </p-floatLabel>
         </div>
 
+        <div class="portion-summary-container">
+          <!-- Display Total Portions -->
+          <div class="total-portions">
+            <h2>Gesamtportionen: 
+              <span [pTooltip]="getTooltipContent(menuPlan)" tooltipPosition="top">
+                {{ totalPortions }}
+              </span>
+            </h2>
+          </div>
+        
+          <!-- Display Portions by Tag -->
+          <div class="portions-by-tag" *ngIf="tagPortions.length > 0">
+            <h3>Portionen nach Tag</h3>
+            <ul>
+              <li *ngFor="let tag of tagPortions" [pTooltip]="getTooltipContent(menuPlan, tag.name)" tooltipPosition="right">
+                <strong >
+                  {{ tag.name }}:
+                </strong> 
+                {{ tag.portions }} Portionen
+              </li>
+            </ul>
+          </div>
+        
+          <div class="no-tags" *ngIf="tagPortions.length === 0">
+            <p>Keine Tags vorhanden.</p>
+          </div>
+        
+          <!-- Display Portions by Tag Combination -->
+          <div class="portions-by-combination" *ngIf="combinedTagPortions.length > 0">
+            <h3>Portionen nach Tag-Kombination</h3>
+            <ul>
+              <li *ngFor="let combination of combinedTagPortions" [pTooltip]="getTooltipContent(menuPlan, null, combination.tags)" tooltipPosition="right">
+                <strong >
+                  {{ getFormattedTags(combination.tags) }}:
+                </strong> 
+                {{ combination.portions }} Portionen
+              </li>
+            </ul>
+          </div>
+        
+          <div class="no-combination" *ngIf="combinedTagPortions.length === 0">
+            <p>Keine Tag-Kombinationen vorhanden.</p>
+          </div>
+        </div>
+        
         <div class="form-field">
           <label for="portions">Portionen<span class="rbm-text-error rbm-text-s">*</span></label>
           <p-floatLabel pTooltip="Mindestens einer der Portionen muss größer sein als 0">

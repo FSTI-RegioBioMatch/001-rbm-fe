@@ -92,6 +92,13 @@ export class MenuPlanningComponent implements OnInit {
   activeIndex: number = 0;
   visible: boolean = false;
 
+  totalPortions: number = 0;
+
+  allTags: string[] = [];
+  tagPortions!: { name: string; portions: number; }[] | [];
+  combinedTagPortions!: { tags: string[]; portions: number; }[] | [];
+
+
   constructor(
     private store: StoreService,
     private menuplanService: NewMenuplanService,
@@ -163,6 +170,7 @@ export class MenuPlanningComponent implements OnInit {
 
         this.loadRecipes(); 
         this.loadAllEvents();
+        this.updatePortionsAndTags()
       });
   }
 
@@ -248,11 +256,13 @@ export class MenuPlanningComponent implements OnInit {
     } else {
       this.addedRecipes.add(recipe);
     }
-    if (this.menuPlan.includes(recipe)) {
-      return;
+    if (!this.menuPlan.includes(recipe)) { // Only add if not already in the menu plan
+      this.menuPlan.push(recipe);
+      this.menuPlanForm.updateValueAndValidity(); // Update form validity
     }
-    this.menuPlan.push(recipe);
-    this.menuPlanForm.updateValueAndValidity(); // Update form validity
+    
+    // Update total portions and tags
+    this.updatePortionsAndTags();
   }
   
   removeRecipeFromMenuPlan(recipe: any): void {
@@ -264,8 +274,51 @@ export class MenuPlanningComponent implements OnInit {
     }
     if (index > -1) {
       this.menuPlan.splice(index, 1);
+      this.menuPlanForm.updateValueAndValidity(); // Update form validity
     }
-    this.menuPlanForm.updateValueAndValidity(); // Update form validity
+  
+    // Update total portions and tags
+    this.updatePortionsAndTags();
+  }
+  
+  // Helper method to update total portions and tags
+  updatePortionsAndTags(): void {
+    this.totalPortions = this.menuPlan.reduce((sum, recipe) => {
+      const portion = Number(recipe.portionen);
+      return sum + (isNaN(portion) ? 0 : portion);
+    }, 0);
+    this.collectAllTags();
+    this.calculateTagPortions();
+
+    this.calculateCombinedTagPortions()
+  }
+  // Function to calculate portions for each tag
+  calculateTagPortions(): void {
+    const tagMap = new Map<string, number>();
+
+    // Iterate through each recipe and accumulate portions for each tag
+    this.menuPlan.forEach(recipe => {
+      recipe.essensgaeste.forEach((tag: string) => {
+        const currentPortions = tagMap.get(tag) || 0;
+        tagMap.set(tag, currentPortions + Number(recipe.portionen));
+      });
+    });
+
+    // Convert map to array for display in template
+    this.tagPortions = Array.from(tagMap, ([name, portions]) => ({ name, portions }));
+  }
+  calculateCombinedTagPortions(): void {
+    const combinationMap = new Map<string, number>();
+  
+    // Iterate through each recipe and create combinations of tags
+    this.menuPlan.forEach(recipe => {
+      const sortedTags = recipe.essensgaeste.sort().join(', '); // Create a unique key for tag combination
+      const currentPortions = combinationMap.get(sortedTags) || 0;
+      combinationMap.set(sortedTags, currentPortions + Number(recipe.portionen));
+    });
+  
+    // Convert map to array for display in template
+    this.combinedTagPortions = Array.from(combinationMap, ([tags, portions]) => ({ tags: tags.split(', '), portions }));
   }
 
   saveMenuPlan(): void {
@@ -610,5 +663,40 @@ export class MenuPlanningComponent implements OnInit {
         console.error('Error fetching menu plans:', error);
       }
     );
+  }
+  // Collect all tags from essensgaeste
+  collectAllTags() {
+    let allTags: string[] = [];
+
+    // Collect all tags from all recipes
+    this.menuPlan.forEach(recipe => {
+      allTags = [...allTags, ...recipe.essensgaeste];
+    });
+
+    // Remove duplicates and update allTags
+    this.allTags = Array.from(new Set(allTags));
+  }
+  
+  getFormattedTags(tags: string[]): string {
+    // Filter out empty tags and join them into a string
+    const filteredTags = tags.filter(tag => tag.trim() !== '').join(', ');
+    return filteredTags || 'Ohne Tags'; // Return 'Ohne Tags' if no valid tags are present
+  }
+  getTooltipContent(recipes: any[], tagName?: string  | null,  combinationTags?: string[]): string {
+    if (tagName) {
+      // Tooltip content for single tag
+      const filteredRecipes = recipes.filter(recipe => recipe.essensgaeste.includes(tagName));
+      return filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
+    } else if (combinationTags) {
+      // Tooltip content for tag combination
+      const filteredTags = combinationTags.filter(tag => tag.trim() !== '');
+      const filteredRecipes = recipes.filter(recipe =>
+        filteredTags.every(tag => recipe.essensgaeste.includes(tag))
+      );
+      return filteredRecipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
+    } else {
+      // Tooltip content for total portions
+      return recipes.map(recipe => `${recipe.recipeName}: ${recipe.portionen} Portionen`).join('\n');
+    }
   }
 }
