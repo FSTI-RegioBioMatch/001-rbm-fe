@@ -1,6 +1,6 @@
 <div class="rbm-site-toolbar">
   <p-button class="first" routerLink="/orders">Meine Bestellungen</p-button>
-  <p-button routerLink="/pr-pi-overview">Preisanfragen</p-button>
+  <p-button routerLink="/pr-pi-overview">Preis/Kauf-anfragen</p-button>
 </div>
 
 <div *ngIf="loadingOrders" class="loading-container rbm-loading-screen">
@@ -12,71 +12,84 @@
 </div>
 
 
+<br><br><br><br>
 
 <div *ngIf="!loadingOrders">
-  <!-- Price Requests Section -->
-  <h3>Price Requests</h3>
 
-  <!-- Status Filter Dropdown for Price Requests -->
-  <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status"
-    (onChange)="filterPriceRequests()"></p-dropdown>
+  <p-tabView>
+    <p-tabPanel header="Preisanfragen">
+        <!-- Price Requests Section -->
+      <h3>Preisanfragen</h3>
 
-  <!-- Price Requests Table -->
-  <p-table [value]="filteredPriceRequests" [rows]="10" [responsiveLayout]="'scroll'">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Date Created</th>
-        <th>Delivery Date</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-priceRequest>
-      <tr>
-        <td>{{ priceRequest.dateCreated | date }}</td>
-        <td>{{ priceRequest.deliveryDate | date }}</td>
-        <td>{{ priceRequest.amount.amount }} {{ priceRequest.amount.unit }}</td>
-        <td>{{ priceRequest.status }}</td>
-        <td>
-          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
-            (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <!-- Status Filter Dropdown for Price Requests -->
+      <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status"
+        (onChange)="filterPriceRequests()"></p-dropdown>
+        
+      <br><br>
 
-  <!-- Purchase Intents Section with Status Filter -->
-  <h3>Purchase Intents</h3>
+      <!-- Price Requests Table -->
+      <p-table [value]="filteredPriceRequests" [rows]="10" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date Created</th>
+            <th>Delivery Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-priceRequest>
+          <tr>
+            <td>{{ priceRequest.dateCreated | date }}</td>
+            <td>{{ priceRequest.deliveryDate | date }}</td>
+            <td>{{ priceRequest.amount.amount }} {{ priceRequest.amount.unit }}</td>
+            <td>{{ priceRequest.status }}</td>
+            <td>
+              <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+                (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+    <p-tabPanel header="Kaufanfragen">
+       <!-- Purchase Intents Section with Status Filter -->
+      <h3>Kaufanfragen</h3>
 
-  <!-- Status Filter Dropdown for Purchase Intents -->
-  <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status"
-    (onChange)="filterPurchaseIntents()"></p-dropdown>
+      <!-- Status Filter Dropdown for Purchase Intents -->
+      <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status"
+        (onChange)="filterPurchaseIntents()"></p-dropdown>
 
-  <!-- Purchase Intents Table -->
-  <p-table [value]="filteredPurchaseIntents" [rows]="10" [responsiveLayout]="'scroll'">
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Date Created</th>
-        <th>Delivery Date</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-purchaseIntent>
-      <tr>
-        <td>{{ purchaseIntent.dateCreated | date }}</td>
-        <td>{{ purchaseIntent.deliveryDate | date }}</td>
-        <td>{{ purchaseIntent.amount.amount }} {{ purchaseIntent.amount.unit }}</td>
-        <td>{{ purchaseIntent.status }}</td>
-        <td>
-          <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
-            (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <br><br>
+
+      <!-- Purchase Intents Table -->
+      <p-table [value]="filteredPurchaseIntents" [rows]="10" [responsiveLayout]="'scroll'">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Date Created</th>
+            <th>Delivery Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-purchaseIntent>
+          <tr>
+            <td>{{ purchaseIntent.dateCreated | date }}</td>
+            <td>{{ purchaseIntent.deliveryDate | date }}</td>
+            <td>{{ purchaseIntent.amount.amount }} {{ purchaseIntent.amount.unit }}</td>
+            <td>{{ purchaseIntent.status }}</td>
+            <td>
+              <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+                (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-tabPanel>
+</p-tabView>
+
+ 
 
 </div>
 <p-toast></p-toast>

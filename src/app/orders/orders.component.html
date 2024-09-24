@@ -1,8 +1,8 @@
 <div class="rbm-site-toolbar">
     <p-button class="first" routerLink="/orders">Meine Bestellungen</p-button>
-    <p-button routerLink="/pr-pi-overview">Preisanfragen</p-button>
+    <p-button routerLink="/pr-pi-overview">Preis/Kauf-anfragen</p-button>
 </div>
-  
+<br><br>
 
 <p-table [value]="orders" responsiveLayout="scroll" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
@@ -28,7 +28,7 @@
             <td>{{ order.dateCreated | date: 'short' }}</td>
             <td>
                 <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
-                  (click)="gotoDetails(order)"></button>
+                  (click)="gotoDetails(order)">Details</button>
               </td>
         </tr>
     </ng-template>
