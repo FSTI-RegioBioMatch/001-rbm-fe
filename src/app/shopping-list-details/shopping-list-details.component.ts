@@ -686,15 +686,7 @@ export class ShoppingListDetailsComponent implements OnInit {
       }
     }
   }
-  scrollToAccordionTab(ingredientName: string): void {
-    this.selectedIngredientName = ingredientName;
-    const index = this.ingredientNames.findIndex(name => name === ingredientName);
-    if (index >= 0) {
-      setTimeout(() => {
-        this.accordion.tabs[index].selected = true; // Open the tab
-      }, 100); // Delay for accordion to be available
-    }
-  }
+
   
   onAccordionTabChange(event: any, index: number): void {
     const selectedTab = this.accordion.tabs[index];
@@ -727,7 +719,7 @@ export class ShoppingListDetailsComponent implements OnInit {
     const items = [
       { label: 'Ausgewählt', value: this.getOffersFoundSelectedCount(), icon: 'pi pi-check', color: 'green', size: (this.getOffersFoundSelectedCount() / total) * 100 },
       { label: 'Verfügbar', value: this.getOffersFoundUnselectedCount(), icon: 'pi pi-pencil', color: 'orange', size: (this.getOffersFoundUnselectedCount() / total) * 100 },
-      { label: 'keine Angebote', value: this.getNoOffersCount(), icon: 'pi pi-ban',  color: 'red', size: (this.getNoOffersCount() / total) * 100 }
+      { label: 'Unverfügbar', value: this.getNoOffersCount(), icon: 'pi pi-ban',  color: 'red', size: (this.getNoOffersCount() / total) * 100 }
     ];
     return items;
   }

@@ -105,21 +105,6 @@
     </p-meterGroup>
 
     <p-tabView class="rbm-max-width-per100">
-      <p-tabPanel header="Verfügbar" class="unselected-offer">
-        <ng-container *ngIf=" getOffersFoundUnselectedCount() < 1">
-          Keine offene Angebote gefunden
-        </ng-container>
-        <div *ngFor="let item of ingredientOfferMapping">
-          <ng-container *ngIf="item.ingredient.length > 0">
-            <p 
-                *ngIf="item.status === 'OFFERS_FOUND' && !item.selected" 
-                class="unselected-offer"
-                (click)="scrollToAccordionTab(item.ingredient[0]?.name)">
-                {{ getLocalizedLabel(item.ingredient[0]?.name) }}
-            </p>
-          </ng-container>
-        </div>
-      </p-tabPanel>
       <p-tabPanel header="Ausgewählt">
         <ng-container *ngIf="getOffersFoundSelectedCount() < 1">
           Keine Angebote ausgewählt
@@ -129,8 +114,23 @@
             <p 
               *ngIf="item.status === 'OFFERS_FOUND' && item.selected" 
               class="valid-offer"
-              (click)="scrollToAccordionTab(item.ingredient[0]?.name)">
+              >
               {{ getLocalizedLabel(item.ingredient[0]?.name) }}
+            </p>
+          </ng-container>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Verfügbar" class="unselected-offer">
+        <ng-container *ngIf=" getOffersFoundUnselectedCount() < 1">
+          Keine offene Angebote gefunden
+        </ng-container>
+        <div *ngFor="let item of ingredientOfferMapping">
+          <ng-container *ngIf="item.ingredient.length > 0">
+            <p 
+                *ngIf="item.status === 'OFFERS_FOUND' && !item.selected" 
+                class="unselected-offer"
+                >
+                {{ getLocalizedLabel(item.ingredient[0]?.name) }}
             </p>
           </ng-container>
         </div>

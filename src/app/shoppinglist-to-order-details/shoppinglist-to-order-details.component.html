@@ -4,12 +4,15 @@
 <p-stepper orientation="vertical" *ngIf="shoppingListToOrderObject?.mappedOffersIngredients">
   <p-stepperPanel *ngFor="let item of shoppingListToOrderObject.mappedOffersIngredients; let i = index" class="rbm-full-stepper">
     <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
-      <div *ngFor="let ingredient of item.ingredient">
-        <span (click)="onClick.emit()" class="rbm-flex-row rbm-gap-p5">
-          <span class="rbm-stepper-number rbm-bg-valid" *ngIf="item.status !== 'NO_OFFERS'">
+      <div *ngFor="let ingredient of getUniqueIngredients(item.ingredient)">
+          <span (click)="onClick.emit()" class="rbm-flex-row rbm-gap-p5">
+          <span class="rbm-stepper-number rbm-bg-valid" *ngIf="item.status !== 'NO_OFFERS' && hasOffers(item)">
             <i class="pi pi-info-circle"></i>
           </span>
           <span class="rbm-stepper-number rbm-bg-error" *ngIf="item.status === 'NO_OFFERS'">
+            <i class="pi pi-ban"></i>
+          </span>
+          <span class="rbm-stepper-number normal-bg" *ngIf="item.status !== 'NO_OFFERS' && !hasOffers(item)">
             <i class="pi pi-ban"></i>
           </span>
           <span class="rbm-height-fit rbm-items-middle">
@@ -143,17 +146,25 @@
               </p-tabPanel>
               <p-tabPanel header="Preisanfrage" class="unselected-offer">
                 <!-- Price Request Section -->
-                <div class="rbm_scrollbar x-scroller">
-                  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests">
+                <div>
+                  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests" class="rbm_scrollbar x-scroller rbm-flex-row rbm-gap-p5">
                     <div class="purchase-request-card" *ngFor="let request of item?.priceRequests">
                       <div class="head">
                         <div class="status completed-bg-l" *ngIf="request?.status === 'PRICE_ADDED'">
                           <i class="pi pi-check completed-bg-d"></i>
-                          <p>Akzeptiert</p>
+                          <p>Bestellung Möglich</p>
                         </div>
-                        <div class="status ausstehend-bg-l" *ngIf="request?.status !== 'PRICE_ADDED'">
+                        <div class="status completed-bg-l" *ngIf="request?.status === 'COMPLETED'">
+                          <i class="pi pi-check completed-bg-d"></i>
+                          <p>Bestellt</p>
+                        </div>
+                        <div class="status ausstehend-bg-l" *ngIf="request?.status === 'PENDING'">
                           <i class="pi pi-hourglass ausstehend-bg-d"></i>
                           <p>Ausstehend</p>
+                        </div>
+                        <div class="status ausstehend-bg-l" *ngIf="request?.status === 'REJECTED'">
+                          <i class="pi pi-ban ausstehend-bg-d"></i>
+                          <p>Abgelehnt</p>
                         </div>
                         <div class="created-at">
                           <span>Erstellungsdatum:</span>
@@ -171,7 +182,10 @@
                         </div>
                       </div>
                       <div class="foota">
-                        <p>Lieferdatum: <span>{{ request?.deliveryDate | date }}</span></p>
+                        <div class="rbm-flex-column">
+                          <p class="rbm-text-black" ><span class="rbm-text-sea-green">{{ request?.sellingCompany?.name }}</span> liefert</p>
+                          <p class="rbm-text-black" >am <span  class="rbm-text-sea-green">{{ request?.deliveryDate | date }}</span></p>
+                        </div>
                         <p-button *ngIf="request.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
                           (onClick)="makePriceRequestOrder(request)">
                         </p-button>
@@ -204,13 +218,21 @@
               </p-tabPanel>
               <p-tabPanel header="Kaufanfrage" class="unselected-offer">
                 <!-- Purchase Request Section -->
-                <div class="rbm_scrollbar x-scroller">
-                  <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents">
+                <div>
+                  <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents" class="rbm_scrollbar x-scroller rbm-flex-row rbm-gap-p5">
                     <div class="purchase-request-card" *ngFor="let intent of item?.purchaseIntents">
                       <div class="head">
-                        <div class="status completed-bg-l" *ngIf="intent?.status === 'INVOICE_ADDED' || intent?.status === 'COMPLETED'">
+                        <div class="status completed-bg-l" *ngIf="intent?.status === 'ACCEPTED'">
                           <i class="pi pi-check completed-bg-d"></i>
                           <p>Akzeptiert</p>
+                        </div>
+                        <div class="status completed-bg-l" *ngIf="intent?.status === 'COMPLETED'">
+                          <i class="pi pi-check completed-bg-d"></i>
+                          <p>Bestellt</p>
+                        </div>
+                        <div class="status completed-bg-l" *ngIf="intent?.status === 'REJECTED'">
+                          <i class="pi pi-ban completed-bg-d"></i>
+                          <p>Abgelehnt</p>
                         </div>
                         <div class="status ausstehend-bg-l" *ngIf="intent?.status === 'PENDING'">
                           <i class="pi pi-hourglass ausstehend-bg-d"></i>
@@ -232,7 +254,10 @@
                         </div>
                       </div>
                       <div class="foota">
-                        <p>Lieferdatum: <span>{{ intent?.deliveryDate | date }}</span></p>
+                        <div class="rbm-flex-column">
+                          <p class="rbm-text-black" ><span class="rbm-text-sea-green">{{ intent?.sellingCompany?.name }}</span> liefert</p>
+                          <p class="rbm-text-black" >am <span  class="rbm-text-sea-green">{{ intent?.deliveryDate | date }}</span></p>
+                        </div>
                         <p-button *ngIf="intent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
                           (onClick)="makePurchaseIntentOrder(intent)">
                         </p-button>
@@ -266,13 +291,17 @@
               </p-tabPanel>
               <p-tabPanel header="Bestellungen" class="unselected-offer">
 
-                <div class="rbm_scrollbar x-scroller">
-                  <div *ngIf="item?.orders?.length > 0; else noOrders">
+                <div>
+                  <div *ngIf="item?.orders?.length > 0; else noOrders"  class="rbm_scrollbar x-scroller rbm-flex-row rbm-gap-p5">
                     <div class="purchase-request-card" *ngFor="let order of item?.orders">
                       <div class="head">
-                        <div class="status completed-bg-l" *ngIf="order?.status === 'INVOICE_ADDED' || order?.status === 'COMPLETED'">
+                        <div class="status completed-bg-l" *ngIf="order?.status === 'COMPLETED'">
                           <i class="pi pi-check completed-bg-d"></i>
                           <p>Akzeptiert</p>
+                        </div>
+                        <div class="status completed-bg-l" *ngIf="order?.status === 'INVOICE_ADDED'">
+                          <i class="pi pi-receipt completed-bg-d"></i>
+                          <p>Rechnung</p>
                         </div>
                         <div class="status ausstehend-bg-l" *ngIf="order?.status === 'PENDING'">
                           <i class="pi pi-hourglass ausstehend-bg-d"></i>

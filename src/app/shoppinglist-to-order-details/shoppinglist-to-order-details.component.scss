@@ -325,6 +325,15 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.normal-bg {
+  background-color: white;
+  border: 2px solid #ccc !important;
+  color: black;
+  i {
+    color: black;
+  }
+}
+
 .x-scroller {
   overflow-x: scroll;
   padding: 10px;
