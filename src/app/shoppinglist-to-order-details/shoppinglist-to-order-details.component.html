@@ -1,9 +1,343 @@
 
 <p-progressSpinner *ngIf="loading" class="rbm-loading-screen"></p-progressSpinner>
 
-<div *ngFor="let item of shoppingListToOrderObject?.mappedOffersIngredients" class="ingredient-container">
+<p-stepper orientation="vertical" *ngIf="shoppingListToOrderObject?.mappedOffersIngredients">
+  <p-stepperPanel *ngFor="let item of shoppingListToOrderObject.mappedOffersIngredients; let i = index" class="rbm-full-stepper">
+    <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+      <div *ngFor="let ingredient of item.ingredient">
+        <span (click)="onClick.emit()" class="rbm-flex-row rbm-gap-p5">
+          <span class="rbm-stepper-number rbm-bg-valid" *ngIf="item.status !== 'NO_OFFERS'">
+            <i class="pi pi-info-circle"></i>
+          </span>
+          <span class="rbm-stepper-number rbm-bg-error" *ngIf="item.status === 'NO_OFFERS'">
+            <i class="pi pi-ban"></i>
+          </span>
+          <span class="rbm-height-fit rbm-items-middle">
+            <strong style="font-size: 27px;">{{ getLocalizedLabel(ingredient.name) }}</strong>
+          </span>
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+      <div class="rbm-flex-column" *ngFor="let ingredient of item.ingredient">
+        <div class="rbm-flex-column rbm-padding-m rbm-gap-4xs">
+          <div class="amountCard">
+            <p>
+              <strong>Total Amount:</strong>
+              {{ ingredient.totalAmount }} {{ getUnitLabel(ingredient.unit) }}
+            </p>
+            <p-accordion>
+              <p-accordionTab header="Aufschlüsselung">
+                <ul>
+                  <li *ngFor="let breakdownItem of getProcessingBreakdownFromItem(ingredient)">
+                    {{ breakdownItem.label }}: {{ breakdownItem.amount }} {{ getUnitLabel(breakdownItem.unit) }}
+                  </li>
+                </ul>
+              </p-accordionTab>
+              <p-accordionTab header="Anfragen und Kaufabsichten">
+                <ul>
+                  <li *ngFor="let request of getAggregatedRequestsAndIntents(item)">
+                    {{ request.amount }} {{ getUnitLabel(request.unit) }} - {{ request.status }}
+                  </li>
+                </ul>
+              </p-accordionTab>
+              <p-accordionTab header="Bestellungen">
+                <ul>
+                  <li *ngFor="let order of getAggregatedOrders(item)">
+                    {{ order.amount }} {{ getUnitLabel(order.unit) }} - {{ order.status }} - Total: €{{ order.totalPrice }}
+                  </li>
+                </ul>
+              </p-accordionTab>
+            </p-accordion>
+
+            <br><br>
+            <p-tabView class="rbm-max-width-per100">
+              <p-tabPanel header="Ausgewählte Angebote">
+                <div *ngIf="item?.offers?.length > 0; else noOffers" class="selected-offers rbm_scrollbar">
+                  <div *ngFor="let offerItem of item?.offers" class="sub-card rbm-relative">
+                    <div class="rbm-relative rbm-width-100">
+                      <h4>{{ getLocalizedLabel(offerItem?.offer?.ontoFoodType?.label) }}</h4>
+                      <p class="brand-name" pTooltip="Produkt von der Marke: {{ offerItem?.offer?.offerDetails?.brandName ?? 'Unbekannt' }}" tooltipPosition="top">
+                        {{ offerItem?.offer?.offerDetails?.brandName ?? 'Unbekannt' }}</p>
+                    </div>
+                    <p class="rbm-text-m rbm-text-sea-green-70">{{ offerItem?.offer?.offerDetails?.description }}</p>
+
+                    <p class="rbm-text-m"><strong>Mengen Preise:</strong></p>
+                    <div class="graduated-prices-listing rbm_scrollbar">
+                      <div class="min-amount">
+                        <span class="amount">Min</span>
+                        <span class="price-info">{{ offerItem?.offer?.offerDetails?.minAmount?.amount }} {{ offerItem?.offer?.offerDetails?.minAmount?.unit }}</span>
+                      </div>
+                      <div class="graduated_prices">
+                        <div class="price-data">
+                          <span class="amount">XXX</span>
+                          <span class="price-info">Einheiten</span>
+                        </div>
+                        <div class="price-data">
+                          <span class="price">Auf Anfrage</span>
+                          <span class="price-info"></span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <h4>Unternehmen Infos:</h4>
+                    <div class="rbm-flex-row rbm-gap-p8">
+                      <p class="company-tag" *ngIf="offerItem?.offer?.company?.verified" pTooltip="Verifiziertes Unternehmen" tooltipPosition="top">
+                        <i class="pi pi-star"></i>
+                        <span>{{ offerItem?.offer?.company?.name }}</span>
+                      </p>
+                      <p class="company-tag" *ngIf="!offerItem?.offer?.company?.verified" pTooltip="Unternehmen verifiziert" tooltipPosition="top">
+                        <i class="pi pi-info-circle"></i>
+                        <span>{{ offerItem?.offer?.company?.name }}</span>
+                      </p>
+                      <p class="company-tag" pTooltip="Addresse" tooltipPosition="top">
+                        <i class="pi pi-map-marker"></i>
+                        <span> {{ offerItem?.offer?.address?.city }}</span>
+                      </p>
+                    </div>
+                    <br>
+                    <strong>TAGS</strong>
+                    <br><br>
+                    <div class="roles">
+                      <div *ngFor="let role of offerItem?.offer?.roles">
+                        <p class="role-tag">{{ role }}</p>
+                      </div>
+                    </div>
+                    <br><br><br><br><br>
+                    
+                    <div class="dings-unten-button">
+                      <p-button
+                        *ngIf="offerItem?.offer?.offerDetails?.pricePerUnit"
+                        label="Kaufabsicht erstellen"
+                        (onClick)="openRequestDialog(offerItem.offer, 'purchaseIntent')">
+                      </p-button>
+                    
+                      <p-button
+                        *ngIf="!offerItem?.offer?.offerDetails?.pricePerUnit"
+                        label="Preisanfrage erstellen"
+                        (onClick)="openRequestDialog(offerItem.offer, 'priceRequest')">
+                      </p-button>
+                    </div>
+                  </div>
+                </div>
+                <ng-template #noOffers>
+                  <div class="purchase-request-card">
+                    <div class="head">
+                      <div class="status diasabled-bg-l" style="visibility: hidden;">
+                        <i class="pi pi-ban diasabled-bg-d"></i>
+                        <p>XXXXXX</p>
+                      </div>
+                      <div class="created-at" style="visibility: hidden;">
+                        <span>Erstellungsdatum:</span>
+                        <p>XX.XX.XXXX</p>
+                      </div>
+                    </div>
+                    <div class="middle rbm-content-center rbm-items-center">
+                      <p class="rbm-text-l">Keine Angebote vorhanden</p>
+                    </div>
+                    <div class="foota">
+                      <p style="visibility: hidden;">Lieferdatum: <span>XX.XX.XXXX</span></p>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-tabPanel>
+              <p-tabPanel header="Preisanfrage" class="unselected-offer">
+                <!-- Price Request Section -->
+                <div class="rbm_scrollbar x-scroller">
+                  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests">
+                    <div class="purchase-request-card" *ngFor="let request of item?.priceRequests">
+                      <div class="head">
+                        <div class="status completed-bg-l" *ngIf="request?.status === 'PRICE_ADDED'">
+                          <i class="pi pi-check completed-bg-d"></i>
+                          <p>Akzeptiert</p>
+                        </div>
+                        <div class="status ausstehend-bg-l" *ngIf="request?.status !== 'PRICE_ADDED'">
+                          <i class="pi pi-hourglass ausstehend-bg-d"></i>
+                          <p>Ausstehend</p>
+                        </div>
+                        <div class="created-at">
+                          <span>Erstellungsdatum:</span>
+                          <p>{{ request?.dateCreated | date }}</p>
+                        </div>
+                      </div>
+                      <div class="middle">
+                        <div class="item">
+                          <p class="price">€{{ request?.totalPrice }}</p>
+                          <span class="subtitle">Gesamt Preis</span>
+                        </div>
+                        <div class="item">
+                          <p class="price">{{ request?.amount.amount }} {{ request?.amount.unit }}</p>
+                          <span class="subtitle">Angefragt</span>
+                        </div>
+                      </div>
+                      <div class="foota">
+                        <p>Lieferdatum: <span>{{ request?.deliveryDate | date }}</span></p>
+                        <p-button *ngIf="request.status === 'PRICE_ADDED'" label="Make Order" icon="pi pi-check"
+                          (onClick)="makePriceRequestOrder(request)">
+                        </p-button>
+                        <p-button *ngIf="request.status !== 'PRICE_ADDED'" label="Make Order" icon="pi pi-check" disabled>
+                        </p-button>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #noPriceRequests>
+                    <div class="purchase-request-card">
+                      <div class="head">
+                        <div class="status diasabled-bg-l" style="visibility: hidden;">
+                          <i class="pi pi-ban diasabled-bg-d"></i>
+                          <p>XXXXXX</p>
+                        </div>
+                        <div class="created-at" style="visibility: hidden;">
+                          <span>Erstellungsdatum:</span>
+                          <p>XX.XX.XXXX</p>
+                        </div>
+                      </div>
+                      <div class="middle rbm-content-center rbm-items-center">
+                        <p class="rbm-text-l">Keine Preisanfragen vorhanden</p>
+                      </div>
+                      <div class="foota">
+                        <p style="visibility: hidden;">Lieferdatum: <span>XX.XX.XXXX</span></p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </p-tabPanel>
+              <p-tabPanel header="Kaufanfrage" class="unselected-offer">
+                <!-- Purchase Request Section -->
+                <div class="rbm_scrollbar x-scroller">
+                  <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents">
+                    <div class="purchase-request-card" *ngFor="let intent of item?.purchaseIntents">
+                      <div class="head">
+                        <div class="status completed-bg-l" *ngIf="intent?.status === 'INVOICE_ADDED' || intent?.status === 'COMPLETED'">
+                          <i class="pi pi-check completed-bg-d"></i>
+                          <p>Akzeptiert</p>
+                        </div>
+                        <div class="status ausstehend-bg-l" *ngIf="intent?.status === 'PENDING'">
+                          <i class="pi pi-hourglass ausstehend-bg-d"></i>
+                          <p>Ausstehend</p>
+                        </div>
+                        <div class="created-at">
+                          <span>Erstellungsdatum:</span>
+                          <p>{{ intent?.dateCreated | date }}</p>
+                        </div>
+                      </div>
+                      <div class="middle">
+                        <div class="item">
+                          <p class="price">€{{ intent?.totalPrice }}</p>
+                          <span class="subtitle">Gesamt Preis</span>
+                        </div>
+                        <div class="item">
+                          <p class="price">{{ intent?.amount.amount }} {{ intent?.amount.unit }}</p>
+                          <span class="subtitle">Angefragt</span>
+                        </div>
+                      </div>
+                      <div class="foota">
+                        <p>Lieferdatum: <span>{{ intent?.deliveryDate | date }}</span></p>
+                        <p-button *ngIf="intent.status === 'ACCEPTED'" label="Make Order" icon="pi pi-check"
+                          (onClick)="makePurchaseIntentOrder(intent)">
+                        </p-button>
+                        <p-button *ngIf="intent.status !== 'ACCEPTED'" label="Make Order" icon="pi pi-check" disabled>
+                        </p-button>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #noPurchaseIntents>
+                    <div class="purchase-request-card">
+                      <div class="head">
+                        <div class="status diasabled-bg-l" style="visibility: hidden;">
+                          <i class="pi pi-ban diasabled-bg-d"></i>
+                          <p>XXXXXX</p>
+                        </div>
+                        <div class="created-at" style="visibility: hidden;">
+                          <span>Erstellungsdatum:</span>
+                          <p>XX.XX.XXXX</p>
+                        </div>
+                      </div>
+                      <div class="middle rbm-content-center rbm-items-center">
+                        <p class="rbm-text-l">Keine Kaufanfrage vorhanden</p>
+                      </div>
+                      <div class="foota">
+                        <p style="visibility: hidden;">Lieferdatum: <span>XX.XX.XXXX</span></p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+                
+              </p-tabPanel>
+              <p-tabPanel header="Bestellungen" class="unselected-offer">
+
+                <div class="rbm_scrollbar x-scroller">
+                  <div *ngIf="item?.orders?.length > 0; else noOrders">
+                    <div class="purchase-request-card" *ngFor="let order of item?.orders">
+                      <div class="head">
+                        <div class="status completed-bg-l" *ngIf="order?.status === 'INVOICE_ADDED' || order?.status === 'COMPLETED'">
+                          <i class="pi pi-check completed-bg-d"></i>
+                          <p>Akzeptiert</p>
+                        </div>
+                        <div class="status ausstehend-bg-l" *ngIf="order?.status === 'PENDING'">
+                          <i class="pi pi-hourglass ausstehend-bg-d"></i>
+                          <p>Ausstehend</p>
+                        </div>
+                        <div class="created-at">
+                          <span>Erstellungsdatum:</span>
+                          <p>{{ order?.dateCreated | date }}</p>
+                        </div>
+                      </div>
+                      <div class="middle">
+                        <div class="item">
+                          <p class="price">€{{ order?.totalPrice }}</p>
+                          <span class="subtitle">Gesamt Preis</span>
+                        </div>
+                        <div class="item">
+                          <p class="price">{{ order?.amount.amount }} {{ order?.amount.unit }}</p>
+                          <span class="subtitle">Anzahl</span>
+                        </div>
+                      </div>
+                      <div class="foota">
+                        <p style="visibility: hidden;">Lieferdatum: <span>{{ order?.deliveryDate | date }}</span></p>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #noOrders>
+                    <div class="purchase-request-card">
+                      <div class="head">
+                        <div class="status diasabled-bg-l" style="visibility: hidden;">
+                          <i class="pi pi-ban diasabled-bg-d"></i>
+                          <p>XXXXXX</p>
+                        </div>
+                        <div class="created-at" style="visibility: hidden;">
+                          <span>Erstellungsdatum:</span>
+                          <p>XX.XX.XXXX</p>
+                        </div>
+                      </div>
+                      <div class="middle rbm-content-center rbm-items-center">
+                        <p class="rbm-text-l">Keine Bestellungen vorhanden</p>
+                      </div>
+                      <div class="foota">
+                        <p style="visibility: hidden;">Lieferdatum: <span>XX.XX.XXXX</span></p>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </p-tabPanel>
+            </p-tabView>
+
+
+            
+          </div>
+        </div>
+      </div>
+      <div class="rbm-flex-row rbm-gap-p5">
+        <p-button label="Back" severity="secondary" (onClick)="prevCallback.emit()" />
+        <p-button label="Next" (onClick)="nextCallback.emit()" />
+      </div>
+    </ng-template>
+  </p-stepperPanel>
+</p-stepper>
+
+<!-- <div *ngFor="let item of shoppingListToOrderObject?.mappedOffersIngredients" class="ingredient-container"> -->
 <!-- Display the Ingredient and Total Amounts -->
-  <h2>{{ getLocalizedLabel(getIngredientName(item)) }}</h2>
+  <!-- <h2>{{ getLocalizedLabel(getIngredientName(item)) }}</h2>
   <p>
     <strong>Gesamtmenge:</strong>
     <ng-container *ngFor="let totalItem of getTotalAmountsPerUnitArrayFromItem(item); let i = index">
@@ -18,10 +352,10 @@
         <strong>Sub-Status:</strong> 
         <span class="sub-status">{{ getIngredientSubStatus(item.id) }}</span>
       </p>
-    </div>
+    </div> -->
 
   <!-- Expandable Processing Breakdown -->
-  <p-accordion>
+  <!-- <p-accordion>
     <p-accordionTab header="Aufschlüsselung">
       <ul>
         <li *ngFor="let breakdownItem of getProcessingBreakdownFromItem(item)">
@@ -43,10 +377,10 @@
         </li>
       </ul>
     </p-accordionTab>
-  </p-accordion>
+  </p-accordion> -->
   
   <!-- Offers Section -->
-  <div *ngIf="item?.offers?.length > 0; else noOffers">
+ <!--  <div *ngIf="item?.offers?.length > 0; else noOffers">
     <h3>Offers:</h3>
     <div *ngFor="let offerItem of item?.offers" class="offer-details">
       <h4>{{ offerItem?.offer?.company?.name }} - {{ getLocalizedLabel(offerItem?.offer?.ontoFoodType?.label) }}</h4>
@@ -85,10 +419,10 @@
   </div>
   <ng-template #noOffers>
     <p>No offers available for this ingredient.</p>
-  </ng-template>
+  </ng-template> -->
 
   <!-- Purchase Intents Section -->
-  <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents">
+  <!-- <div *ngIf="item?.purchaseIntents?.length > 0; else noPurchaseIntents">
     <h3>Purchase Intents:</h3>
     <ul>
       <li *ngFor="let intent of item?.purchaseIntents">
@@ -106,10 +440,10 @@
   </div>
   <ng-template #noPurchaseIntents>
     <p>No purchase intents available for this ingredient.</p>
-  </ng-template>
+  </ng-template> -->
 
   <!-- Price Requests Section -->
-  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests">
+ <!--  <div *ngIf="item?.priceRequests?.length > 0; else noPriceRequests">
     <h3>Price Requests:</h3>
     <ul>
       <li *ngFor="let request of item?.priceRequests">
@@ -127,9 +461,9 @@
   <ng-template #noPriceRequests>
     <p>No price requests available for this ingredient.</p>
   </ng-template>
-
+ -->
   <!-- Orders Section -->
-  <div *ngIf="item?.orders?.length > 0; else noOrders">
+ <!--  <div *ngIf="item?.orders?.length > 0; else noOrders">
     <h3>Orders:</h3>
     <ul>
       <li *ngFor="let order of item?.orders">
@@ -145,18 +479,18 @@
   <ng-template #noOrders>
     <p>No orders available for this ingredient.</p>
   </ng-template>
-
+ -->
   <!-- No Data Available for Ingredient -->
-  <p *ngIf="!item?.offers?.length && !item?.purchaseIntents?.length && !item?.priceRequests?.length && !item?.orders?.length">
+ <!--  <p *ngIf="!item?.offers?.length && !item?.purchaseIntents?.length && !item?.priceRequests?.length && !item?.orders?.length">
     No offers, purchase intents, price requests, or orders available for this ingredient.
-  </p>
-</div>
+  </p> -->
+<!-- </div> -->
 
 <p-toast></p-toast>
 
 <p-dialog [(visible)]="showRequestDialog" header="Anfrage Details hinzufügen" [modal]="true" [closable]="false">
-  <div class="p-fluid">
-    <div class="p-field">
+  <div class="rbm-flex-column rbm-gap-p5">
+    <div class="rbm-flex-column rbm-width-100">
       <label for="deliveryDate">Lieferdatum</label>
       <input type="date" id="deliveryDate" [(ngModel)]="requestData.deliveryDate" pInputText />
     </div>
@@ -164,7 +498,7 @@
       <label for="message">Nachricht</label>
       <textarea id="message" rows="3" [(ngModel)]="requestData.message" pInputTextarea></textarea>
     </div>
-    <div class="p-field">
+    <div class="rbm-flex-column">
       <label for="totalAmount">Gesamtmenge</label>
       <input 
         type="number" 
@@ -176,12 +510,12 @@
         pInputText 
         (keypress)="preventInvalidChars($event)"
       />
-      <p>Verfügbare Menge: {{ selectedOffer?.offerDetails?.totalAmount?.amount }} {{ selectedOffer?.offerDetails?.totalAmount?.unit }}</p>
-      <p>Mindestmenge: {{ selectedOffer?.offerDetails?.minAmount?.amount }} {{ selectedOffer?.offerDetails?.minAmount?.unit }}</p>
     </div>
-    <div class="p-field">
+    <p>Verfügbare Menge: {{ selectedOffer?.offerDetails?.totalAmount?.amount }} {{ selectedOffer?.offerDetails?.totalAmount?.unit }}</p>
+      <p>Mindestmenge: {{ selectedOffer?.offerDetails?.minAmount?.amount }} {{ selectedOffer?.offerDetails?.minAmount?.unit }}</p>
+    <div class="rbm-flex-row rbm-gap-p5 rbm-height-fit">
       <label for="pricePerUnit">Preis pro Einheit:</label>
-      <p>{{ requestData.pricePerUnit !== 'N/A' ? '€' + requestData.pricePerUnit : 'Auf Anfrage' }}</p>
+      <p class="rbm-margin-none">{{ requestData.pricePerUnit !== 'N/A' ? '€' + requestData.pricePerUnit : 'Auf Anfrage' }}</p>
     </div>
   </div>
   <p-footer>

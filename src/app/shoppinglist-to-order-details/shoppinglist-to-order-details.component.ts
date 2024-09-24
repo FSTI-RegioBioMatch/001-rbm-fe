@@ -18,7 +18,9 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { StepperModule } from 'primeng/stepper';
-import { StepsModule } from 'primeng/steps';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
+
 const ingredientUnits: IngredientUnit[] = [
   { label: 'Gramm', value: 'g' },
   { label: 'Kilogramm', value: 'kg' },
@@ -71,7 +73,8 @@ const ingredientUnits: IngredientUnit[] = [
     FormsModule,
     ReactiveFormsModule,
     StepperModule,
-    StepsModule
+    TabViewModule,
+    TooltipModule
     
   ],
   standalone: true
@@ -968,4 +971,5 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
   getIngredientSubStatus(ingredientId: string): string {
     return this.ingredientStatusMap[ingredientId]?.subStatus || 'NO_OFFERS';
   }
+  
 }

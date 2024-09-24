@@ -16,12 +16,7 @@
     font-size: 14px;
     color: #555;
   }
-  
-  .offer-details {
-    margin-top: 10px;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-  }
+
   
   .offer-details h4 {
     margin: 0 0 10px 0;
@@ -33,4 +28,325 @@
     font-size: 14px;
     color: #555;
   }
+
+
+::ng-deep p-stepper {
+  button {
+    border-radius: 4px;
+  }
+}
+
+.sub-card {
+  width: 400px;
+  background-color: white;
+  box-shadow: var(--rbm-shadow-l);
+  border-radius: 7px;
+  padding: 20px;
+
+  h4 {
+    margin: 0;
+    color: var(--rbm-sea-green);
+  }
+  p {
+    margin: 5px 0;
+
+  }
+
+  .brand-name {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--rbm-tea-green);
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px
+  }
+
+  .company-tag {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    background-color: white;
+    border: 1px solid var(--rbm-sea-green);
+    border-radius: 100px;
+    width: fit-content;
+    height: 30px;
+    padding: 5px;
+
+    i {
+      color: green;
+      font-size: 15px;
+      border-radius: 100px;
+      width: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    span {
+      margin-right: 3px;
+    }
+  } 
+
+  .graduated_prices {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin: 5px;
+    border: 1px solid rgb(241, 241, 241);
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: var(--rbm-shadow-l);
+  }
+
+  .price-data {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: center;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid rgb(241, 241, 241);
+
+    .amount {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .price-info {
+      margin-left: 5px;
+      color: var(--rbm-sea-green-80);
+    }
+  }
+
+  .min-amount {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid rgb(241, 241, 241);
+    border-radius: 7px;
+    box-shadow: var(--rbm-shadow-l);
+
+    .amount {
+      font-size: 17px;
+      font-weight: bold;
+    }
   
+    .price-info {
+      margin-left: 5px;
+      color: var(--rbm-sea-green-80);
+      font-size: 28px;
+    }
+  }
+
+  .graduated-prices-listing {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    padding: 10px;
+  }
+
+  .roles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    .role-tag {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      background-color: var(--rbm-sea-green-40);
+      border-radius: 100px;
+      width: fit-content;
+      height: 30px;
+      padding: 5px;
+    }
+  }
+
+}
+
+::ng-deep .sub-card {
+  button {
+    border-radius: 4px;
+  }
+}
+
+.dings-unten-button {
+  position: absolute;
+  bottom: 20px;
+}
+
+.selected-offers {
+  overflow-x: scroll;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px;
+  padding-bottom: 20px;
+}
+
+
+.purchase-request-card {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--rbm-shadow-l);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: 500px;
+
+  .head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    width: 100%;
+
+    .status {
+      display: flex;
+      flex-direction: row;
+      padding: 7px;
+      justify-content: center;
+      width: fit-content;
+      height: fit-content;
+      border-radius: 5px;
+      gap: 10px;
+      i {
+        padding: 5px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+      }
+      p {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: black;
+
+      }
+    }
+    .created-at {
+      display: flex;
+      flex-direction: column;
+      padding: 5px;
+      gap: 3px;
+      width: fit-content;
+      justify-content: center;
+      align-items: center;
+      span {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+      }
+      p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .middle {
+    display: flex;
+    flex-direction: row;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+
+    .item {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      p {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .foota {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: end;
+    p {
+      margin: 0;
+      font-size: 18px;
+    }
+    span {
+      margin: 0;
+      font-size: 18px;
+    }
+  }
+}
+
+::ng-deep .purchase-request-card button {
+  border-radius: 4px;
+}
+
+.ausstehend-bg-l {
+  background-color: rgba(255, 166, 0, 0.468);
+}
+
+.ausstehend-bg-d {
+  background-color: rgba(255, 166, 1, 0.473);
+}
+
+.completed-bg-l {
+  background-color: var(--rbm-tea-green-60);
+}
+
+.completed-bg-d {
+  background-color: var(--rbm-tea-green);
+}
+
+.diasabled-bg-l {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.diasabled-bg-d {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.x-scroller {
+  overflow-x: scroll;
+  padding: 10px;
+  padding-bottom: 20px;
+}
+
+.rbm-stepper-number {
+  color: rgba(255, 253, 253, 0.87);
+  border: 1px solid transparent;
+  border-width: 2px;
+  min-width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 1.143rem;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rbm-bg-valid {
+  background-color: var(--rbm-valid);
+}
