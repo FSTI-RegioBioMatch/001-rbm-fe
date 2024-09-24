@@ -653,7 +653,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
         if (orderId && this.shoppingListTrack) {
           if (!this.shoppingListTrack.orderIds.includes(orderId)) {
             this.shoppingListTrack.orderIds.push(orderId);
-            this.removePurchaseIntent(purchaseIntent);
+            //this.removePurchaseIntent(purchaseIntent);
             this.updateShoppingListTrack(this.shoppingListTrack);
           }
         }
@@ -728,7 +728,7 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
         if (orderId && this.shoppingListTrack) {
           if (!this.shoppingListTrack.orderIds.includes(orderId)) {
             this.shoppingListTrack.orderIds.push(orderId);
-            this.removePriceRequest(priceRequest);
+            //this.removePriceRequest(priceRequest);
             this.updateShoppingListTrack(this.shoppingListTrack);
           }
         }
@@ -970,6 +970,22 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
 
   getIngredientSubStatus(ingredientId: string): string {
     return this.ingredientStatusMap[ingredientId]?.subStatus || 'NO_OFFERS';
+  }
+
+  hasOffers(item: any): boolean {
+    // Logik um zu überprüfen, ob Angebote vorhanden sind
+    return item.offers && item.offers.length > 0;
+  }
+
+  getUniqueIngredients(ingredients: any[]): any[] {
+    const uniqueNames = new Set();
+    return ingredients.filter(ingredient => {
+      if (!uniqueNames.has(ingredient.name)) {
+        uniqueNames.add(ingredient.name);
+        return true;
+      }
+      return false;
+    });
   }
   
 }
