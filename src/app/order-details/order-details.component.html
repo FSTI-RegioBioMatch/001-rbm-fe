@@ -22,7 +22,7 @@
         <div class="flow-content">
           <div class="icon-box" [ngClass]="getAddressTypeClass(address.type)">
             <ng-container [ngSwitch]="address.type">
-              <i *ngSwitchCase="'INVOICE'" class="pi pi-file-invoice"></i>
+              <i *ngSwitchCase="'INVOICE'" class="pi pi-file-check"></i>
               <i *ngSwitchCase="'DELIVERY'" class="pi pi-truck"></i>
               <i *ngSwitchCase="'SELLER'" class="pi pi-building"></i>
             </ng-container>

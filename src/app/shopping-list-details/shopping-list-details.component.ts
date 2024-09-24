@@ -522,7 +522,7 @@ export class ShoppingListDetailsComponent implements OnInit {
     );
   
     if (hasOffersFound && hasSelectedItems) {
-      return 'Bestellen';
+      return 'Zur Bestellung';
     } else if (hasOffersFound && !hasSelectedItems) {
       return 'Ohne Angebote weiter';
     } else if (allNoOffers) {

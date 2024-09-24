@@ -32,7 +32,7 @@
         </ng-template>
         <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
           <div class="rbm-flex-column">
-              <div class="rbm-flex-column rbm-padding-m rbm-gap-4xs">
+              <div class="rbm-flex-row rbm-padding-m rbm-gap-4xs rbm-flex-wrap">
 
                 <div *ngFor="let item of getTotalAmountsPerUnitArray(ingredientName)" class="amountCard">
                   <p>
@@ -48,15 +48,16 @@
                   </ul>
                 </div>
                 
-                <!-- Button to Open Offers Dialog -->
+              </div>
+                  <!-- Button to Open Offers Dialog -->
                 <button
-                  pButton
-                  label="Angebote Auswählen"
-                  (click)="openOfferSelectionDialog(ingredientName)"
-                  [disabled]="!hasOffersForIngredient(ingredientName)"
+                pButton
+                label="Angebote Auswählen"
+                (click)="openOfferSelectionDialog(ingredientName)"
+                [disabled]="!hasOffersForIngredient(ingredientName)"
                 >
                 </button>
-              </div>
+                <br><br>
           </div>
           <div class="rbm-flex-row rbm-gap-p5">
               <p-button label="Zurück" severity="secondary" (onClick)="prevCallback.emit()" />
