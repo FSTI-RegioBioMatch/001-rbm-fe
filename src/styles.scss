@@ -3619,6 +3619,54 @@ p-slider {
   background: #f1f1f1;
 }
 
+.rbm_scrollbar-x-hidden {
+  overflow-x: hidden;
+}
+
+.rbm_scrollbar-y-hidden {
+  overflow-y: hidden;
+}
+
+.rbm_scrollbar-x-auto {
+  overflow-x: auto;
+}
+
+.rbm_scrollbar-y-auto {
+  overflow-y: auto;
+}
+
+.rbm_scrollbar-x-visible {
+  overflow-x: visible;
+}
+
+.rbm_scrollbar-y-visible {
+  overflow-y: visible;
+}
+
+.rbm_scrollbar-x-scroll {
+  overflow-x: scroll;
+}
+
+.rbm_scrollbar-y-scroll {
+  overflow-y: scroll;
+}
+
+.rbm_scrollbar-hidden {
+  overflow: hidden;
+}
+
+.rbm_scrollbar-auto {
+  overflow: auto;
+}
+
+.rbm_scrollbar-visible {
+  overflow: visible;
+}
+
+.rbm_scrollbar-scroll {
+  overflow: scroll;
+}
+
 
 /***
  *     _    _                                     
