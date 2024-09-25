@@ -1,8 +1,8 @@
 <div class="rbm-site-toolbar">
-    <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
-    <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-    <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-    <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
+  <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
+  <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
+  <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+  <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
 </div>
 
 <p-toast></p-toast>
@@ -13,193 +13,208 @@
 </div>
 
 <div class="einkaufsliste-actions">
-    <div class="left">
-      <h3 class="rbm-text-sea-green rbm-margin-none">Meine Menüs</h3>
-    </div>
-    <div class="right">
-      <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
-          [disabled]="selectedMenuPlans.length === 0"></button>
-    </div>
+  <div class="left">
+    <h3 class="rbm-text-sea-green rbm-margin-none">Meine Menüs</h3>
+  </div>
+  <div class="right">
+    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
+      [disabled]="selectedMenuPlans.length === 0"></button>
+  </div>
 </div>
 
 <p-table [value]="menuPlans" class="p-datatable-gridlines" *ngIf="!loading">
-    <ng-template pTemplate="header">
-        <tr>
-            <th><input class="table-checkbox" type="checkbox" (change)="toggleSelectAll($event)" /></th>
-            <th>Menüs</th>
-            <th>Nächste Ausführung</th>
-            <th>Wochentag</th>
-            <th>Ort</th>
-            <th>Portionen gesamt</th>
-            <th>Wiederholung</th>
-            <th>Einkaufen?</th>
-            <th>Komponenten</th>
-            <th>Details</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-menuPlan>
+  <ng-template pTemplate="header">
+    <tr>
+      <th><input class="table-checkbox" type="checkbox" (change)="toggleSelectAll($event)" /></th>
+      <th>Menüs</th>
+      <th>Nächste Ausführung</th>
+      <th>Wochentag</th>
+      <th>Ort</th>
+      <th>Portionen gesamt</th>
+      <th>Wiederholung</th>
+      <th>Einkaufen?</th>
+      <th>Komponenten</th>
+      <th>Details</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-menuPlan>
 
-        <tr class="tr-item">
-            <td><input class="table-checkbox" type="checkbox" [(ngModel)]="menuPlan.selected" (change)="updateSelectedMenuPlans()" /></td>
-            <td>{{ menuPlan.name }}</td>
-            <td>{{ menuPlan.nextExecution }}</td>
-            <td>{{ menuPlan.weekday }}</td>
-            <td>{{ menuPlan.location }}</td>
-            <td>
-                <span (mouseover)="showPortionDetails(menuPlan)" (mouseout)="hidePortionDetails()">
-                    {{ getTotalPortions(menuPlan) }}
-                </span>
-                <div class="portion-tooltip" *ngIf="hoveredMenuPlanId === menuPlan.id">
-                    <span *ngIf="menuPlan.portions > 0" class="portion-item">
-                        <i class="pi pi-users"></i> {{ menuPlan.portions }} Regular
-                    </span>
-                    <span *ngIf="menuPlan.portionsVegetarisch > 0" class="portion-item">
-                        <i class="pi pi-apple"></i> {{ menuPlan.portionsVegetarisch }} Vegetarisch
-                    </span>
-                    <span *ngIf="menuPlan.portionsVegan > 0" class="portion-item">
-                        <i class="pi pi-globe"></i> {{ menuPlan.portionsVegan }} Vegan
-                    </span>
-                </div>
-            </td>
-            <td>{{ getTranslatedRepeatFrequency(menuPlan.repeatFrequency) }}</td>
-            <td>
-                <button class="rbm-not-allowed" pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
-            </td>
-            <td>
-                <button [disabled]="loadingRecipes" pButton icon="pi pi-cog"
-                    (click)="toggleExpandMenuPlan(menuPlan.id)"*ngIf="expandedMenuPlanId !== menuPlan.id"></button>
-                  
-                    <button [disabled]="loadingRecipes" pButton icon="pi pi-cog"
-                    (click)="toggleExpandMenuPlan(menuPlan.id)" class="rbm-bg-willow-green" *ngIf="expandedMenuPlanId === menuPlan.id"></button>
-            </td>
-            <td>
-                <button pButton class="rbm-bg-tea-green-l-3" (click)="gotoDetails(menuPlan)">anzeigen</button>
-            </td>
-        </tr>
-        <tr *ngIf="expandedMenuPlanId === menuPlan.id">
-          <p-dialog header="Konfiguration" [(visible)]="expandedConfigurationModal" (onHide)="toggleExpandMenuPlan(menuPlan.id)" [modal]="true" [style]="{width: '50vw', height: '90vh'}">
-            <div>
-                <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
-                    <h5>{{ recipe.recipeName }}</h5>
-                    
-                    <div class="grouplist">
-                    <!-- Main Ingredient -->
-                      <div *ngFor="let ingredient of recipe.ingredients">
-                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length < 1" class="normal-items rbm-padding-p8">
-                          <div class="rbm-flex-column">
-                            <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
-                            <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
-                            <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span> 
-                            <div class="rbm-flex-row">
-                              <!-- Check if ingredient is optional -->
-                                <p-multiSelect [selectedItemsLabel]="'{0} Elemente ausgewählt'" [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
-                                </p-multiSelect>
-                              
-                              <div>
-                                <button pButton style="height: 50px;width: 50px;" icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
-                              </div>
-                            </div>
-                          </div> 
-                        </div>
+    <tr class="tr-item">
+      <td><input class="table-checkbox" type="checkbox" [(ngModel)]="menuPlan.selected"
+          (change)="updateSelectedMenuPlans()" /></td>
+      <td>{{ menuPlan.name }}</td>
+      <td>{{ menuPlan.nextExecution }}</td>
+      <td>{{ menuPlan.weekday }}</td>
+      <td>{{ menuPlan.location }}</td>
+      <td>
+        <span (mouseover)="showPortionDetails(menuPlan)" (mouseout)="hidePortionDetails()">
+          {{ getTotalPortions(menuPlan) }}
+        </span>
+        <div class="portion-tooltip" *ngIf="hoveredMenuPlanId === menuPlan.id">
+          <span *ngIf="menuPlan.portions > 0" class="portion-item">
+            <i class="pi pi-users"></i> {{ menuPlan.portions }} Regular
+          </span>
+          <span *ngIf="menuPlan.portionsVegetarisch > 0" class="portion-item">
+            <i class="pi pi-apple"></i> {{ menuPlan.portionsVegetarisch }} Vegetarisch
+          </span>
+          <span *ngIf="menuPlan.portionsVegan > 0" class="portion-item">
+            <i class="pi pi-globe"></i> {{ menuPlan.portionsVegan }} Vegan
+          </span>
+        </div>
+      </td>
+      <td>{{ getTranslatedRepeatFrequency(menuPlan.repeatFrequency) }}</td>
+      <td>
+        <button class="rbm-not-allowed" pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
+      </td>
+      <td>
+        <button [disabled]="loadingRecipes" pButton icon="pi pi-cog" (click)="toggleExpandMenuPlan(menuPlan.id)"
+          *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
+
+        <button [disabled]="loadingRecipes" pButton icon="pi pi-cog" (click)="toggleExpandMenuPlan(menuPlan.id)"
+          class="rbm-bg-willow-green" *ngIf="expandedMenuPlanId === menuPlan.id"></button>
+      </td>
+      <td>
+        <button pButton class="rbm-bg-tea-green-l-3" (click)="gotoDetails(menuPlan)">anzeigen</button>
+      </td>
+    </tr>
+    <tr *ngIf="expandedMenuPlanId === menuPlan.id">
+      <p-dialog header="Konfiguration" [(visible)]="expandedConfigurationModal"
+        (onHide)="toggleExpandMenuPlan(menuPlan.id)" [modal]="true" [style]="{width: '50vw', height: '90vh'}">
+        <div>
+          <div *ngFor="let recipe of recipesWithIngredients[menuPlan.id]">
+            <h5>{{ recipe.recipeName }}</h5>
+
+            <div class="grouplist">
+              <!-- Main Ingredient -->
+              <div *ngFor="let ingredient of recipe.ingredients">
+                <div *ngIf="ingredient.alternatives && ingredient.alternatives.length < 1"
+                  class="normal-items rbm-padding-p8">
+                  <div class="rbm-flex-column">
+                    <span *ngIf="ingredient.optional"
+                      style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
+                    <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
+                    <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
+                      getLocalizedLabel(ingredient.name) }}</span>
+                    <div class="rbm-flex-row">
+                      <!-- Check if ingredient is optional -->
+                      <p-multiSelect [selectedItemsLabel]="'{0} Elemente ausgewählt'" [options]="processingOptions"
+                        [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
+                      </p-multiSelect>
+
+                      <div>
+                        <button pButton style="height: 50px;width: 50px;" icon="pi pi-shopping-cart"
+                          (click)="onBuyIngredientClick(ingredient)"></button>
                       </div>
-
-
-                      <div *ngFor="let ingredient of recipe.ingredients" class="hallo">
-                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0" class="alternative-items rbm-padding-p8">
-                          <div class="rbm-flex-column rbm-margin-bottom-m">
-                            <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
-                            <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
-                            <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span> 
-                            <div class="rbm-flex-row">
-                                  <!-- Check if ingredient is optional -->
-                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
-                                    </p-multiSelect>
-                                  
-                                  <div>
-                                    <button pButton style="height: 50px;width: 50px;" icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(ingredient)"></button>
-                                  </div>
-                              </div>
-                          </div> 
-                      
-                          <!-- Ingredient Alternatives -->
-                          <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0">
-                              <div *ngFor="let alternative of ingredient.alternatives" class="rbm-flex-column rbm-gap-p11">
-                                  <!-- Check if alternative is optional -->
-                                  <span style="color: blue;">
-                                      <strong>Alternative:</strong><br>
-                                      <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold;">Optional:</span>
-                                      <span *ngIf="!ingredient.optional" style="color: black; font-weight: bold; margin-bottom: 5px;">Zutat:</span>
-                                      <span style="color: black;">{{ alternative.amount }} {{ getUnitLabel(alternative.unit) }} {{ getLocalizedLabel(alternative.name) }}</span>
-                                  </span>
-                                  <div class="rbm-flex-row">
-                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="alternative.processing" placeholder="Verarbeitung auswählen">
-                                    </p-multiSelect>
-                                  
-                                    <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(alternative)"></button>
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                      </div>
-                    
-                    <div *ngIf="recipe.ingredients.length === 0">Keine Zutaten</div>
                     </div>
+                  </div>
                 </div>
-                
-                <div *ngIf="recipesWithIngredients[menuPlan.id].length === 0">Keine Rezepte</div>
               </div>
-          </p-dialog>
-        </tr>
-    </ng-template>
+
+
+              <div *ngFor="let ingredient of recipe.ingredients" class="hallo">
+                <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0"
+                  class="alternative-items rbm-padding-p8">
+                  <div class="rbm-flex-column rbm-margin-bottom-m">
+                    <span *ngIf="ingredient.optional"
+                      style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
+                    <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
+                    <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{
+                      getLocalizedLabel(ingredient.name) }}</span>
+                    <div class="rbm-flex-row">
+                      <!-- Check if ingredient is optional -->
+                      <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing"
+                        placeholder="Verarbeitung auswählen">
+                      </p-multiSelect>
+
+                      <div>
+                        <button pButton style="height: 50px;width: 50px;" icon="pi pi-shopping-cart"
+                          (click)="onBuyIngredientClick(ingredient)"></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ingredient Alternatives -->
+                  <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0">
+                    <div *ngFor="let alternative of ingredient.alternatives" class="rbm-flex-column rbm-gap-p11">
+                      <!-- Check if alternative is optional -->
+                      <span style="color: blue;">
+                        <strong>Alternative:</strong><br>
+                        <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold;">Optional:</span>
+                        <span *ngIf="!ingredient.optional"
+                          style="color: black; font-weight: bold; margin-bottom: 5px;">Zutat:</span>
+                        <span style="color: black;">{{ alternative.amount }} {{ getUnitLabel(alternative.unit) }} {{
+                          getLocalizedLabel(alternative.name) }}</span>
+                      </span>
+                      <div class="rbm-flex-row">
+                        <p-multiSelect [options]="processingOptions" [(ngModel)]="alternative.processing"
+                          [selectedItemsLabel]="'{0} Elemente ausgewählt'" placeholder="Verarbeitung auswählen">
+                        </p-multiSelect>
+
+                        <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(alternative)"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="recipe.ingredients.length === 0">Keine Zutaten</div>
+            </div>
+          </div>
+
+          <div *ngIf="recipesWithIngredients[menuPlan.id].length === 0">Keine Rezepte</div>
+        </div>
+      </p-dialog>
+    </tr>
+  </ng-template>
 </p-table>
 
 <p-dialog [(visible)]="displayShoppingListDialog" [modal]="true" [header]="'Einkaufsliste'" [closable]="true">
-    <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Name</th>
-            <th>Menge (Gesamt)</th>
-            <th>Menge (Einzel)</th>
-            <th>Einheit</th>
-            <th>Verarbeitung</th>
-            <th>Rezept</th>
-            <th>Aktionen</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-groupName>
-          <tr>
-            <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
-          </tr>
-          <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
-            <td>
-              <span *ngIf="item.isAlternative" class="alternative-note">Alternative</span>
-              <span *ngIf="item.optional" class="optional-note">Optional</span>
-            </td>
-            <td><strong>{{ item.totalInLargestUnit }}</strong></td>
-            <td>
-              <div *ngFor="let process of getProcessingTypes(item)">
-                <input pInputText type="number" [value]="item.processingBreakdown[process]"
-                  (change)="updateAmount(item, process, $event)" />
-                <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
-                  {{ item.errorMessages[process] }}
-                </div>
-              </div>
-            </td>
-            <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
-            <td>
-              <div *ngFor="let process of getProcessingTypes(item)">
-                <span>{{ process !== 'n/a' ? process : 'keine Angabe' }}</span>
-              </div>
-            </td>
-            <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
-            <td>
-              <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
-                <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"
-        [disabled]="isGroupedShoppingListEmpty()"></button>
+  <p-table [value]="getGroupKeys()" class="p-datatable-gridlines">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Menge (Gesamt)</th>
+        <th>Menge (Einzel)</th>
+        <th>Einheit</th>
+        <th>Verarbeitung</th>
+        <th>Rezept</th>
+        <th>Aktionen</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-groupName>
+      <tr>
+        <td colspan="7"><strong>{{ getLocalizedLabel(groupName) }}</strong></td>
+      </tr>
+      <tr *ngFor="let item of groupedShoppingList[groupName]; let i = index">
+        <td>
+          <span *ngIf="item.isAlternative" class="alternative-note">Alternative</span>
+          <span *ngIf="item.optional" class="optional-note">Optional</span>
+        </td>
+        <td><strong>{{ item.totalInLargestUnit }}</strong></td>
+        <td>
+          <div *ngFor="let process of getProcessingTypes(item)">
+            <input pInputText type="number" [value]="item.processingBreakdown[process]"
+              (change)="updateAmount(item, process, $event)" />
+            <div *ngIf="item.errorMessages && item.errorMessages[process]" class="error-message">
+              {{ item.errorMessages[process] }}
+            </div>
+          </div>
+        </td>
+        <td><strong>{{ getUnitLabel(item.unit) }}</strong></td>
+        <td>
+          <div *ngFor="let process of getProcessingTypes(item)">
+            <span>{{ getLocalizedLabelLOP(process) !== 'n/a' ? getLocalizedLabelLOP(process) : 'keine Angabe' }}</span>
+          </div>
+        </td>
+        <td>{{ uniqueSourceRecipes(item.sourceRecipes) }}</td>
+        <td>
+          <div *ngFor="let process of getProcessingTypes(item); let pIdx = index">
+            <button pButton icon="pi pi-trash" (click)="deleteIngredient(groupName, process, i)"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <button pButton label="Einkaufsliste speichern" icon="pi pi-save" (click)="saveShoppingList()"
+    [disabled]="isGroupedShoppingListEmpty()"></button>
 </p-dialog>
