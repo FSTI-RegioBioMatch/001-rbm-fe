@@ -85,14 +85,14 @@
                     <div class="grouplist">
                     <!-- Main Ingredient -->
                       <div *ngFor="let ingredient of recipe.ingredients">
-                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length < 1" class="normal-items rbm-padding-p8">
+                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length < 1" class="normal-items rbm-padding-p8" style="min-width: 326px;">
                           <div class="rbm-flex-column">
                             <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
                             <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
                             <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span> 
                             <div class="rbm-flex-row">
                               <!-- Check if ingredient is optional -->
-                                <p-multiSelect [selectedItemsLabel]="'{0} Elemente ausgewählt'" [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
+                                <p-multiSelect [selectedItemsLabel]="'{0} Elemente ausgewählt'" [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen" class="rbm-full-width">
                                 </p-multiSelect>
                               
                               <div>
@@ -105,14 +105,14 @@
 
 
                       <div *ngFor="let ingredient of recipe.ingredients" class="hallo">
-                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0" class="alternative-items rbm-padding-p8">
+                        <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0" class="alternative-items rbm-padding-p8" style="min-width: 326px;">
                           <div class="rbm-flex-column rbm-margin-bottom-m">
                             <span *ngIf="ingredient.optional" style="color: orange; font-weight: bold; margin-bottom: 5px;">Optional:</span>
                             <span *ngIf="!ingredient.optional" style="font-weight: bold; margin-bottom: 5px;">Zutat:</span>
                             <span>{{ ingredient.amount }} {{ getUnitLabel(ingredient.unit) }} {{ getLocalizedLabel(ingredient.name) }}</span> 
                             <div class="rbm-flex-row">
                                   <!-- Check if ingredient is optional -->
-                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen">
+                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="ingredient.processing" placeholder="Verarbeitung auswählen" class="rbm-full-width">
                                     </p-multiSelect>
                                   
                                   <div>
@@ -123,7 +123,7 @@
                       
                           <!-- Ingredient Alternatives -->
                           <div *ngIf="ingredient.alternatives && ingredient.alternatives.length > 0">
-                              <div *ngFor="let alternative of ingredient.alternatives" class="rbm-flex-column rbm-gap-p11">
+                              <div *ngFor="let alternative of ingredient.alternatives" class="rbm-flex-column rbm-gap-p11" style="min-width: 326px;">
                                   <!-- Check if alternative is optional -->
                                   <span style="color: blue;">
                                       <strong>Alternative:</strong><br>
@@ -132,7 +132,7 @@
                                       <span style="color: black;">{{ alternative.amount }} {{ getUnitLabel(alternative.unit) }} {{ getLocalizedLabel(alternative.name) }}</span>
                                   </span>
                                   <div class="rbm-flex-row">
-                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="alternative.processing" placeholder="Verarbeitung auswählen">
+                                    <p-multiSelect [options]="processingOptions" [(ngModel)]="alternative.processing" placeholder="Verarbeitung auswählen" class="rbm-full-width">
                                     </p-multiSelect>
                                   
                                     <button pButton icon="pi pi-shopping-cart" (click)="onBuyIngredientClick(alternative)"></button>

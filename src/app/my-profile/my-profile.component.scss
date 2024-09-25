@@ -44,14 +44,12 @@
   /* User information styling */
   .user-info h2 {
     margin: 0;
-    color: #333;
     font-size: 24px;
   }
   
   .user-info p {
     margin: 5px 0;
     font-size: 16px;
-    color: #555;
   }
   
   /* Employment container styling */
@@ -61,7 +59,7 @@
   
   /* Employment card styling */
   .employment-card h4 {
-    color: #007bff;
+    color: var(--rbm-sea-green);
     margin-bottom: 10px;
   }
   

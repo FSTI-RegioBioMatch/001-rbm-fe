@@ -89,13 +89,13 @@
                     
                     <h4>Unternehmen Infos:</h4>
                     <div class="rbm-flex-row rbm-gap-p8">
-                      <p class="company-tag" *ngIf="offerItem?.offer?.company?.verified" pTooltip="Verifiziertes Unternehmen" tooltipPosition="top">
+                      <p class="company-tag" *ngIf="offerItem?.offer?.company?.verified" pTooltip="Verifiziertes Unternehmen - {{ offerItem?.offer?.company?.name }}" tooltipPosition="top">
                         <i class="pi pi-star"></i>
-                        <span>{{ offerItem?.offer?.company?.name }}</span>
+                        <span>{{ offerItem?.offer?.company?.name?.length > 10 ? (offerItem?.offer?.company?.name | slice:0:10) + '...' : offerItem?.offer?.company?.name }}</span>
                       </p>
-                      <p class="company-tag" *ngIf="!offerItem?.offer?.company?.verified" pTooltip="Unternehmen verifiziert" tooltipPosition="top">
+                      <p class="company-tag" *ngIf="!offerItem?.offer?.company?.verified" pTooltip="Unternehmen nicht verifiziert - {{ offerItem?.offer?.company?.name }}" tooltipPosition="top">
                         <i class="pi pi-info-circle"></i>
-                        <span>{{ offerItem?.offer?.company?.name }}</span>
+                        <span>{{ offerItem?.offer?.company?.name?.length > 10 ? (offerItem?.offer?.company?.name | slice:0:10) + '...' : offerItem?.offer?.company?.name }}</span>
                       </p>
                       <p class="company-tag" pTooltip="Addresse" tooltipPosition="top">
                         <i class="pi pi-map-marker"></i>
