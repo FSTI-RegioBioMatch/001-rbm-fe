@@ -21,6 +21,7 @@ import { NearbuyTestService } from '../../shared/services/nearbuy-test.service';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OfferService } from '../../shared/services/offer.service';
 import { CardModule } from 'primeng/card';
+import { LocalizeService } from '../../shared/services/localize.service';
 
 interface IngredientUnit {
   label: string;
@@ -124,7 +125,7 @@ interface EnhancedIngredient {
   styleUrl: './my-menus.component.scss'
 })
 export class MyMenusComponent implements OnInit {
-
+  localizationDataLOP: { [key: string]: string } = {};
   menuPlans: any[] = [];
   expandedMenuPlanId: string | null = null;
   recipesWithIngredients: { [key: string]: Recipe[] } = {};
@@ -150,7 +151,8 @@ export class MyMenusComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private nearbuyTestService: NearbuyTestService,
-    private offerService: OfferService
+    private offerService: OfferService,
+    private localizeService: LocalizeService
   ) {}
 
   repeatOptions = [
@@ -233,6 +235,14 @@ export class MyMenusComponent implements OnInit {
     this.nearbuyTestService.getData().subscribe({
       next: (result) => {
         this.localizationData = result;
+        this.localizeService.getLevelsOfProcessing().subscribe({
+          next: result => {
+            this.localizationDataLOP = result; // Save localization data for later use
+          },
+          error: err => {
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Laden der Übersetzungen' });
+          }
+        });
         this.loadingLocalize = false; // Set to false after successful loading
       },
       error: (err) => {
@@ -749,5 +759,21 @@ loadRecipesWithIngredients(menuPlanId: string): void {
   getTranslatedRepeatFrequency(repeatFrequency: string): string {
     const foundOption = this.repeatOptions.find(option => option.value === repeatFrequency);
     return foundOption ? foundOption.label : repeatFrequency; // Return label if found, otherwise the value itself
+  }
+  getLocalizedLabelLOP(levelsOfProcessing: string): string {
+    if (!levelsOfProcessing || !this.localizationDataLOP) {
+      return ''; // Return empty string if no translation is available or input is empty
+    }
+  
+    // Split by commas and trim each label
+    const labels = levelsOfProcessing.split(',').map(label => label.trim());
+  
+    // Translate each label individually, falling back to the original label if no translation is found
+    const translatedLabels = labels
+      .map(label => this.localizationDataLOP[label] || label)
+      .filter(label => label.toLowerCase() !== 'n/a' && label !== ''); // Filter out 'n/a' and empty labels
+  
+    // Join the translated labels back with a comma separator
+    return translatedLabels.length > 0 ? translatedLabels.join(', ') : ''; // Return empty string if no valid labels
   }
 }
