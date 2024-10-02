@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 import { JsonPipe } from '@angular/common';
 import { CardDashboardComponent } from './components/card-dashboard/card-dashboard.component';
 import { SeasonalCalendarComponent } from './components/seasonal-calendar/seasonal-calendar.component';
+import { CardSuggestionComponent } from './components/card-suggestion/card-suggestion.component';
 
 @Component({
   selector: 'app-dashboard2',
@@ -35,6 +36,7 @@ import { SeasonalCalendarComponent } from './components/seasonal-calendar/season
     JsonPipe,
     CardDashboardComponent,
     SeasonalCalendarComponent,
+    CardSuggestionComponent,
   ],
   templateUrl: './dashboard2.component.html',
   styleUrl: './dashboard2.component.scss',

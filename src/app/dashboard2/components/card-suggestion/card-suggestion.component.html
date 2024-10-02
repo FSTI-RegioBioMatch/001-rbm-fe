@@ -1,0 +1,94 @@
+<div class="container">
+  <form [formGroup]="formGroup" class="w-full flex flex-column gap-4">
+    <div class="flex flex-column gap-2">
+      <label for="bearerToken">Bearer Token</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="bearerToken"
+        placeholder="Bearer Token"
+        id="bearerToken"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="lat1">lat1</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="lat1"
+        placeholder="lat1"
+        id="lat1"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="lon1">lon1</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="lon1"
+        placeholder="lon1"
+        id="lon1"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="lat2">lat2</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="lat2"
+        placeholder="lat2"
+        id="lat2"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="lon2">lon2</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="lon2"
+        placeholder="lon2"
+        id="lon2"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="currentCompanyId">currentCompanyId</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="currentCompanyId"
+        placeholder="currentCompanyId"
+        id="currentCompanyId"
+      />
+    </div>
+
+    <div class="flex flex-column gap-2">
+      <label for="useNearbuyProd">useNearbuyProd</label>
+      <input
+        type="checkbox"
+        pInputSwitch
+        formControlName="useNearbuyProd"
+        label="useNearbuyProd"
+        id="useNearbuyProd"
+      />
+    </div>
+
+    <p-button
+      [loading]="loading"
+      type="button"
+      label="Start planner"
+      (click)="startPlanning()"
+    />
+  </form>
+  @if (data.score) {
+    <div class="flex gap-4">
+      <p-badge [value]="data.score" />
+    </div>
+  }
+
+  <pre>{{ data.offers | json }}</pre>
+</div>
