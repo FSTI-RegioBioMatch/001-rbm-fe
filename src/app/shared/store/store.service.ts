@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { PersonType } from '../types/person.type';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { catchError, finalize, switchMap, filter, take, map } from 'rxjs/operators';
+import {
+  catchError,
+  finalize,
+  switchMap,
+  filter,
+  take,
+  map,
+} from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { EmploymentType } from '../types/employment.type';
 import { CompanyType } from '../types/company.type';
@@ -53,18 +60,27 @@ export class StoreService {
   public rbmRole$ = this.rbmRoleSubject.asObservable();
 
   // current user company context
-  private selectedCompanyContext = new BehaviorSubject<CompanyType | null>(null);
+  private selectedCompanyContext = new BehaviorSubject<CompanyType | null>(
+    null,
+  );
   public selectedCompanyContext$ = this.selectedCompanyContext.asObservable();
 
   // current selected recipes to create menu plan
-  public selectedPublicRecipeSubject = new BehaviorSubject<PublicRecipeType[]>([]);
-  public selectedPublicRecipe$ = this.selectedPublicRecipeSubject.asObservable();
+  public selectedPublicRecipeSubject = new BehaviorSubject<PublicRecipeType[]>(
+    [],
+  );
+  public selectedPublicRecipe$ =
+    this.selectedPublicRecipeSubject.asObservable();
 
   public selectedRecipesSubject = new BehaviorSubject<RecipeType[]>([]);
   public selectedRecipes$ = this.selectedRecipesSubject.asObservable();
 
-  public selectedCompanyLatLonSubject = new BehaviorSubject<{ lat: number; lon: number } | null>(null);
-  public selectedCompanyLatLon$ = this.selectedCompanyLatLonSubject.asObservable();
+  public selectedCompanyLatLonSubject = new BehaviorSubject<{
+    lat: number;
+    lon: number;
+  } | null>(null);
+  public selectedCompanyLatLon$ =
+    this.selectedCompanyLatLonSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.selectedCompanyContextChangedListener();
@@ -92,7 +108,7 @@ export class StoreService {
           console.error('Error fetching person information:', error);
           return [];
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       )
       .subscribe(({ employments, companies }) => {
         this.employmentsSubject.next(employments);
@@ -101,7 +117,9 @@ export class StoreService {
         // Only trigger company context selection once companies are fully loaded
         this.getSelectedCompanyFromSessionStore();
         companies.map((company) => {
-          this.fetchCompanyAddresses(company);
+          this.fetchCompanyAddresses(company).subscribe((company) => {
+            console.log(123123123123, company);
+          });
         });
       });
   }
@@ -119,13 +137,14 @@ export class StoreService {
   // Fetch companies for a person's employments
   private fetchCompanies(person: PersonType): Observable<CompanyType[]> {
     return this.fetchEmployments(person).pipe(
-      switchMap((employments) =>
-        forkJoin(
+      switchMap((employments) => {
+        console.log(123123, employments);
+        return forkJoin(
           employments.map((employment) => {
             return this.http.get<CompanyType>(employment.links.company);
-          })
-        )
-      )
+          }),
+        );
+      }),
     );
   }
 
@@ -140,39 +159,49 @@ export class StoreService {
       console.info('Company context from session store:', companyContext);
 
       // Wait for the companies to load before selecting a company context
-      this.companies$.pipe(
-        filter((companies) => Array.isArray(companies) && companies.length > 0),
-        take(1)
-      ).subscribe((companies) => {
-        const company = companies.find((c) => c && c.id === companyContext);
-        if (company) {
-          this.selectedCompanyContext.next(company);
-        } else {
-          console.warn(`No company found with id: ${companyContext}`);
-        }
-      });
+      this.companies$
+        .pipe(
+          filter(
+            (companies) => Array.isArray(companies) && companies.length > 0,
+          ),
+          take(1),
+        )
+        .subscribe((companies) => {
+          const company = companies.find((c) => c && c.id === companyContext);
+          if (company) {
+            this.selectedCompanyContext.next(company);
+          } else {
+            console.warn(`No company found with id: ${companyContext}`);
+          }
+        });
     } else {
       console.info('No company context found in session store');
 
-      this.companies$.pipe(
-        filter((companies) => Array.isArray(companies) && companies.length > 0),
-        take(1)
-      ).subscribe((companies) => {
-        this.selectedCompanyContext.next(companies[0]);
-      });
+      this.companies$
+        .pipe(
+          filter(
+            (companies) => Array.isArray(companies) && companies.length > 0,
+          ),
+          take(1),
+        )
+        .subscribe((companies) => {
+          this.selectedCompanyContext.next(companies[0]);
+        });
     }
   }
 
   private selectedCompanyContextChangedListener() {
-    this.selectedCompanyContext$.pipe(
-      filter((company) => !!company),
-      take(1)
-    ).subscribe((company) => {
-      if (company) {
-        localStorage.setItem('company_context', company.id);
-        this.updaterbmRole(company.roles);
-      }
-    });
+    this.selectedCompanyContext$
+      .pipe(
+        filter((company) => !!company),
+        take(1),
+      )
+      .subscribe((company) => {
+        if (company) {
+          localStorage.setItem('company_context', company.id);
+          this.updaterbmRole(company.roles);
+        }
+      });
   }
 
   public updateSelectedCompanyContext(company: CompanyType) {
@@ -199,7 +228,11 @@ export class StoreService {
 
     if (roles.includes('SUPPLIER')) {
       return 'producer';
-    } else if (roles.some((role) => ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role))) {
+    } else if (
+      roles.some((role) =>
+        ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
+      )
+    ) {
       return 'refiner';
     } else {
       return 'gastro'; // Default to gastro if no matching roles
