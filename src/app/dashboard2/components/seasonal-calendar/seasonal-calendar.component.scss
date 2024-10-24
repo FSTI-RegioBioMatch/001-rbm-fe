@@ -1,0 +1,72 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .calendar-wrapper {
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .calendar-title {
+    font-size: 2rem;
+    color: #3d5a80;
+    font-weight: bold;
+  }
+  
+  .custom-dropdown {
+    max-width: 300px;
+    border-radius: 8px;
+    .p-dropdown {
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .produce-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+  
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .produce-image {
+      object-fit: cover;
+      width: 100%;
+      border-radius: 8px;
+      max-height: 150px;
+    }
+  
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #293241;
+    }
+  
+    .badge {
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+    }
+  
+    .text-muted {
+      font-size: 0.9rem;
+    }
+  }
+  
+  .text-muted {
+    font-size: 1rem;
+    color: #8696a7;
+  }
+  

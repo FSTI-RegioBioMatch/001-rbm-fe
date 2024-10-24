@@ -3,20 +3,24 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
+import { PixabayService } from '../../../shared/services/pixabay.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 interface Produce {
   name: string;
   type: 'fruit' | 'vegetable';
   seasons: number[];
+  imageUrl?: string;
 }
 
 @Component({
   selector: 'app-seasonal-calendar',
   standalone: true,
-  imports: [DropdownModule, TableModule, FormsModule, JsonPipe],
+  imports: [DropdownModule, TableModule, FormsModule, JsonPipe, CommonModule],
   templateUrl: './seasonal-calendar.component.html',
-  styleUrl: './seasonal-calendar.component.scss',
+  styleUrls: ['./seasonal-calendar.component.scss'],
 })
 export class SeasonalCalendarComponent implements OnInit {
   months!: SelectItem[];
@@ -65,6 +69,8 @@ export class SeasonalCalendarComponent implements OnInit {
     { name: 'Fenchel', type: 'vegetable', seasons: [6, 7, 8, 9, 10, 11] },
   ];
 
+  constructor(private pixabayService: PixabayService, private router: Router,private http: HttpClient) {}
+
   ngOnInit() {
     this.months = [
       { label: 'Januar', value: 0 },
@@ -88,5 +94,24 @@ export class SeasonalCalendarComponent implements OnInit {
     this.outputData = this.produceData.filter((item) =>
       item.seasons.includes(this.selectedMonth + 1),
     );
+    this.loadImagesForProduce(); 
   }
+  loadImagesForProduce() {
+    this.outputData.forEach((produce) => {
+        this.pixabayService.searchImage(produce.name).subscribe({
+            next: (response: any) => {
+                if (response.hits && response.hits.length > 0) {
+                    produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
+                } else {
+                    produce.imageUrl = '';  // No image found
+                    console.warn(`Kein Bild gefunden für ${produce.name}`);
+                }
+            },
+            error: (error) => {
+                console.error(`Fehler beim Abrufen des Bildes für ${produce.name}:`, error);
+                produce.imageUrl = '';  // In case of an error, fallback to no image
+            }
+        });
+    });
+}
 }

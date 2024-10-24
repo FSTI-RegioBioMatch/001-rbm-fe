@@ -44,6 +44,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
       bearerExcludedUrls: [
         'https://www.themealdb.com/*',
         'https://themealdb.com/*',
+        'https://pixabay.com/*',
       ],
     });
 }

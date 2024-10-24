@@ -6,4 +6,3 @@
     "pathRewrite": {"^/services/masterdata/api" : "/api/v1"}
   }
 }
-

@@ -1,25 +1,40 @@
-<div class="pl-8 pr-8 container">
-  <div class="card">
-    <h2>Saisonkalender für Obst und Gemüse</h2>
-    <p-dropdown
-      [options]="months"
-      [(ngModel)]="selectedMonth"
-      (onChange)="updateProduceList()"
-    ></p-dropdown>
-    <div class="mt-4 mb-4"></div>
-    <p-table [value]="outputData" [tableStyle]="{ 'min-width': '50rem' }">
-      <ng-template pTemplate="header">
-        <tr>
-          <th>Type</th>
-          <th>Name</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-fruit>
-        <tr>
-          <td>{{ fruit.type }}</td>
-          <td>{{ fruit.name }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
+<div class="container py-5">
+  <div class="calendar-wrapper">
+    <!-- Title Section -->
+    <h2 class="text-center calendar-title mb-5">Saisonkalender für Obst und Gemüse</h2>
+
+    <!-- Month Dropdown Selector -->
+    <div class="d-flex justify-content-center mb-4">
+      <p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="updateProduceList()"
+        placeholder="Monat auswählen" class="custom-dropdown w-50"></p-dropdown>
+    </div>
+
+    <!-- Produce Grid (Modern Card Layout) -->
+    <div class="row g-4">
+      <ng-container *ngFor="let produce of outputData">
+        <div class="col-sm-6 col-md-4 col-lg-3">
+          <div [ngClass]="{'fruit-card': produce.type === 'fruit', 'vegetable-card': produce.type === 'vegetable'}"
+            class="produce-card card shadow-sm h-100">
+            <div class="card-body d-flex flex-column align-items-center text-center">
+              <img *ngIf="produce.imageUrl" [src]="produce.imageUrl" [alt]="produce.name"
+                class="img-fluid rounded mb-3 produce-image" style="max-height: 150px;" />
+              <h5 class="card-title mb-2">{{ produce.name }}</h5>
+              <!-- Display different icons and badges for fruits and vegetables -->
+              <div class="badge-container">
+                <span class="badge">
+                  {{ produce.type === 'fruit' ? 'Frucht' : 'Gemüse' }}
+                </span>
+              </div>
+              <span *ngIf="!produce.imageUrl" class="text-muted">Kein Bild verfügbar</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- No Produce Found -->
+    <div *ngIf="outputData.length === 0" class="text-center mt-4">
+      <p class="text-muted">Keine Produkte für den ausgewählten Monat verfügbar.</p>
+    </div>
   </div>
 </div>
