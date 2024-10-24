@@ -6,13 +6,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { switchMap, filter } from 'rxjs/operators';
-import { Router, RouterLink } from '@angular/router'; // Import Router
+import { Router, RouterLink } from '@angular/router';
 import { NewShoppingListService } from '../shared/services/new-shopping-list.service';
 import { StoreService } from '../shared/store/store.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { AddressService } from '../shared/services/adress.service';
 
 @Component({
   selector: 'app-shopping-list-overview',
@@ -38,6 +37,9 @@ export class ShoppingListOverviewComponent implements OnInit {
   shoppingLists: any[] = [];
   filteredShoppingLists: any[] = [];
   loading = false;
+  
+  // Add the German locale configuration
+  de: any;
 
   constructor(
     private shoppingListService: NewShoppingListService,
@@ -54,12 +56,24 @@ export class ShoppingListOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+      // Define the German locale configuration
+      this.de = {
+        firstDayOfWeek: 1,
+        dayNames: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
+        dayNamesShort: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+        dayNamesMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+        monthNames: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+        monthNamesShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+        today: 'Heute',
+        clear: 'Löschen'
+      };
+
       this.loading = true;
   
       this.storeService.selectedCompanyContext$
         .pipe(
-          filter(company => company !== null),  // Ensure company context is available
-          switchMap(company => this.shoppingListService.getAllShoppingLists()) // Fetch all shopping lists
+          filter(company => company !== null),
+          switchMap(company => this.shoppingListService.getAllShoppingLists())
         )
         .subscribe({
           next: (lists) => {
@@ -104,6 +118,6 @@ export class ShoppingListOverviewComponent implements OnInit {
   }
 
   onRowSelect(list: any): void {
-    this.router.navigate(['/shopping-list-detail', list.id]); // Navigate to the detail page with the selected list's ID
+    this.router.navigate(['/shopping-list-detail', list.id]);
   }
 }

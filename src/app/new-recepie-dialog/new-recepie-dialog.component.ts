@@ -291,7 +291,8 @@ export class NewRecepieDialogComponent implements OnInit {
   }
 
   onFilter(event: any, index: number) {
-    const filterValue = event.filter.trim().toLowerCase();
+    const originalFilterValue = event.filter.trim(); // Store the original filter value
+    const filterValue = originalFilterValue.toLowerCase(); // Convert to lowercase for filtering
     const ingredientFormGroup = this.ingredients.at(index) as FormGroup;
     let filteredOptions = [];
 
@@ -314,17 +315,16 @@ export class NewRecepieDialogComponent implements OnInit {
             filteredOptions = [
                 ...filteredOptions,
                 {
-                    label: `${filterValue}`,
-                    value: filterValue,
+                    label: originalFilterValue, // Use the original filter value
+                    value: originalFilterValue,
                 }
             ];
         }
     }
 
     // Update the form group with the filtered options
-    ingredientFormGroup.patchValue({ ingredientOptions: filteredOptions });
+    ingredientFormGroup.patchValue({ filteredOptions });
 }
-
 
   
   

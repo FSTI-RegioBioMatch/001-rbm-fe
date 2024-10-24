@@ -8,7 +8,7 @@
 <p-toast></p-toast>
 
 <div class="shopping-list-overview">
-    <h2 class="rbm-text-sea-green">Shopping List Overview</h2>
+    <h2 class="rbm-text-sea-green">Einkaufslistenübersicht</h2>
     <br>
     <form [formGroup]="searchForm">
         <div class="rbm-flex-row rbm-gap-s">
@@ -17,16 +17,16 @@
                 <input id="name" pInputText formControlName="name" />
             </div>
             <div class="rbm-flex-column">
-                <label for="recipe">Recipe</label>
+                <label for="recipe">Rezept</label>
                 <input id="recipe" pInputText formControlName="recipe" />
             </div>
             <div class="rbm-flex-column">
-                <label for="menuPlan">Menu Plan</label>
+                <label for="menuPlan">Menüplan</label>
                 <input id="menuPlan" pInputText formControlName="menuPlan" />
             </div>
             <div class="rbm-flex-column">
-                <label for="date">Date</label>
-                <p-calendar id="date" formControlName="date"></p-calendar>
+                <label for="date">Datum</label>
+                <p-calendar id="date" formControlName="date" [locale]="de"></p-calendar>
             </div>
         </div>
     </form>
@@ -38,14 +38,14 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Name</th>
-                <th>Recipes</th>
-                <th>Menu Plans</th>
-                <th>Date Created</th>
+                <th>Rezepte</th>
+                <th>Menüpläne</th>
+                <th>Erstellungsdatum</th>
                 <th>Löschen</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-list>
-            <tr class="tr-item rbm-pointer" (click)="onRowSelect(list)"> <!-- Add click event handler here -->
+            <tr class="tr-item rbm-pointer" (click)="onRowSelect(list)">
                 <td>{{ getMenuPlanNames(list) }}</td>
                 <td>{{ getRecipeNames(list) }}</td>
                 <td>{{ getMenuPlanDetails(list) }}</td>
