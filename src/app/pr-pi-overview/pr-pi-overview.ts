@@ -17,6 +17,7 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PersonType } from '../shared/types/person.type';
+import { LocalizeService } from '../shared/services/localize.service';
 
 @Component({
   selector: 'app-pr-pi-overview',
@@ -57,32 +58,34 @@ export class PrPiOverviewComponent implements OnInit {
   calculatedPricePerUnit: number | null = null;
 
   priceRequestStatuses = [
-    { label: 'All', value: null },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Price Added', value: 'PRICE_ADDED' },
-    { label: 'Completed', value: 'COMPLETED' },
-    { label: 'Canceled by Buyer', value: 'CANCELED_BY_BUYER' },
-    { label: 'Canceled by Seller', value: 'CANCELED_BY_SELLER' },
-    { label: 'Rejected', value: 'REJECTED' },
+    { label: 'Alle', value: null },
+    { label: 'Ausstehend', value: 'PENDING' },
+    { label: 'Preis hinzugefügt', value: 'PRICE_ADDED' },
+    { label: 'Abgeschlossen', value: 'COMPLETED' },
+    { label: 'Vom Käufer storniert', value: 'CANCELED_BY_BUYER' },
+    { label: 'Vom Verkäufer storniert', value: 'CANCELED_BY_SELLER' },
+    { label: 'Abgelehnt', value: 'REJECTED' },
   ];
-
+  
   purchaseIntentStatuses = [
-    { label: 'All', value: null },
-    { label: 'Pending', value: 'PENDING' },
-    { label: 'Accepted', value: 'ACCEPTED' },
-    { label: 'Completed', value: 'COMPLETED' },
-    { label: 'Canceled by Buyer', value: 'CANCELED_BY_BUYER' },
-    { label: 'Canceled by Seller', value: 'CANCELED_BY_SELLER' },
-    { label: 'Rejected', value: 'REJECTED' },
+    { label: 'Alle', value: null },
+    { label: 'Ausstehend', value: 'PENDING' },
+    { label: 'Akzeptiert', value: 'ACCEPTED' },
+    { label: 'Abgeschlossen', value: 'COMPLETED' },
+    { label: 'Vom Käufer storniert', value: 'CANCELED_BY_BUYER' },
+    { label: 'Vom Verkäufer storniert', value: 'CANCELED_BY_SELLER' },
+    { label: 'Abgelehnt', value: 'REJECTED' },
   ];
   companyId: string | undefined;
+  localizationDataUnits: { [key: string]: string } = {};
 
   constructor(
     private store: StoreService,
     private messageService: MessageService,
     private offerService: OfferService,
     private orderService: OrderService,
-    private storeService: StoreService
+    private storeService: StoreService,
+    private localizeService: LocalizeService
   ) {}
 
   ngOnInit(): void {
@@ -102,6 +105,7 @@ export class PrPiOverviewComponent implements OnInit {
       }
     });
     this.fetchOrdersAndRecurringOrders();
+    this.loadLocalization();
   }
 
   // Function to fetch both orders and recurring orders
@@ -588,5 +592,41 @@ export class PrPiOverviewComponent implements OnInit {
       return false;
     }
     return data.sellingCompany.id === this.companyId;
+  }
+  getStatusLabel(status: string, type: 'priceRequest' | 'purchaseIntent'): string {
+    const statuses = type === 'priceRequest' ? this.priceRequestStatuses : this.purchaseIntentStatuses;
+    const statusObj = statuses.find((item) => item.value === status);
+    return statusObj ? statusObj.label : status; // If no match, return status as fallback
+  }
+  loadLocalization()
+  {
+    this.localizeService.getUnits().subscribe({
+      next: (result) => {
+        this.localizationDataUnits = result; // Save localization data for later use
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Fehler',
+          detail: 'Fehler beim Laden der Übersetzungen',
+        });
+      },
+    });
+  }
+  getLocalizedLabelUnit(unit: string): string {
+    if (!unit || !this.localizationDataUnits) {
+      return unit; // Return original value if no translation is available or input is empty
+    }
+
+    // Split by commas and trim each label
+    const labels = unit.split(',').map((label) => label.trim());
+
+    // Translate each label individually, falling back to the original label if no translation is found
+    const translatedLabels = labels.map(
+      (label) => this.localizationDataUnits[label] || label,
+    );
+
+    // Join the translated labels back with a comma separator
+    return translatedLabels.join(', ');
   }
 }

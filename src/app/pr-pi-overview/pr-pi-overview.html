@@ -17,12 +17,12 @@
 <div *ngIf="!loadingOrders">
 
   <p-tabView>
+    <!-- Price Requests Tab -->
     <p-tabPanel header="Preisanfragen">
-        <!-- Price Requests Section -->
       <h3>Preisanfragen</h3>
 
       <!-- Status Filter Dropdown for Price Requests -->
-      <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Select Status"
+      <p-dropdown [options]="priceRequestStatuses" [(ngModel)]="selectedPriceRequestStatus" placeholder="Status wählen"
         (onChange)="filterPriceRequests()"></p-dropdown>
         
       <br><br>
@@ -31,33 +31,34 @@
       <p-table [value]="filteredPriceRequests" [rows]="10" [responsiveLayout]="'scroll'">
         <ng-template pTemplate="header">
           <tr>
-            <th>Date Created</th>
-            <th>Delivery Date</th>
-            <th>Amount</th>
+            <th>Erstellt am</th>
+            <th>Lieferdatum</th>
+            <th>Menge</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Aktionen</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-priceRequest>
           <tr>
             <td>{{ priceRequest.dateCreated | date }}</td>
             <td>{{ priceRequest.deliveryDate | date }}</td>
-            <td>{{ priceRequest.amount.amount }} {{ priceRequest.amount.unit }}</td>
-            <td>{{ priceRequest.status }}</td>
+            <td>{{ priceRequest.amount.amount }} {{ getLocalizedLabelUnit(priceRequest.amount.unit) }}</td>
+            <td>{{ getStatusLabel(priceRequest.status, 'priceRequest') }}</td>
             <td>
-              <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+              <button pButton type="button" label="Details ansehen" icon="pi pi-info-circle" class="p-button-sm p-button-info"
                 (click)="fetchPriceRequestDetails(priceRequest.links.self)"></button>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </p-tabPanel>
+
+    <!-- Purchase Intents Tab -->
     <p-tabPanel header="Kaufanfragen">
-       <!-- Purchase Intents Section with Status Filter -->
       <h3>Kaufanfragen</h3>
 
       <!-- Status Filter Dropdown for Purchase Intents -->
-      <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Select Status"
+      <p-dropdown [options]="purchaseIntentStatuses" [(ngModel)]="selectedPurchaseIntentStatus" placeholder="Status wählen"
         (onChange)="filterPurchaseIntents()"></p-dropdown>
 
       <br><br>
@@ -66,32 +67,30 @@
       <p-table [value]="filteredPurchaseIntents" [rows]="10" [responsiveLayout]="'scroll'">
         <ng-template pTemplate="header">
           <tr>
-            <th>Date Created</th>
-            <th>Delivery Date</th>
-            <th>Amount</th>
+            <th>Erstellt am</th>
+            <th>Lieferdatum</th>
+            <th>Menge</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Aktionen</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-purchaseIntent>
           <tr>
             <td>{{ purchaseIntent.dateCreated | date }}</td>
             <td>{{ purchaseIntent.deliveryDate | date }}</td>
-            <td>{{ purchaseIntent.amount.amount }} {{ purchaseIntent.amount.unit }}</td>
-            <td>{{ purchaseIntent.status }}</td>
+            <td>{{ purchaseIntent.amount.amount }} {{ getLocalizedLabelUnit(purchaseIntent.amount.unit) }}</td>
+            <td>{{ getStatusLabel(purchaseIntent.status, 'purchaseIntent') }}</td>
             <td>
-              <button pButton type="button" label="View Details" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+              <button pButton type="button" label="Details ansehen" icon="pi pi-info-circle" class="p-button-sm p-button-info"
                 (click)="fetchPurchaseIntentDetails(purchaseIntent.links.self)"></button>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </p-tabPanel>
-</p-tabView>
-
- 
-
+  </p-tabView>
 </div>
+
 <p-toast></p-toast>
 
 <p-dialog header="Purchase Intent Details" [(visible)]="selectedPurchaseIntent" [modal]="true" [closable]="true"

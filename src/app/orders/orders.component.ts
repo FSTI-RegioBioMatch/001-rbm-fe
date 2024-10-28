@@ -8,6 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Button  } from 'primeng/button';
 import { Router, RouterLink } from '@angular/router';
+import { LocalizeService } from '../shared/services/localize.service';
 
 @Component({
   selector: 'app-orders',
@@ -21,11 +22,20 @@ export class OrdersComponent implements OnInit {
 
   orders: any[] = []; // Store the order details here
   orderIds: string[] = []; // Store the extracted order IDs here
+  localizationDataUnits: { [key: string]: string } = {};
+  foodDataUnits: { [key: string]: string } = {};
+  orderStatuses = [
+    { label: 'Alle', value: null },
+    { label: 'Ausstehend', value: 'PENDING' },
+    { label: 'Rechnung erstellt', value: 'INVOICE_ADDED' },
+  ];
+  
 
   constructor(
     private orderService: OrderService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private localizeService: LocalizeService,
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +51,7 @@ export class OrdersComponent implements OnInit {
 
         // Fetch order details for each extracted order ID
         this.fetchAllOrderDetails(this.orderIds);
+        this.loadLocalization();
       },
       error: (error) => {
         this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Bestellungen des Unternehmens konnten nicht abgerufen werden'});
@@ -83,5 +94,70 @@ export class OrdersComponent implements OnInit {
     console.log(order);
     const orderId = order.links.self.split('/').pop();
     this.router.navigate(["order-details", orderId])
+  }
+
+  loadLocalization()
+    {
+      this.localizeService.getUnits().subscribe({
+        next: (result) => {
+          this.localizationDataUnits = result; // Save localization data for later use
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Fehler beim Laden der Übersetzungen',
+          });
+        },
+      });
+      this.localizeService.getOntofood().subscribe({
+        next: (result) => {
+          this.foodDataUnits = result; // Save localization data for later use
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Fehler beim Laden der Übersetzungen',
+          });
+        },
+      });
+    }
+
+  getLocalizedLabelUnit(unit: string): string {
+      if (!unit || !this.localizationDataUnits) {
+        return unit; // Return original value if no translation is available or input is empty
+      }
+  
+      // Split by commas and trim each label
+      const labels = unit.split(',').map((label) => label.trim());
+  
+      // Translate each label individually, falling back to the original label if no translation is found
+      const translatedLabels = labels.map(
+        (label) => this.localizationDataUnits[label] || label,
+      );
+  
+      // Join the translated labels back with a comma separator
+      return translatedLabels.join(', ');
+    }
+    getStatusLabel(status: string): string {
+      const statusObj = this.orderStatuses.find((item) => item.value === status);
+      return statusObj ? statusObj.label : status; // If no match, return status as fallback
+    }
+    getLocalizedLabelFood(unit: string): string {
+      if (!unit || !this.foodDataUnits) {
+        return unit; // Return original value if no translation is available or input is empty
+      }
+  
+      // Split by commas and trim each label
+      const labels = unit.split(',').map((label) => label.trim());
+  
+      // Translate each label individually, falling back to the original label if no translation is found
+      const translatedLabels = labels.map(
+        (label) => this.foodDataUnits[label] || label,
+      );
+  
+      // Join the translated labels back with a comma separator
+      return translatedLabels.join(', ');
     }
 }
