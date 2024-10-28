@@ -58,6 +58,22 @@ const ingredientUnits: IngredientUnit[] = [
   { label: 'Körner', value: 'grains' },
 ];
 
+export enum IngredientStatus {
+  NO_OFFERS = 'Keine Angebote verfügbar',
+  OFFERS_AVAILABLE = 'Angebote verfügbar',
+  OFFER_SELECTED = 'Angebot ausgewählt',
+  PRICE_REQUEST_PENDING = 'Preisabfrage ausstehend',
+  PRICE_REQUEST_COMPLETED = 'Preisabfrage abgeschlossen',
+  PURCHASE_INTENT_PENDING = 'Kaufabsicht ausstehend',
+  PURCHASE_INTENT_ACCEPTED = 'Kaufabsicht akzeptiert',
+  ORDER_PENDING = 'Bestellung ausstehend',
+  ORDER_COMPLETED = 'Bestellung abgeschlossen',
+  INVOICE_ADDED = 'Rechnung hinzugefügt',
+  ORDER_MIXED = 'Bestellung gemischt',
+  PURCHASE_INTENT_MIXED = 'Kaufabsicht gemischt',
+  PRICE_REQUEST_MIXED = 'Preisabfrage gemischt'
+}
+
 @Component({
   selector: 'app-shoppinglist-to-order-details',
   templateUrl: './shoppinglist-to-order-details.component.html',
@@ -82,7 +98,7 @@ const ingredientUnits: IngredientUnit[] = [
 
 
 export class ShoppinglistToOrderDetailsComponent implements OnInit {
-
+  overallProgress = { ordered: 0, requested: 0, intended: 0 };
   loading = false;
   shoppingListToOrderObject: any;
   localizationData: { displayLabel: string; value: string }[] = [];
@@ -222,7 +238,6 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
             this.shoppingListToOrderObject = result.shoppingListToOrderObject;
             this.localizationData = result.localizationData;
             this.shoppingListTrack = result.shoppingListTrack;
-  
             this.fetchAllOrders();
           }
           this.loading = false;
@@ -368,7 +383,6 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
       )
       .subscribe({
         next: ([priceRequestsData, purchaseIntentsData, orderData]) => {
-          console.log("orderdata", orderData)
           this.mapRequestsAndIntentsToIngredients(priceRequestsData, purchaseIntentsData, orderData);
           this.loadingOrders = false;
         },
@@ -518,7 +532,8 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
         )
         .subscribe({
           next: () => {
-            console.log('Mapped Offers Ingredients with Details:', mappedOffersIngredients);
+            this.evaluateIngredientProgress();
+            this.calculateOverallProgress();
           },
           error: error => {
             console.error('Error mapping requests, intents, and orders:', error);
@@ -527,8 +542,6 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
     } else {
       console.log('No price requests, purchase intents, or orders to map.');
     }
-    console.log(this.shoppingListToOrderObject)
-    this.evaluateIngredientStatuses()
   }
   
   
@@ -883,85 +896,6 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
       event.preventDefault();
     }
   }
-  private evaluateIngredientStatuses(): void {
-    this.shoppingListToOrderObject.mappedOffersIngredients.forEach((ingredient: any, index: number) => {
-      let ingredientId = ingredient.id || ingredient.ingredient?.[0]?.name || `generated-id-${index}`;
-  
-      if (!ingredient.id) {
-        console.warn(`Ingredient missing ID. Generating unique ID for ingredient: ${ingredient.ingredient?.[0]?.name}`, ingredient);
-        ingredient.id = ingredientId;
-      }
-  
-      // Aggregate data from all offers
-      let aggregatedOrders: any[] = [];
-      let aggregatedIntents: any[] = [];
-      let aggregatedRequests: any[] = [];
-  
-      if (ingredient.offers && ingredient.offers.length > 0) {
-        ingredient.offers.forEach((offer: any) => {
-          if (offer.orders) {
-            aggregatedOrders = [...aggregatedOrders, ...offer.orders];
-          }
-          if (offer.purchaseIntents) {
-            aggregatedIntents = [...aggregatedIntents, ...offer.purchaseIntents];
-          }
-          if (offer.priceRequests) {
-            aggregatedRequests = [...aggregatedRequests, ...offer.priceRequests];
-          }
-        });
-      }
-  
-      // Initialize with default main and sub-status
-      let mainStatus = 'OFFERS_AVAILABLE';
-      let subStatus = 'OFFERS_FOUND';
-  
-      // 1. Check aggregated orders first
-      if (aggregatedOrders.length > 0) {
-        const pendingOrders = aggregatedOrders.filter((order: any) => order.status === 'PENDING');
-        const completedOrders = aggregatedOrders.filter((order: any) => order.status === 'INVOICE_ADDED' || order.status === 'COMPLETED');
-  
-        if (completedOrders.length > 0) {
-          mainStatus = 'ORDER_PLACED';
-          subStatus = completedOrders.length > 1 ? 'MULTIPLE_ORDERS_COMPLETED' : 'SINGLE_ORDER_COMPLETED';
-        } else if (pendingOrders.length > 0) {
-          mainStatus = 'ORDER_PLACED';
-          subStatus = pendingOrders.length > 1 ? 'MULTIPLE_ORDERS_PENDING' : 'SINGLE_ORDER_PENDING';
-        }
-      }
-      // 2. Check aggregated purchase intents and price requests
-      else if (aggregatedIntents.length > 0 || aggregatedRequests.length > 0) {
-        mainStatus = 'REQUESTS_OR_INTENTS';
-  
-        const pendingIntents = aggregatedIntents.filter((intent: any) => intent.status === 'PENDING');
-        const pendingRequests = aggregatedRequests.filter((pr: any) => pr.status === 'PENDING');
-  
-        const totalPending = pendingIntents.length + pendingRequests.length;
-  
-        if (totalPending > 1) {
-          subStatus = 'MULTIPLE_REQUESTS_OR_INTENTS_PENDING';
-        } else if (totalPending === 1) {
-          subStatus = 'SINGLE_REQUEST_OR_INTENT_PENDING';
-        } else {
-          subStatus = 'ALL_REQUESTS_OR_INTENTS_COMPLETED';
-        }
-      }
-      // 3. Check if there are any offers available
-      else if (ingredient.offers && ingredient.offers.length > 0) {
-        mainStatus = 'OFFERS_AVAILABLE';
-        subStatus = 'OFFERS_FOUND';
-      }
-      // 4. Default to no offers if no intents, requests, or orders are found
-      else {
-        mainStatus = 'NO_OFFERS';
-        subStatus = 'NO_OFFERS_FOUND';
-      }
-  
-      // Update the status map with main and sub-status
-      this.ingredientStatusMap[ingredientId] = { mainStatus, subStatus };
-    });
-  
-    console.log('Ingredient statuses:', this.ingredientStatusMap);
-  }
 
   // You can use this method to get the main and sub-status of an ingredient wherever needed
   getIngredientMainStatus(ingredientId: string): string {
@@ -987,5 +921,210 @@ export class ShoppinglistToOrderDetailsComponent implements OnInit {
       return false;
     });
   }
+
+  // Define the function that returns the status based on ingredient data
+  getIngredientStatus(item: any): IngredientStatus {
+    // Check if there are any offers available
+    if (!item.offers || item.offers.length === 0) {
+      return IngredientStatus.NO_OFFERS;
+    }
   
+    // Check for order status within the ingredient's offers
+    const orders = item.offers.flatMap((offer: any) => offer.orders || []);
+    if (orders.length > 0) {
+      if (orders.some((order: any) => order.status === 'COMPLETED' || order.status === 'INVOICE_ADDED')) {
+        return IngredientStatus.ORDER_COMPLETED;
+      } else if (orders.every((order: any) => order.status === 'PENDING')) {
+        return IngredientStatus.ORDER_PENDING;
+      } else {
+        return IngredientStatus.ORDER_MIXED; // Mixed status if both completed and pending exist
+      }
+    }
+  
+    // Check for purchase intents within the ingredient's offers
+    const purchaseIntents = item.offers.flatMap((offer: any) => offer.purchaseIntents || []);
+    if (purchaseIntents.length > 0) {
+      if (purchaseIntents.some((intent: any) => intent.status === 'ACCEPTED')) {
+        return IngredientStatus.PURCHASE_INTENT_ACCEPTED;
+      } else if (purchaseIntents.every((intent: any) => intent.status === 'PENDING')) {
+        return IngredientStatus.PURCHASE_INTENT_PENDING;
+      } else {
+        return IngredientStatus.PURCHASE_INTENT_MIXED; // Mixed status if both accepted and pending exist
+      }
+    }
+  
+    // Check for price requests within the ingredient's offers
+    const priceRequests = item.offers.flatMap((offer: any) => offer.priceRequests || []);
+    if (priceRequests.length > 0) {
+      if (priceRequests.some((request: any) => request.status === 'PRICE_ADDED')) {
+        return IngredientStatus.PRICE_REQUEST_COMPLETED;
+      } else if (priceRequests.every((request: any) => request.status === 'PENDING')) {
+        return IngredientStatus.PRICE_REQUEST_PENDING;
+      } else {
+        return IngredientStatus.PRICE_REQUEST_MIXED; // Mixed status if both added and pending exist
+      }
+    }
+  
+    // Default to offer selected if none of the above conditions apply
+    return IngredientStatus.OFFER_SELECTED;
+  }
+  
+  evaluateIngredientProgress(): void {
+    this.shoppingListToOrderObject.mappedOffersIngredients.forEach((ingredient: any, index: number) => {
+        let ingredientId = ingredient.id || ingredient.ingredient?.[0]?.name || `generated-id-${index}`;
+        ingredient.id = ingredientId; // Assign generated ID if missing
+
+        // Calculate total amounts
+        const totalAmount = ingredient.ingredient.reduce((sum: number, ing: any) => sum + (ing.totalAmount || 0), 0);
+        const orderedAmount = (ingredient.orders || []).reduce((sum: number, order: any) => sum + (order.amount?.amount || 0), 0);
+        const requestedAmount = (ingredient.priceRequests || []).reduce((sum: number, request: any) => sum + (request.amount?.amount || 0), 0);
+        const intendedAmount = (ingredient.purchaseIntents || []).reduce((sum: number, intent: any) => sum + (intent.amount?.amount || 0), 0);
+
+        // Calculate percentages only if totalAmount > 0 to avoid NaN
+        const orderedPercentage = totalAmount ? (orderedAmount / totalAmount) * 100 : 0;
+        const requestedPercentage = totalAmount ? (requestedAmount / totalAmount) * 100 : 0;
+        const intendedPercentage = totalAmount ? (intendedAmount / totalAmount) * 100 : 0;
+
+        // Determine main status
+        let mainStatus: IngredientStatus = IngredientStatus.OFFERS_AVAILABLE;
+        if (orderedAmount === totalAmount) {
+            mainStatus = IngredientStatus.ORDER_COMPLETED;
+        } else if (intendedAmount > 0) {
+            mainStatus = IngredientStatus.PURCHASE_INTENT_PENDING;
+        } else if (requestedAmount > 0) {
+            mainStatus = IngredientStatus.PRICE_REQUEST_PENDING;
+        } else if (ingredient.offers && ingredient.offers.length > 0) {
+            mainStatus = IngredientStatus.OFFER_SELECTED;
+        } else {
+            mainStatus = IngredientStatus.NO_OFFERS;
+        }
+
+        // Save to status map with status percentages
+        this.ingredientStatusMap[ingredientId] = {
+            mainStatus,
+            subStatus: `${orderedPercentage.toFixed(0)}% Ordered, ${requestedPercentage.toFixed(0)}% Requested, ${intendedPercentage.toFixed(0)}% Intended`
+        };
+    });
+  }
+
+
+  getIngredientProgress(item: any): { ordered: number, requested: number, intended: number } {
+    const totalAmount = item.ingredient.reduce((sum: number, ing: any) => sum + (ing.totalAmount || 0), 0);
+    const orderedAmount = (item.orders || []).reduce((sum: number, order: any) => sum + (order.amount?.amount || 0), 0);
+    const requestedAmount = (item.priceRequests || []).reduce((sum: number, request: any) => sum + (request.amount?.amount || 0), 0);
+    const intendedAmount = (item.purchaseIntents || []).reduce((sum: number, intent: any) => sum + (intent.amount?.amount || 0), 0);
+  
+    return {
+      ordered: totalAmount ? (orderedAmount / totalAmount) * 100 : 0,
+      requested: totalAmount ? (requestedAmount / totalAmount) * 100 : 0,
+      intended: totalAmount ? (intendedAmount / totalAmount) * 100 : 0
+    };
+  }
+
+  calculateOverallProgress() {
+    let totalOrdered = 0, totalRequested = 0, totalIntended = 0, grandTotal = 0;
+
+    this.shoppingListToOrderObject.mappedOffersIngredients
+        .filter((item: any) => this.getIngredientStatus(item) !== IngredientStatus.NO_OFFERS) // Ignore 'NO_OFFERS' ingredients
+        .forEach((item: { ingredient: any[]; orders: any; priceRequests: any; purchaseIntents: any; }, index: number) => {
+            const ingredientName = item.ingredient?.[0]?.name || `Ingredient #${index + 1}`;
+
+            // Calculate and log the total amount for the ingredient
+            const totalAmount = item.ingredient.reduce((sum: any, ing: { totalAmount: any; }) => sum + (ing.totalAmount || 0), 0);
+
+            // Ordered Amounts Check
+            if (item.orders) {
+                item.orders.forEach((order: any, i: number) => {
+
+                });
+            }
+            const orderedAmount = (item.orders || []).reduce((sum: any, order: { amount: { amount: any; }; }) => sum + (order.amount?.amount || 0), 0);
+
+            // Requested Amounts Check
+            if (item.priceRequests) {
+                item.priceRequests.forEach((req: any, i: number) => {
+
+                });
+            }
+            const requestedAmount = (item.priceRequests || []).reduce((sum: any, req: { amount: { amount: any; }; }) => sum + (req.amount?.amount || 0), 0);
+
+
+            // Intended Amounts Check
+            if (item.purchaseIntents) {
+                item.purchaseIntents.forEach((intent: any, i: number) => {
+
+                });
+            }
+            const intendedAmount = (item.purchaseIntents || []).reduce((sum: any, intent: { amount: { amount: any; }; }) => sum + (intent.amount?.amount || 0), 0);
+            // Log and validate item status
+            const itemStatus = this.getIngredientStatus(item);
+
+            // Accumulate totals only if totalAmount > 0
+            if (totalAmount > 0) {
+                totalOrdered += orderedAmount;
+                totalRequested += requestedAmount;
+                totalIntended += intendedAmount;
+                grandTotal += totalAmount;
+            } else {
+                console.log("  Skipping this ingredient in totals due to 0 Total Amount.");
+            }
+        });
+    // Calculate overall percentages based on the grand total
+    this.overallProgress = {
+        ordered: grandTotal > 0 ? (totalOrdered / grandTotal) * 100 : 0,
+        requested: grandTotal > 0 ? (totalRequested / grandTotal) * 100 : 0,
+        intended: grandTotal > 0 ? (totalIntended / grandTotal) * 100 : 0
+    };
+}
+
+
+
+
+  
+  getIngredientProgressBar(item: any): string {
+    const progress = this.getIngredientProgress(item);
+  
+    // Calculate cumulative widths for the bar segments
+    const orderedWidth = Math.min(progress.ordered, 100);
+    const requestedWidth = Math.min(progress.requested, 100 - orderedWidth);
+    const intendedWidth = Math.min(progress.intended, 100 - orderedWidth - requestedWidth);
+  
+    // CSS gradient stops to create segmented bar
+    return `linear-gradient(to right,
+      #28a745 ${orderedWidth}%,
+      #ffc107 ${orderedWidth}% ${orderedWidth + requestedWidth}%,
+      #17a2b8 ${orderedWidth + requestedWidth}% ${orderedWidth + requestedWidth + intendedWidth}%,
+      #e9ecef ${orderedWidth + requestedWidth + intendedWidth}%)`;
+  }
+  
+  getIngredientProgressText(item: any): string {
+    const progress = this.getIngredientProgress(item);
+  
+    // Display the most relevant status
+    if (progress.ordered >= 100) {
+      return 'Bestellt: 100% (abgeschlossen)';
+    }
+    if (progress.requested > 0 || progress.intended > 0) {
+      return `Geplant: ${progress.intended.toFixed(0)}%, Angefragt: ${progress.requested.toFixed(0)}%, Bestellt: ${progress.ordered.toFixed(0)}%`;
+    }
+    return 'Keine Fortschritte';
+  }
+  getOverallProgressBar(): string {
+    const orderedWidth = Math.min(this.overallProgress.ordered, 100);
+    const requestedWidth = Math.min(this.overallProgress.requested, 100 - orderedWidth);
+    const intendedWidth = Math.min(this.overallProgress.intended, 100 - orderedWidth - requestedWidth);
+  
+    return `linear-gradient(to right,
+      #28a745 ${orderedWidth}%,
+      #ffc107 ${orderedWidth}% ${orderedWidth + requestedWidth}%,
+      #17a2b8 ${orderedWidth + requestedWidth}% ${orderedWidth + requestedWidth + intendedWidth}%,
+      #e9ecef ${orderedWidth + requestedWidth + intendedWidth}%)`;
+  }
+  
+  getOverallProgressText(): string {
+    if (this.overallProgress.ordered >= 100) {
+      return 'Bestellt: 100% (abgeschlossen)';
+    }
+    return `Geplant: ${this.overallProgress.intended.toFixed(0)}%, Angefragt: ${this.overallProgress.requested.toFixed(0)}%, Bestellt: ${this.overallProgress.ordered.toFixed(0)}%`;
+  }
 }
