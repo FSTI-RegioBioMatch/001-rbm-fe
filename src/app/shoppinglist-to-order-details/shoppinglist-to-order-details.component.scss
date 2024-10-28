@@ -359,3 +359,113 @@
 .rbm-bg-valid {
   background-color: var(--rbm-valid);
 }
+
+
+
+
+
+
+
+.list-summary h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.overall-progress-bar-container {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  height: 24px;
+  margin: 10px 0;
+  display: flex;
+}
+
+.overall-progress-bar {
+  height: 100%;
+  position: relative;
+}
+
+.overall-progress-bar.ordered {
+  background-color: #4caf50;
+}
+
+.overall-progress-bar.requested {
+  background-color: #2196f3;
+}
+
+.overall-progress-bar.intended {
+  background-color: #ff9800;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Individual Ingredient Container */
+.ingredient-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.ingredient-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ingredient-header h3 {
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+}
+
+.ingredient-main-status {
+  font-weight: bold;
+  color: #888;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #e0e0e0;
+}
+
+/* Individual Ingredient Progress Bars */
+.ingredient-progress .progress-bar-container {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 8px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.ingredient-progress .progress-bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.ingredient-progress .progress-bar.ordered {
+  background-color: #4caf50;
+}
+
+.ingredient-progress .progress-bar.requested {
+  background-color: #2196f3;
+}
+
+.ingredient-progress .progress-bar.intended {
+  background-color: #ff9800;
+}
+
+.progress-label {
+  font-size: 14px;
+}
