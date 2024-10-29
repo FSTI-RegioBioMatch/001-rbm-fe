@@ -11,4 +11,5 @@ export interface PersonType {
     remove: string;
   };
   language: string;
+  tackingEnabled: boolean
 }

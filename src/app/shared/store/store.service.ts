@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PersonType } from '../types/person.type';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, of, throwError } from 'rxjs';
 import {
   catchError,
   finalize,
@@ -12,11 +12,12 @@ import {
 import { environment } from '../../../environments/environment';
 import { EmploymentType } from '../types/employment.type';
 import { CompanyType } from '../types/company.type';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { OntofoodType } from '../types/ontofood.type';
 import { OfferType } from '../types/offer.type';
 import { PublicRecipeType } from '../types/public-recipe.type';
 import { RecipeType } from '../types/recipe.type';
+import { UserProfile } from '../types/userprofile.type';
 
 export type NearbuyRole =
   | 'SUPPLIER'
@@ -81,7 +82,7 @@ export class StoreService {
   } | null>(null);
   public selectedCompanyLatLon$ =
     this.selectedCompanyLatLonSubject.asObservable();
-
+  private backendUrl = `${environment.API_CORE}/user-profiles`;
   constructor(private http: HttpClient) {
     this.selectedCompanyContextChangedListener();
   }
@@ -98,11 +99,14 @@ export class StoreService {
     this.fetchPerson()
       .pipe(
         switchMap((person) => {
+          console.log('Fetched person:', person);
           this.personSubject.next(person);
           return forkJoin({
             employments: this.fetchEmployments(person),
             companies: this.fetchCompanies(person),
-          });
+          }).pipe(
+            map(({ employments, companies }) => ({ person, employments, companies })) // Combine data here
+          );
         }),
         catchError((error) => {
           console.error('Error fetching person information:', error);
@@ -110,12 +114,16 @@ export class StoreService {
         }),
         finalize(() => this.loadingSubject.next(false)),
       )
-      .subscribe(({ employments, companies }) => {
+      .subscribe(({ person, employments, companies }) => {
+        console.log('Fetched employments:', employments);
+        console.log('Fetched companies:', companies);
+        this.sendUserProfile(person, employments, companies)
         this.employmentsSubject.next(employments);
         this.companiesSubject.next(companies);
-
+        
         // Only trigger company context selection once companies are fully loaded
         this.getSelectedCompanyFromSessionStore();
+  
         companies.map((company) => {
           this.fetchCompanyAddresses(company).subscribe((company) => {
             console.log(123123123123, company);
@@ -123,7 +131,31 @@ export class StoreService {
         });
       });
   }
-
+  sendUserProfile(person: PersonType, employments: EmploymentType[], companies: CompanyType[]) {
+    // Extract company IDs
+    const companyIds = companies.map(company => company.id);
+  
+    // Create the user profile object
+    const userProfile: UserProfile = {
+      person,
+      employments,
+      companies,
+      companyIds
+    };
+  
+    // Log the user profile for debugging
+    console.log('Sending user profile:', userProfile);
+  
+    // Send the merged object to the backend
+    this.saveOrUpdateUserProfile(userProfile).subscribe({
+      next: (response) => {
+        console.log('User profile saved:', response);
+      },
+      error: (error) => {
+        console.error('Error saving user profile:', error);
+      }
+    })
+  }
   // Fetch person information
   private fetchPerson(): Observable<PersonType> {
     return this.http.get<PersonType>(`${environment.NEARBUY_API}/persons/me`);
@@ -237,5 +269,61 @@ export class StoreService {
     } else {
       return 'gastro'; // Default to gastro if no matching roles
     }
+  }
+
+  saveOrUpdateUserProfile(userProfile: UserProfile): Observable<UserProfile> {
+    return this.checkUserProfileExists(userProfile.person.email).pipe(
+      switchMap((exists) => {
+        if (exists) {
+          // If the profile exists, update it
+          return this.updateUserProfile(userProfile);
+        } else {
+          // If the profile does not exist, create a new one
+          return this.createUserProfile(userProfile);
+        }
+      }),
+      catchError((error) => {
+        console.error('Error saving or updating user profile:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private checkUserProfileExists(email: string): Observable<boolean> {
+    const params = new HttpParams().set('email', email);
+    return this.http.get<boolean>(`${this.backendUrl}/exists`, { params }).pipe(
+      catchError((error) => {
+        console.error('Error checking if user profile exists:', error);
+        return of(false);
+      })
+    );
+  }
+
+  private getUserProfile(email: string): Observable<UserProfile> {
+    const params = new HttpParams().set('email', email);
+    return this.http.get<UserProfile>(`${this.backendUrl}`, { params }).pipe(
+      catchError((error) => {
+        console.error('Error fetching user profile:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private createUserProfile(userProfile: UserProfile): Observable<UserProfile> {
+    return this.http.post<UserProfile>(this.backendUrl, userProfile).pipe(
+      catchError((error) => {
+        console.error('Error creating user profile:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  private updateUserProfile(userProfile: UserProfile): Observable<UserProfile> {
+    return this.http.put<UserProfile>(`${this.backendUrl}`, userProfile).pipe(
+      catchError((error) => {
+        console.error('Error updating user profile:', error);
+        return throwError(error);
+      })
+    );
   }
 }
