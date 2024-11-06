@@ -1,0 +1,45 @@
+
+<!-- Statistics Cards -->
+<div class="grid">
+    <!-- TOP Articles -->
+    <div class="col-12 md:col-4">
+      <p-card header="TOP Artikel">
+        <ul class="list-none p-0 m-0">
+          @for (item of topItems.articles; track item.name) {
+            <li class="flex justify-content-between align-items-center mb-2">
+              <span>{{item.name}}</span>
+              <span class="text-500">{{item.count}}x</span>
+            </li>
+          }
+        </ul>
+      </p-card>
+    </div>
+
+    <!-- TOP Recipes -->
+    <div class="col-12 md:col-4">
+      <p-card header="TOP Rezepte">
+        <ul class="list-none p-0 m-0">
+          @for (item of topItems.recipes; track item.name) {
+            <li class="flex justify-content-between align-items-center mb-2">
+              <span>{{item.name}}</span>
+              <span class="text-500">{{item.count}}x</span>
+            </li>
+          }
+        </ul>
+      </p-card>
+    </div>
+
+    <!-- TOP Menus -->
+    <div class="col-12 md:col-4">
+      <p-card header="TOP Menüs">
+        <ul class="list-none p-0 m-0">
+          @for (item of topItems.menus; track item.name) {
+            <li class="flex justify-content-between align-items-center mb-2">
+              <span>{{item.name}}</span>
+              <span class="text-500">{{item.count}}x</span>
+            </li>
+          }
+        </ul>
+      </p-card>
+    </div>
+  </div>

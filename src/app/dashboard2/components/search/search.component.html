@@ -1,0 +1,157 @@
+<div class="card-wrapper">
+  <p-card class="card">
+    <!-- Results Section -->
+    <div class="search-results">
+      <!-- Companies -->
+      @if (filteredCompanies.length > 0) {
+        <div class="section mb-4">
+          <h3 class="mb-3">Unternehmen ({{filteredCompanies.length}})</h3>
+          @for (company of filteredCompanies; track company.id) {
+            <div 
+              class="result-item p-3 mb-2 surface-ground border-round cursor-pointer hover:surface-hover transition-colors transition-duration-150"
+              (click)="showDetailsCompany(company)"
+            >
+              <div class="flex align-items-center justify-content-between">
+                <div>
+                  <span class="font-medium">{{ company.company.name }}</span>
+                  @if (company.address) {
+                    <span class="ml-2 text-500">{{ company.address.city }}</span>
+                  }
+                </div>
+                @if (company.company.verified) {
+                  <i class="pi pi-verified text-primary"></i>
+                }
+              </div>
+              @if (company.roles && company.roles.length > 0) {
+                <div class="flex gap-2 mt-2">
+                  @for (role of company.roles; track role) {
+                    <span class="text-xs bg-primary-100 text-primary-900 px-2 py-1 border-round">
+                      {{role}}
+                    </span>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Offers -->
+      @if (filteredOffers.length > 0) {
+        <div class="section">
+          <h3 class="mb-3">Angebote ({{filteredOffers.length}})</h3>
+          @for (offer of filteredOffers; track offer.company.id) {
+            <div 
+              class="result-item p-3 mb-2 surface-ground border-round cursor-pointer hover:surface-hover transition-colors transition-duration-150"
+              (click)="showDetailsOffer(offer)"
+            >
+              <div class="flex align-items-center justify-content-between">
+                <div>
+                  <span class="font-medium">{{ offer.ontoFoodType?.label || 'Kein Label' }}</span>
+                  <span class="ml-2 text-500">{{ offer.company.name }}</span>
+                </div>
+                <div class="text-sm text-500">
+                  {{ offer.product.totalAmount }} {{ offer.product.unit }}
+                </div>
+              </div>
+              @if (offer.address) {
+                <div class="mt-2 text-500">
+                  <i class="pi pi-map-marker mr-2"></i>
+                  {{ offer.address.city }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (filteredCompanies.length === 0 && filteredOffers.length === 0) {
+        <div class="text-center p-4 text-500">
+          Keine Ergebnisse gefunden
+        </div>
+      }
+    </div>
+  </p-card>
+
+  <!-- Details Dialog -->
+  <p-dialog 
+    [(visible)]="displayDialog" 
+    [style]="{width: '50vw'}" 
+    [modal]="true" 
+    [draggable]="false" 
+    [resizable]="false"
+  >
+    <ng-template pTemplate="header">Details</ng-template>
+    <ng-template pTemplate="content">
+      @if (selectedCompany) {
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <p class="mb-2"><strong>Unternehmen:</strong></p>
+            <p class="text-xl mb-4">{{ selectedCompany.company.name }}</p>
+
+            <p class="mb-2"><strong>Label:</strong></p>
+            <p class="mb-4">{{ selectedCompany.company.label }}</p>
+
+            @if (selectedCompany.address) {
+              <p class="mb-2"><strong>Adresse:</strong></p>
+              <p class="mb-4">{{ selectedCompany.address.city }}</p>
+            }
+
+            @if (selectedCompany.roles && selectedCompany.roles.length > 0) {
+              <p class="mb-2"><strong>Rollen:</strong></p>
+              <div class="flex flex-wrap gap-2">
+                @for (role of selectedCompany.roles; track role) {
+                  <span class="bg-primary-100 text-primary-900 px-2 py-1 border-round text-sm">
+                    {{role}}
+                  </span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (selectedOffer) {
+        <div class="grid">
+          <div class="col-12 md:col-6">
+            <p class="mb-2"><strong>Unternehmen:</strong></p>
+            <p class="text-xl mb-4">{{ selectedOffer.company.name }}</p>
+
+            <p class="mb-2"><strong>Produkt:</strong></p>
+            <p class="mb-4">{{ selectedOffer.ontoFoodType?.label || 'Kein Label' }}</p>
+
+            @if (selectedOffer.address) {
+              <p class="mb-2"><strong>Adresse:</strong></p>
+              <p class="mb-4">{{ selectedOffer.address.city }}</p>
+            }
+
+            @if (selectedOffer.roles && selectedOffer.roles.length > 0) {
+              <p class="mb-2"><strong>Rollen:</strong></p>
+              <div class="flex flex-wrap gap-2">
+                @for (role of selectedOffer.roles; track role) {
+                  <span class="bg-primary-100 text-primary-900 px-2 py-1 border-round text-sm">
+                    {{role}}
+                  </span>
+                }
+              </div>
+            }
+          </div>
+
+          <div class="col-12 md:col-6">
+            <p class="mb-2"><strong>Menge:</strong></p>
+            <p class="mb-4">
+              {{ selectedOffer.product.totalAmount }} {{ selectedOffer.product.unit }}
+            </p>
+
+            <p class="mb-2"><strong>Zeitraum:</strong></p>
+            <p class="mb-4">
+              Von: {{ selectedOffer.product.dateStart | date:'dd.MM.yyyy' }}<br>
+              Bis: {{ selectedOffer.product.dateEnd | date:'dd.MM.yyyy' }}
+            </p>
+          </div>
+        </div>
+      }
+    </ng-template>
+  </p-dialog>
+</div>
