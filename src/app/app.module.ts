@@ -25,7 +25,6 @@ import { primengLocaleDe } from './primeng-locale-de'; // Import your custom Ger
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MapComponent } from './dashboard2/components/map/map.component';
 
-
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
@@ -78,7 +77,7 @@ registerLocaleData(localeDe);
       withFetch(),
     ),
     DialogService,
-    { provide: LOCALE_ID, useValue: 'de-DE' }
+    { provide: LOCALE_ID, useValue: 'de-DE' },
   ],
   bootstrap: [AppComponent],
   exports: [],

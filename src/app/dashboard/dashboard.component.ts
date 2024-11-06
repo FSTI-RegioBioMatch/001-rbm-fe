@@ -22,7 +22,7 @@ import { ButtonModule } from 'primeng/button';
 import { AddressType } from '../shared/types/address.type';
 import { OfferType } from '../shared/types/offer.type';
 import { MenuplanType } from '../shared/types/menuplan.type';
-import { SearchComponent } from './components/search/search.component';
+import { SearchComponent } from '../dashboard2/components/search/search.component';
 import { DialogModule } from 'primeng/dialog';
 import { SeasonCalendarComponent } from './components/season-calendar/season-calendar/season-calendar.component';
 import {
@@ -100,7 +100,6 @@ export class DashboardComponent {
   // companies: CompanyType[] = [];
   // mapLat: number = 0;
   // mapLng: number = 0;
-
   // constructor(
   //   public offerService: OfferService,
   //   private publicRecipeService: PublicRecipeService,
@@ -111,7 +110,6 @@ export class DashboardComponent {
   //   private cdr: ChangeDetectorRef,
   //   private companyService: CompanyService,
   // ) {}
-
   // ngOnInit() {
   //   this.loadCompanyAndRoles(); // This will call loadDashboardComponents
   //   this.loadCompanyRecipes();
@@ -119,7 +117,6 @@ export class DashboardComponent {
   //   this.getOffers();
   //   this.getRecentMenus();
   //   this.getCompanies();
-
   //   this.routerSubscription = this.router.events
   //     .pipe(filter((event) => event instanceof NavigationEnd))
   //     .subscribe(() => {
@@ -128,17 +125,14 @@ export class DashboardComponent {
   //       this.initSortableIfPossible();
   //     });
   // }
-
   // ngAfterViewInit() {
   //   console.log('View initialized');
   //   this.viewInitialized = true;
   //   this.initSortableIfPossible();
   // }
-
   // ngAfterViewChecked() {
   //   this.initSortableIfPossible();
   // }
-
   // getCompanies() {
   //   this.subscription.add(
   //     this.companyService.companies$.subscribe((companies) => {
@@ -148,7 +142,6 @@ export class DashboardComponent {
   //     }),
   //   );
   // }
-
   // private initSortableIfPossible() {
   //   if (
   //     this.viewInitialized &&
@@ -161,7 +154,6 @@ export class DashboardComponent {
   //     this.cdr.detectChanges();
   //   }
   // }
-
   // ngOnDestroy() {
   //   console.log('DashboardComponent being destroyed');
   //   if (this.sortableInstance) {
@@ -171,12 +163,10 @@ export class DashboardComponent {
   //     this.routerSubscription.unsubscribe();
   //   }
   // }
-
   // private initSortable() {
   //   if (this.sortableInstance) {
   //     this.sortableInstance.destroy();
   //   }
-
   //   const el = this.dashboardGridElement.nativeElement;
   //   if (el) {
   //     console.log('Dashboard grid element found:', el);
@@ -192,14 +182,11 @@ export class DashboardComponent {
   //         console.log('Drag ended', evt);
   //         const newIndex = evt.newIndex;
   //         const oldIndex = evt.oldIndex;
-
   //         // Update the order in your array
   //         const item = this.dashboardComponents.splice(oldIndex, 1)[0];
   //         this.dashboardComponents.splice(newIndex, 0, item);
-
   //         // Save the new configuration
   //         this.saveDashboardConfiguration();
-
   //         // Trigger change detection
   //         this.cdr.detectChanges();
   //       },
@@ -209,7 +196,6 @@ export class DashboardComponent {
   //     console.error('Dashboard grid element not found');
   //   }
   // }
-
   // private destroySortable() {
   //   if (this.sortableInstance) {
   //     console.log('Destroying existing Sortable instance');
@@ -217,21 +203,18 @@ export class DashboardComponent {
   //     this.sortableInstance = null;
   //   }
   // }
-
   // openRecipeDetails(recipe: RecipeType) {
   //   this.selectedRecipe = recipe;
   //   this.displayRecipeDialog = true;
   //   this.displayMenuDialog = false;
   //   this.cdr.detectChanges();
   // }
-
   // openMenuDetails(menu: MenuplanType) {
   //   this.selectedMenu = menu;
   //   this.displayMenuDialog = true;
   //   this.displayRecipeDialog = false;
   //   this.cdr.detectChanges();
   // }
-
   // loadCompanyRecipes(): void {
   //   const seasons = this.getSeasonsFromDateRange(this.fromDate, this.toDate);
   //   this.store.selectedCompanyContext$
@@ -257,7 +240,6 @@ export class DashboardComponent {
   //       },
   //     );
   // }
-
   // loadPublicRecipes(): void {
   //   this.publicRecipeService.getRecipes().subscribe(
   //     (recipes: PublicRecipeType[]) => {
@@ -270,7 +252,6 @@ export class DashboardComponent {
   //     },
   //   );
   // }
-
   // getSeasonsFromDateRange(
   //   fromDate: Date | null,
   //   toDate: Date | null,
@@ -278,11 +259,9 @@ export class DashboardComponent {
   //   if (!fromDate || !toDate) {
   //     return [];
   //   }
-
   //   const seasons = [];
   //   const startMonth = fromDate.getMonth() + 1;
   //   const endMonth = toDate.getMonth() + 1;
-
   //   if (
   //     startMonth <= 2 ||
   //     startMonth === 12 ||
@@ -309,10 +288,8 @@ export class DashboardComponent {
   //   ) {
   //     seasons.push('Autumn');
   //   }
-
   //   return seasons;
   // }
-
   // getOffers() {
   //   this.subscription.add(
   //     this.offerService.offers$.subscribe((offers) => {
@@ -321,7 +298,6 @@ export class DashboardComponent {
   //       this.cdr.detectChanges();
   //     }),
   //   );
-
   //   this.subscription.add(
   //     this.store.selectedCompanyContext$.subscribe((company) => {
   //       if (company && company.addresses && company.addresses.length > 0) {
@@ -332,19 +308,16 @@ export class DashboardComponent {
   //             console.log('Address updated', address);
   //             this.mapLat = address.lat;
   //             this.mapLng = address.lon;
-
   //             const searchRadiusInKM = 50;
   //             this.offerService.setOffersBySearchRadius(
   //               searchRadiusInKM,
   //               address,
   //             );
-
   //             this.cdr.detectChanges();
   //           });
   //       }
   //     }),
   //   );
-
   //   this.subscription.add(
   //     this.offerService.loaded$.subscribe((loaded) => {
   //       console.log('Offers loaded:', loaded);
@@ -353,7 +326,6 @@ export class DashboardComponent {
   //     }),
   //   );
   // }
-
   // getRecentMenus() {
   //   this.store.selectedCompanyContext$
   //     .pipe(
@@ -369,7 +341,6 @@ export class DashboardComponent {
   //       },
   //     );
   // }
-
   // loadCompanyAndRoles(): void {
   //   this.store.selectedCompanyContext$.subscribe(
   //     (company) => {
@@ -383,7 +354,6 @@ export class DashboardComponent {
   //       console.error('Error loading selected company:', error);
   //     },
   //   );
-
   //   this.store.rbmRole$.subscribe(
   //     (rbmRole) => {
   //       this.rbmRole = 'gastro'; //unbedingt wieder auf rbmRole setzen!!!
@@ -395,7 +365,6 @@ export class DashboardComponent {
   //     },
   //   );
   // }
-
   // loadDashboardComponents(): void {
   //   console.log('Loading dashboard components for role:', this.rbmRole);
   //   switch (this.rbmRole) {
@@ -472,7 +441,6 @@ export class DashboardComponent {
   //   }
   //   this.loadDashboardConfiguration();
   // }
-
   // getRandom(arr: PublicRecipeType[], n: number): PublicRecipeType[] {
   //   const result = new Array(n);
   //   let len = arr.length;
@@ -486,7 +454,6 @@ export class DashboardComponent {
   //   }
   //   return result as PublicRecipeType[];
   // }
-
   // loadDashboardConfiguration(): void {
   //   const savedConfig = localStorage.getItem(
   //     `dashboard-config-${this.rbmRole}`,
@@ -501,11 +468,9 @@ export class DashboardComponent {
   //         (comp: DashboardItem | undefined): comp is DashboardItem =>
   //           comp !== undefined,
   //       );
-
   //     console.log('Loaded dashboard configuration:', this.dashboardComponents);
   //   }
   // }
-
   // saveDashboardConfiguration(): void {
   //   const componentTypes = this.dashboardComponents.map((comp) => comp.type);
   //   localStorage.setItem(
@@ -514,15 +479,12 @@ export class DashboardComponent {
   //   );
   //   console.log('Saved dashboard configuration:', componentTypes);
   // }
-
   // navigateToRecipes() {
   //   this.router.navigate(['/my-recipes']);
   // }
-
   // navigateToMenuPlanning() {
   //   this.router.navigate(['/menu-planning']);
   // }
-
   // trackByFn(index: number, item: any): any {
   //   return item.id || index; // Use item.id if available, otherwise use the index
   // }

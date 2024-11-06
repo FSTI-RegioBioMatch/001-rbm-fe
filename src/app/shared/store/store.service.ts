@@ -21,13 +21,14 @@ import { UserProfile } from '../types/userprofile.type';
 
 export type NearbuyRole =
   | 'SUPPLIER'
-  | 'CONSUMER'
-  | 'SHIPPER'
-  | 'CONSOLIDATOR'
   | 'PROCESSOR'
+  | 'CONSOLIDATOR'
+  | 'SHIPPER'
   | 'WHOLESALER'
-  | 'NETWORKER';
-export type rbmRole = 'producer' | 'refiner' | 'gastro';
+  | 'PRODUCER'
+  | 'GASTRO';
+
+export type rbmRole = 'refiner' | 'producer' | 'supplier' | 'gastro';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,7 @@ export class StoreService {
   public selectedCompanyLatLon$ =
     this.selectedCompanyLatLonSubject.asObservable();
   private backendUrl = `${environment.API_CORE}/user-profiles`;
+
   constructor(private http: HttpClient) {
     this.selectedCompanyContextChangedListener();
   }
@@ -99,53 +101,73 @@ export class StoreService {
     this.fetchPerson()
       .pipe(
         switchMap((person) => {
-          console.log('Fetched person:', person);
+          console.log('[Store] Fetched person:', person);
           this.personSubject.next(person);
           return forkJoin({
             employments: this.fetchEmployments(person),
             companies: this.fetchCompanies(person),
           }).pipe(
-            map(({ employments, companies }) => ({ person, employments, companies })) // Combine data here
+            map(({ employments, companies }) => ({
+              person,
+              employments,
+              companies,
+            })),
           );
         }),
         catchError((error) => {
-          console.error('Error fetching person information:', error);
+          console.error('[Store] Error fetching person information:', error);
           return [];
         }),
-        finalize(() => this.loadingSubject.next(false)),
+        finalize(() => {
+          console.log('[Store] Loading finished');
+          this.loadingSubject.next(false);
+        }),
       )
       .subscribe(({ person, employments, companies }) => {
-        console.log('Fetched employments:', employments);
-        console.log('Fetched companies:', companies);
-        this.sendUserProfile(person, employments, companies)
+        console.log('[Store] Data loaded:', {
+          employments: employments.length,
+          companies: companies.length,
+        });
+        this.sendUserProfile(person, employments, companies);
         this.employmentsSubject.next(employments);
         this.companiesSubject.next(companies);
-        
+
+        // Log companies data
+        console.log('[Store] Companies data:', companies);
+
+        // When updating companies, also fetch and set offers
+        this.fetchAndSetOffers(companies);
+
         // Only trigger company context selection once companies are fully loaded
         this.getSelectedCompanyFromSessionStore();
-  
+
         companies.map((company) => {
           this.fetchCompanyAddresses(company).subscribe((company) => {
-            console.log(123123123123, company);
+            console.log('[Store] Fetched company addresses:', company);
           });
         });
       });
   }
-  sendUserProfile(person: PersonType, employments: EmploymentType[], companies: CompanyType[]) {
+
+  sendUserProfile(
+    person: PersonType,
+    employments: EmploymentType[],
+    companies: CompanyType[],
+  ) {
     // Extract company IDs
-    const companyIds = companies.map(company => company.id);
-  
+    const companyIds = companies.map((company) => company.id);
+
     // Create the user profile object
     const userProfile: UserProfile = {
       person,
       employments,
       companies,
-      companyIds
+      companyIds,
     };
-  
+
     // Log the user profile for debugging
     console.log('Sending user profile:', userProfile);
-  
+
     // Send the merged object to the backend
     this.saveOrUpdateUserProfile(userProfile).subscribe({
       next: (response) => {
@@ -153,8 +175,8 @@ export class StoreService {
       },
       error: (error) => {
         console.error('Error saving user profile:', error);
-      }
-    })
+      },
+    });
   }
   // Fetch person information
   private fetchPerson(): Observable<PersonType> {
@@ -252,23 +274,28 @@ export class StoreService {
     }
   }
 
-  public mapToRBMRole(roles: NearbuyRole[]): rbmRole {
+  public mapToRBMRole(roles: string[]): rbmRole {
     if (!Array.isArray(roles)) {
       console.warn('Expected roles to be an array, received:', roles);
-      return 'gastro'; // Default value if roles are invalid
+      return 'gastro';
     }
+    const upperRoles = roles.map((role) => role.toUpperCase());
+    // Check for refiner roles
+    const hasRefinerRole = upperRoles.some((role) =>
+      ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
+    );
 
-    if (roles.includes('SUPPLIER')) {
-      return 'producer';
-    } else if (
-      roles.some((role) =>
-        ['SHIPPER', 'CONSOLIDATOR', 'PROCESSOR', 'WHOLESALER'].includes(role),
-      )
-    ) {
+    if (hasRefinerRole) {
       return 'refiner';
-    } else {
-      return 'gastro'; // Default to gastro if no matching roles
     }
+    if (upperRoles.includes('SUPPLIER')) {
+      return 'supplier';
+    }
+    if (upperRoles.includes('PRODUCER')) {
+      return 'producer';
+    }
+    console.log('Falling back to gastro');
+    return 'gastro';
   }
 
   saveOrUpdateUserProfile(userProfile: UserProfile): Observable<UserProfile> {
@@ -285,7 +312,7 @@ export class StoreService {
       catchError((error) => {
         console.error('Error saving or updating user profile:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -295,7 +322,7 @@ export class StoreService {
       catchError((error) => {
         console.error('Error checking if user profile exists:', error);
         return of(false);
-      })
+      }),
     );
   }
 
@@ -305,7 +332,7 @@ export class StoreService {
       catchError((error) => {
         console.error('Error fetching user profile:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -314,7 +341,7 @@ export class StoreService {
       catchError((error) => {
         console.error('Error creating user profile:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -323,7 +350,39 @@ export class StoreService {
       catchError((error) => {
         console.error('Error updating user profile:', error);
         return throwError(error);
-      })
+      }),
     );
+  }
+
+  // Add a method to fetch and set offers
+  private fetchAndSetOffers(companies: CompanyType[]) {
+    // Assuming each company has an offers endpoint
+    const offerRequests = companies.map((company) =>
+      this.http.get<OfferType[]>(`${company.links.offer}`).pipe(
+        catchError((error) => {
+          console.error(
+            `[Store] Error fetching offers for company ${company.id}:`,
+            error,
+          );
+          return of([]);
+        }),
+      ),
+    );
+
+    forkJoin(offerRequests).subscribe((offersArrays) => {
+      // Flatten all offers into a single array
+      const allOffers = offersArrays.flat();
+      console.log('[Store] All offers loaded:', allOffers.length);
+      this.offersSubject.next(allOffers);
+    });
+  }
+
+  // Add a method to get current data state
+  public logCurrentState() {
+    console.log('[Store] Current state:', {
+      companies: this.companiesSubject.getValue().length,
+      offers: this.offersSubject.getValue().length,
+      loading: this.loadingSubject.getValue(),
+    });
   }
 }

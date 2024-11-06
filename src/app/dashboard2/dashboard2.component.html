@@ -1,48 +1,57 @@
-<div class="container">
-  <div class="flex mb-4 gap-2 justify-content-between">
-    <div class="w-full">
-      <input
-        pInputText
-        type="text"
-        placeholder="Suche..."
-        class="form-control w-full"
-      />
-    </div>
-    <div class="flex gap-2">
-      <p-button
-        (onClick)="activeItem = items[0]"
-        [rounded]="true"
-        label="Dashboard"
-        styleClass="w-10rem h-2rem p-0"
-        [outlined]="activeItem !== items[0]"
-      />
-      <p-button
-
-        [rounded]="true"
-        label="Empfehlungen"
-        styleClass="w-10rem h-2rem p-0"
-        [outlined]="activeItem !== items[1]"
-        (onClick)="activeItem = items[1]"
-      />
-      <p-button
-        (onClick)="activeItem = items[2]"
-        [rounded]="true"
-        label="Season Calendar"
-        styleClass="w-10rem h-2rem p-0"
-        [outlined]="activeItem !== items[2]"
-      />
-    </div>
+<div class="w-full max-w-[1200px] mx-auto p-4">
+  <!-- Navigation Icons -->
+  <div class="flex justify-content-center align-items-center gap-3 mb-4">
+    @for (item of items; track item.label) {
+      <div 
+        class="text-center p-3 border-round-lg cursor-pointer surface-card"
+        (click)="setActiveItem(item)"
+      >
+        <div class="mb-2 p-3 border-round-xl surface-ground flex align-items-center justify-content-center" 
+             [ngClass]="{'bg-primary': activeItem === item}">
+          <i class="{{item.icon}} text-2xl" [ngClass]="{'text-white': activeItem === item}"></i>
+        </div>
+        <span class="text-sm block">{{item.label}}</span>
+      </div>
+    }
   </div>
 
-  @switch (activeItem.label) {
-    @case ("Dashboard") {
-      <app-card-dashboard></app-card-dashboard>
+ <!-- Search Bar -->
+ <div class="flex mb-2 gap-2">
+  <span class="p-input-icon-right flex-grow-1">
+    <input 
+      type="text" 
+      pInputText 
+      [(ngModel)]="searchText"
+      (ngModelChange)="onSearchChange($event)"
+      placeholder="Suchen Sie nach Artikeln, Rezepten oder Menüs..." 
+      class="w-full" />
+  </span>
+  <p-button 
+    label="Suchen" 
+    icon="pi pi-search" 
+    (onClick)="onSearch()">
+  </p-button>
+</div>
+
+  <!-- Main Content Area -->
+  <div class="surface-card p-4 border-round">
+    @if (isSearchActive) {
+      <app-search></app-search>
+    } @else {
+      @switch (activeItem.label) {
+        @case ("Übersicht") {
+          <app-card-dashboard></app-card-dashboard>
+        }
+        @case ("Empfehlungen") {
+          <app-card-suggestion></app-card-suggestion>
+        }
+        @case ("Saisonkalender") {
+          <app-seasonal-calendar></app-seasonal-calendar>
+        }
+        @case ("Tops") {
+          <app-card-tops></app-card-tops>
+        }
+      }
     }
-    @case ("Recommendations") {
-      <app-card-suggestion></app-card-suggestion>
-    }
-    @case ("SeasonCalendar") {
-      <app-seasonal-calendar></app-seasonal-calendar>
-    }
-  }
+  </div>
 </div>

@@ -1,65 +1,81 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { Button } from 'primeng/button';
-import { TabMenuModule } from 'primeng/tabmenu';
-import { MenuItem } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { MapComponent } from './components/map/map.component';
-import { OfferType } from '../shared/types/offer.type';
-import { OfferService } from '../shared/services/offer.service';
-import { StoreService } from '../shared/store/store.service';
-import { AddressType } from '../shared/types/address.type';
-import { CardCompanyComponent } from './components/card-company/card-company.component';
-import { CompanyType } from '../shared/types/company.type';
-import { PersonType } from '../shared/types/person.type';
 import { InputTextModule } from 'primeng/inputtext';
-import { PaginatorModule } from 'primeng/paginator';
-import { TableModule } from 'primeng/table';
-import { NewMenuplanService } from '../shared/services/new-menuplan.service';
-import { filter } from 'rxjs/operators';
-import { JsonPipe } from '@angular/common';
 import { CardDashboardComponent } from './components/card-dashboard/card-dashboard.component';
 import { SeasonalCalendarComponent } from './components/seasonal-calendar/seasonal-calendar.component';
 import { CardSuggestionComponent } from './components/card-suggestion/card-suggestion.component';
+import { CardTopsComponent } from './components/card-tops/card-tops.component';
+import { SearchComponent } from './components/search/search.component';
+import { SearchService } from '../shared/services/search.service';
+
+interface NavItem {
+  label: string;
+  icon: string;
+}
 
 @Component({
   selector: 'app-dashboard2',
   standalone: true,
   imports: [
-    Button,
-    TabMenuModule,
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    SearchComponent,
     CardModule,
-    MapComponent,
-    CardCompanyComponent,
     InputTextModule,
-    PaginatorModule,
-    TableModule,
-    JsonPipe,
     CardDashboardComponent,
     SeasonalCalendarComponent,
     CardSuggestionComponent,
+    CardTopsComponent,
   ],
+  providers: [SearchService],
   templateUrl: './dashboard2.component.html',
-  styleUrl: './dashboard2.component.scss',
 })
-export class Dashboard2Component implements OnInit, AfterViewInit {
-  items!: MenuItem[];
-  activeItem!: MenuItem;
+export class Dashboard2Component implements OnInit {
+  items: NavItem[] = [];
+  activeItem!: NavItem;
+  searchText: string = '';
+  isSearchActive: boolean = false;
 
-  ngAfterViewInit(): void {}
+  constructor(private searchService: SearchService) {}
 
   ngOnInit(): void {
     this.initMenuPoints();
   }
 
-  onActiveItemChange(event: MenuItem) {
-    this.activeItem = event;
+  setActiveItem(item: NavItem) {
+    this.activeItem = item;
+    this.isSearchActive = false;
+    this.searchText = '';
+    this.searchService.clearSearch();
+  }
+
+  onSearchChange(term: string) {
+    if (term.trim().length >= 2) {
+      this.isSearchActive = true;
+      this.searchService.search(term);
+    } else if (term.trim().length === 0) {
+      this.isSearchActive = false;
+      this.searchService.clearSearch();
+    }
+  }
+
+  onSearch() {
+    if (this.searchText.trim().length >= 2) {
+      this.isSearchActive = true;
+      this.searchService.search(this.searchText);
+    }
   }
 
   private initMenuPoints() {
     this.items = [
-      { label: 'Dashboard', icon: 'pi pi-home' },
-      { label: 'Recommendations', icon: 'pi pi-chart-line' },
-      { label: 'SeasonCalendar', icon: 'pi pi-list' },
+      { label: 'Übersicht', icon: 'pi pi-home' },
+      { label: 'Empfehlungen', icon: 'pi pi-star' },
+      { label: 'Saisonkalender', icon: 'pi pi-calendar' },
+      { label: 'Tops', icon: 'pi pi-chart-bar' },
     ];
 
     this.activeItem = this.items[0];
