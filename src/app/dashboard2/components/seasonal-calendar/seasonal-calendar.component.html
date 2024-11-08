@@ -5,7 +5,7 @@
 
     <!-- Month Dropdown Selector -->
     <div class="d-flex justify-content-center mb-4">
-      <p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="updateProduceList()"
+      <p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="updateOutputList()"
         placeholder="Monat auswählen" class="custom-dropdown w-50"></p-dropdown>
     </div>
 
@@ -13,7 +13,7 @@
     <div class="row g-4">
       <ng-container *ngFor="let produce of outputData">
         <div class="col-sm-6 col-md-4 col-lg-3">
-          <div [ngClass]="{'fruit-card': produce.type === 'fruit', 'vegetable-card': produce.type === 'vegetable'}"
+          <div [ngClass]="{}"
             class="produce-card card shadow-sm h-100">
             <div class="card-body d-flex flex-column align-items-center text-center">
               <img *ngIf="produce.imageUrl" [src]="produce.imageUrl" [alt]="produce.name"
@@ -22,7 +22,7 @@
               <!-- Display different icons and badges for fruits and vegetables -->
               <div class="badge-container">
                 <span class="badge">
-                  {{ produce.type === 'fruit' ? 'Frucht' : 'Gemüse' }}
+                  <!-- {{ produce.type === 'fruit' ? 'Frucht' : 'Gemüse' }} -->
                 </span>
               </div>
               <span *ngIf="!produce.imageUrl" class="text-muted">Kein Bild verfügbar</span>
