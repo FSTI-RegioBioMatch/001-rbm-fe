@@ -11,7 +11,7 @@ import { HistoryOfferService} from '../../../shared/services/history-offer.servi
 import { HistoricProductType } from '../../../shared/types/historicproduct.type';
 import { StoreService } from '../../../shared/store/store.service'; 
 import { AddressType } from '../../../shared/types/address.type';
-import { Subscription } from 'rxjs';
+import { of, switchMap, Observable } from 'rxjs';
 
 interface Produce {
   name: string;
@@ -36,7 +36,7 @@ export class SeasonalCalendarComponent implements OnInit {
   months!: SelectItem[];
   selectedMonth: number = new Date().getMonth();
   seasons!: SelectItem[];
-  loaded = false; // what for?
+  // loaded = false;
   products: HistoricProductType[] = [];
   filteredProducts: Produce[] = [];
   displayDialog: boolean = false;
@@ -50,7 +50,7 @@ export class SeasonalCalendarComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private historyOfferService: HistoryOfferService, 
-    // private cdr: ChangeDetectorRef,
+    // private cdr: ChangeDetectorRef, // what for?
     private store: StoreService // Inject StoreService
   ) {}
 
@@ -85,22 +85,46 @@ export class SeasonalCalendarComponent implements OnInit {
   ngOnDestroy(): void {
     // unsubscibe() needed
   }
-      
+
   getProductHistory() {
-    this.store.selectedCompanyContext$.subscribe(company => {
-      if (company && company.addresses && company.addresses.length > 0) {
-        const addressUrl = company.addresses[0].self; // Use the first address
-        this.historyOfferService.getAddress(addressUrl).subscribe((address: AddressType) => {
-          const searchRadiusInKM = 50; // Adjust the search radius as needed
+    // this.store.selectedCompanyContext$.subscribe(company => {
+    //   if (company && company.addresses && company.addresses.length > 0) {
+    //     const addressUrl = company.addresses[0].self; // Use the first address
+    //     this.historyOfferService.getAddress(addressUrl).subscribe((address: AddressType) => {
+    //       console.log('address ', address);
+    //       const searchRadiusInKM = 50; // Adjust the search radius as needed
+    //       this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
+    //     });
+    //   }
+    // });
+
+    this.store.selectedCompanyContext$.pipe(
+      switchMap((company) => {
+        if (company && company.addresses && company.addresses.length > 0) {
+          const addressUrl = company.addresses[0].self; // Get the first address URL
+          return this.historyOfferService.getAddress(addressUrl);
+        } else {
+          return of(null);
+        }
+      }),
+      switchMap((address: AddressType | null, index: number): Observable<null> => {
+        if (address) {
+          const searchRadiusInKM = 50; // Set the search radius
           this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
-        });
-      }
+          return of(null);
+        } else {
+          return of(null);
+        }
+      })
+    ).subscribe(result => {
+      // console.log(result);
     });
 
-    // Subscribe to the loaded observable to update the loading state
-    this.historyOfferService.loaded$.subscribe(loaded => {
-      this.loaded = loaded;
-    });
+    // // Subscribe to the loaded observable to update the loading state
+    // this.historyOfferService.loaded$.subscribe(loaded => {
+    //   this.loaded = loaded;
+    //   console.log('loaded ', this.loaded);
+    // });
   }
 
   updateProduceList() {
@@ -121,7 +145,7 @@ export class SeasonalCalendarComponent implements OnInit {
         }
       })
     });
-  
+
     // console.log('produceData: ', this.produceData);
   }
 
@@ -139,14 +163,14 @@ export class SeasonalCalendarComponent implements OnInit {
       if (product.isPermanent) {
         return true; // Always available
       }
-  
+
       const dateStart = this.parseDate(product.dateStart);
       const dateEnd = this.parseDate(product.dateEnd);
-  
+
       if (!dateStart || !dateEnd) {
         return false; // Skip products with invalid or null dates
       }
-  
+
       switch (season) {
         case 'spring':
           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 2, 21), new Date(now.getFullYear(), 5, 20));
@@ -161,7 +185,7 @@ export class SeasonalCalendarComponent implements OnInit {
       }
     });
   }
-  
+
   parseDate(dateString: string): Date | null {
     if (!dateString) return null;
     const date = new Date(dateString);
@@ -190,7 +214,7 @@ export class SeasonalCalendarComponent implements OnInit {
   clearFilteredProducts(): void {
     this.filteredProducts = [];
   }
-  
+
   loadImagesForProduce() {
     this.outputData.forEach((produce) => {
       this.pixabayService.searchImage(produce.name).subscribe({
@@ -209,7 +233,7 @@ export class SeasonalCalendarComponent implements OnInit {
       });
     });
   }
-  
+
   capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
