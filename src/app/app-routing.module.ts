@@ -20,6 +20,7 @@ import { OrdersComponent } from './orders/orders.component';
 import { ShoppinglistToOrderDetailsComponent } from './shoppinglist-to-order-details/shoppinglist-to-order-details.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { MatcherComponent } from './matcher/matcher.component';
 
 const routes: Routes = [
   { path: '', component: Dashboard2Component },
@@ -91,6 +92,8 @@ const routes: Routes = [
   },
   {
     path: 'my-profile', component: MyProfileComponent
+  },{
+    path: "matcher", component: MatcherComponent
   }
 ];
 @NgModule({
