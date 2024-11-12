@@ -15,42 +15,20 @@
     }
   </div>
 
- <!-- Search Bar -->
- <div class="flex mb-2 gap-2">
-  <span class="p-input-icon-right flex-grow-1">
-    <input 
-      type="text" 
-      pInputText 
-      [(ngModel)]="searchText"
-      (ngModelChange)="onSearchChange($event)"
-      placeholder="Suchen Sie nach Artikeln, Rezepten oder Menüs..." 
-      class="w-full" />
-  </span>
-  <p-button 
-    label="Suchen" 
-    icon="pi pi-search" 
-    (onClick)="onSearch()">
-  </p-button>
-</div>
-
   <!-- Main Content Area -->
   <div class="surface-card p-4 border-round">
-    @if (isSearchActive) {
-      <app-search></app-search>
-    } @else {
-      @switch (activeItem.label) {
-        @case ("Übersicht") {
-          <app-card-dashboard></app-card-dashboard>
-        }
-        @case ("Empfehlungen") {
-          <app-card-suggestion></app-card-suggestion>
-        }
-        @case ("Saisonkalender") {
-          <app-seasonal-calendar></app-seasonal-calendar>
-        }
-        @case ("Tops") {
-          <app-card-tops></app-card-tops>
-        }
+    @switch (activeItem.label) {
+      @case ("Übersicht") {
+        <app-card-dashboard></app-card-dashboard>
+      }
+      @case ("Empfehlungen") {
+        <app-card-suggestion></app-card-suggestion>
+      }
+      @case ("Saisonkalender") {
+        <app-seasonal-calendar></app-seasonal-calendar>
+      }
+      @case ("Tops") {
+        <app-card-tops></app-card-tops>
       }
     }
   </div>

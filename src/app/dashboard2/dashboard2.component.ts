@@ -9,7 +9,7 @@ import { SeasonalCalendarComponent } from './components/seasonal-calendar/season
 import { CardSuggestionComponent } from './components/card-suggestion/card-suggestion.component';
 import { CardTopsComponent } from './components/card-tops/card-tops.component';
 import { SearchComponent } from './components/search/search.component';
-import { SearchService } from '../shared/services/search.service';
+import { StoreService } from '../shared/store/store.service';
 
 interface NavItem {
   label: string;
@@ -23,7 +23,6 @@ interface NavItem {
     CommonModule,
     FormsModule,
     ButtonModule,
-    SearchComponent,
     CardModule,
     InputTextModule,
     CardDashboardComponent,
@@ -31,16 +30,13 @@ interface NavItem {
     CardSuggestionComponent,
     CardTopsComponent,
   ],
-  providers: [SearchService],
   templateUrl: './dashboard2.component.html',
 })
 export class Dashboard2Component implements OnInit {
   items: NavItem[] = [];
   activeItem!: NavItem;
-  searchText: string = '';
-  isSearchActive: boolean = false;
 
-  constructor(private searchService: SearchService) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.initMenuPoints();
@@ -48,26 +44,6 @@ export class Dashboard2Component implements OnInit {
 
   setActiveItem(item: NavItem) {
     this.activeItem = item;
-    this.isSearchActive = false;
-    this.searchText = '';
-    this.searchService.clearSearch();
-  }
-
-  onSearchChange(term: string) {
-    if (term.trim().length >= 2) {
-      this.isSearchActive = true;
-      this.searchService.search(term);
-    } else if (term.trim().length === 0) {
-      this.isSearchActive = false;
-      this.searchService.clearSearch();
-    }
-  }
-
-  onSearch() {
-    if (this.searchText.trim().length >= 2) {
-      this.isSearchActive = true;
-      this.searchService.search(this.searchText);
-    }
   }
 
   private initMenuPoints() {
