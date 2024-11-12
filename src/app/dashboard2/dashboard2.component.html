@@ -17,9 +17,6 @@
 
   <!-- Main Content Area -->
   <div class="surface-card p-4 border-round">
-    @if (isSearchActive) {
-      <app-search></app-search>
-    } @else {
       @switch (activeItem.label) {
         @case ("Übersicht") {
           <app-card-dashboard></app-card-dashboard>
@@ -34,6 +31,5 @@
           <app-card-tops></app-card-tops>
         }
       }
-    }
   </div>
 </div>
