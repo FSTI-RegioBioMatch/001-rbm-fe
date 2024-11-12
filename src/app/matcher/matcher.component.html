@@ -1,9 +1,5 @@
 <!-- matcher.component.html -->
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
-
-  <div *ngIf="!loading && recipeMatches.length === 0" class="no-recipes">
-    <p>Keine Rezepte gefunden.</p>
-  </div>
   
   <div *ngIf="!loading && recipeMatches.length > 0" class="recipes-container">
     <div *ngFor="let match of recipeMatches" class="recipe-card">

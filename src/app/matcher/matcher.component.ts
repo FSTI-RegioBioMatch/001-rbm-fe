@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import Fuse, { Expression } from 'fuse.js';
+import { Component, OnInit, NgZone } from '@angular/core';
+import Fuse from 'fuse.js';
 import { AddressType } from '../shared/types/address.type';
 import { filter, of, switchMap, take } from 'rxjs';
 import { Router } from '@angular/router';
@@ -30,16 +30,19 @@ export class MatcherComponent implements OnInit {
   recipes: any[] = [];
   ontofood: any;
   recipeMatches: any[] = [];
+
   constructor(
     private offerService: NewOfferService,
     private store: StoreService,
     private messageService: MessageService,
     private router: Router,
     private matcherService: MatcherService,
-    private localozationService: LocalizeService
+    private localizationService: LocalizeService,
+    private ngZone: NgZone // Inject NgZone for better control
   ) {}
 
   ngOnInit(): void {
+    this.loading = true; // Start loading
     this.fetchAllRecipes();
     this.loadOffers();
     this.loadOfferLocalize();
@@ -90,7 +93,6 @@ export class MatcherComponent implements OnInit {
         next: offers => {
           this.offers = offers;
           this.addLocalizedField(); 
-          this.loading = false; 
         },
         error: error => {
           console.error('Error loading offers:', error);
@@ -105,13 +107,18 @@ export class MatcherComponent implements OnInit {
       this.recipes = await this.matcherService.getAllRecipes();
     } catch (error) {
       console.error('Error fetching recipes:', error);
+      this.loading = false;
     }
   }
 
   loadOfferLocalize() {
-    this.localozationService.getOntofood().subscribe({
+    this.localizationService.getOntofood().subscribe({
       next: (data) => {
         this.ontofood = data;
+      },
+      error: err => {
+        console.error('Error loading localization data:', err);
+        this.loading = false;
       }
     });
   }
@@ -119,6 +126,7 @@ export class MatcherComponent implements OnInit {
   private async addLocalizedField(): Promise<void> {
     if (!this.ontofood) {
       console.warn('Ontofood translations not loaded');
+      this.loading = false;
       return;
     }
 
@@ -132,7 +140,14 @@ export class MatcherComponent implements OnInit {
       })
     );
 
-    this.matchRecipesToOffers(localizedOffers);
+    // Perform matching asynchronously to prevent blocking
+    this.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.matchRecipesToOffers(localizedOffers);
+        });
+      }, 0);
+    });
   }
 
   private matchRecipesToOffers(localizedOffers: any[]): void {
@@ -179,13 +194,13 @@ export class MatcherComponent implements OnInit {
   
     // Log for debugging
     console.log('Best Recipe Matches:', this.recipeMatches);
+    this.loading = false; // Stop loading after matching is done
   }
-  
 
   getImageUrl(recipe: any): string {
-    return recipe.image_urls && recipe.image_urls.length > 0 ? recipe.image_urls[0] : 'path/to/default-image.jpg';
+    return recipe.image_urls && recipe.image_urls.length > 0 ? recipe.image_urls[0] : 'assets/default-image.jpg'; // Update path as needed
   }
-  
+
   /**
    * Checks if an ingredient is matched in the offers.
    * @param ingredientName - The name of the ingredient.
