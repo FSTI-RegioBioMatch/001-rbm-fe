@@ -17,18 +17,22 @@
 
   <!-- Main Content Area -->
   <div class="surface-card p-4 border-round">
-    @switch (activeItem.label) {
-      @case ("Übersicht") {
-        <app-card-dashboard></app-card-dashboard>
-      }
-      @case ("Empfehlungen") {
-        <app-card-suggestion></app-card-suggestion>
-      }
-      @case ("Saisonkalender") {
-        <app-seasonal-calendar></app-seasonal-calendar>
-      }
-      @case ("Tops") {
-        <app-card-tops></app-card-tops>
+    @if (isSearchActive) {
+      <app-search></app-search>
+    } @else {
+      @switch (activeItem.label) {
+        @case ("Übersicht") {
+          <app-card-dashboard></app-card-dashboard>
+        }
+        @case ("Empfehlungen") {
+          <app-matcher></app-matcher>
+        }
+        @case ("Saisonkalender") {
+          <app-seasonal-calendar></app-seasonal-calendar>
+        }
+        @case ("Tops") {
+          <app-card-tops></app-card-tops>
+        }
       }
     }
   </div>

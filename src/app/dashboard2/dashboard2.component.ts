@@ -10,6 +10,8 @@ import { CardSuggestionComponent } from './components/card-suggestion/card-sugge
 import { CardTopsComponent } from './components/card-tops/card-tops.component';
 import { SearchComponent } from './components/search/search.component';
 import { StoreService } from '../shared/store/store.service';
+import { SearchService } from '../shared/services/search.service';
+import { MatcherComponent } from '../matcher/matcher.component';
 
 interface NavItem {
   label: string;
@@ -29,6 +31,7 @@ interface NavItem {
     SeasonalCalendarComponent,
     CardSuggestionComponent,
     CardTopsComponent,
+    MatcherComponent,
   ],
   templateUrl: './dashboard2.component.html',
 })
