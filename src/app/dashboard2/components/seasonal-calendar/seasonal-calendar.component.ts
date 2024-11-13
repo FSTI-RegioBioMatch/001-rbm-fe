@@ -15,8 +15,6 @@ import { of, switchMap, Observable } from 'rxjs';
 
 interface Produce {
   name: string;
-  // type: 'fruit' | 'vegetable'; // no identifier
-  seasons?: number[];
   imageUrl?: string;
   // links?
   dateStart: string;
@@ -36,21 +34,22 @@ export class SeasonalCalendarComponent implements OnInit {
   months!: SelectItem[];
   selectedMonth: number = new Date().getMonth();
   seasons!: SelectItem[];
-  // loaded = false;
+  loaded = false;
   products: HistoricProductType[] = [];
-  filteredProducts: Produce[] = [];
+  filteredProducts: HistoricProductType[] = [];
   displayDialog: boolean = false;
   selectedProduct: HistoricProductType | null = null;
 
   outputData: Produce[] = []
   produceData: Produce[] = []
+  imageUrl: string = '';
 
   constructor(
     private pixabayService: PixabayService,
     private router: Router,
     private http: HttpClient,
     private historyOfferService: HistoryOfferService, 
-    // private cdr: ChangeDetectorRef, // what for?
+    // private cdr: ChangeDetectorRef,
     private store: StoreService // Inject StoreService
   ) {}
 
@@ -78,8 +77,6 @@ export class SeasonalCalendarComponent implements OnInit {
     ];
 
     this.getProductHistory();
-    this.updateProduceList();
-    this.updateOutputList();
   }
   
   ngOnDestroy(): void {
@@ -87,51 +84,49 @@ export class SeasonalCalendarComponent implements OnInit {
   }
 
   getProductHistory() {
-    // this.store.selectedCompanyContext$.subscribe(company => {
-    //   if (company && company.addresses && company.addresses.length > 0) {
-    //     const addressUrl = company.addresses[0].self; // Use the first address
-    //     this.historyOfferService.getAddress(addressUrl).subscribe((address: AddressType) => {
-    //       console.log('address ', address);
-    //       const searchRadiusInKM = 50; // Adjust the search radius as needed
-    //       this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
-    //     });
-    //   }
-    // });
-
-    this.store.selectedCompanyContext$.pipe(
-      switchMap((company) => {
-        if (company && company.addresses && company.addresses.length > 0) {
-          const addressUrl = company.addresses[0].self; // Get the first address URL
-          return this.historyOfferService.getAddress(addressUrl);
-        } else {
-          return of(null);
-        }
-      }),
-      switchMap((address: AddressType | null, index: number): Observable<null> => {
-        if (address) {
-          const searchRadiusInKM = 50; // Set the search radius
+    this.store.selectedCompanyContext$.subscribe(company => {
+      if (company && company.addresses && company.addresses.length > 0) {
+        const addressUrl = company.addresses[0].self; // Use the first address
+        this.historyOfferService.getAddress(addressUrl).subscribe((address: AddressType) => {
+          const searchRadiusInKM = 50; // Adjust the search radius as needed
           this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
-          return of(null);
-        } else {
-          return of(null);
-        }
-      })
-    ).subscribe(result => {
-      // console.log(result);
+        });
+      }
     });
 
-    // // Subscribe to the loaded observable to update the loading state
-    // this.historyOfferService.loaded$.subscribe(loaded => {
-    //   this.loaded = loaded;
-    //   console.log('loaded ', this.loaded);
+    // this.store.selectedCompanyContext$.pipe(
+    //   switchMap((company) => {
+    //     if (company && company.addresses && company.addresses.length > 0) {
+    //       const addressUrl = company.addresses[0].self; // Get the first address URL
+    //       return this.historyOfferService.getAddress(addressUrl);
+    //     } else {
+    //       return of(null);
+    //     }
+    //   }),
+    //   switchMap((address: AddressType | null, index: number): Observable<null> => {
+    //     if (address) {
+    //       const searchRadiusInKM = 50; // Set the search radius
+    //       this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
+    //       return of(null);
+    //     } else {
+    //       return of(null);
+    //     }
+    //   })
+    // ).subscribe(result => { // change for tap()
+    //   // console.log(result);
     // });
+
+    // Subscribe to the loaded observable to update the loading state
+    this.historyOfferService.loaded$.subscribe(loaded => {
+      this.loaded = loaded;
+      if (loaded)
+        this.updateProduceList();
+    });
   }
 
   updateProduceList() {
-    // Subscribe to the products observable to update the products list
     this.historyOfferService.products$.subscribe((products) => {
       this.products = products;
-      // console.log('products: ', this.products);
       this.products.forEach((product) => {
         const productLabel = product?.ontoFoodType?.label;
         if (productLabel) {
@@ -146,7 +141,11 @@ export class SeasonalCalendarComponent implements OnInit {
       })
     });
 
-    // console.log('produceData: ', this.produceData);
+    this.historyOfferService.loaded$.subscribe(loaded => {
+      this.loaded = loaded;
+      if (loaded)
+        this.updateOutputList();
+    });
   }
 
   updateOutputList() {
@@ -154,7 +153,7 @@ export class SeasonalCalendarComponent implements OnInit {
     if (currentSeason)
       this.filterProductsBySeason(currentSeason);
     this.loadImagesForProduce();
-    // console.log('outputData: ', this.outputData);
+    console.log('items ', this.outputData.length);
   }
 
   filterProductsBySeason(season: string): void {
@@ -186,6 +185,25 @@ export class SeasonalCalendarComponent implements OnInit {
     });
   }
 
+  loadImagesForProduce() {
+    this.produceData.forEach((produce) => {
+      this.pixabayService.searchImage(produce.name).subscribe({
+        next: (response: any) => {
+          if (response.hits && response.hits.length > 0) {
+            produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
+          } else {
+            produce.imageUrl = '';  // No image found
+            console.warn(`Kein Bild gefunden für ${produce.name}`);
+          }
+          },
+          error: (error) => {
+            console.error(`Fehler beim Abrufen des Bildes für ${produce.name}:`, error);
+            produce.imageUrl = '';  // In case of an error, fallback to no image
+          }
+      });
+    });
+  }
+
   parseDate(dateString: string): Date | null {
     if (!dateString) return null;
     const date = new Date(dateString);
@@ -213,25 +231,6 @@ export class SeasonalCalendarComponent implements OnInit {
 
   clearFilteredProducts(): void {
     this.filteredProducts = [];
-  }
-
-  loadImagesForProduce() {
-    this.outputData.forEach((produce) => {
-      this.pixabayService.searchImage(produce.name).subscribe({
-        next: (response: any) => {
-          if (response.hits && response.hits.length > 0) {
-            produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
-          } else {
-            produce.imageUrl = '';  // No image found
-            console.warn(`Kein Bild gefunden für ${produce.name}`);
-          }
-          },
-          error: (error) => {
-            console.error(`Fehler beim Abrufen des Bildes für ${produce.name}:`, error);
-            produce.imageUrl = '';  // In case of an error, fallback to no image
-          }
-      });
-    });
   }
 
   capitalizeFirstLetter(str: string): string {

@@ -1,16 +1,16 @@
 <div class="container py-5">
-  <!-- <div *ngIf="!(loaded)">Loading data...</div> -->
-  <!-- <div *ngIf="loaded"> -->
+  <div *ngIf="!(loaded)">Loading data...</div>
+  <div *ngIf="loaded">
     <div class="calendar-wrapper">
       <!-- Title Section -->
       <h2 class="text-center calendar-title mb-5">Saisonkalender für Obst und Gemüse</h2>
       
       <!-- Month Dropdown Selector -->
       <div class="d-flex justify-content-center mb-4">
-        <p-dropdown [options]="months" [(ngModel)]="selectedMonth" (onChange)="updateOutputList()"
-        placeholder="Monat auswählen" class="custom-dropdown w-50"></p-dropdown>
+        <p-dropdown [options]="seasons" [(ngModel)]="selectedMonth" (onChange)="updateOutputList()"
+        placeholder="Wählen Sie eine Saison aus" class="custom-dropdown w-50"></p-dropdown>
       </div>
-      
+
       <!-- Produce Grid (Modern Card Layout) -->
       <div class="row g-4">
         <ng-container *ngFor="let produce of outputData">
@@ -39,5 +39,5 @@
         <p class="text-muted">Keine Produkte für den ausgewählten Monat verfügbar.</p>
       </div>
     </div>
-  <!-- </div> -->
+  </div>
 </div>
