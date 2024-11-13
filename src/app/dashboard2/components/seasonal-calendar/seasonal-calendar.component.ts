@@ -13,6 +13,11 @@ import { StoreService } from '../../../shared/store/store.service';
 import { AddressType } from '../../../shared/types/address.type';
 import { of, switchMap, Observable } from 'rxjs';
 
+interface Season {
+  name: string;
+  months: number[];
+}
+
 interface Produce {
   name: string;
   imageUrl?: string;
@@ -33,7 +38,22 @@ interface Produce {
 export class SeasonalCalendarComponent implements OnInit {
   months!: SelectItem[];
   selectedMonth: number = new Date().getMonth();
-  seasons!: SelectItem[];
+
+  // seasons: Season[] = [
+  //   { name: 'spring', months: [2, 3, 4] },
+  //   { name: 'summer', months: [5, 6, 7] },
+  //   { name: 'autumn', months: [8, 9, 10] },
+  //   { name: 'winter', months: [11, 0, 1] },
+  // ]
+  seasons: { label: string, value: Season }[] = [
+    { label: 'Spring', value: { name: 'spring', months: [2, 3, 4] } },
+    { label: 'Summer', value: { name: 'summer', months: [5, 6, 7] } },
+    { label: 'Autumn', value: { name: 'autumn', months: [8, 9, 10] } },
+    { label: 'Winter', value: { name: 'winter', months: [11, 0, 1] } },
+  ];
+  selectedSeason: Season = this.seasons[0].value;
+  currentSeason: Season = this.seasons[0].value;
+
   loaded = false;
   products: HistoricProductType[] = [];
   filteredProducts: HistoricProductType[] = [];
@@ -54,28 +74,7 @@ export class SeasonalCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.months = [
-      { label: 'Januar', value: 0 },
-      { label: 'Februar', value: 1 },
-      { label: 'März', value: 2 },
-      { label: 'April', value: 3 },
-      { label: 'Mai', value: 4 },
-      { label: 'Juni', value: 5 },
-      { label: 'Juli', value: 6 },
-      { label: 'August', value: 7 },
-      { label: 'September', value: 8 },
-      { label: 'Oktober', value: 9 },
-      { label: 'November', value: 10 },
-      { label: 'Dezember', value: 11 },
-    ];
-
-    this.seasons = [
-      { label: 'spring', value: [2, 3, 4] },
-      { label: 'summer', value: [5, 6, 7] },
-      { label: 'autumn', value: [8, 9, 10] },
-      { label: 'winter', value: [11, 0, 1] },
-    ];
-
+    this.setCurrentSeason();
     this.getProductHistory();
   }
   
@@ -149,9 +148,7 @@ export class SeasonalCalendarComponent implements OnInit {
   }
 
   updateOutputList() {
-    const currentSeason = this.getSeason(this.selectedMonth);
-    if (currentSeason)
-      this.filterProductsBySeason(currentSeason);
+    this.filterProductsBySeason(this.selectedSeason.name);
     this.loadImagesForProduce();
     console.log('items ', this.outputData.length);
   }
@@ -237,9 +234,13 @@ export class SeasonalCalendarComponent implements OnInit {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  // Function to get the season based on the selected month
-  getSeason(selectedMonth: number) {
-    const season = this.seasons.find(season => season.value.includes(selectedMonth));
-    return season?.label;
+  setCurrentSeason() {
+    const currentMonth = new Date().getMonth();  // Get the current month (0 to 11)
+    this.currentSeason = this.seasons.find(season =>
+      season.value.months.includes(currentMonth)
+    )?.value || this.seasons[0].value;
+
+    // Set the selected season to the current season by default
+    this.selectedSeason = this.currentSeason;
   }
 }
