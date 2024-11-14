@@ -195,7 +195,160 @@
             }
           </ng-template>
         </p-dialog>
-  
+
+     <!-- Company/Offer Details Dialog -->
+      <p-dialog 
+      [(visible)]="displayDialog" 
+      [style]="{width: '70vw'}" 
+      [modal]="true"
+      >
+      <ng-template pTemplate="header">
+        @if (selectedCompany) {
+          <h2 class="m-0">{{ selectedCompany.company.name }}</h2>
+        }
+        @if (selectedOffer) {
+          <h2 class="m-0">{{ selectedOffer.ontoFoodType?.label || selectedOffer.company.name }}</h2>
+        }
+      </ng-template>
+
+      <ng-template pTemplate="content">
+        <!-- Company Details -->
+        @if (selectedCompany) {
+          <div class="grid">
+            <!-- Basic Info -->
+            <div class="col-12 md:col-6">
+              <h3>Unternehmensinformationen</h3>
+              <div class="mb-3">
+                @if (selectedCompany.company.verified) {
+                  <span class="text-primary mr-2">
+                    <i class="pi pi-verified mr-1"></i>Verifiziert
+                  </span>
+                }
+              </div>
+              
+              <!-- Address -->
+              @if (selectedCompany.address) {
+                <div class="mb-3">
+                  <h4>Standort</h4>
+                  <p class="m-0">{{ selectedCompany.address.city }}</p>
+                  <p class="m-0 text-500">
+                    <i class="pi pi-map-marker mr-2"></i>
+                    Lat: {{ selectedCompany.address.lat }}, Lon: {{ selectedCompany.address.lon }}
+                  </p>
+                </div>
+              }
+
+              <!-- Product Info if available -->
+              @if (selectedCompany.product) {
+                <div class="mb-3">
+                  <h4>Produkt Details</h4>
+                  <p class="m-0">Menge: {{ selectedCompany.product.totalAmount }} {{ selectedCompany.product.unit }}</p>
+                  @if (!selectedCompany.product.isPermanent) {
+                    <p class="m-0">Zeitraum: {{ selectedCompany.product.dateStart }} - {{ selectedCompany.product.dateEnd }}</p>
+                  }
+                </div>
+              }
+
+              <!-- Roles -->
+              @if (selectedCompany.roles && selectedCompany.roles.length > 0) {
+                <div class="mb-3">
+                  <h4>Rollen</h4>
+                  <div class="flex gap-2 flex-wrap">
+                    @for (role of selectedCompany.roles; track role) {
+                      <span class="text-sm bg-primary-100 text-primary-900 px-2 py-1 border-round">
+                        {{role}}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- OntoFood Type Info -->
+              @if (selectedCompany.ontoFoodType) {
+                <div class="mb-3">
+                  <h4>Kategorie</h4>
+                  <p class="m-0">{{ selectedCompany.ontoFoodType.label }}</p>
+                  @if (selectedCompany.ontoFoodType.subcategories.length > 0) {
+                    <div class="mt-2">
+                      <h5 class="m-0 mb-1">Unterkategorien:</h5>
+                      <div class="flex gap-2 flex-wrap">
+                        @for (subcat of selectedCompany.ontoFoodType.subcategories; track subcat) {
+                          <span class="text-sm bg-blue-100 text-blue-900 px-2 py-1 border-round">
+                            {{subcat}}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Offer Details -->
+        @if (selectedOffer) {
+          <div class="grid">
+            <div class="col-12 md:col-6">
+              <h3>Angebotsdetails</h3>
+              
+              <!-- Company Info -->
+              <div class="mb-3">
+                <h4>Anbieter</h4>
+                <p class="m-0">{{ selectedOffer.company.name }}</p>
+                @if (selectedOffer.company.verified) {
+                  <span class="text-primary">
+                    <i class="pi pi-verified mr-1"></i>Verifiziert
+                  </span>
+                }
+              </div>
+
+              <!-- Product Details -->
+              <div class="mb-3">
+                <h4>Produkt</h4>
+                <p class="m-0">Menge: {{ selectedOffer.product.totalAmount }} {{ selectedOffer.product.unit }}</p>
+                <p class="m-0">Zeitraum: {{ selectedOffer.product.dateStart }} - {{ selectedOffer.product.dateEnd }}</p>
+              </div>
+
+              <!-- Location -->
+              @if (selectedOffer.address) {
+                <div class="mb-3">
+                  <h4>Standort</h4>
+                  <p class="m-0">{{ selectedOffer.address.city }}</p>
+                  <p class="m-0 text-500">
+                    <i class="pi pi-map-marker mr-2"></i>
+                    Lat: {{ selectedOffer.address.lat }}, Lon: {{ selectedOffer.address.lon }}
+                  </p>
+                </div>
+              }
+
+              <!-- Roles -->
+              @if (selectedOffer.roles && selectedOffer.roles.length > 0) {
+                <div class="mb-3">
+                  <h4>Rollen</h4>
+                  <div class="flex gap-2 flex-wrap">
+                    @for (role of selectedOffer.roles; track role) {
+                      <span class="text-sm bg-primary-100 text-primary-900 px-2 py-1 border-round">
+                        {{role}}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+
+              <!-- OntoFood Type Info -->
+              @if (selectedOffer.ontoFoodType) {
+                <div class="mb-3">
+                  <h4>Kategorie</h4>
+                  <p class="m-0">{{ selectedOffer.ontoFoodType.label }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </ng-template>
+      </p-dialog>
+         
         <!-- No Results -->
         @if (filteredCompanies.length === 0 && filteredOffers.length === 0 && filteredRecipes.length === 0) {
           <div class="text-center p-4 text-500">
