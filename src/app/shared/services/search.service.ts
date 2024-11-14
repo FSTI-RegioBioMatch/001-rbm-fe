@@ -53,14 +53,9 @@ export class SearchService {
     private offerService: OfferService,
     private publicRecipeService: PublicRecipeService,
   ) {
-    console.log('[SearchService] Initializing');
-
     // Initialize both services with location data when available
     this.storeService.selectedCompanyContext$
       .pipe(
-        tap((company) =>
-          console.log('[SearchService] Selected company context:', company),
-        ),
         switchMap((company) => {
           if (company && company.addresses && company.addresses.length > 0) {
             return this.companyService.getAddress(company.addresses[0].self);
@@ -70,7 +65,6 @@ export class SearchService {
       )
       .subscribe({
         next: (address: AddressType) => {
-          console.log('[SearchService] Got address:', address);
           this.initializeSearchData(address);
         },
         error: (error) =>
@@ -79,9 +73,6 @@ export class SearchService {
 
     // Create a stream of recipes that starts with an empty array
     const recipes$ = this.publicRecipeService.getRecipes().pipe(
-      tap((recipes: PublicRecipeType[]) =>
-        console.log('[Search] Loaded recipes:', recipes.length),
-      ),
       catchError((error: Error) => {
         console.error('[Search] Error loading recipes:', error);
         return of([] as PublicRecipeType[]);
@@ -112,13 +103,6 @@ export class SearchService {
       ),
     ]).pipe(
       map(([searchTerm, companies, offers, recipes]) => {
-        console.log('[Search] Raw data:', {
-          term: searchTerm,
-          companiesCount: companies.length,
-          offersCount: offers.length,
-          recipesCount: recipes.length,
-        });
-
         if (!searchTerm.trim()) {
           return { companies: [], offers: [], recipes: [], menus: [] };
         }
@@ -136,11 +120,6 @@ export class SearchService {
           const cityMatch = company.address?.city
             ?.toLowerCase()
             .includes(searchTermLower);
-
-          console.log(
-            `[SearchService] Company "${company.company?.name}" matches: ${nameMatch || labelMatch || cityMatch}`,
-          );
-
           return nameMatch || labelMatch || cityMatch;
         });
 
@@ -166,13 +145,6 @@ export class SearchService {
           recipes,
           searchTermLower,
         );
-
-        console.log('[Search] Filtered results:', {
-          companies: filteredCompanies.length,
-          offers: filteredOffers.length,
-          recipes: filteredRecipes.length,
-        });
-
         return {
           results,
           companies: filteredCompanies,
@@ -181,72 +153,7 @@ export class SearchService {
           menus: [],
         };
       }),
-      tap((results) => {
-        console.log('[Search] Emitting results:', {
-          companies: results.companies.length,
-          offers: results.offers.length,
-          recipes: results.recipes.length,
-        });
-      }),
     );
-
-    // Subscribe to search results for debugging
-    this.searchResults$.subscribe(
-      (results) => console.log('[Search] Search results updated:', results),
-      (error) => console.error('[Search] Error in search results:', error),
-    );
-  }
-
-  private filterCompaniesInternal(
-    companies: CompanyType[],
-    searchTerm: string,
-  ): CompanyType[] {
-    const filtered = companies.filter((company) => {
-      const nameMatch = company.company?.name
-        ?.toLowerCase()
-        .includes(searchTerm);
-      const labelMatch = company.company?.label
-        ?.toLowerCase()
-        .includes(searchTerm);
-      const cityMatch = company.address?.city
-        ?.toLowerCase()
-        .includes(searchTerm);
-
-      console.log('[Search] Checking company:', {
-        name: company.company?.name,
-        matches: nameMatch || labelMatch || cityMatch,
-      });
-
-      return nameMatch || labelMatch || cityMatch;
-    });
-
-    console.log('[Search] Filtered companies:', filtered.length);
-    return filtered;
-  }
-
-  private filterOffersInternal(
-    offers: OfferType[],
-    searchTerm: string,
-  ): OfferType[] {
-    const filtered = offers.filter((offer) => {
-      const companyMatch = offer.company?.name
-        ?.toLowerCase()
-        .includes(searchTerm);
-      const labelMatch = offer.ontoFoodType?.label
-        ?.toLowerCase()
-        .includes(searchTerm);
-
-      console.log('[Search] Checking offer:', {
-        company: offer.company?.name,
-        label: offer.ontoFoodType?.label,
-        matches: companyMatch || labelMatch,
-      });
-
-      return companyMatch || labelMatch;
-    });
-
-    console.log('[Search] Filtered offers:', filtered.length);
-    return filtered;
   }
 
   private filterRecipesInternal(
@@ -264,46 +171,33 @@ export class SearchService {
       const badgesMatch = recipe.badges.some((badge) =>
         badge.text.toLowerCase().includes(searchTerm),
       );
-
-      console.log('[Search] Checking recipe:', {
-        title: recipe.title,
-        matches:
-          titleMatch || instructionsMatch || ingredientsMatch || badgesMatch,
-      });
-
       return titleMatch || instructionsMatch || ingredientsMatch || badgesMatch;
     });
 
-    console.log('[Search] Filtered recipes:', filtered.length);
     return filtered;
   }
 
   search(term: string): void {
-    console.log('[Search] Setting search term:', term);
     this.searchTermSubject.next(term);
   }
 
   updateFilters(filters: SearchFilters): void {
-    console.log('[Search] Updating filters:', filters);
     this.filtersSubject.next(filters);
   }
 
   clearSearch(): void {
-    console.log('[Search] Clearing search');
     this.searchTermSubject.next('');
     this.filtersSubject.next({});
   }
 
   setSearchRadius(radiusKM: number): void {
     this.searchRadiusKM = radiusKM;
-    // Re-initialize search data with new radius if we have an address
     if (this.companyService.address) {
       this.initializeSearchData(this.companyService.address);
     }
   }
 
   private initializeSearchData(address: AddressType): void {
-    console.log('[Search] Initializing search data with address:', address);
     this.companyService.setCompaniesBySearchCriteria(
       this.searchRadiusKM,
       address,

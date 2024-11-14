@@ -98,7 +98,6 @@ export class StoreService {
   }
 
   initPersonMeInformation() {
-    console.log('[Store] Loading started');
     this.fetchPerson()
       .pipe(
         switchMap((person) => {
@@ -120,7 +119,6 @@ export class StoreService {
           return [];
         }),
         finalize(() => {
-          console.log('[Store] Loading finished');
           this.loadingSubject.next(false);
         }),
       )
@@ -143,9 +141,7 @@ export class StoreService {
         this.getSelectedCompanyFromSessionStore();
 
         companies.map((company) => {
-          this.fetchCompanyAddresses(company).subscribe((company) => {
-            console.log('[Store] Fetched company addresses:', company);
-          });
+          this.fetchCompanyAddresses(company).subscribe((company) => {});
         });
       });
   }
@@ -204,7 +200,6 @@ export class StoreService {
   }
 
   private fetchCompanyAddresses(company: CompanyType): Observable<CompanyType> {
-    console.log('Fetching company addresses:', company);
     return this.http.get<CompanyType>(`${company.address}`);
   }
 
@@ -378,7 +373,6 @@ export class StoreService {
     forkJoin(offerRequests).subscribe((offersArrays) => {
       // Flatten all offers into a single array
       const allOffers = offersArrays.flat();
-      console.log('[Store] All offers loaded:', allOffers.length);
       this.offersSubject.next(allOffers);
     });
   }

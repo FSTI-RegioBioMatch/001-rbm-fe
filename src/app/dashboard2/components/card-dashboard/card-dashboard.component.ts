@@ -90,7 +90,6 @@ export class CardDashboardComponent implements OnInit {
   }
 
   onSearchChange(term: string) {
-    console.log('[CardDashboard] Search term changed:', term);
     if (term.trim().length >= 2) {
       this.isSearchActive = true;
       this.searchService.search(term);
