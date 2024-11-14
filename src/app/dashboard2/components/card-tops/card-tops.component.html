@@ -11,7 +11,7 @@
           @for (item of topItems.articles; track item.name) {
             <li class="flex justify-content-between align-items-center mb-2">
               <span>{{item.name}}</span>
-              <span class="text-500">{{item.count}}x</span>
+              <span class="text-500">{{item.count}} {{item.unit}}</span>
             </li>
           }
         </ul>
@@ -20,7 +20,7 @@
       }
     </p-card>
   </div>
-
+  
   <!-- TOP Recipes -->
   <div class="col-12 md:col-4">
     <p-card header="TOP Rezepte">
