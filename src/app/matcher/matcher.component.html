@@ -1,0 +1,48 @@
+<!-- matcher.component.html -->
+<div class="container">
+  <div class="main-content">
+
+    <!-- Loading Spinner -->
+    <p-progressSpinner *ngIf="loading" class="spinner"></p-progressSpinner>
+
+    <!-- No Recipes Found -->
+    <div *ngIf="!loading && recipeMatches.length === 0" class="no-recipes">
+      <p>Keine Rezepte gefunden.</p>
+    </div>
+
+    <!-- Recipes Display -->
+    <div *ngIf="!loading && recipeMatches.length > 0" class="recipes-container">
+      <div *ngFor="let match of recipeMatches" class="recipe-card">
+        <img [src]="getImageUrl(match.recipe)" alt="{{ match.recipe.title }}" class="recipe-image">
+        <div class="recipe-info">
+          <h2>{{ match.recipe.title }}</h2>
+          <p><strong>Portionen:</strong> {{ match.recipe.portions }}</p>
+          <p><strong>Zubereitung:</strong> {{ match.recipe.instructions }}</p>
+
+          <h3>Zutaten:</h3>
+          <ul>
+            <li *ngFor="let ingredient of match.ingredients">
+              <span [ngClass]="{'matched-ingredient': ingredient.isMatched, 'unmatched-ingredient': !ingredient.isMatched}">
+                {{ ingredient.quantity }} {{ ingredient.name }}
+              </span>
+              <span *ngIf="ingredient.isMatched" class="matched-icon">
+                ✔️
+              </span>
+              <span *ngIf="!ingredient.isMatched" class="not-matched-icon">
+                ❌
+              </span>
+            </li>
+          </ul>
+
+          <p class="match-percentage"><strong>Match-Quote:</strong> {{ match.matchPercentage | number:'1.0-2' }}%</p>
+
+          <!-- Optional: Action Icons -->
+          <div class="icons">
+            <i class="pi pi-heart"></i>
+            <i class="pi pi-share-alt"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

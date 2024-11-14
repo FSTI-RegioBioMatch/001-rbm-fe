@@ -1,15 +1,32 @@
-<!-- card-dashboard.component.html -->
 <div class="p-4">
-  <p-toast></p-toast>
-  
-  <p-card class="w-full mb-4">
-    <div class="h-[800px]"> 
-      <app-map 
-        [lat]="mapLat" 
-        [lng]="mapLng" 
-        [offers]="offers"
-      ></app-map>
-    </div>
-  </p-card>
+  <!-- Search Bar -->
+  <div class="flex mb-2 gap-2">
+    <span class="p-input-icon-right flex-grow-1">
+      <input 
+        type="text" 
+        pInputText 
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Suchen Sie nach Artikeln, Rezepten oder Menüs..." 
+        class="w-full" 
+      />
+    </span>
+  </div>
 
+  <div class="surface-card p-4 border-round">
+    @if (isSearchActive) {
+      <app-search [searchTerm]="searchText"></app-search>
+    } @else {
+      <p-toast></p-toast>
+      <p-card class="w-full mb-4">
+        <div class="h-[800px]"> 
+          <app-map 
+            [lat]="mapLat" 
+            [lng]="mapLng" 
+            [offers]="offers"
+          ></app-map>
+        </div>
+      </p-card>
+    }
+  </div>
 </div>

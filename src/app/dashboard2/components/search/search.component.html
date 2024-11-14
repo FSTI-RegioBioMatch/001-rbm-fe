@@ -65,93 +65,143 @@
         </div>
       }
 
-      <!-- No Results -->
-      @if (filteredCompanies.length === 0 && filteredOffers.length === 0) {
-        <div class="text-center p-4 text-500">
-          Keine Ergebnisse gefunden
-        </div>
-      }
-    </div>
-  </p-card>
-
-  <!-- Details Dialog -->
-  <p-dialog 
-    [(visible)]="displayDialog" 
-    [style]="{width: '50vw'}" 
-    [modal]="true" 
-    [draggable]="false" 
-    [resizable]="false"
-  >
-    <ng-template pTemplate="header">Details</ng-template>
-    <ng-template pTemplate="content">
-      @if (selectedCompany) {
-        <div class="grid">
-          <div class="col-12 md:col-6">
-            <p class="mb-2"><strong>Unternehmen:</strong></p>
-            <p class="text-xl mb-4">{{ selectedCompany.company.name }}</p>
-
-            <p class="mb-2"><strong>Label:</strong></p>
-            <p class="mb-4">{{ selectedCompany.company.label }}</p>
-
-            @if (selectedCompany.address) {
-              <p class="mb-2"><strong>Adresse:</strong></p>
-              <p class="mb-4">{{ selectedCompany.address.city }}</p>
-            }
-
-            @if (selectedCompany.roles && selectedCompany.roles.length > 0) {
-              <p class="mb-2"><strong>Rollen:</strong></p>
-              <div class="flex flex-wrap gap-2">
-                @for (role of selectedCompany.roles; track role) {
-                  <span class="bg-primary-100 text-primary-900 px-2 py-1 border-round text-sm">
-                    {{role}}
-                  </span>
+         <!-- Recipes Section -->
+         @if (filteredRecipes.length > 0) {
+          <div class="section mb-4">
+            <h3 class="mb-3">Rezepte ({{filteredRecipes.length}})</h3>
+            @for (recipe of filteredRecipes; track recipe.id) {
+              <div 
+                class="result-item p-3 mb-2 surface-ground border-round cursor-pointer hover:surface-hover transition-colors transition-duration-150"
+                (click)="showRecipeDetails(recipe)"
+              >
+                <div class="flex align-items-center justify-content-between">
+                  <div class="flex-grow-1">
+                    <div class="flex align-items-center gap-2">
+                      <span class="font-medium">{{ recipe.title }}</span>
+                      <span class="text-sm text-500">({{recipe.portions}} Portionen)</span>
+                    </div>
+                    
+                    <!-- Badges -->
+                    @if (recipe.badges.length > 0) {
+                      <div class="flex gap-2 mt-2">
+                        @for (badge of recipe.badges; track badge.text) {
+                          <span class="text-xs px-2 py-1 border-round"
+                                [ngClass]="getBadgeClass(badge.type)">
+                            {{badge.text}}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+  
+                  <!-- Recipe Image - Fixed with safe access -->
+                  @if (getRecipeImageUrl(recipe)) {
+                    <img 
+                      [src]="getRecipeImageUrl(recipe)"
+                      [alt]="recipe.title"
+                      class="w-4rem h-4rem object-cover border-round ml-3"
+                      onerror="this.style.display='none'"
+                    >
+                  }
+                </div>
+  
+                <!-- Ingredients Preview -->
+                @if (recipe.ingredients.length > 0) {
+                  <div class="flex gap-2 mt-2">
+                    @for (ingredient of recipe.ingredients.slice(0, 3); track ingredient.name) {
+                      <span class="text-xs bg-primary-100 text-primary-900 px-2 py-1 border-round">
+                        {{ingredient.name}}
+                      </span>
+                    }
+                    @if (recipe.ingredients.length > 3) {
+                      <span class="text-xs text-500">+{{ recipe.ingredients.length - 3 }} weitere</span>
+                    }
+                  </div>
                 }
               </div>
             }
           </div>
-        </div>
-      }
-
-      @if (selectedOffer) {
-        <div class="grid">
-          <div class="col-12 md:col-6">
-            <p class="mb-2"><strong>Unternehmen:</strong></p>
-            <p class="text-xl mb-4">{{ selectedOffer.company.name }}</p>
-
-            <p class="mb-2"><strong>Produkt:</strong></p>
-            <p class="mb-4">{{ selectedOffer.ontoFoodType?.label || 'Kein Label' }}</p>
-
-            @if (selectedOffer.address) {
-              <p class="mb-2"><strong>Adresse:</strong></p>
-              <p class="mb-4">{{ selectedOffer.address.city }}</p>
-            }
-
-            @if (selectedOffer.roles && selectedOffer.roles.length > 0) {
-              <p class="mb-2"><strong>Rollen:</strong></p>
-              <div class="flex flex-wrap gap-2">
-                @for (role of selectedOffer.roles; track role) {
-                  <span class="bg-primary-100 text-primary-900 px-2 py-1 border-round text-sm">
-                    {{role}}
-                  </span>
-                }
+        }
+  
+        <!-- Recipe Details Dialog -->
+        <p-dialog 
+          [(visible)]="displayRecipeDialog" 
+          [style]="{width: '70vw'}" 
+          [modal]="true"
+        >
+          <ng-template pTemplate="header">
+            @if (selectedRecipe) {
+              <div class="flex align-items-center gap-3">
+                <h2 class="m-0">{{ selectedRecipe.title }}</h2>
+                <span class="text-500">({{selectedRecipe.portions}} Portionen)</span>
               </div>
             }
+          </ng-template>
+          
+          <ng-template pTemplate="content">
+            @if (selectedRecipe) {
+              <div class="grid">
+                <!-- Images if available - Fixed with safe access -->
+                @if (getRecipeImageUrl(selectedRecipe)) {
+                  <div class="col-12 mb-4">
+                    <img 
+                      [src]="getRecipeImageUrl(selectedRecipe)"
+                      [alt]="selectedRecipe.title"
+                      class="w-full border-round"
+                      style="max-height: 300px; object-fit: cover;"
+                      onerror="this.style.display='none'"
+                    >
+                  </div>
+                } @else {
+                  <div class="col-12 mb-4 surface-ground border-round" 
+                       style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <i class="pi pi-image text-500" style="font-size: 2rem;"></i>
+                  </div>
+                }
+  
+                <!-- Badges -->
+                @if (selectedRecipe.badges.length > 0) {
+                  <div class="col-12 mb-4">
+                    <div class="flex gap-2">
+                      @for (badge of selectedRecipe.badges; track badge.text) {
+                        <span class="px-2 py-1 border-round"
+                              [ngClass]="getBadgeClass(badge.type)">
+                          {{badge.text}}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+  
+                <!-- Ingredients -->
+                <div class="col-12 md:col-4">
+                  <h3>Zutaten</h3>
+                  <ul class="list-none p-0">
+                    @for (ingredient of selectedRecipe.ingredients; track ingredient.name) {
+                      <li class="mb-2">
+                        <strong>{{ ingredient.quantity }}</strong>
+                        {{ ingredient.name }}
+                      </li>
+                    }
+                  </ul>
+                </div>
+  
+                <!-- Instructions -->
+                <div class="col-12 md:col-8">
+                  <h3>Zubereitung</h3>
+                  <div [innerHTML]="selectedRecipe.instructions"></div>
+                </div>
+              </div>
+            }
+          </ng-template>
+        </p-dialog>
+  
+        <!-- No Results -->
+        @if (filteredCompanies.length === 0 && filteredOffers.length === 0 && filteredRecipes.length === 0) {
+          <div class="text-center p-4 text-500">
+            Keine Ergebnisse gefunden
           </div>
-
-          <div class="col-12 md:col-6">
-            <p class="mb-2"><strong>Menge:</strong></p>
-            <p class="mb-4">
-              {{ selectedOffer.product.totalAmount }} {{ selectedOffer.product.unit }}
-            </p>
-
-            <p class="mb-2"><strong>Zeitraum:</strong></p>
-            <p class="mb-4">
-              Von: {{ selectedOffer.product.dateStart | date:'dd.MM.yyyy' }}<br>
-              Bis: {{ selectedOffer.product.dateEnd | date:'dd.MM.yyyy' }}
-            </p>
-          </div>
-        </div>
-      }
-    </ng-template>
-  </p-dialog>
-</div>
+        }
+      </div>
+    </p-card>
+  </div>
