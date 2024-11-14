@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { PixabayService } from '../../../shared/services/pixabay.service';
 import { Router } from '@angular/router';
@@ -38,12 +36,13 @@ interface Produce {
     dateEnd: string;
   }
   imageUrl?: string;
+  engQuery?: string;
 }
 
 @Component({
   selector: 'app-seasonal-calendar',
   standalone: true,
-  imports: [DropdownModule, TableModule, FormsModule, JsonPipe, CommonModule, DialogModule],
+  imports: [DropdownModule, FormsModule, CommonModule, DialogModule],
   templateUrl: './seasonal-calendar.component.html',
   styleUrls: ['./seasonal-calendar.component.scss'],
 })
@@ -68,6 +67,9 @@ export class SeasonalCalendarComponent implements OnInit {
   loaded = false;
   displayDialog: boolean = false;
 
+  defaultImageUrl: string = '';
+
+
   constructor(
     private pixabayService: PixabayService,
     private router: Router,
@@ -78,6 +80,7 @@ export class SeasonalCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.setUpDefaultImage();
     this.setCurrentSeason();
     this.getProductHistory();
   }
@@ -131,13 +134,12 @@ export class SeasonalCalendarComponent implements OnInit {
     this.historyOfferService.products$.subscribe((products) => {
       this.products = products;
       this.products.forEach((product) => {
-        console.log('product: ', product);
         const productLabel = product?.ontoFoodType?.label;
         if (productLabel) {
-          const capitalized = this.capitalizeFirstLetter(productLabel);
-          const exists = this.produceData.some(item => item.productName === capitalized);
+          const query = this.sanitiseQuery(productLabel);
+          const exists = this.produceData.some(item => item.productName === query);
           if (!exists)
-            this.produceData.push({productName: capitalized,
+            this.produceData.push({productName: query,
                                   company: {
                                     label: product.company.label,
                                     city: product.address.city,
@@ -201,6 +203,57 @@ export class SeasonalCalendarComponent implements OnInit {
     });
   }
 
+  // loadImagesForProduce() {
+  //   this.produceData.forEach((produce) => {
+  //     this.searchWithImage(produce, true);
+  //   });
+  // }
+
+  // searchWithImage(produce: Produce, isFallback: boolean) : void {
+  //   this.pixabayService.searchImage(produce.productName).subscribe({
+  //   next: (response: any) => {
+  //     if (response.hits && response.hits.length > 0) {
+  //       produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
+  //     } else {
+  //       produce.imageUrl = '';  // No image found
+  //       console.warn(`Kein Bild gefunden für ${produce.productName}`);
+  //       if (isFallback)
+  //         this.searchWithFallback(produce);
+  //     }
+  //     },
+  //     error: (error) => {
+  //       console.error(`Fehler beim Abrufen des Bildes für ${produce.productName}:`, error);
+  //       produce.imageUrl = '';  // In case of an error, fallback to no image
+  //     }
+  //   });
+  // }
+
+  // searchWithFallback(produce: Produce) : void {
+  //   this.translateText('Milchreis').then(translated => {
+  //     console.log(translated);
+  //     produce.engQuery = translated;
+  //     this.searchWithImage(produce, false);
+  //   });
+  // }
+
+  // translateText = async (text: string) => {
+  //   // const response = await fetch('https://libretranslate.de/translate', {
+  //   const response = await fetch(`https://cors-anywhere.herokuapp.com/https://libretranslate.de/translate`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       q: text,
+  //       source: 'de',
+  //       target: 'en',
+  //     }),
+  //   });
+
+  //   const data = await response.json();
+  //   return data.translatedText;
+  // };
+
   loadImagesForProduce() {
     this.produceData.forEach((produce) => {
       this.pixabayService.searchImage(produce.productName).subscribe({
@@ -208,7 +261,7 @@ export class SeasonalCalendarComponent implements OnInit {
           if (response.hits && response.hits.length > 0) {
             produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
           } else {
-            produce.imageUrl = '';  // No image found
+            produce.imageUrl = this.defaultImageUrl;  // No image found
             console.warn(`Kein Bild gefunden für ${produce.productName}`);
           }
           },
@@ -258,5 +311,25 @@ export class SeasonalCalendarComponent implements OnInit {
 
     // Set the selected season to the current season by default
     this.selectedSeason = this.currentSeason;
+  }
+
+  sanitiseQuery(query: string) : string {
+    const newQuery = this.capitalizeFirstLetter(query).replace(/_/g, ' ');
+    return newQuery;
+  }
+
+  setUpDefaultImage() {
+    this.pixabayService.searchImage('gemüse korb').subscribe({
+      next: (response: any) => {
+        if (response.hits && response.hits.length > 0) {
+          this.defaultImageUrl = response.hits[0].webformatURL;  // Set the first image URL
+        } else {
+          console.warn(`Kein Bild gefunden für Standardbild`);
+        }
+        },
+        error: (error) => {
+          console.error(`Fehler beim Abrufen des Bildes für Standardbild:`, error);
+        }
+    });
   }
 }
