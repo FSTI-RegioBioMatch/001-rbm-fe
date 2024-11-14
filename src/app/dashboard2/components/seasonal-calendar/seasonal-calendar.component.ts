@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { HistoryOfferService} from '../../../shared/services/history-offer.servi
 import { HistoricProductType } from '../../../shared/types/historicproduct.type';
 import { StoreService } from '../../../shared/store/store.service'; 
 import { AddressType } from '../../../shared/types/address.type';
+import { DialogModule } from 'primeng/dialog';
 import { of, switchMap, Observable } from 'rxjs';
 
 interface Season {
@@ -19,57 +20,60 @@ interface Season {
 }
 
 interface Produce {
-  name: string;
+  productName: string;
+  company: {
+    label: string;
+    city: string;
+  }
+  links: {
+    company: string;
+    offer: string;
+    address: string;
+  }
+  product: {
+    amount: number;
+    unit: string;
+    isPermanent: boolean;    
+    dateStart: string;
+    dateEnd: string;
+  }
   imageUrl?: string;
-  // links?
-  dateStart: string;
-  dateEnd: string;
-  isPermanent: boolean;
 }
 
 @Component({
   selector: 'app-seasonal-calendar',
   standalone: true,
-  imports: [DropdownModule, TableModule, FormsModule, JsonPipe, CommonModule],
+  imports: [DropdownModule, TableModule, FormsModule, JsonPipe, CommonModule, DialogModule],
   templateUrl: './seasonal-calendar.component.html',
   styleUrls: ['./seasonal-calendar.component.scss'],
 })
 
 export class SeasonalCalendarComponent implements OnInit {
-  months!: SelectItem[];
-  selectedMonth: number = new Date().getMonth();
 
-  // seasons: Season[] = [
-  //   { name: 'spring', months: [2, 3, 4] },
-  //   { name: 'summer', months: [5, 6, 7] },
-  //   { name: 'autumn', months: [8, 9, 10] },
-  //   { name: 'winter', months: [11, 0, 1] },
-  // ]
-  seasons: { label: string, value: Season }[] = [
-    { label: 'Spring', value: { name: 'spring', months: [2, 3, 4] } },
-    { label: 'Summer', value: { name: 'summer', months: [5, 6, 7] } },
-    { label: 'Autumn', value: { name: 'autumn', months: [8, 9, 10] } },
+  seasons: { label: string, value: Season } [] = [
+    { label: 'Frühling', value: { name: 'spring', months: [2, 3, 4] } },
+    { label: 'Sommer', value: { name: 'summer', months: [5, 6, 7] } },
+    { label: 'Herbst', value: { name: 'autumn', months: [8, 9, 10] } },
     { label: 'Winter', value: { name: 'winter', months: [11, 0, 1] } },
   ];
   selectedSeason: Season = this.seasons[0].value;
   currentSeason: Season = this.seasons[0].value;
 
-  loaded = false;
   products: HistoricProductType[] = [];
   filteredProducts: HistoricProductType[] = [];
-  displayDialog: boolean = false;
-  selectedProduct: HistoricProductType | null = null;
-
   outputData: Produce[] = []
   produceData: Produce[] = []
-  imageUrl: string = '';
+  selectedProduct: Produce | null = null;
+
+  loaded = false;
+  displayDialog: boolean = false;
 
   constructor(
     private pixabayService: PixabayService,
     private router: Router,
     private http: HttpClient,
     private historyOfferService: HistoryOfferService, 
-    // private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     private store: StoreService // Inject StoreService
   ) {}
 
@@ -127,15 +131,30 @@ export class SeasonalCalendarComponent implements OnInit {
     this.historyOfferService.products$.subscribe((products) => {
       this.products = products;
       this.products.forEach((product) => {
+        console.log('product: ', product);
         const productLabel = product?.ontoFoodType?.label;
         if (productLabel) {
           const capitalized = this.capitalizeFirstLetter(productLabel);
-          const exists = this.produceData.some(item => item.name === capitalized);
+          const exists = this.produceData.some(item => item.productName === capitalized);
           if (!exists)
-            this.produceData.push({name: capitalized,
-                                  dateStart: product?.product?.dateStart,
-                                  dateEnd: product?.product?.dateEnd,
-                                  isPermanent: product?.product?.isPermanent});
+            this.produceData.push({productName: capitalized,
+                                  company: {
+                                    label: product.company.label,
+                                    city: product.address.city,
+                                  },
+                                  links: {
+                                    company: product.links.company,
+                                    offer: product.links.offer,
+                                    address: product.links.address,
+                                  },
+                                  product: {
+                                    amount: product.product.totalAmount,
+                                    unit: product.product.unit,
+                                    dateStart: product?.product?.dateStart,
+                                    dateEnd: product?.product?.dateEnd,
+                                    isPermanent: product?.product?.isPermanent
+                                  }
+                                  });
         }
       })
     });
@@ -150,18 +169,18 @@ export class SeasonalCalendarComponent implements OnInit {
   updateOutputList() {
     this.filterProductsBySeason(this.selectedSeason.name);
     this.loadImagesForProduce();
-    console.log('items ', this.outputData.length);
+    console.log('amount of items ', this.outputData.length);
   }
 
   filterProductsBySeason(season: string): void {
     const now = new Date();
     this.outputData = this.produceData.filter(product => {
-      if (product.isPermanent) {
+      if (product.product.isPermanent) {
         return true; // Always available
       }
 
-      const dateStart = this.parseDate(product.dateStart);
-      const dateEnd = this.parseDate(product.dateEnd);
+      const dateStart = this.parseDate(product.product.dateStart);
+      const dateEnd = this.parseDate(product.product.dateEnd);
 
       if (!dateStart || !dateEnd) {
         return false; // Skip products with invalid or null dates
@@ -184,17 +203,17 @@ export class SeasonalCalendarComponent implements OnInit {
 
   loadImagesForProduce() {
     this.produceData.forEach((produce) => {
-      this.pixabayService.searchImage(produce.name).subscribe({
+      this.pixabayService.searchImage(produce.productName).subscribe({
         next: (response: any) => {
           if (response.hits && response.hits.length > 0) {
             produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
           } else {
             produce.imageUrl = '';  // No image found
-            console.warn(`Kein Bild gefunden für ${produce.name}`);
+            console.warn(`Kein Bild gefunden für ${produce.productName}`);
           }
           },
           error: (error) => {
-            console.error(`Fehler beim Abrufen des Bildes für ${produce.name}:`, error);
+            console.error(`Fehler beim Abrufen des Bildes für ${produce.productName}:`, error);
             produce.imageUrl = '';  // In case of an error, fallback to no image
           }
       });
@@ -216,16 +235,13 @@ export class SeasonalCalendarComponent implements OnInit {
     return item.company.id; // or item.someUniqueIdentifier
   }
 
-  showDetails(product: HistoricProductType): void {
-    this.selectedProduct = product;
+  showDetails(produce: Produce): void {
+    this.selectedProduct = produce;
     this.displayDialog = true;
-    // this.cdr.detectChanges(); // Manually trigger change detection
+    this.cdr.detectChanges(); // Manually trigger change detection
   }
 
-  logToConsole(message: string): void {
-    console.log(message);
-  }
-
+  // add
   clearFilteredProducts(): void {
     this.filteredProducts = [];
   }
