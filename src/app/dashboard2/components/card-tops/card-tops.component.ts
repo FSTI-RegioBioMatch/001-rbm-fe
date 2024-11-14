@@ -36,14 +36,6 @@ interface TopStats {
   templateUrl: './card-tops.component.html',
   styleUrl: './card-tops.component.scss',
 })
-@Component({
-  selector: 'app-card-tops',
-  standalone: true,
-  imports: [CommonModule, CardModule, ToastModule],
-  providers: [MessageService],
-  templateUrl: './card-tops.component.html',
-  styleUrl: './card-tops.component.scss',
-})
 export class CardTopsComponent implements OnInit {
   loading = true;
   topItems: TopStats = {

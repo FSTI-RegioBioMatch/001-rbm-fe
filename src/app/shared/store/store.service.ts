@@ -98,6 +98,7 @@ export class StoreService {
   }
 
   initPersonMeInformation() {
+    console.log('[Store] Loading started');
     this.fetchPerson()
       .pipe(
         switchMap((person) => {
@@ -203,7 +204,8 @@ export class StoreService {
   }
 
   private fetchCompanyAddresses(company: CompanyType): Observable<CompanyType> {
-    return this.http.get<CompanyType>(`${company.links.self}/addresses`);
+    console.log('Fetching company addresses:', company);
+    return this.http.get<CompanyType>(`${company.address}`);
   }
 
   private getSelectedCompanyFromSessionStore() {
@@ -346,7 +348,7 @@ export class StoreService {
   }
 
   private updateUserProfile(userProfile: UserProfile): Observable<UserProfile> {
-    return this.http.put<UserProfile>(`${this.backendUrl}`, userProfile).pipe(
+    return this.http.post<UserProfile>(`${this.backendUrl}`, userProfile).pipe(
       catchError((error) => {
         console.error('Error updating user profile:', error);
         return throwError(error);
@@ -358,15 +360,19 @@ export class StoreService {
   private fetchAndSetOffers(companies: CompanyType[]) {
     // Assuming each company has an offers endpoint
     const offerRequests = companies.map((company) =>
-      this.http.get<OfferType[]>(`${company.links.offer}`).pipe(
-        catchError((error) => {
-          console.error(
-            `[Store] Error fetching offers for company ${company.id}:`,
-            error,
-          );
-          return of([]);
-        }),
-      ),
+      this.http
+        .get<
+          OfferType[]
+        >(`${environment.NEARBUY_API}/companies/${company.id}/offers`)
+        .pipe(
+          catchError((error) => {
+            console.error(
+              `[Store] Error fetching offers for company ${company.id}:`,
+              error,
+            );
+            return of([]);
+          }),
+        ),
     );
 
     forkJoin(offerRequests).subscribe((offersArrays) => {
