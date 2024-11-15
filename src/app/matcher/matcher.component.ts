@@ -10,13 +10,18 @@ import { MatcherService } from '../matcher.service';
 import { LocalizeService } from '../shared/services/localize.service';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PaginatorModule } from 'primeng/paginator';
+import { DialogModule } from 'primeng/dialog';
+import { RecipeService } from '../shared/services/recipe.service';
 
 @Component({
   selector: 'app-matcher',
   standalone: true,
   imports: [
     CommonModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    PaginatorModule,
+    DialogModule
   ],
   templateUrl: './matcher.component.html',
   styleUrl: './matcher.component.scss',
@@ -24,12 +29,20 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class MatcherComponent implements OnInit {
 
+  displayModal: boolean = false;
+  selectedRecipe: any = null;
+  totalRecords: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 6; // Anzahl der Rezepte pro Seite
+  paginatedRecipeMatches: any[] = [];
+
   loading = false;
   offers: any[] = []; 
   range: number = 50; 
   recipes: any[] = [];
   ontofood: any;
   recipeMatches: any[] = [];
+  clickedMatches: Set<any> = new Set();
 
   constructor(
     private offerService: NewOfferService,
@@ -38,7 +51,8 @@ export class MatcherComponent implements OnInit {
     private router: Router,
     private matcherService: MatcherService,
     private localizationService: LocalizeService,
-    private ngZone: NgZone // Inject NgZone for better control
+    private ngZone: NgZone, // Inject NgZone for better control
+    private recipeService: RecipeService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +60,16 @@ export class MatcherComponent implements OnInit {
     this.fetchAllRecipes();
     this.loadOffers();
     this.loadOfferLocalize();
+  }
+
+  showRecipeDetails(recipe: any) {
+    this.selectedRecipe = recipe;
+    this.displayModal = true;
+  }
+
+  hideRecipeDetails() {
+    this.displayModal = false;
+    this.selectedRecipe = null;
   }
 
   private loadOffers(): void {
@@ -188,13 +212,25 @@ export class MatcherComponent implements OnInit {
         ingredients: ingredientsWithMatch, // Use enhanced ingredients
       };
     });
+
+    this.recipeMatches = this.recipeMatches.filter(match => match.matchPercentage > 0);
   
     // Sort recipes by highest match percentage
     this.recipeMatches.sort((a, b) => b.matchPercentage - a.matchPercentage);
   
     // Log for debugging
     console.log('Best Recipe Matches:', this.recipeMatches);
+
+    this.totalRecords = this.recipeMatches.length;
+    this.paginate({ first: 0, rows: this.pageSize });
     this.loading = false; // Stop loading after matching is done
+  }
+
+  paginate(event: any) {
+    this.currentPage = event.first / event.rows;
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedRecipeMatches = this.recipeMatches.slice(start, end);
   }
 
   getImageUrl(recipe: any): string {
@@ -214,5 +250,68 @@ export class MatcherComponent implements OnInit {
     // Normalize the ingredient name and offer localization for comparison
     const normalizedIngredient = ingredientName.toLowerCase().trim();
     return matchedOffers.some(offer => offer.localized.toLowerCase().trim() === normalizedIngredient);
+  }
+
+
+  createNewRecipeFromMatch(match: any) {
+    if (!match || !match.recipe) {
+      console.error('Invalid match object:', match);
+      return;
+    }
+
+    this.clickedMatches.add(match);
+
+    // Dings neues rezept macchen und an recipesercviece schicken
+    const newRecipe = {
+      recipeName: match.recipe.title || 'Untitled Recipe',
+      recipeDescription: match.recipe.instructions || '',
+      ingredients: match.ingredients.map((ingredient: any) => {
+        const matchedOffer = ingredient.matchedOffers && ingredient.matchedOffers.length > 0 ? ingredient.matchedOffers[0] : null;
+        const name = matchedOffer && matchedOffer.ontoFoodType ? matchedOffer.ontoFoodType.label : 'Unknown Ingredient';
+        return {
+          name: name,
+          amount: ingredient.quantity || 'N/A',
+          unit: '', // You might need to adjust this based on your data
+          optional: false,
+          note: '',
+          alternatives: [],
+        };
+      }),
+      steps: match.recipe.steps || [],
+      energie: '',
+      portionen: match.recipe.portions || 1,
+      besonderheiten: '',
+      essensgaeste: [],
+      allergene: [],
+      saison: '',
+      selectedDiets: {},
+      recipeImage: match.recipe.image_urls && match.recipe.image_urls.length > 0 ? match.recipe.image_urls[0] : null,
+    };
+
+    // Send the new recipe to the backend using RecipeService
+    this.sendRecipeToBackend(newRecipe);
+  }
+
+  sendRecipeToBackend(recipe: any) {
+    this.loading = true;
+    this.recipeService.saveRecipe(recipe).subscribe(
+      (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Erfolg',
+          detail: 'Rezept erfolgreich erstellt!',
+        });
+        this.loading = false;
+      },
+      (error) => {
+        console.error('Error creating recipe:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Fehler',
+          detail: 'Rezept konnte nicht erstellt werden.',
+        });
+        this.loading = false;
+      }
+    );
   }
 }

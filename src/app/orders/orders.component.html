@@ -1,6 +1,6 @@
 <div class="rbm-site-toolbar">
-    <p-button class="first" routerLink="/orders">Meine Bestellungen</p-button>
-    <p-button routerLink="/pr-pi-overview">Preis-/Kaufanfragen</p-button>
+    <p-button class="first pt-orders1" routerLink="/orders">Meine Bestellungen</p-button>
+    <p-button class="last pt-orders2" routerLink="/pr-pi-overview">Preis-/Kaufanfragen</p-button>
 </div>
 <br><br>
 
@@ -25,7 +25,7 @@
             <td>{{ getStatusLabel(order.status) }}</td>
             <td>{{ order.dateCreated | date: 'short' }}</td>
             <td>
-                <button pButton type="button" label="Ansehen" icon="pi pi-info-circle" class="p-button-sm p-button-info"
+                <button pButton type="button" label="Ansehen" icon="pi pi-info-circle" class="pt-orders3 p-button-sm p-button-info"
                   (click)="gotoDetails(order)">Details</button>
               </td>
         </tr>

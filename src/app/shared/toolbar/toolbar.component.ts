@@ -15,6 +15,8 @@ import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ToolbarMenuService } from '../services/toolbarmenu.service';
 import { CommonModule } from '@angular/common';
+import { TourService } from '../services/tour.service';
+import { TourComponent } from '../../tour/tour.component';
 
 
 @Component({
@@ -33,6 +35,7 @@ import { CommonModule } from '@angular/common';
     AvatarModule,
     AvatarGroupModule,
     CommonModule,
+    TourComponent,
   ],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
@@ -46,6 +49,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private dialogService: DialogService,
     private menuService: ToolbarMenuService,
+    private tourService: TourService
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +72,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     if (this.burgerMenuSubscription) {
       this.burgerMenuSubscription.unsubscribe();
     }
+  }
+
+  startTour() {
+    this.tourService.startTour();
   }
 
   initializeMenu(): void {

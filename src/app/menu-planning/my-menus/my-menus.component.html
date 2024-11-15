@@ -1,8 +1,8 @@
 <div class="rbm-site-toolbar">
-  <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
-  <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-  <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-  <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
+  <p-button class="first pt-mymenus1" routerLink="/menu-planning">Menüplanung</p-button>
+  <p-button class="pt-mymenus2" routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
+  <p-button class="pt-mymenus3" routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
+  <p-button class="last pt-mymenus4" routerLink="/offers-overview">Angebotsliste</p-button>
 </div>
 
 <p-toast></p-toast>
@@ -17,7 +17,7 @@
     <h3 class="rbm-text-sea-green rbm-margin-none">Meine Menüs</h3>
   </div>
   <div class="right">
-    <button pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
+    <button class="pt-mymenus-einkauf-btn" pButton label="Einkaufszettel Erstellen" icon="pi pi-file" (click)="createShoppingList()"
       [disabled]="selectedMenuPlans.length === 0"></button>
   </div>
 </div>
@@ -40,14 +40,14 @@
   <ng-template pTemplate="body" let-menuPlan>
 
     <tr class="tr-item">
-      <td><input class="table-checkbox" type="checkbox" [(ngModel)]="menuPlan.selected"
+      <td><input class="table-checkbox pt-mymenus-checkbox" type="checkbox" [(ngModel)]="menuPlan.selected"
           (change)="updateSelectedMenuPlans()" /></td>
       <td>{{ menuPlan.name }}</td>
       <td>{{ menuPlan.nextExecution }}</td>
       <td>{{ menuPlan.weekday }}</td>
       <td>{{ menuPlan.location }}</td>
       <td>
-        <span (mouseover)="showPortionDetails(menuPlan)" (mouseout)="hidePortionDetails()">
+        <span class="pt-mymenus-portions" (mouseover)="showPortionDetails(menuPlan)" (mouseout)="hidePortionDetails()">
           {{ getTotalPortions(menuPlan) }}
         </span>
         <div class="portion-tooltip" *ngIf="hoveredMenuPlanId === menuPlan.id">
@@ -66,7 +66,7 @@
       <td>
         <button class="rbm-not-allowed" pButton icon="pi pi-shopping-cart" (click)="onBuyClick(menuPlan)"></button>
       </td>
-      <td>
+      <td class="pt-mymenus-komponente">
         <button [disabled]="loadingRecipes" pButton icon="pi pi-cog" (click)="toggleExpandMenuPlan(menuPlan.id)"
           *ngIf="expandedMenuPlanId !== menuPlan.id"></button>
 
@@ -74,7 +74,7 @@
           class="rbm-bg-willow-green" *ngIf="expandedMenuPlanId === menuPlan.id"></button>
       </td>
       <td>
-        <button pButton class="rbm-bg-tea-green-l-3" (click)="gotoDetails(menuPlan)">anzeigen</button>
+        <button pButton class="pt-mymenus-details rbm-bg-tea-green-l-3" (click)="gotoDetails(menuPlan)">anzeigen</button>
       </td>
     </tr>
     <tr *ngIf="expandedMenuPlanId === menuPlan.id">

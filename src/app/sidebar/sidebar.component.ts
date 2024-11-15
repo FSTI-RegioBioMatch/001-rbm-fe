@@ -5,6 +5,8 @@ import { HostListener } from '@angular/core';
 import { TieredMenuModule, TieredMenu  } from 'primeng/tieredmenu';
 import { an } from '@fullcalendar/core/internal-common';
 
+
+
 @Component({
   selector: 'app-sidebar',
   standalone: true,
@@ -12,7 +14,7 @@ import { an } from '@fullcalendar/core/internal-common';
   styleUrl: './sidebar.component.scss',
   imports: [
     CommonModule,
-    TieredMenuModule
+    TieredMenuModule,
   ],
 })
 export class SidebarComponent implements OnInit, OnDestroy {
@@ -20,7 +22,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   constructor(private menuService: ToolbarMenuService) {}
 
   ngOnInit() {
-    this.menuService.setBurgerMenuState(false);
+    this.menuService.setBurgerMenuState(window.innerWidth < 1000);
   }
 
   ngOnDestroy() {
@@ -45,15 +47,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
     menu.hide(event);
   }
 
+
   navLinks = [
-    { path: '/dashboard', icon: 'pi pi-home', label: 'Übersicht', subLinks: [
+    { path: '/dashboard', class: 'pt-sidebar-home', icon: 'pi pi-home', label: 'Übersicht', subLinks: [
       { label: 'dings', path: '/menu-planning/my-menus', icon: 'pi pi-fw pi-list' },
     ]},
-    { path: '/my-recipes', icon: 'pi pi-book', label: 'Meine Rezepte', related: ['/recipe-details/'] },
-    { path: '/menu-planning/my-menus', icon: 'pi pi-clipboard', label: 'Meine Menüs',  related: ['/menu-planning'] },
-    { path: '/orders', icon: 'pi pi-shopping-cart', label: 'Bestelllungen',  related: ['/offers-overview', '/pr-pi-overview'] },
-    { path: '', icon: 'pi pi-shop', label: 'Marktplatz' },
-    { path: '', icon: 'pi pi-objects-column', label: 'Bereich X Y' },
+    { path: '/my-recipes', class: 'pt-sidebar-recipe', icon: 'pi pi-book', label: 'Meine Rezepte', related: ['/recipe-details/'] },
+    { path: '/menu-planning/my-menus', class: 'pt-sidebar-menus', icon: 'pi pi-clipboard', label: 'Meine Menüs',  related: ['/menu-planning'] },
+    { path: '/orders', class: 'pt-sidebar-orders', icon: 'pi pi-shopping-cart', label: 'Bestelllungen',  related: ['/offers-overview', '/pr-pi-overview'] },
+    { path: '', class: 'pt-none', icon: 'pi pi-shop', label: 'Marktplatz' },
+    { path: '', class: 'pt-none', icon: 'pi pi-objects-column', label: 'Bereich X Y' },
   ];
 
   hoverLink: any = null;

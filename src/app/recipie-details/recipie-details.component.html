@@ -127,7 +127,7 @@
     </h2>
     <div class="step" *ngFor="let step of recipe?.steps; let i = index">
       <div *ngIf="step?.images && step?.images.length == 0" class="step-images">
-        <div class="rbm-bg-willow-green rbm-flex-column rbm-items-middle rbm-content-center"
+        <div class="rbm-bg-willow-green rbm-flex-column rbm-items-middle rbm-content-center rbm-radius-s"
           style="width: 200px;height: 200px;">{{ i + 1 }}</div>
       </div>
       <div *ngIf="step?.images && step?.images.length > 0 && step?.images.length < 2" class="step-images">

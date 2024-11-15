@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { OfferService } from './shared/services/offer.service';
 import { AddressType } from './shared/types/address.type';
 import { RequestService } from './shared/services/request.service';

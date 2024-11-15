@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { RecipeService } from '../shared/services/recipe.service';
 import { StoreService } from '../shared/store/store.service';
@@ -18,6 +18,7 @@ import { MessageService } from 'primeng/api';
 import { Toast, ToastModule } from 'primeng/toast';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { LoggingService } from '../shared/services/logging.service';
+import { TourService } from '../shared/services/tour.service';
 
 @Component({
   selector: 'app-my-recipes',
@@ -42,7 +43,7 @@ import { LoggingService } from '../shared/services/logging.service';
   templateUrl: './my-recipes.component.html',
   styleUrls: ['./my-recipes.component.scss'],
 })
-export class MyRecipesComponent implements OnInit, AfterViewInit {
+export class MyRecipesComponent implements OnInit, AfterViewInit, OnDestroy {
   displayAddRecipeDialog: boolean = false;
   recipes: any[] = [];
   totalElements: number = 0;
@@ -72,13 +73,28 @@ export class MyRecipesComponent implements OnInit, AfterViewInit {
     private router: Router,
     private recipeService: RecipeService,
     private messageService: MessageService,
-    private logService: LoggingService
+    private logService: LoggingService,
+    private tourService: TourService
   ) {}
 
   ngAfterViewInit(): void {}
 
   ngOnInit(): void {
     this.loadRecipes();
+     const steps = [
+      { element: '.pt-myrecipe1', title: "Rezepte", text: 'Hier findest du deine Rezepte' },
+      { element: '.pt-myrecipe2', title: "Neues Rezept", text: 'Erstelle ein neues Rezept. du kannst Zutaten sowie eine Schritt für Schritt Anleitung implementieren' },
+      { element: '.pt-myrecipe3', title: "Filter Möglichkeiten", text: 'Filter deine Rezepte. Du kannst von A - Z sortierung ändern oder auch nach Erstellungs Datum' },
+      { element: '.pt-myrecipe4', title: "Suche", text: 'Suchst du ein spezielles Rezept? geb einfach den assozierten namen ein' },
+      { element: '.pt-myrecipe5', title: "Rezept", text: 'Klicke auf ein Rezept um die Details anzuschauen' },
+      { element: '.pt-myrecipe6', title: "Weitere Rezepte", text: 'Bei einer hohen Anzahl an Rezepten kannst du durch die Rezept Seiten hier durch navigieren' }
+    ];
+
+    this.tourService.setSteps(steps);
+  }
+
+  ngOnDestroy(): void {
+    this.tourService.setSteps([]);
   }
 
   loadRecipes(): void {

@@ -1,10 +1,10 @@
 <div class="container">
   <div class="main-content">
     <div class="header">
-      <h2>
+      <h2 class="pt-myrecipe1">
         Meine Rezepte
       </h2>
-      <p-button label="Neues Rezept anlegen" icon="pi pi-plus" (click)="openAddRecipeDialog()"></p-button>
+      <p-button class="pt-myrecipe2" label="Neues Rezept anlegen" icon="pi pi-plus" (click)="openAddRecipeDialog()"></p-button>
     </div>
 
     <p-dialog [(visible)]="displayAddRecipeDialog" modal="true" [style]="{width: '80vw', height: '90vh'}"
@@ -17,23 +17,15 @@
 
     </p-dialog>
     <p-toast></p-toast>
-    <!-- <div class="row mb-3 justify-content-end">
-      <div class="col-auto">
-        <button pButton label="Neuen Menüplan erstellen" icon="pi pi-plus" (click)="onClickCreateMenuPlan()"
-          class="p-button-success"></button>
-      </div> <p></p>
-    </div> -->
-
-
 
     <div class="filters mb-3 row gx-3 align-items-center">
 
-      <div class="col-md-2 col-sm-6 filter-item">
+      <div class="col-md-2 col-sm-6 filter-item pt-myrecipe3">
         <p-dropdown id="sort" [options]="sortOptions" [(ngModel)]="selectedSortOption" (onChange)="onSortChange()"
           class="form-control"></p-dropdown>
       </div>
 
-      <div class="col-md-3 col-sm-6 filter-item rbm-width-40">
+      <div class="col-md-3 col-sm-6 filter-item rbm-width-40 pt-myrecipe4">
         <input pInputText type="text" placeholder="Suche via Name" [(ngModel)]="searchName" (input)="onSearchChange()"
           class="form-control rbm-full-width" />
       </div>
@@ -47,13 +39,14 @@
         <p-calendar id="toDate" [(ngModel)]="toDate" dateFormat="yy-mm-dd" (onSelect)="onDateRangeChange()"
           showIcon="true" placeholder="Datum bis" class="form-control"></p-calendar>
       </div>
+
     </div>
     <div *ngIf="loading" class="text-center">
       <p-progressSpinner></p-progressSpinner>
     </div>
     <div class="recipes" *ngIf="!loading">
 
-      <div class="recipe-card" *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
+      <div class="recipe-card pt-myrecipe5" *ngFor="let recipe of recipes" (click)="viewRecipe(recipe.id)">
         <img [src]="recipe.recipeImage || 'assets/img/image_fallback-bg-green.png'" height="150" width="300" />
         <div class="recipe-info">
           <h3>
@@ -81,7 +74,7 @@
     <div class="pagination-controls text-end mt-3">
       <button pButton label="Vorherige Seite" icon="pi pi-chevron-left" class="p-button-secondary me-2"
         (click)="onPrevPage()" [disabled]="currentPage === 0"></button>
-      <button pButton label="Nächste Seite" icon="pi pi-chevron-right" iconPos="right" class="p-button-secondary"
+      <button pButton label="Nächste Seite" icon="pi pi-chevron-right" iconPos="right" class="pt-myrecipe6 p-button-secondary"
         (click)="onNextPage()" [disabled]="(currentPage + 1) * pageSize >= totalElements"></button>
     </div>
   </div>
