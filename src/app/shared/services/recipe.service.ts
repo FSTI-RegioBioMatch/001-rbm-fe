@@ -10,17 +10,20 @@ import { StoreService } from '../store/store.service';
   providedIn: 'root',
 })
 export class RecipeService {
-  constructor(private http: HttpClient, private storeService: StoreService) {}
+  constructor(
+    private http: HttpClient,
+    private storeService: StoreService,
+  ) {}
 
   getRecipesByCompanyId(
     page: number,
     size: number,
     sort: string,
     searchName?: string,
-    saisons?: string[]
+    saisons?: string[],
   ): Observable<Page<RecipeType>> {
     return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
+      switchMap((company) => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
@@ -39,50 +42,62 @@ export class RecipeService {
           params = params.set('saisons', saisons.join(','));
         }
 
-        return this.http.get<Page<RecipeType>>(`${environment.API_CORE}/new-recipes`, {
-          params,
-          headers: { 'Current-Company': company.id },
-        });
+        return this.http.get<Page<RecipeType>>(
+          `${environment.API_CORE}/new-recipes`,
+          {
+            params,
+            headers: { 'Current-Company': company.id },
+          },
+        );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching recipes by company ID:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
   getRecipesByCompanyContext(): Observable<RecipeType[]> {
     return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
+      switchMap((company) => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
-        return this.http.get<RecipeType[]>(`${environment.API_CORE}/recipes`, {
-          headers: { 'Current-Company': company.id },
-        });
+        // Use /new-recipes to be consistent with other methods
+        return this.http.get<RecipeType[]>(
+          `${environment.API_CORE}/new-recipes`,
+          {
+            headers: { 'Current-Company': company.id },
+            params: new HttpParams().set('companyId', company.id),
+          },
+        );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching recipes by company context:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
   saveRecipe(recipe: any): Observable<any> {
     return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
+      switchMap((company) => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
         recipe.companyId = company.id;
-        return this.http.post<any>(`${environment.API_CORE}/new-recipes`, recipe, {
-          headers: { 'Current-Company': company.id },
-        });
+        return this.http.post<any>(
+          `${environment.API_CORE}/new-recipes`,
+          recipe,
+          {
+            headers: { 'Current-Company': company.id },
+          },
+        );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error saving recipe:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -100,29 +115,43 @@ export class RecipeService {
   //     })
   //   );
   // }
-  getRecipeById(id: string, includeImages: boolean = false): Observable<RecipeType> {
-    return this.http.get<RecipeType>(`${environment.API_CORE}/new-recipes/${id}?includeImages=${includeImages}`);
+  getRecipeById(
+    id: string,
+    includeImages: boolean = false,
+  ): Observable<RecipeType> {
+    return this.http.get<RecipeType>(
+      `${environment.API_CORE}/new-recipes/${id}?includeImages=${includeImages}`,
+    );
   }
 
   getStepImages(recipeId: string, stepIndex: number): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.API_CORE}/new-recipes/${recipeId}/steps/${stepIndex}/images`);
-}
+    return this.http.get<string[]>(
+      `${environment.API_CORE}/new-recipes/${recipeId}/steps/${stepIndex}/images`,
+    );
+  }
 
-  updateRecipeById(id: string, recipe: Partial<RecipeType>): Observable<RecipeType> {
+  updateRecipeById(
+    id: string,
+    recipe: Partial<RecipeType>,
+  ): Observable<RecipeType> {
     return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
+      switchMap((company) => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
         recipe.companyId = company.id;
-        return this.http.put<RecipeType>(`${environment.API_CORE}/new-recipes/${id}`, recipe, {
-          headers: { 'Current-Company': company.id },
-        });
+        return this.http.put<RecipeType>(
+          `${environment.API_CORE}/new-recipes/${id}`,
+          recipe,
+          {
+            headers: { 'Current-Company': company.id },
+          },
+        );
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error updating recipe:', error);
         return throwError(error);
-      })
+      }),
     );
   }
 
@@ -130,9 +159,9 @@ export class RecipeService {
     if (!id) {
       return throwError('Recipe ID is required to delete a recipe');
     }
-  
+
     return this.storeService.selectedCompanyContext$.pipe(
-      switchMap(company => {
+      switchMap((company) => {
         if (!company || !company.id) {
           return throwError('No company selected or company ID is missing');
         }
@@ -141,13 +170,12 @@ export class RecipeService {
           headers: { 'Current-Company': company.id },
         });
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error deleting recipe:', error);
         return throwError(error);
-      })
+      }),
     );
   }
-  
 }
 
 export interface Page<T> {

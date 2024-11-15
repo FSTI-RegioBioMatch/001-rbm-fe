@@ -2,7 +2,7 @@
 <div class="sidebar">
   <ul>
     <li class="rbm-relative" *ngFor="let link of navLinks" [class.active]="isActive(link.path)" (mouseover)="hoverLink = link" (mouseleave)="hoverLink = null">
-      <a *ngIf="link.path" [routerLink]="link.path">
+      <a class="{{ link.class }}" *ngIf="link.path" [routerLink]="link.path">
         <i [class]="link.icon"></i>
         {{ link.label }}
       </a>

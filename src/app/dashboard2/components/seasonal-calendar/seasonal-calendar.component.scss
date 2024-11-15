@@ -4,15 +4,13 @@
   }
   
   .calendar-wrapper {
-    background-color: #f7f9fc;
     border-radius: 10px;
     padding: 40px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
   }
   
   .calendar-title {
     font-size: 2rem;
-    color: #3d5a80;
+    color: var(--rbm-sea-green);
     font-weight: bold;
   }
   

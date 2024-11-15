@@ -1,0 +1,157 @@
+.dw-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.292);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard-welcome {
+  display: flex;
+  width: 700px;
+  height: 400px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  .left {
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .right {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .btn-box {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      margin-top: 15px;
+      padding: 10px;
+      width: 80%;
+
+      button {
+        width: 100%;
+        height: 50px;
+        padding: 0;
+        background-color: var(--rbm-willow-green);
+        border: 1px solid #e7e7e7;
+        border-radius: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+      }
+
+      button:hover {
+        background-color: var(--rbm-tea-green);
+      }
+    }
+  }
+
+
+  svg {
+    height: 50%;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--rbm-sea-green);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--rbm-text-black);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+  }
+
+  p {
+    font-size: 1rem;
+    font-weight: 400;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+  }
+}
+
+
+.pt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.055);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ptour-btn-box {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  
+}
+
+.ptour-btn {
+  width: 100%;
+  height: 50px;
+  padding: 0;
+
+  background-color: white;
+  border: 1px solid #e7e7e7;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 5px;
+
+}
+
+.ptour-btn:hover {
+  background-color: #f5f5f5;
+}
+
+p {
+  margin: 0;
+}
+
+.ptour-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--rbm-sea-green);
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+}
+
+.ptour-beschreibung {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+}

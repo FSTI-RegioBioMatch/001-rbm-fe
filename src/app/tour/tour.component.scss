@@ -1,0 +1,62 @@
+
+.pt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.055);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ptour-btn-box {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    
+}
+
+.ptour-btn {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+
+    background-color: white;
+    border: 1px solid #e7e7e7;
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+.ptour-btn:hover {
+    background-color: #f5f5f5;
+}
+
+p {
+    margin: 0;
+}
+
+.ptour-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--rbm-sea-green);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.ptour-beschreibung {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}

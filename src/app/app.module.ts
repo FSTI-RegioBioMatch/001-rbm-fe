@@ -24,6 +24,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { primengLocaleDe } from './primeng-locale-de'; // Import your custom German locale
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MapComponent } from './dashboard2/components/map/map.component';
+import { TourComponent } from './tour/tour.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -61,6 +62,7 @@ registerLocaleData(localeDe);
     MapComponent,
     DragDropModule,
     SidebarComponent,
+    TourComponent,
   ],
   providers: [
     // TODO uncomment to enable Keycloak

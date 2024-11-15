@@ -234,7 +234,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
               align-items: center;
             "
           >
-            <span style="color: #2196F3; font-weight: bold;">
+            <span style="color: var(--rbm-sea-green); font-weight: bold;">
               ${category} (${categoryOffers.length})
             </span>
             <span style="color: #666; font-size: 12px;">▼</span>
@@ -243,7 +243,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
             display: ${index === 0 ? 'block' : 'none'};
             padding: 8px;
             margin-top: 4px;
-            border-left: 2px solid #e0e0e0;
+            border-left: 2px solid var(--rbm-willow-green);
           ">
             ${categoryOffers
               .map(

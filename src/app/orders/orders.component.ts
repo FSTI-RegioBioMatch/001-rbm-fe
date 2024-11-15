@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { OrderService } from '../shared/services/order.service';
@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { Button  } from 'primeng/button';
 import { Router, RouterLink } from '@angular/router';
 import { LocalizeService } from '../shared/services/localize.service';
+import { TourService } from '../shared/services/tour.service';
 
 @Component({
   selector: 'app-orders',
@@ -36,6 +37,7 @@ export class OrdersComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private localizeService: LocalizeService,
+    private tourService: TourService
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +60,18 @@ export class OrdersComponent implements OnInit {
         console.error('Error fetching company orders:', error);
       }
     });
+
+    const steps = [
+      { element: '.pt-orders1', title: "Bestellungen", text: 'Bei deiner Bestellung Seite hast du 2 Reiter. Wir befinden uns gerade bei Meine Besetellungen, die dir eine übersicht über deine offenen, vollendete...Bestellungen aufzeigt' },
+      { element: '.pt-orders2', title: "Preis/Kauf-anfragen", text: 'Verwaltung deiner Preis / Kauf anfragen' },
+      { element: '.pt-orders3', title: "Details ansehen", text: 'betrachte die Details deiner jeweiligen Bestellung' }
+    ];
+
+    this.tourService.setSteps(steps);
+  }
+
+  ngOnDestroy(): void {
+    this.tourService.setSteps([]);
   }
 
   // Function to extract the order ID from the URL

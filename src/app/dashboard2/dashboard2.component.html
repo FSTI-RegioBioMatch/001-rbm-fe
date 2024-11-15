@@ -1,25 +1,28 @@
 <div class="w-full max-w-[1200px] mx-auto p-4">
   <!-- Navigation Icons -->
-  <div class="flex justify-content-center align-items-center gap-3 mb-4">
-    @for (item of items; track item.label) {
-      <div 
-        class="text-center p-3 border-round-lg cursor-pointer surface-card"
-        (click)="setActiveItem(item)"
-      >
-        <div class="mb-2 p-3 border-round-xl surface-ground flex align-items-center justify-content-center" 
-             [ngClass]="{'bg-primary': activeItem === item}">
-          <i class="{{item.icon}} text-2xl" [ngClass]="{'text-white': activeItem === item}"></i>
+  <div class="rbm-flex-row rbm-space-between">
+    <div class="rbm-flex-row rbm-gap-xs">
+      @for (item of items; track item.label) {
+        <div [ngClass]="{
+          'pt-dashboard-home': item.class === 'pt-dashboard-home',
+          'pt-dashboard-match': item.class === 'pt-dashboard-match',
+          'pt-dashboard-saison': item.class === 'pt-dashboard-saison',
+          'pt-dashboard-tops': item.class === 'pt-dashboard-tops'}" (click)="setActiveItem(item)">
+          <div class="rbm-bg-tea-green rbm-flex-column rbm-gap-p8 rbm-content-center rbm-items-middle rbm-padding-xs rbm-radius-xs" 
+              [ngClass]="{'rbm-bg-sea-green rbm-text-white': activeItem === item}">
+            <i class="{{item.icon}} text-2xl" [ngClass]="{'text-white': activeItem === item}"></i>
+            <span class="text-sm block">{{item.label}}</span>
+          </div>
         </div>
-        <span class="text-sm block">{{item.label}}</span>
-      </div>
-    }
+      }
+    </div>
   </div>
 
   <!-- Main Content Area -->
-  <div class="surface-card p-4 border-round">
+  <div class="">
       @switch (activeItem.label) {
         @case ("Übersicht") {
-          <app-card-dashboard></app-card-dashboard>
+          <app-card-dashboard class="pt-map"></app-card-dashboard>
         }
         @case ("Empfehlungen") {
           <app-matcher></app-matcher>
@@ -32,4 +35,48 @@
         }
       }
   </div>
+
+  <div #welcomeElement class="dw-overlay dashboard-welcome-active">
+    <div class="dashboard-welcome">
+      <div class="left">
+        <svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+          <defs>
+            <style>
+              .cls-1 {
+                fill: #aecb3a;
+              }
+            </style>
+          </defs>
+          <path class="cls-1" d="m750.23,96.68c-2.96-2.73-11.09-9.99-22.3-10.44-5.08-.2-11.71.96-26.02,11.05-10.47,7.38-33.73,24.21-48.83,55.89-1.6,3.36-4.48,8.58-6.43,16.13-2.48,9.57-1.85,18.19-5.5,43.04-2.45,16.67-8.91,32.7-19.45,46.02-21.01,26.48-141.82,123.91-175.33,147.95,0,0-38.83,30.98-46.75,24.85-.57-.41-.9-1.06-.9-1.06-2.53-5.15,8.34-15.77,14.06-21.17,5.64-5.31,120.97-113.7,127.59-120.56,2.62-2.7,3.11-5.15,3.27-6.54.08-1.06,0-4.01-2.13-6.29-2.53-2.45-5.89-2.21-6.46-2.21-3.27.33-5.56,2.62-6.29,3.43,0,0-64.25,60.32-135.52,126.78-.98.98-3.02,2.13-5.31,3.19-1.96.98-6.29,3.02-7.76,1.55-1.47-1.55.57-5.97,1.47-7.68,1.47-3.11,3.27-5.07,3.43-5.31,3.76-3.92,57.22-59.91,130.7-136.58,2.94-2.86,3.02-7.52.49-10.38l-.08-.08-.08-.08-.08-.08c-2.86-2.53-7.6-2.37-10.38.57-76.26,73.81-131.92,127.67-135.85,131.44-.25.16-2.21,1.96-5.31,3.43-1.72.98-6.05,3.02-7.6,1.55-1.55-1.47.49-5.8,1.47-7.76.98-2.29,2.21-4.33,3.19-5.31,66.04-71.77,125.96-136.26,125.96-136.26.74-.82,3.02-3.11,3.35-6.37.08-.49.25-3.84-2.29-6.38-2.29-2.21-5.23-2.21-6.21-2.13-1.39.16-3.92.65-6.54,3.27-6.87,6.7-114.51,122.61-119.83,128.33-5.39,5.72-15.94,16.76-21.09,14.14,0,0-.65-.24-1.06-.82-6.21-7.85,24.6-46.92,24.6-46.92,23.79-33.59,120.56-155.06,146.88-176.23,13.24-10.63,29.18-17.17,45.85-19.7,19.94-3.11,39.81-6.54,59.1-12.26,8.15-2.42,27.59-11.01,35.61-28.84,2.98-6.64,3.81-13.46,3.37-19.98-1.46-21.23-17-38.76-37.34-45.02C583.51,8.1,545.31-.03,499.99,0c-80.65.05-139.42,26-156,33.65-131.78,60.79-215.25,195.89-215.25,338.18,0,70.7,20.6,143.28,66.21,209.33l96.05,139.19c14.07,20.39,43.84,21.64,59.42,2.38,18.8-23.24,36.25-49.19,51.4-78.14,2.94-5.64,5.72-11.28,8.34-16.84,0,0,1.31-3.92,2.13-7.68,2.62-12.02-.74-22.8-1.8-31.71-3.02-23.95,8.83-43.98,11.61-48.72,4.33-7.52,9.15-12.75,12.51-16.02,5.72-5.72,11.53-11.52,17.25-17.25l11.37,11.36c8.2,8.19,15.22,17.6,19.92,28.19,3.71,8.37,6.78,18.51,7.54,30.33,1.31,20.36-20.62,53.16-39.91,77.93-2.61,3.35,1.72,7.67,5.06,5.06,24.77-19.3,57.57-41.22,77.93-39.91,11.79.76,21.91,3.82,30.26,7.51,10.61,4.69,20.03,11.72,28.24,19.93l11.39,11.39c-5.72,5.72-11.52,11.53-17.25,17.25-3.27,3.35-8.5,8.17-16.02,12.51-4.74,2.78-24.77,14.63-48.72,11.61-8.91-1.06-19.7-4.41-31.71-1.8-3.76.82-7.68,2.13-7.68,2.13-5.56,2.62-11.2,5.4-16.84,8.34-38.09,20.13-69.69,45.51-95.96,72.7-12.4,12.84-14.25,32.54-4.11,47.23l109.55,158.72c12.1,17.57,38.01,17.57,50.19,0l279.95-405.67c112.91-163.64,72.74-366.83-54.81-484.48Zm-223.92,474.92l-15.86-15.94c-29.92-29.84-29.92-78.31,0-108.22l15.86-15.86,15.94,15.86c29.92,29.92,29.92,78.39,0,108.22l-15.94,15.94Zm136.09,27.79c-29.92,29.92-78.3,29.92-108.22,0l-15.94-15.86,15.94-15.94c29.92-29.84,78.3-29.84,108.22,0l15.94,15.94-15.94,15.86Zm38.17-167.81c0,41.76-33.85,75.61-75.61,75.61h-22.23v-22.23c0-41.76,33.85-75.61,75.61-75.61h22.23v22.23Z"/>
+        </svg>
+      </div>
+      <div class="right">
+        <h1>RegioBioMatch</h1>
+        <h2>Willkommen bei RegioBioMatch</h2>
+        <p>Du kannst direkt starten oder</p><p>die Einführungs Tour beginnen</p>
+        <div class="btn-box">
+          <button (click)="closeWelcome();startTour()">Tour starten</button>
+          <button (click)="closeWelcome()">Direkt starten</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-overlayPanel #overlayPanel dismissable="false" [style]="{ padding: '0', maxWidth: '500px', overflow: 'hidden' }">
+    <br>
+    <p class="ptour-title">{{ steps[currentStepIndex]?.title }}</p>
+    <div *ngIf="isTourActive" style="z-index: 1000; padding: 0;">
+      <p class="ptour-beschreibung">{{ steps[currentStepIndex].text }}</p>
+      <div class="ptour-btn-box">
+        <button class="ptour-btn" (click)="nextStep()">
+          <i class="pi pi-arrow-right"></i>
+          <p>Weiter</p>
+        </button>
+        <button class="ptour-btn" (click)="closeTour()">
+          <i class="pi pi-times"></i>
+          <p>Beenden</p>
+        </button>
+      </div>
+    </div>
+  </p-overlayPanel>
 </div>

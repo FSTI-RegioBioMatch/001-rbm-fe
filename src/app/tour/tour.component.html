@@ -1,0 +1,18 @@
+<div class="pt-overlay" *ngIf="isTourActive"></div>
+<p-overlayPanel #overlayPanel [dismissable]="false" [style]="{ padding: '0', maxWidth: '500px', overflow: 'hidden' }">
+  <br>
+  <p class="ptour-title">{{ steps[currentStepIndex]?.title }}</p>
+  <div *ngIf="isTourActive" style="z-index: 9999; padding: 0;">
+    <p class="ptour-beschreibung">{{ steps[currentStepIndex].text }}</p>
+    <div class="ptour-btn-box">
+      <button class="ptour-btn" (click)="nextStep()">
+        <i class="pi pi-arrow-right"></i>
+        <p>Weiter</p>
+      </button>
+      <button class="ptour-btn" (click)="closeTour()">
+        <i class="pi pi-times"></i>
+        <p>Beenden</p>
+      </button>
+    </div>
+  </div>
+</p-overlayPanel>

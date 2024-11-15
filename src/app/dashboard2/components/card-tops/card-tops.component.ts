@@ -4,32 +4,52 @@ import { CardModule } from 'primeng/card';
 import { NewMenuplanService } from '../../../shared/services/new-menuplan.service';
 import { RecipeService } from '../../../shared/services/recipe.service';
 import { StoreService } from '../../../shared/store/store.service';
-import { forkJoin } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { RecipeType, Ingredient } from '../../../shared/types/recipe.type';
+import { ChangeDetectorRef } from '@angular/core';
+import {
+  filter,
+  map,
+  switchMap,
+  catchError,
+  take,
+  finalize,
+} from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface TopItem {
   name: string;
   count: number;
 }
 
+interface TopArticle {
+  name: string;
+  count: number;
+  unit: string;
+}
+
 interface TopStats {
-  articles: TopItem[];
+  articles: TopArticle[];
   recipes: TopItem[];
   menus: TopItem[];
+}
+
+interface MenuItem {
+  id: string;
+  name: string;
 }
 
 interface MenuPlan {
   id: string;
   name: string;
-  recipes?: Array<{
-    title: string;
-    ingredients?: Array<{
-      name: string;
-      quantity: string;
-      unit: string;
-    }>;
-  }>;
+  recipes: MenuItem[];
+}
+
+interface RecipeResponse {
+  content: RecipeType[];
+  totalElements: number;
+  totalPages: number;
 }
 
 @Component({
@@ -40,8 +60,12 @@ interface MenuPlan {
   templateUrl: './card-tops.component.html',
   styleUrl: './card-tops.component.scss',
 })
-export class CardTopsComponent {
-  loading = true;
+export class CardTopsComponent implements OnInit {
+  loading = {
+    menus: true,
+    recipes: true,
+  };
+
   topItems: TopStats = {
     articles: [],
     recipes: [],
@@ -53,89 +77,154 @@ export class CardTopsComponent {
     private recipeService: RecipeService,
     private storeService: StoreService,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
-    this.loadTopStats();
+    this.processMenus();
+    this.processRecipes();
   }
 
-  private loadTopStats(): void {
-    this.storeService.selectedCompanyContext$.subscribe((company) => {
-      if (company) {
-        this.loading = true;
+  trackByName(index: number, item: TopItem): string {
+    return item.name;
+  }
 
-        // Use getAllMenuPlans instead of getMenuPlans
-        this.menuPlanService.getAllMenuPlans().subscribe(
-          (menuPlans: MenuPlan[]) => {
-            // Process menu plans for top menus
-            const menuCounts = new Map<string, number>();
+  private processMenus(): void {
+    this.loading.menus = true;
+
+    this.storeService.selectedCompanyContext$
+      .pipe(
+        filter((company) => company !== null && company.id !== undefined),
+        take(1),
+        switchMap(() => this.menuPlanService.getAllMenuPlans()),
+        map((menuPlans: MenuPlan[]) => {
+          const menuCounts = new Map<string, number>();
+
+          if (Array.isArray(menuPlans)) {
             menuPlans.forEach((plan: MenuPlan) => {
-              const count = menuCounts.get(plan.name) || 0;
-              menuCounts.set(plan.name, count + 1);
+              if (!plan?.name) return;
+              menuCounts.set(plan.name, (menuCounts.get(plan.name) || 0) + 1);
+
+              if (plan.recipes) {
+                plan.recipes.forEach((recipe: MenuItem) => {});
+              }
             });
+          }
 
-            this.topItems.menus = Array.from(menuCounts.entries())
-              .map(([name, count]) => ({ name, count }))
-              .sort((a, b) => b.count - a.count)
-              .slice(0, 5);
+          return {
+            menus: this.getTopItems(menuCounts),
+          };
+        }),
+        catchError((error) => {
+          console.error('Error processing menus:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Fehler beim Laden der Menüs',
+          });
+          return of({
+            menus: [],
+          });
+        }),
+        finalize(() => {
+          this.loading.menus = false;
+        }),
+      )
+      .subscribe((result) => {
+        this.topItems.menus = [...(result.menus || [])];
+        this.cdr.detectChanges();
+      });
+  }
 
-            // Process recipes from menu plans
-            const recipeCounts = new Map<string, number>();
-            const articleCounts = new Map<
-              string,
-              { name: string; weight: number }
-            >();
+  private processRecipes(): void {
+    this.loading.recipes = true;
 
-            menuPlans.forEach((plan: MenuPlan) => {
-              // Count recipes
-              plan.recipes?.forEach((recipe) => {
-                const count = recipeCounts.get(recipe.title) || 0;
-                recipeCounts.set(recipe.title, count + 1);
+    this.storeService.selectedCompanyContext$
+      .pipe(
+        filter((company) => company !== null && company.id !== undefined),
+        take(1),
+        switchMap(() => this.recipeService.getRecipesByCompanyContext()),
+        map((response: any) => {
+          const recipes = response.content || response;
+          const recipeCounts = new Map<string, number>();
+          const articleCounts = new Map<string, TopArticle>();
 
-                // Sum up ingredients
-                recipe.ingredients?.forEach((ingredient) => {
-                  const current = articleCounts.get(ingredient.name) || {
-                    name: ingredient.name,
-                    weight: 0,
-                  };
-                  // Convert quantity to number and add
-                  const weight = parseFloat(ingredient.quantity) || 0;
-                  articleCounts.set(ingredient.name, {
-                    name: ingredient.name,
-                    weight: current.weight + weight,
+          if (Array.isArray(recipes)) {
+            recipes.forEach((recipe: RecipeType) => {
+              const recipeTitle = recipe.recipeName;
+
+              if (recipeTitle) {
+                recipeCounts.set(
+                  recipeTitle,
+                  (recipeCounts.get(recipeTitle) || 0) + 1,
+                );
+
+                if (recipe.ingredients && recipe.ingredients.length > 0) {
+                  recipe.ingredients.forEach((ingredient: Ingredient) => {
+                    if (!ingredient.name || !ingredient.unit) {
+                      return;
+                    }
+
+                    const key = `${ingredient.name}-${ingredient.unit}`;
+                    const current = articleCounts.get(key) || {
+                      name: ingredient.name,
+                      count: 0,
+                      unit: ingredient.unit,
+                    };
+
+                    let amount = 0;
+                    if (typeof ingredient.amount === 'string') {
+                      const match = ingredient.amount.match(/\d+/);
+                      amount = match ? Number(match[0]) : 0;
+                    } else {
+                      amount = Number(ingredient.amount) || 0;
+                    }
+
+                    articleCounts.set(key, {
+                      name: ingredient.name,
+                      count: current.count + amount,
+                      unit: ingredient.unit,
+                    });
                   });
-                });
-              });
+                }
+              }
             });
-
-            // Set top recipes
-            this.topItems.recipes = Array.from(recipeCounts.entries())
-              .map(([name, count]) => ({ name, count }))
+          }
+          return {
+            recipes: this.getTopItems(recipeCounts),
+            articles: Array.from(articleCounts.values())
               .sort((a, b) => b.count - a.count)
-              .slice(0, 5);
+              .slice(0, 5),
+          };
+        }),
+        catchError((error) => {
+          console.error('Error processing recipes:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Fehler',
+            detail: 'Fehler beim Laden der Rezepte',
+          });
+          return of({
+            recipes: [],
+            articles: [],
+          });
+        }),
+        finalize(() => {
+          this.loading.recipes = false;
+          this.cdr.detectChanges();
+        }),
+      )
+      .subscribe((result) => {
+        this.topItems.recipes = [...(result.recipes || [])];
+        this.topItems.articles = [...(result.articles || [])];
+        this.cdr.detectChanges();
+      });
+  }
 
-            // Set top articles
-            this.topItems.articles = Array.from(articleCounts.values())
-              .map((item) => ({
-                name: item.name,
-                count: Math.round(item.weight),
-              }))
-              .sort((a, b) => b.count - a.count)
-              .slice(0, 5);
-
-            this.loading = false;
-          },
-          (error: Error) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Fehler',
-              detail: 'Fehler beim Laden der Statistiken',
-            });
-            this.loading = false;
-            console.error('Error loading statistics:', error);
-          },
-        );
-      }
-    });
+  private getTopItems(countMap: Map<string, number>): TopItem[] {
+    return Array.from(countMap.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
   }
 }

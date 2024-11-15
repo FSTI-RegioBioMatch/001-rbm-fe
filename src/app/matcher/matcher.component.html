@@ -8,17 +8,18 @@
     <!-- No Recipes Found -->
     <div *ngIf="!loading && recipeMatches.length === 0" class="no-recipes">
       <p>Keine Rezepte gefunden.</p>
+      <br>
+      <p>Versuche die Seite neuzuladen</p>
     </div>
 
     <!-- Recipes Display -->
     <div *ngIf="!loading && recipeMatches.length > 0" class="recipes-container">
-      <div *ngFor="let match of recipeMatches" class="recipe-card">
+      <div *ngFor="let match of paginatedRecipeMatches" class="recipe-card">
         <img [src]="getImageUrl(match.recipe)" alt="{{ match.recipe.title }}" class="recipe-image">
         <div class="recipe-info">
           <h2>{{ match.recipe.title }}</h2>
           <p><strong>Portionen:</strong> {{ match.recipe.portions }}</p>
-          <p><strong>Zubereitung:</strong> {{ match.recipe.instructions }}</p>
-
+          <p><strong>Zubereitung:</strong> {{ match.recipe.instructions | slice:0:140 }}...<span (click)="showRecipeDetails(match)">Mehr</span></p>
           <h3>Zutaten:</h3>
           <ul>
             <li *ngFor="let ingredient of match.ingredients">
@@ -38,11 +39,59 @@
 
           <!-- Optional: Action Icons -->
           <div class="icons">
-            <i class="pi pi-heart"></i>
+            <i class="pi pi-heart" [ngClass]="{'clicked': clickedMatches.has(match)}" (click)="createNewRecipeFromMatch(match)"></i>
             <i class="pi pi-share-alt"></i>
           </div>
         </div>
       </div>
+      <p-paginator [rows]="pageSize" [totalRecords]="totalRecords" (onPageChange)="paginate($event)"></p-paginator>
     </div>
   </div>
 </div>
+
+<p-dialog header="Rezeptdetails" [(visible)]="displayModal" [modal]="true" [closable]="true" (onHide)="hideRecipeDetails()">
+  <div *ngIf="selectedRecipe">
+    <h2>{{ selectedRecipe.title }}</h2>
+    <p><strong>Portionen:</strong> {{ selectedRecipe.portions }}</p>
+    <p><strong>Zubereitung:</strong> {{ selectedRecipe.instructions }}</p>
+
+    <h3>Zutaten:</h3>
+    <ul>
+      <li *ngFor="let ingredient of selectedRecipe.ingredients">
+        {{ ingredient.quantity }} {{ ingredient.name }}
+      </li>
+    </ul>
+
+    <div *ngIf="selectedRecipe" class="recipe-card">
+      <img [src]="getImageUrl(selectedRecipe.recipe)" alt="{{ selectedRecipe.title }}" class="recipe-image">
+      <div class="recipe-info">
+        <h2>{{ selectedRecipe.title }}</h2>
+        <p><strong>Portionen:</strong> {{ selectedRecipe.recipe.portions }}</p>
+        <p><strong>Zubereitung:</strong> {{ selectedRecipe.recipe.instructions}}</p>
+
+        <h3>Zutaten:</h3>
+        <ul>
+          <li *ngFor="let ingredient of selectedRecipe.ingredients">
+            <span [ngClass]="{'matched-ingredient': ingredient.isMatched, 'unmatched-ingredient': !ingredient.isMatched}">
+              {{ ingredient.quantity }} {{ ingredient.name }}
+            </span>
+            <span *ngIf="ingredient.isMatched" class="matched-icon">
+              ✔️
+            </span>
+            <span *ngIf="!ingredient.isMatched" class="not-matched-icon">
+              ❌
+            </span>
+          </li>
+        </ul>
+
+        <p class="match-percentage"><strong>Match-Quote:</strong> {{ selectedRecipe.matchPercentage | number:'1.0-2' }}%</p>
+
+        <!-- Optional: Action Icons -->
+        <div class="icons">
+          <i class="pi pi-heart"></i>
+          <i class="pi pi-share-alt"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-dialog>

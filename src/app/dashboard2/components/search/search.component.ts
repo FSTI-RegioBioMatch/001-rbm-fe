@@ -83,13 +83,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('[SearchComponent] ngOnInit');
     this.loaded = true;
   }
 
   onSearch(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    console.log('[SearchComponent] Search triggered:', inputElement.value);
     this.searchService.search(inputElement.value);
   }
 
@@ -105,12 +103,10 @@ export class SearchComponent implements OnInit, OnDestroy {
           }
         : undefined,
     };
-    console.log('[SearchComponent] Updating filters:', filters);
     this.searchService.updateFilters(filters);
   }
 
   showDetailsCompany(company: CompanyType): void {
-    console.log('[SearchComponent] Showing company details:', company);
     this.selectedCompany = company;
     this.selectedOffer = null;
     this.displayDialog = true;
@@ -153,13 +149,11 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   showRecipeDetails(recipe: PublicRecipeType): void {
-    console.log('Showing details for recipe:', recipe);
     this.selectedRecipe = recipe;
     this.displayRecipeDialog = true;
   }
 
   showDetailsOffer(offer: OfferType): void {
-    console.log('[SearchComponent] Showing offer details:', offer);
     this.selectedOffer = offer;
     this.selectedCompany = null;
     this.displayDialog = true;
@@ -170,7 +164,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('[SearchComponent] Destroying');
     this.destroy$.next();
     this.destroy$.complete();
   }

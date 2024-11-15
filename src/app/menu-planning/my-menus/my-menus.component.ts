@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NewMenuplanService } from '../../shared/services/new-menuplan.service';
 import { RecipeService } from '../../shared/services/recipe.service';
 import { CommonModule } from '@angular/common';
@@ -22,6 +22,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { OfferService } from '../../shared/services/offer.service';
 import { CardModule } from 'primeng/card';
 import { LocalizeService } from '../../shared/services/localize.service';
+import { TourService } from '../../shared/services/tour.service';
 
 interface IngredientUnit {
   label: string;
@@ -152,7 +153,8 @@ export class MyMenusComponent implements OnInit {
     private router: Router,
     private nearbuyTestService: NearbuyTestService,
     private offerService: OfferService,
-    private localizeService: LocalizeService
+    private localizeService: LocalizeService,
+    private tourService: TourService
   ) {}
 
   repeatOptions = [
@@ -186,6 +188,24 @@ export class MyMenusComponent implements OnInit {
           console.error('Error loading menu plans', error);
         }
       });
+
+    const steps = [
+      { element: '.pt-mymenus1', title: "Menüplan Erstellen", text: 'Die Meine Menüs Seite hat 4 Reiter. Bei der Menüplanung kannst du neue Menüs erstellen, die du später auch als Einkaufsliste verwandeln kannst' },
+      { element: '.pt-mymenus2', title: "Aktueller Reiter", text: 'Hier befinden wir uns gerade. Hier findest du alle deine Menüs und kannst die Details begutachten oder die Zutaten Einkaufen gehen' },
+      { element: '.pt-mymenus3', title: "Einkaufszettel", text: 'Alle deine bisherigen Einkaufszettel sind hier zu finden' },
+      { element: '.pt-mymenus4', title: "Angebote in der Region", text: 'Bei der Angebotsliste findest du die Angebote in deienr Region' },
+      { element: '.pt-mymenus-checkbox', title: "Dein Menü", text: 'Setze bei einem oder mehreren Menüs dein Häckchen um es als Auswahl für den Einkauszettel hinzuzufügen' },
+      { element: '.pt-mymenus-einkauf-btn', title: "Einkaufszettel erstellen", text: 'Sobald du 1 oder mehrere ausgewählt hast kannst du daraus einen Einkaufszettel mit dem Knopf erstellen' },
+      { element: '.pt-mymenus-portions', title: "Portionen gesamt", text: 'Hier siehst du neben wichtige infos auch die Portion Menge. gehe mit dem Mauszeiger über die Zahl um zu sehen wie viel vegetarische, ve...Portionen du hast' },
+      { element: '.pt-mymenus-komponente', title: "Komponenten | Veredlungen", text: 'Möchtest du Zutaten gleich geschält oder sonstige Veredlungen? Dann kannst du das hier festlegen für deinen EInkaufszettel. Es sucht dann später automatisch nach einem passenden Angebot' },
+      { element: '.pt-mymenus-details', title: "Details anzeigen", text: 'Betrachte dein ganzes Menü. In der Detail Ansicht kannst du es auch löschen.' },
+    ];
+
+    this.tourService.setSteps(steps);
+  }
+
+  ngOnDestroy(): void {
+    this.tourService.setSteps([]);
   }
 
 
