@@ -2,67 +2,70 @@
   <!-- TOP Articles -->
   <div class="col-12 md:col-4">
     <p-card header="TOP Artikel">
-      @if (loading) {
-        <div class="flex justify-content-center">
-          <i class="pi pi-spin pi-spinner"></i>
-        </div>
-      } @else if (topItems.articles.length) {
-        <ul class="list-none p-0 m-0">
-          @for (item of topItems.articles; track item.name) {
-            <li class="flex justify-content-between align-items-center mb-2">
-              <span>{{item.name}}</span>
-              <span class="text-500">{{item.count}} {{item.unit}}</span>
-            </li>
-          }
+      <div *ngIf="topItems!.articles.length > 0; else noArticles">
+        <ul class="list p-0 m-0">
+          <li
+            *ngFor="let item of topItems!.articles; trackBy: trackByName"
+            class="list-item"
+          >
+            <div class="list-item-content">
+              <div class="list-item-title">{{ item.name }}</div>
+              <div class="list-item-subtitle">
+                {{ item.count }} {{ item.unit }}
+              </div>
+            </div>
+          </li>
         </ul>
-      } @else {
+      </div>
+      <ng-template #noArticles>
         <p class="text-center text-500">Keine Daten verfügbar</p>
-      }
+      </ng-template>
     </p-card>
   </div>
-  
+
   <!-- TOP Recipes -->
   <div class="col-12 md:col-4">
     <p-card header="TOP Rezepte">
-      @if (loading) {
-        <div class="flex justify-content-center">
-          <i class="pi pi-spin pi-spinner"></i>
-        </div>
-      } @else if (topItems.recipes.length) {
-        <ul class="list-none p-0 m-0">
-          @for (item of topItems.recipes; track item.name) {
-            <li class="flex justify-content-between align-items-center mb-2">
-              <span>{{item.name}}</span>
-              <span class="text-500">{{item.count}}x</span>
-            </li>
-          }
+      <div *ngIf="topItems!.recipes.length > 0; else noRecipes">
+        <ul class="list p-0 m-0">
+          <li
+            *ngFor="let item of topItems!.recipes; trackBy: trackByName"
+            class="list-item"
+          >
+            <div class="list-item-content">
+              <div class="list-item-title">{{ item.name }}</div>
+              <div class="list-item-subtitle">{{ item.count }}x</div>
+            </div>
+          </li>
         </ul>
-      } @else {
+      </div>
+      <ng-template #noRecipes>
         <p class="text-center text-500">Keine Daten verfügbar</p>
-      }
+      </ng-template>
     </p-card>
   </div>
 
   <!-- TOP Menus -->
   <div class="col-12 md:col-4">
     <p-card header="TOP Menüs">
-      @if (loading) {
-        <div class="flex justify-content-center">
-          <i class="pi pi-spin pi-spinner"></i>
-        </div>
-      } @else if (topItems.menus.length) {
-        <ul class="list-none p-0 m-0">
-          @for (item of topItems.menus; track item.name) {
-            <li class="flex justify-content-between align-items-center mb-2">
-              <span>{{item.name}}</span>
-              <span class="text-500">{{item.count}}x</span>
-            </li>
-          }
+      <div *ngIf="topItems!.menus.length > 0; else noMenus">
+        <ul class="list p-0 m-0">
+          <li
+            *ngFor="let item of topItems!.menus; trackBy: trackByName"
+            class="list-item"
+          >
+            <div class="list-item-content">
+              <div class="list-item-title">{{ item.name }}</div>
+              <div class="list-item-subtitle">{{ item.count }}x</div>
+            </div>
+          </li>
         </ul>
-      } @else {
+      </div>
+      <ng-template #noMenus>
         <p class="text-center text-500">Keine Daten verfügbar</p>
-      }
+      </ng-template>
     </p-card>
   </div>
 </div>
+
 <p-toast></p-toast>

@@ -81,26 +81,12 @@ export class SearchService {
 
     // Combine search term with data sources
     this.searchResults$ = combineLatest([
-      this.searchTermSubject.asObservable().pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        tap((term) => console.log('[Search] Processing term:', term)),
-      ),
-      this.companyService.companies$.pipe(
-        tap((companies) =>
-          console.log('[Search] Processing companies:', companies.length),
-        ),
-      ),
-      this.offerService.offers$.pipe(
-        tap((offers) =>
-          console.log('[Search] Processing offers:', offers.length),
-        ),
-      ),
-      recipes$.pipe(
-        tap((recipes) =>
-          console.log('[Search] Processing recipes:', recipes.length),
-        ),
-      ),
+      this.searchTermSubject
+        .asObservable()
+        .pipe(debounceTime(300), distinctUntilChanged()),
+      this.companyService.companies$,
+      this.offerService.offers$,
+      recipes$,
     ]).pipe(
       map(([searchTerm, companies, offers, recipes]) => {
         if (!searchTerm.trim()) {
