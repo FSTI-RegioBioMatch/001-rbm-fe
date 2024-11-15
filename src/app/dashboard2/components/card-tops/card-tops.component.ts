@@ -98,7 +98,6 @@ export class CardTopsComponent implements OnInit {
         take(1),
         switchMap(() => this.menuPlanService.getAllMenuPlans()),
         map((menuPlans: MenuPlan[]) => {
-          console.log('Received menu plans:', menuPlans);
           const menuCounts = new Map<string, number>();
 
           if (Array.isArray(menuPlans)) {
@@ -107,9 +106,7 @@ export class CardTopsComponent implements OnInit {
               menuCounts.set(plan.name, (menuCounts.get(plan.name) || 0) + 1);
 
               if (plan.recipes) {
-                plan.recipes.forEach((recipe: MenuItem) => {
-                  console.log('Processing recipe from menu:', recipe);
-                });
+                plan.recipes.forEach((recipe: MenuItem) => {});
               }
             });
           }
@@ -134,10 +131,8 @@ export class CardTopsComponent implements OnInit {
         }),
       )
       .subscribe((result) => {
-        console.log('Menu processing result before set:', result);
         this.topItems.menus = [...(result.menus || [])];
         this.cdr.detectChanges();
-        console.log('TopItems after menu update:', this.topItems);
       });
   }
 
@@ -150,21 +145,13 @@ export class CardTopsComponent implements OnInit {
         take(1),
         switchMap(() => this.recipeService.getRecipesByCompanyContext()),
         map((response: any) => {
-          console.log('Full response:', response);
-
           const recipes = response.content || response;
-          console.log('Recipes array:', recipes);
-
           const recipeCounts = new Map<string, number>();
           const articleCounts = new Map<string, TopArticle>();
-          console.log('article counts', articleCounts);
 
           if (Array.isArray(recipes)) {
             recipes.forEach((recipe: RecipeType) => {
-              console.log('Processing recipe:', recipe);
-
               const recipeTitle = recipe.recipeName;
-              console.log('Recipe title:', recipeTitle);
 
               if (recipeTitle) {
                 recipeCounts.set(
@@ -173,16 +160,8 @@ export class CardTopsComponent implements OnInit {
                 );
 
                 if (recipe.ingredients && recipe.ingredients.length > 0) {
-                  console.log(
-                    'Processing ingredients for recipe:',
-                    recipeTitle,
-                  );
                   recipe.ingredients.forEach((ingredient: Ingredient) => {
                     if (!ingredient.name || !ingredient.unit) {
-                      console.log(
-                        'Skipping ingredient due to missing name or unit:',
-                        ingredient,
-                      );
                       return;
                     }
 
@@ -197,15 +176,8 @@ export class CardTopsComponent implements OnInit {
                     if (typeof ingredient.amount === 'string') {
                       const match = ingredient.amount.match(/\d+/);
                       amount = match ? Number(match[0]) : 0;
-                      console.log(
-                        'Parsed string amount:',
-                        ingredient.amount,
-                        'to:',
-                        amount,
-                      );
                     } else {
                       amount = Number(ingredient.amount) || 0;
-                      console.log('Parsed number amount:', amount);
                     }
 
                     articleCounts.set(key, {
@@ -218,12 +190,6 @@ export class CardTopsComponent implements OnInit {
               }
             });
           }
-
-          console.log('Final counts:', {
-            recipes: Array.from(recipeCounts.entries()),
-            articles: Array.from(articleCounts.entries()),
-          });
-
           return {
             recipes: this.getTopItems(recipeCounts),
             articles: Array.from(articleCounts.values())
@@ -249,11 +215,9 @@ export class CardTopsComponent implements OnInit {
         }),
       )
       .subscribe((result) => {
-        console.log('Recipe processing result before set:', result);
         this.topItems.recipes = [...(result.recipes || [])];
         this.topItems.articles = [...(result.articles || [])];
         this.cdr.detectChanges();
-        console.log('TopItems after recipe update:', this.topItems);
       });
   }
 
