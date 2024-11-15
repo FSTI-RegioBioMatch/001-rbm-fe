@@ -13,15 +13,15 @@
 
       <!-- Produce Grid (Modern Card Layout) -->
       <div class="row rbm-flex-row rbm-flex-wrap rbm-items-middle">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4 rbm-width-30" *ngFor="let produce of outputData">
-          <div [ngClass]="{}" (click)="showDetails(produce)"
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4 rbm-width-30" *ngFor="let product of filteredOffers">
+          <div [ngClass]="{}" (click)="showDetails(product)"
           class="produce-card card shadow-sm h-100">
           <div class="col-sm-6 col-md-4 col-lg-3">
               <div class="card-body d-flex flex-column align-items-center text-center">
-                  <h5>{{ produce.productName }}</h5>
-                  <img *ngIf="produce.imageUrl" [src]="produce.imageUrl" [alt]="produce.productName"
+                  <h5>{{ product.productName }}</h5>
+                  <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.productName"
                   class="img-fluid rounded mb-3" style="max-height: 150px;" />
-                <span *ngIf="!produce.imageUrl" class="text-muted">Kein Bild verfügbar</span>
+                <span *ngIf="!product.imageUrl" class="text-muted">Kein Bild verfügbar</span>
               </div>
             </div>
           </div>
@@ -29,7 +29,7 @@
       </div>
     
       <!-- No Produce Found -->
-      <div *ngIf="outputData.length === 0" class="text-center mt-4">
+      <div *ngIf="products.length === 0" class="text-center mt-4">
         <p class="text-muted">Keine Produkte für den ausgewählten Monat verfügbar.</p>
       </div>
     </div>
@@ -40,12 +40,15 @@
       Product Details
     </ng-template>
     <ng-container  *ngIf="selectedProduct">
-      <p><strong>Company Name:</strong> {{ selectedProduct.company.label }}</p>
-      <p><strong>Product:</strong> {{ selectedProduct.productName }}</p>
-      <p><strong>City:</strong> {{ selectedProduct.company.city }}</p>
-      <p><strong>From:</strong> {{ selectedProduct.product.dateStart }}</p>
-      <p><strong>To:</strong> {{ selectedProduct.product.dateEnd }}</p>
-      <p><strong>Link:</strong> <a [href]="selectedProduct.links.company" target="_blank"> {{ selectedProduct.links.company }}</a></p>
+      <div *ngFor="let offer of selectedProduct.offers">
+        <p><strong>Offer from Company:</strong> {{ offer.company.label }}</p>
+        <p><strong>Product:</strong> {{ selectedProduct.productName }}</p>
+        <p><strong>City:</strong> {{ offer.company.city }}</p>
+        <p><strong>From:</strong> {{ offer.product.dateStart }}</p>
+        <p><strong>To:</strong> {{ offer.product.dateEnd }}</p>
+        <p><strong>Link:</strong> <a [href]="offer.links.company" target="_blank"> {{ offer.links.company }}</a></p>
+        <hr>
+      </div>
     </ng-container>
   </p-dialog>
 

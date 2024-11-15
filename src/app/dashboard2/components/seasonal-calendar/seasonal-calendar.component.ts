@@ -17,8 +17,13 @@ interface Season {
   months: number[];
 }
 
-interface Produce {
+interface Product {
   productName: string;
+  offers: Offer[];
+  imageUrl?: string;
+}
+
+interface Offer {
   company: {
     label: string;
     city: string;
@@ -29,14 +34,10 @@ interface Produce {
     address: string;
   }
   product: {
-    amount: number;
-    unit: string;
     isPermanent: boolean;    
     dateStart: string;
     dateEnd: string;
   }
-  imageUrl?: string;
-  engQuery?: string;
 }
 
 @Component({
@@ -58,17 +59,16 @@ export class SeasonalCalendarComponent implements OnInit {
   selectedSeason: Season = this.seasons[0].value;
   currentSeason: Season = this.seasons[0].value;
 
-  products: HistoricProductType[] = [];
-  filteredProducts: HistoricProductType[] = [];
-  outputData: Produce[] = []
-  produceData: Produce[] = []
-  selectedProduct: Produce | null = null;
+  productsHistory: HistoricProductType[] = [];
+  products: Product[] = []
+  filteredProducts: Product[] = []
+  filteredOffers: Product[] = []
+  selectedProduct: Product | null = null;
 
   loaded = false;
   displayDialog: boolean = false;
 
   defaultImageUrl: string = '';
-
 
   constructor(
     private pixabayService: PixabayService,
@@ -132,31 +132,13 @@ export class SeasonalCalendarComponent implements OnInit {
 
   updateProduceList() {
     this.historyOfferService.products$.subscribe((products) => {
-      this.products = products;
-      this.products.forEach((product) => {
-        const productLabel = product?.ontoFoodType?.label;
+      this.productsHistory = products;
+      console.log(products);
+      this.productsHistory.forEach((item) => {
+        const productLabel = item?.ontoFoodType?.label;
         if (productLabel) {
           const query = this.sanitiseQuery(productLabel);
-          const exists = this.produceData.some(item => item.productName === query);
-          if (!exists)
-            this.produceData.push({productName: query,
-                                  company: {
-                                    label: product.company.label,
-                                    city: product.address.city,
-                                  },
-                                  links: {
-                                    company: product.links.company,
-                                    offer: product.links.offer,
-                                    address: product.links.address,
-                                  },
-                                  product: {
-                                    amount: product.product.totalAmount,
-                                    unit: product.product.unit,
-                                    dateStart: product?.product?.dateStart,
-                                    dateEnd: product?.product?.dateEnd,
-                                    isPermanent: product?.product?.isPermanent
-                                  }
-                                  });
+          this.addOffer(item, query);
         }
       })
     });
@@ -168,106 +150,124 @@ export class SeasonalCalendarComponent implements OnInit {
     });
   }
 
+  addOffer(item: HistoricProductType, query: string): void {
+    let product = this.products.find(p => p.productName === query);
+
+    if (!product) {
+      this.products.push({productName: query, offers: []});
+    }
+
+    product?.offers.push({company: {
+                            label: item.company.label,
+                            city: item.address.city,
+                          },
+                          links: {
+                            company: item.links.company,
+                            offer: item.links.offer,
+                            address: item.links.address,
+                          },
+                          product: {
+                            dateStart: item?.product?.dateStart,
+                            dateEnd: item?.product?.dateEnd,
+                            isPermanent: item?.product?.isPermanent
+                          }
+      });
+  }
+
   updateOutputList() {
-    this.filterProductsBySeason(this.selectedSeason.name);
+    this.filterOffersBySeason(this.selectedSeason.name);
+    // this.filterProductsBySeason(this.selectedSeason.name);
     this.loadImagesForProduce();
-    console.log('amount of items ', this.outputData.length);
+    console.log('amount of items ', this.filteredProducts.length);
   }
 
-  filterProductsBySeason(season: string): void {
+  // filterProductsBySeason(season: string): void {
+  //   const now = new Date();
+  //   this.filteredProducts = this.products.filter(product => {
+  //     for (let i = 0; i < product.offers.length; i++) {
+  //       if (product.offers[i].product.isPermanent) {
+  //         return true; // Always available
+  //       }
+  
+  //       const dateStart = this.parseDate(product.offers[i].product.dateStart);
+  //       const dateEnd = this.parseDate(product.offers[i].product.dateEnd);
+  
+  //       if (!dateStart || !dateEnd) {
+  //         return false; // Skip products with invalid or null dates
+  //       }
+  
+  //       switch (season) {
+  //         case 'spring':
+  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 2, 21), new Date(now.getFullYear(), 5, 20));
+  //         case 'summer':
+  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 5, 21), new Date(now.getFullYear(), 8, 22));
+  //         case 'autumn':
+  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 8, 23), new Date(now.getFullYear(), 11, 20));
+  //         case 'winter':
+  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 11, 21), new Date(now.getFullYear() + 1, 2, 20));
+  //         default:
+  //           return false;
+  //       }
+  //     }
+  //     return false;
+  //   });
+  // }
+  filterOffersBySeason(season: string): void {
     const now = new Date();
-    this.outputData = this.produceData.filter(product => {
-      if (product.product.isPermanent) {
-        return true; // Always available
-      }
+    this.filteredOffers = []; // Reset the filtered offers array
 
-      const dateStart = this.parseDate(product.product.dateStart);
-      const dateEnd = this.parseDate(product.product.dateEnd);
+    this.products.forEach(product => {
+        // Filter the offers for the product based on the season
+        const filteredOffers = product.offers.filter(offer => {
+            if (offer.product.isPermanent) {
+                return true; // Always include permanent offers
+            }
 
-      if (!dateStart || !dateEnd) {
-        return false; // Skip products with invalid or null dates
-      }
+            const dateStart = this.parseDate(offer.product.dateStart);
+            const dateEnd = this.parseDate(offer.product.dateEnd);
 
-      switch (season) {
-        case 'spring':
-          return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 2, 21), new Date(now.getFullYear(), 5, 20));
-        case 'summer':
-          return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 5, 21), new Date(now.getFullYear(), 8, 22));
-        case 'autumn':
-          return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 8, 23), new Date(now.getFullYear(), 11, 20));
-        case 'winter':
-          return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 11, 21), new Date(now.getFullYear() + 1, 2, 20));
-        default:
-          return false;
-      }
+            if (!dateStart || !dateEnd) {
+                return false; // Exclude offers with invalid or null dates
+            }
+
+            switch (season) {
+                case 'spring':
+                    return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 2, 21), new Date(now.getFullYear(), 5, 20));
+                case 'summer':
+                    return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 5, 21), new Date(now.getFullYear(), 8, 22));
+                case 'autumn':
+                    return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 8, 23), new Date(now.getFullYear(), 11, 20));
+                case 'winter':
+                    return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 11, 21), new Date(now.getFullYear() + 1, 2, 20));
+                default:
+                    return false;
+            }
+        });
+
+        // If the product has valid offers, add it to the filteredOffers array
+        if (filteredOffers.length > 0) {
+            this.filteredOffers.push({
+                ...product,
+                offers: filteredOffers
+            });
+        }
     });
-  }
-
-  // loadImagesForProduce() {
-  //   this.produceData.forEach((produce) => {
-  //     this.searchWithImage(produce, true);
-  //   });
-  // }
-
-  // searchWithImage(produce: Produce, isFallback: boolean) : void {
-  //   this.pixabayService.searchImage(produce.productName).subscribe({
-  //   next: (response: any) => {
-  //     if (response.hits && response.hits.length > 0) {
-  //       produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
-  //     } else {
-  //       produce.imageUrl = '';  // No image found
-  //       console.warn(`Kein Bild gefunden für ${produce.productName}`);
-  //       if (isFallback)
-  //         this.searchWithFallback(produce);
-  //     }
-  //     },
-  //     error: (error) => {
-  //       console.error(`Fehler beim Abrufen des Bildes für ${produce.productName}:`, error);
-  //       produce.imageUrl = '';  // In case of an error, fallback to no image
-  //     }
-  //   });
-  // }
-
-  // searchWithFallback(produce: Produce) : void {
-  //   this.translateText('Milchreis').then(translated => {
-  //     console.log(translated);
-  //     produce.engQuery = translated;
-  //     this.searchWithImage(produce, false);
-  //   });
-  // }
-
-  // translateText = async (text: string) => {
-  //   // const response = await fetch('https://libretranslate.de/translate', {
-  //   const response = await fetch(`https://cors-anywhere.herokuapp.com/https://libretranslate.de/translate`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       q: text,
-  //       source: 'de',
-  //       target: 'en',
-  //     }),
-  //   });
-
-  //   const data = await response.json();
-  //   return data.translatedText;
-  // };
+}
 
   loadImagesForProduce() {
-    this.produceData.forEach((produce) => {
-      this.pixabayService.searchImage(produce.productName).subscribe({
+    this.filteredOffers.forEach((product) => {
+      this.pixabayService.searchImage(product.productName).subscribe({
         next: (response: any) => {
           if (response.hits && response.hits.length > 0) {
-            produce.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
+            product.imageUrl = response.hits[0].webformatURL;  // Set the first image URL
           } else {
-            produce.imageUrl = this.defaultImageUrl;  // No image found
-            console.warn(`Kein Bild gefunden für ${produce.productName}`);
+            product.imageUrl = this.defaultImageUrl;  // No image found
+            console.warn(`Kein Bild gefunden für ${product.productName}`);
           }
           },
           error: (error) => {
-            console.error(`Fehler beim Abrufen des Bildes für ${produce.productName}:`, error);
-            produce.imageUrl = '';  // In case of an error, fallback to no image
+            console.error(`Fehler beim Abrufen des Bildes für ${product.productName}:`, error);
+            product.imageUrl = '';  // In case of an error, fallback to no image
           }
       });
     });
@@ -288,7 +288,7 @@ export class SeasonalCalendarComponent implements OnInit {
     return item.company.id; // or item.someUniqueIdentifier
   }
 
-  showDetails(produce: Produce): void {
+  showDetails(produce: Product): void {
     this.selectedProduct = produce;
     this.displayDialog = true;
     this.cdr.detectChanges(); // Manually trigger change detection
@@ -313,7 +313,7 @@ export class SeasonalCalendarComponent implements OnInit {
     this.selectedSeason = this.currentSeason;
   }
 
-  sanitiseQuery(query: string) : string {
+  sanitiseQuery(query: string): string {
     const newQuery = this.capitalizeFirstLetter(query).replace(/_/g, ' ');
     return newQuery;
   }
