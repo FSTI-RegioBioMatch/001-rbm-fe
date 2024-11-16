@@ -9,7 +9,13 @@ import {
 import * as L from 'leaflet';
 import { OfferType } from '../../../shared/types/offer.type';
 import { CompanyType } from '../../../shared/types/company.type';
-import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Subscription,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { StoreService, rbmRole } from '../../../shared/store/store.service';
 import { NearbuyRole } from '../../../shared/store/store.service';
 
@@ -27,6 +33,8 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() offers: OfferType[] = [];
   @Input() companies: CompanyType[] = [];
 
+  private destroy$ = new Subject<void>();
+
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private customMarker: L.Marker | null = null;
@@ -37,7 +45,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private offersSubject = new BehaviorSubject<OfferType[]>([]);
   private companiesSubject = new BehaviorSubject<CompanyType[]>([]);
 
-  private subscription = new Subscription();
+  private subscriptions = new Subscription();
 
   private readonly markerColors: Record<
     rbmRole | 'myLocation',
@@ -54,6 +62,7 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   ngAfterViewInit() {
     this.initializeMap();
+    this.setupDataSubscription();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -63,10 +72,6 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
     } else {
       this.updateMap();
     }
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   private initializeMap() {
@@ -95,16 +100,42 @@ export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private setupDataSubscription() {
-    this.subscription.add(
+    this.subscriptions.add(
       combineLatest([
         this.latSubject,
         this.lngSubject,
         this.offersSubject,
         this.companiesSubject,
-      ]).subscribe(([lat, lng, offers, companies]) => {
-        this.updateMap();
-      }),
+      ])
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(([lat, lng, offers, companies]) => {
+          this.updateMap();
+        }),
     );
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subjects
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.latSubject.complete();
+    this.lngSubject.complete();
+    this.offersSubject.complete();
+    this.companiesSubject.complete();
+
+    // Clean up subscriptions
+    this.subscriptions.unsubscribe();
+
+    // Clean up map
+    if (this.map) {
+      this.clearMarkers();
+      this.map.remove();
+    }
+
+    if (this.customMarker) {
+      this.customMarker.remove();
+      this.customMarker = null;
+    }
   }
 
   private updateMap() {

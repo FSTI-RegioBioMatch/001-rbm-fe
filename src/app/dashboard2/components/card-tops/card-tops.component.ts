@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { NewMenuplanService } from '../../../shared/services/new-menuplan.service';
@@ -15,8 +15,9 @@ import {
   catchError,
   take,
   finalize,
+  takeUntil,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 interface TopItem {
   name: string;
@@ -60,7 +61,9 @@ interface RecipeResponse {
   templateUrl: './card-tops.component.html',
   styleUrl: './card-tops.component.scss',
 })
-export class CardTopsComponent implements OnInit {
+export class CardTopsComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   loading = {
     menus: true,
     recipes: true,
@@ -104,10 +107,6 @@ export class CardTopsComponent implements OnInit {
             menuPlans.forEach((plan: MenuPlan) => {
               if (!plan?.name) return;
               menuCounts.set(plan.name, (menuCounts.get(plan.name) || 0) + 1);
-
-              if (plan.recipes) {
-                plan.recipes.forEach((recipe: MenuItem) => {});
-              }
             });
           }
 
@@ -122,13 +121,12 @@ export class CardTopsComponent implements OnInit {
             summary: 'Fehler',
             detail: 'Fehler beim Laden der Menüs',
           });
-          return of({
-            menus: [],
-          });
+          return of({ menus: [] });
         }),
         finalize(() => {
           this.loading.menus = false;
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe((result) => {
         this.topItems.menus = [...(result.menus || [])];
@@ -204,15 +202,13 @@ export class CardTopsComponent implements OnInit {
             summary: 'Fehler',
             detail: 'Fehler beim Laden der Rezepte',
           });
-          return of({
-            recipes: [],
-            articles: [],
-          });
+          return of({ recipes: [], articles: [] });
         }),
         finalize(() => {
           this.loading.recipes = false;
           this.cdr.detectChanges();
         }),
+        takeUntil(this.destroy$),
       )
       .subscribe((result) => {
         this.topItems.recipes = [...(result.recipes || [])];
@@ -226,5 +222,13 @@ export class CardTopsComponent implements OnInit {
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.cdr) {
+      this.cdr.detach();
+    }
   }
 }

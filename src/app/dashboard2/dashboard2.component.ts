@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -10,11 +16,18 @@ import { CardSuggestionComponent } from './components/card-suggestion/card-sugge
 import { CardTopsComponent } from './components/card-tops/card-tops.component';
 import { MatcherComponent } from '../matcher/matcher.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { TourStep, TOUR_STEPS } from './config/tour-steps.config';
 
 interface NavItem {
   label: string;
   class: string;
   icon: string;
+}
+
+interface Step {
+  element: string;
+  title: string;
+  text: string;
 }
 
 @Component({
@@ -39,26 +52,27 @@ interface NavItem {
 export class Dashboard2Component implements OnInit, OnDestroy {
   items: NavItem[] = [];
   activeItem!: NavItem;
-  steps = [
-    { element: '.pt-sidebar-home', title: "Übersicht", text: 'In der Übersicht findest du Schnellinformationen' },
-    { element: '.pt-sidebar-recipe', title: "Meine Rezepte", text: 'Erstelle, bearbeite oder schau dir deine Rezepte an' },
-    { element: '.pt-sidebar-menus', title: "Meine Menüs", text: 'Hier findest du deine Menüs. Du kannst Menüs erstellen, eine EInkaufsliste erstellen/ansehen und Angebote in deiner Region finden' },
-    { element: '.pt-sidebar-orders', title: "Bestellungen", text: 'Den aktuellen Stand von Bestellungen findest du hier' },
-    { element: '.pt-toolbar-betrieb', title: "Betrieb", text: 'Wechsel falls nötig zwischen einem Betrieb' },
-    { element: '.pt-toolbar-help', title: "Tour | Hilfe", text: 'Für eine Schritt für Schritt ERklärung kannst du auf jeder Seite diesen knopf drücken um die Tour zu starten.' },
-    { element: '.pt-toolbar-profile', title: "Profil", text: 'Profil Seite mit Informationen über dich und deinem unternehmen' },
-    { element: '.pt-dashboard-home', title: "Übersicht", text: 'In der Übersicht findest du 4 Reiter. Wir befinden uns in der Übersicht.' },
-    { element: '.pt-dashboard-search', title: "Suche", text: 'Suche nach Regionalen Angeboten, Rezepten oder Menüs' },
-    { element: '.pt-dashboard-map', title: "Map", text: 'Auf der Map findest du Farbig markierte Standorte von Anbieter. Klicke auf einen um die verfügbaren Produkte und andere Informationen zu lesen' },
-    { element: '.pt-dashboard-match', title: "Empfehlungen", text: 'Du kannst zu Empfehlungen wechseln, ein Algorithmus der dir anhand lokaler Angebote Rezept Vorschläge erstellt.' },
-    { element: '.pt-dashboard-saison', title: "Saison", text: 'Finde das passende für jede Saison!' },
-    { element: '.pt-dashboard-tops', title: "Tops", text: 'Weitere informative Statistiken' },
-  ];
   isTourActive = false;
   currentStepIndex = 0;
+  steps: TourStep[] = TOUR_STEPS;
 
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   @ViewChild('welcomeElement') welcomeElement!: ElementRef;
+
+  get currentStep(): TourStep {
+    if (
+      this.currentStepIndex >= 0 &&
+      this.currentStepIndex < this.steps.length
+    ) {
+      return this.steps[this.currentStepIndex];
+    }
+
+    return {
+      element: '',
+      title: '',
+      text: '',
+    };
+  }
 
   ngOnInit(): void {
     this.initMenuPoints();
@@ -66,6 +80,9 @@ export class Dashboard2Component implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.steps = [];
+    if (this.overlayPanel) {
+      this.overlayPanel.hide();
+    }
   }
 
   setActiveItem(item: NavItem) {
@@ -75,8 +92,16 @@ export class Dashboard2Component implements OnInit, OnDestroy {
   private initMenuPoints() {
     this.items = [
       { label: 'Übersicht', class: 'pt-dashboard-home', icon: 'pi pi-home' },
-      { label: 'Empfehlungen', class: 'pt-dashboard-match', icon: 'pi pi-star' },
-      { label: 'Saisonkalender', class: 'pt-dashboard-saison', icon: 'pi pi-calendar' },
+      {
+        label: 'Empfehlungen',
+        class: 'pt-dashboard-match',
+        icon: 'pi pi-star',
+      },
+      {
+        label: 'Saisonkalender',
+        class: 'pt-dashboard-saison',
+        icon: 'pi pi-calendar',
+      },
       { label: 'Tops', class: 'pt-dashboard-tops', icon: 'pi pi-chart-bar' },
     ];
 
@@ -87,7 +112,7 @@ export class Dashboard2Component implements OnInit, OnDestroy {
     return item.label;
   }
 
-  startTour() {
+  startTour(): void {
     if (this.steps.length > 0) {
       this.isTourActive = true;
       this.currentStepIndex = 0;
@@ -95,8 +120,8 @@ export class Dashboard2Component implements OnInit, OnDestroy {
     }
   }
 
-  showStep() {
-    const step = this.steps[this.currentStepIndex];
+  showStep(): void {
+    const step = this.currentStep;
     const element = document.querySelector(step.element);
 
     if (element) {

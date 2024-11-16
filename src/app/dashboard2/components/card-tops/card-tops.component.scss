@@ -1,0 +1,137 @@
+.tops-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .tops-card {
+    height: 100%;
+    
+    ::ng-deep .p-card {
+      height: 100%;
+      background: var(--rbm-light);
+      border-radius: var(--rbm-radius-m);
+      box-shadow: var(--rbm-shadow-s);
+      
+      .p-card-body {
+        padding: 0;
+      }
+      
+      .p-card-content {
+        padding: 0;
+      }
+    }
+  }
+  
+  .tops-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--rbm-sea-green);
+    color: white;
+    border-top-left-radius: var(--rbm-radius-m);
+    border-top-right-radius: var(--rbm-radius-m);
+  
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  
+    i {
+      font-size: 1.4rem;
+    }
+  }
+  
+  .tops-content {
+    padding: 1rem;
+  }
+  
+  .tops-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .tops-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border-radius: var(--rbm-radius-s);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--rbm-shadow-m);
+    }
+  
+    &.tops-item-highlighted {
+      background: var(--rbm-tea-green-10);
+    }
+  }
+  
+  .tops-rank {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: var(--rbm-sea-green);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    margin-right: 1rem;
+  }
+  
+  .tops-details {
+    flex: 1;
+  }
+  
+  .tops-title {
+    font-weight: 500;
+    color: var(--rbm-sea-green);
+    margin-bottom: 0.25rem;
+  }
+  
+  .tops-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--rbm-dark);
+    font-size: 0.9rem;
+  }
+  
+  .tops-count {
+    font-weight: 600;
+    color: var(--rbm-sea-green);
+  }
+  
+  .tops-unit {
+    color: var(--rbm-dark-60);
+  }
+  
+  .tops-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--rbm-dark-50);
+  
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tops-container {
+      grid-template-columns: 1fr;
+    }
+  }

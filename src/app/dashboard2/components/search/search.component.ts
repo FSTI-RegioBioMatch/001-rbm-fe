@@ -10,12 +10,11 @@ import { CalendarModule } from 'primeng/calendar';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CompanyType } from '../../../shared/types/company.type';
 import { OfferType } from '../../../shared/types/offer.type';
-import { tap } from 'rxjs';
 import {
   SearchService,
   SearchFilters,
 } from '../../../shared/services/search.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, Subscription, tap } from 'rxjs';
 import { PublicRecipeType } from '../../../shared/types/public-recipe.type';
 
 interface FilterDisplay {
@@ -44,6 +43,7 @@ interface FilterDisplay {
 export class SearchComponent implements OnInit, OnDestroy {
   @Input() searchTerm: string = '';
   private destroy$ = new Subject<void>();
+  private searchSubscription?: Subscription;
 
   // Component properties
   filteredCompanies: CompanyType[] = [];
@@ -83,7 +83,21 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initializeSearchSubscription();
     this.loaded = true;
+  }
+
+  private initializeSearchSubscription(): void {
+    this.searchSubscription = this.searchService.searchResults$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((results) => {
+          this.filteredCompanies = results.companies;
+          this.filteredOffers = results.offers;
+          this.filteredRecipes = results.recipes;
+        }),
+      )
+      .subscribe();
   }
 
   onSearch(event: Event): void {
@@ -164,7 +178,25 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Clean up subscriptions
     this.destroy$.next();
     this.destroy$.complete();
+
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+
+    // Clear selections and dialogs
+    this.selectedCompany = null;
+    this.selectedOffer = null;
+    this.selectedRecipe = null;
+    this.displayDialog = false;
+    this.displayRecipeDialog = false;
+
+    // Clear arrays
+    this.filteredCompanies = [];
+    this.filteredOffers = [];
+    this.filteredRecipes = [];
+    this.selectedRoles = [];
   }
 }

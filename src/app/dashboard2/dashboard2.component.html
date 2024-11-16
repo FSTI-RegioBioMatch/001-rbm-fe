@@ -64,7 +64,7 @@
 
   <p-overlayPanel #overlayPanel dismissable="false" [style]="{ padding: '0', maxWidth: '500px', overflow: 'hidden' }">
     <br>
-    <p class="ptour-title">{{ steps[currentStepIndex]?.title }}</p>
+    <p class="ptour-title">{{ steps[currentStepIndex].title }}</p>
     <div *ngIf="isTourActive" style="z-index: 1000; padding: 0;">
       <p class="ptour-beschreibung">{{ steps[currentStepIndex].text }}</p>
       <div class="ptour-btn-box">

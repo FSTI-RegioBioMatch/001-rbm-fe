@@ -1,68 +1,99 @@
-<div class="grid">
+<div class="tops-container">
   <!-- TOP Articles -->
-  <div class="col-12 md:col-4">
-    <p-card header="TOP Artikel">
-      <div *ngIf="topItems!.articles.length > 0; else noArticles">
-        <ul class="list p-0 m-0">
-          <li
-            *ngFor="let item of topItems!.articles; trackBy: trackByName"
-            class="list-item"
-          >
-            <div class="list-item-content">
-              <div class="list-item-title">{{ item.name }}</div>
-              <div class="list-item-subtitle">
-                {{ item.count }} {{ item.unit }}
+  <div class="tops-card">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="header">
+        <div class="tops-header">
+          <i class="pi pi-box mr-2"></i>
+          <h3>TOP Artikel</h3>
+        </div>
+      </ng-template>
+      <div *ngIf="topItems!.articles.length > 0; else noArticles" class="tops-content">
+        <ul class="tops-list">
+          <li *ngFor="let item of topItems!.articles; trackBy: trackByName; let i = index" 
+              class="tops-item" [class.tops-item-highlighted]="i < 3">
+            <div class="tops-rank">{{ i + 1 }}</div>
+            <div class="tops-details">
+              <div class="tops-title">{{ item.name }}</div>
+              <div class="tops-subtitle">
+                <span class="tops-count">{{ item.count }}</span>
+                <span class="tops-unit">{{ item.unit }}</span>
               </div>
             </div>
           </li>
         </ul>
       </div>
       <ng-template #noArticles>
-        <p class="text-center text-500">Keine Daten verfügbar</p>
+        <div class="tops-empty">
+          <i class="pi pi-inbox text-500 text-4xl mb-3"></i>
+          <p>Keine Daten verfügbar</p>
+        </div>
       </ng-template>
     </p-card>
   </div>
 
   <!-- TOP Recipes -->
-  <div class="col-12 md:col-4">
-    <p-card header="TOP Rezepte">
-      <div *ngIf="topItems!.recipes.length > 0; else noRecipes">
-        <ul class="list p-0 m-0">
-          <li
-            *ngFor="let item of topItems!.recipes; trackBy: trackByName"
-            class="list-item"
-          >
-            <div class="list-item-content">
-              <div class="list-item-title">{{ item.name }}</div>
-              <div class="list-item-subtitle">{{ item.count }}x</div>
+  <div class="tops-card">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="header">
+        <div class="tops-header">
+          <i class="pi pi-book mr-2"></i>
+          <h3>TOP Rezepte</h3>
+        </div>
+      </ng-template>
+      <div *ngIf="topItems!.recipes.length > 0; else noRecipes" class="tops-content">
+        <ul class="tops-list">
+          <li *ngFor="let item of topItems!.recipes; trackBy: trackByName; let i = index" 
+              class="tops-item" [class.tops-item-highlighted]="i < 3">
+            <div class="tops-rank">{{ i + 1 }}</div>
+            <div class="tops-details">
+              <div class="tops-title">{{ item.name }}</div>
+              <div class="tops-subtitle">
+                <span class="tops-count">{{ item.count }}</span>
+                <span class="tops-unit">mal verwendet</span>
+              </div>
             </div>
           </li>
         </ul>
       </div>
       <ng-template #noRecipes>
-        <p class="text-center text-500">Keine Daten verfügbar</p>
+        <div class="tops-empty">
+          <i class="pi pi-inbox text-500 text-4xl mb-3"></i>
+          <p>Keine Daten verfügbar</p>
+        </div>
       </ng-template>
     </p-card>
   </div>
 
   <!-- TOP Menus -->
-  <div class="col-12 md:col-4">
-    <p-card header="TOP Menüs">
-      <div *ngIf="topItems!.menus.length > 0; else noMenus">
-        <ul class="list p-0 m-0">
-          <li
-            *ngFor="let item of topItems!.menus; trackBy: trackByName"
-            class="list-item"
-          >
-            <div class="list-item-content">
-              <div class="list-item-title">{{ item.name }}</div>
-              <div class="list-item-subtitle">{{ item.count }}x</div>
+  <div class="tops-card">
+    <p-card styleClass="h-full">
+      <ng-template pTemplate="header">
+        <div class="tops-header">
+          <i class="pi pi-list mr-2"></i>
+          <h3>TOP Menüs</h3>
+        </div>
+      </ng-template>
+      <div *ngIf="topItems!.menus.length > 0; else noMenus" class="tops-content">
+        <ul class="tops-list">
+          <li *ngFor="let item of topItems!.menus; trackBy: trackByName; let i = index" 
+              class="tops-item" [class.tops-item-highlighted]="i < 3">
+            <div class="tops-rank">{{ i + 1 }}</div>
+            <div class="tops-details">
+              <div class="tops-title">{{ item.name }}</div>
+              <div class="tops-subtitle">
+                <span class="tops-count">{{ item.count }}</span>
+                <span class="tops-unit">mal erstellt</span>
+              </div>
             </div>
           </li>
         </ul>
       </div>
       <ng-template #noMenus>
-        <p class="text-center text-500">Keine Daten verfügbar</p>
+        <div class="tops-empty">
+          <i class="pi pi-inbox text-500 text-4xl mb-3"></i>
+          <p>Keine Daten verfügbar</p>
+        </div>
       </ng-template>
     </p-card>
   </div>
