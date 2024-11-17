@@ -9,7 +9,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     element: '.pt-sidebar-home',
     title: 'Übersicht',
-    text: 'In der Übersicht findest Du Schnellinformationen über Deine Aktivitäten.',
+    text: 'In der Übersicht findest Du Informationen über Deine Aktivitäten und einen Blick in Deine Region.',
   },
   {
     element: '.pt-sidebar-recipe',
