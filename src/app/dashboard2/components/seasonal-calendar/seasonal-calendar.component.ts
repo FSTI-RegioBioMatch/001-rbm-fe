@@ -10,7 +10,8 @@ import { HistoricProductType } from '../../../shared/types/historicproduct.type'
 import { StoreService } from '../../../shared/store/store.service'; 
 import { AddressType } from '../../../shared/types/address.type';
 import { DialogModule } from 'primeng/dialog';
-import { of, switchMap, Observable } from 'rxjs';
+import { of, switchMap, Observable, filter, tap } from 'rxjs';
+import { LocalizeService } from '../../../shared/services/localize.service';
 
 interface Season {
   name: string;
@@ -62,7 +63,6 @@ export class SeasonalCalendarComponent implements OnInit {
   productsHistory: HistoricProductType[] = [];
   products: Product[] = []
   filteredProducts: Product[] = []
-  filteredOffers: Product[] = []
   selectedProduct: Product | null = null;
 
   loaded = false;
@@ -71,6 +71,7 @@ export class SeasonalCalendarComponent implements OnInit {
   defaultImageUrl: string = '';
 
   constructor(
+    private localizationService: LocalizeService,
     private pixabayService: PixabayService,
     private router: Router,
     private http: HttpClient,
@@ -96,6 +97,12 @@ export class SeasonalCalendarComponent implements OnInit {
         this.historyOfferService.getAddress(addressUrl).subscribe((address: AddressType) => {
           const searchRadiusInKM = 50; // Adjust the search radius as needed
           this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
+          this.historyOfferService.loaded$.subscribe(loaded => {
+            this.loaded = loaded;
+            if (loaded)
+              this.updateProduceList();
+            // this.updateOutputList();
+          });
         });
       }
     });
@@ -109,45 +116,51 @@ export class SeasonalCalendarComponent implements OnInit {
     //       return of(null);
     //     }
     //   }),
-    //   switchMap((address: AddressType | null, index: number): Observable<null> => {
+    //   tap((address: AddressType | null) => {
     //     if (address) {
     //       const searchRadiusInKM = 50; // Set the search radius
     //       this.historyOfferService.setProductsBySearchCriteria(searchRadiusInKM, address);
-    //       return of(null);
-    //     } else {
-    //       return of(null);
     //     }
-    //   })
-    // ).subscribe(result => { // change for tap()
-    //   // console.log(result);
-    // });
+    //   }),
+    //   switchMap(() => this.historyOfferService.products$)
+    //   ).subscribe((products) => {
+    //     if (products == null) {
+    //       console.error('Error find a products');
+    //       return;
+    //     }
+    //     this.productsHistory = products;
+    //     this.productsHistory.forEach((item) => {
+    //       const productLabel = item?.ontoFoodType?.label;
+    //       if (productLabel) {
+    //         const query = this.sanitiseQuery(productLabel); // Use matcher.components.ts
+    //         this.addOffer(item, query);
+    //       }
+    //     });
+    //   });
 
     // Subscribe to the loaded observable to update the loading state
-    this.historyOfferService.loaded$.subscribe(loaded => {
-      this.loaded = loaded;
-      if (loaded)
-        this.updateProduceList();
-    });
+
   }
 
   updateProduceList() {
     this.historyOfferService.products$.subscribe((products) => {
       this.productsHistory = products;
-      console.log(products);
+      // console.log(products);
       this.productsHistory.forEach((item) => {
         const productLabel = item?.ontoFoodType?.label;
         if (productLabel) {
-          const query = this.sanitiseQuery(productLabel);
+          const query = this.sanitiseQuery(productLabel); // use matcher.components.ts
           this.addOffer(item, query);
         }
       })
-    });
-
+      
     this.historyOfferService.loaded$.subscribe(loaded => {
       this.loaded = loaded;
       if (loaded)
         this.updateOutputList();
     });
+    });
+
   }
 
   addOffer(item: HistoricProductType, query: string): void {
@@ -176,45 +189,13 @@ export class SeasonalCalendarComponent implements OnInit {
 
   updateOutputList() {
     this.filterOffersBySeason(this.selectedSeason.name);
-    // this.filterProductsBySeason(this.selectedSeason.name);
     this.loadImagesForProduce();
     console.log('amount of items ', this.filteredProducts.length);
   }
 
-  // filterProductsBySeason(season: string): void {
-  //   const now = new Date();
-  //   this.filteredProducts = this.products.filter(product => {
-  //     for (let i = 0; i < product.offers.length; i++) {
-  //       if (product.offers[i].product.isPermanent) {
-  //         return true; // Always available
-  //       }
-  
-  //       const dateStart = this.parseDate(product.offers[i].product.dateStart);
-  //       const dateEnd = this.parseDate(product.offers[i].product.dateEnd);
-  
-  //       if (!dateStart || !dateEnd) {
-  //         return false; // Skip products with invalid or null dates
-  //       }
-  
-  //       switch (season) {
-  //         case 'spring':
-  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 2, 21), new Date(now.getFullYear(), 5, 20));
-  //         case 'summer':
-  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 5, 21), new Date(now.getFullYear(), 8, 22));
-  //         case 'autumn':
-  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 8, 23), new Date(now.getFullYear(), 11, 20));
-  //         case 'winter':
-  //           return this.isDateInRange(dateStart, dateEnd, new Date(now.getFullYear(), 11, 21), new Date(now.getFullYear() + 1, 2, 20));
-  //         default:
-  //           return false;
-  //       }
-  //     }
-  //     return false;
-  //   });
-  // }
   filterOffersBySeason(season: string): void {
     const now = new Date();
-    this.filteredOffers = []; // Reset the filtered offers array
+    this.filteredProducts = []; // Reset the filtered offers array
 
     this.products.forEach(product => {
         // Filter the offers for the product based on the season
@@ -246,16 +227,16 @@ export class SeasonalCalendarComponent implements OnInit {
 
         // If the product has valid offers, add it to the filteredOffers array
         if (filteredOffers.length > 0) {
-            this.filteredOffers.push({
+            this.filteredProducts.push({
                 ...product,
                 offers: filteredOffers
             });
         }
     });
-}
+  }
 
   loadImagesForProduce() {
-    this.filteredOffers.forEach((product) => {
+    this.filteredProducts.forEach((product) => {
       this.pixabayService.searchImage(product.productName).subscribe({
         next: (response: any) => {
           if (response.hits && response.hits.length > 0) {

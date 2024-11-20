@@ -13,7 +13,7 @@
 
       <!-- Produce Grid (Modern Card Layout) -->
       <div class="row rbm-flex-row rbm-flex-wrap rbm-items-middle">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4 rbm-width-30" *ngFor="let product of filteredOffers">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-4 rbm-width-30" *ngFor="let product of filteredProducts">
           <div [ngClass]="{}" (click)="showDetails(product)"
           class="produce-card card shadow-sm h-100">
           <div class="col-sm-6 col-md-4 col-lg-3">
@@ -44,7 +44,12 @@
         <p><strong>Product:</strong> {{ selectedProduct.productName }}</p>
         <p><strong>City:</strong> {{ offer.company.city }}</p>
         <p><strong>From:</strong> {{ offer.product.dateStart }}</p>
-        <p><strong>To:</strong> {{ offer.product.dateEnd }}</p>
+        <p *ngIf="offer.product.isPermanent; else dateEnd">
+          <strong>To:</strong> {{ "permanent offer" }}
+        </p>
+        <ng-template #dateEnd>
+          <strong>To:</strong> {{ offer.product.dateEnd }}
+        </ng-template>
         <p><strong>Link:</strong> <a [href]="offer.links.company" target="_blank"> {{ offer.links.company }}</a></p>
         <hr>
       </div>
