@@ -139,7 +139,18 @@ export class StoreService {
 
         // Only trigger company context selection once companies are fully loaded
         this.getSelectedCompanyFromSessionStore();
+        const allRoles$ = companies.map((company) => this.getRolesPerCompany(company));
 
+        forkJoin(allRoles$).subscribe({
+          next: (rolesArray) => {
+            const allRoles = rolesArray.flat();
+            console.log('All Roles:', allRoles);
+          },
+          error: (error) => {
+            console.error('Error fetching roles:', error);
+          }
+        });
+        
         companies.map((company) => {
           this.fetchCompanyAddresses(company).subscribe((company) => {});
         });
@@ -197,6 +208,13 @@ export class StoreService {
         );
       }),
     );
+  }
+
+  private getRolesPerCompany(company: CompanyType): Observable<string[]> {
+    return this.http
+    .get<
+      string[]
+    >(`${environment.NEARBUY_API}/companies/${company.id}/roles`);
   }
 
   private fetchCompanyAddresses(company: CompanyType): Observable<CompanyType> {
