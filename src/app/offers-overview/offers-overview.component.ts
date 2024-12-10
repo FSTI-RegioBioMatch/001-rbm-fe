@@ -17,6 +17,8 @@ import { SliderModule } from 'primeng/slider';
 import { OrderService } from '../shared/services/order.service';
 import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-offers-overview',
@@ -33,7 +35,9 @@ import { DialogModule } from 'primeng/dialog';
     CardModule,
     SliderModule,
     ToastModule,
-    DialogModule
+    DialogModule,
+    PaginatorModule,
+    InputTextModule
   ],
   providers: [MessageService],
   templateUrl: './offers-overview.component.html',
@@ -42,8 +46,11 @@ import { DialogModule } from 'primeng/dialog';
 export class OffersOverviewComponent implements OnInit {
   localizationData: { displayLabel: string; value: string }[] = [];
   loading = false;
-  offers: any[] = []; // Declare offers to store the list of offers
-  range: number = 50; // Example range for filtering offers by distance
+  offers: any[] = []; 
+  filteredOffers: any[] = [];
+  displayedOffers: any[] = [];
+  groupedOffers: { companyName: string; offers: any[] }[] = [];
+  range: number = 50; 
   showRequestDialog: boolean = false;
   requestType: 'priceRequest' | 'purchaseIntent' | undefined;
   selectedOffer: any = null;
@@ -54,6 +61,13 @@ export class OffersOverviewComponent implements OnInit {
     pricePerUnit: '',
     unit: '',
   };
+
+  // View states
+  viewGrouped = false; 
+  searchTerm: string = '';
+  rows: number = 5;   // Number of offers per page
+  currentPage: number = 0;
+
   constructor(
     private offerService: NewOfferService,
     private store: StoreService,
@@ -93,13 +107,35 @@ export class OffersOverviewComponent implements OnInit {
     });
   }
 
-  // Helper method to get localized label for ingredient
+  toggleView(): void {
+    this.viewGrouped = !this.viewGrouped;
+    if (this.viewGrouped && this.offers.length > 0) {
+      this.buildGroupedOffers();
+    }
+  }
+
+  private buildGroupedOffers(): void {
+    const groupedMap: { [key: string]: any[] } = {};
+
+    for (const offer of this.filteredOffers) {
+      const companyName = offer?.company?.name || 'Unbekannte Firma';
+      if (!groupedMap[companyName]) {
+        groupedMap[companyName] = [];
+      }
+      groupedMap[companyName].push(offer);
+    }
+
+    this.groupedOffers = Object.keys(groupedMap).map(companyName => ({
+      companyName,
+      offers: groupedMap[companyName]
+    }));
+  }
+
   getLocalizedLabel(ingredientName: string): string {
     const localizedItem = this.localizationData.find(item => item.value === ingredientName);
     return localizedItem ? localizedItem.displayLabel : ingredientName;
   }
 
-  // Method to load offers, leveraging caching logic
   private loadOffers(): void {
     const address = this.offerService.getAddress();
 
@@ -138,35 +174,33 @@ export class OffersOverviewComponent implements OnInit {
     }
   }
 
-  // Fetch offers based on the current address
   private fetchOffers(address: AddressType): void {
     this.offerService.setOffersBySearchRadius(this.range, address)
-      .pipe(take(1)) // Ensure only one subscription
+      .pipe(take(1))
       .subscribe({
         next: offers => {
-          this.offers = offers; // Store the offers
-          this.loading = false; // Stop loading once offers are fetched
+          this.offers = offers;
+          this.applyFilters();
+          this.loading = false;
         },
         error: error => {
           console.error('Error loading offers:', error);
-          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Angebote konnten nicht geladen werden'})
-          this.loading = false; // Stop loading on error
+          this.messageService.add({severity: 'error', summary: 'Fehler', detail: 'Angebote konnten nicht geladen werden'});
+          this.loading = false;
         }
       });
   }
 
-  // Clear the cache and reload offers
   clearCacheAndReload(): void {
     this.loading = true
-    this.loadOffers(); // Reload the offers
+    this.loadOffers();
   }
 
-  // Method to make a price request for a specific offer
   openRequestDialog(offer: any, requestType: 'priceRequest' | 'purchaseIntent'): void {
     this.selectedOffer = offer;
     this.requestType = requestType;
-    this.requestData.message = `Anfrage für ${this.getLocalizedLabel(offer.ontoFoodType.label)}`; // Default message in German
-    this.requestData.totalAmount = offer.offerDetails.minAmount?.amount || offer.offerDetails.totalAmount; // Set default amount to minimum or total available
+    this.requestData.message = `Anfrage für ${this.getLocalizedLabel(offer.ontoFoodType.label)}`;
+    this.requestData.totalAmount = offer.offerDetails.minAmount?.amount || offer.offerDetails.totalAmount;
     this.requestData.pricePerUnit = offer.offerDetails.pricePerUnit || 'N/A';
     this.requestData.unit = offer.offerDetails.unit;
     this.showRequestDialog = true;
@@ -178,23 +212,18 @@ export class OffersOverviewComponent implements OnInit {
 
   submitRequest(): void {
     const enteredAmount = parseFloat(this.requestData.totalAmount);
-    
-    // Validate the entered amount
-  
-    // Check if delivery date is entered, add more validation
+
     if (!this.requestData.deliveryDate) {
       this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Bitte ein Lieferdatum angeben.' });
       return;
     }
-  
-    // Submit the request based on the request type
+
     if (this.requestType === 'priceRequest') {
       this.makePriceRequest(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
     } else if (this.requestType === 'purchaseIntent') {
       this.makePurchaseIntent(this.selectedOffer, this.requestData.deliveryDate, this.requestData.message, enteredAmount);
     }
-  
-    // Close the dialog
+
     this.showRequestDialog = false;
   }
 
@@ -205,21 +234,14 @@ export class OffersOverviewComponent implements OnInit {
       deliveryDate: deliveryDate,
       containers: [],
       totalAmount: {
-        amount: totalAmount, // Use user-entered amount
-        unit: offer.product.unit // Use the unit from offer details
+        amount: totalAmount,
+        unit: offer.product.unit
       }
     };
 
     this.orderService.createPriceRequest(priceRequest).subscribe({
       next: response => {
         this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Preisanfrage erfolgreich gesendet' });
-        // const priceRequestId = response.links.self.split('/').pop();
-        // if (priceRequestId && this.shoppingListTrack) {
-        //   if (!this.shoppingListTrack.priceRequestIds.includes(priceRequestId)) {
-        //     this.shoppingListTrack.priceRequestIds.push(priceRequestId);
-        //     this.updateShoppingListTrack(this.shoppingListTrack);
-        //   }
-        // }
       },
       error: error => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Preisanfrage konnte nicht gesendet werden' });
@@ -235,21 +257,14 @@ export class OffersOverviewComponent implements OnInit {
       message: message,
       containers: [],
       totalAmount: {
-        amount: totalAmount, // Use user-entered amount
-        unit: offer.product.unit // Use the unit from offer details
+        amount: totalAmount,
+        unit: offer.product.unit
       }
     };
 
     this.orderService.createPurchaseIntent(purchaseIntent).subscribe({
       next: response => {
         this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Kaufabsicht erfolgreich gesendet' });
-        // const purchaseIntentId = response.links.self.split('/').pop();
-        // if (purchaseIntentId && this.shoppingListTrack) {
-        //   if (!this.shoppingListTrack.purchaseIntedIds.includes(purchaseIntentId)) {
-        //     this.shoppingListTrack.purchaseIntedIds.push(purchaseIntentId);
-        //     this.updateShoppingListTrack(this.shoppingListTrack);
-        //   }
-        // }
       },
       error: error => {
         this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Kaufabsicht konnte nicht gesendet werden' });
@@ -257,10 +272,50 @@ export class OffersOverviewComponent implements OnInit {
       }
     });
   }
+
   preventInvalidChars(event: KeyboardEvent): void {
     // Prevent entering non-digit characters, except for '.', ',' and control keys
     if (!/[0-9.,]/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       event.preventDefault();
     }
+  }
+
+  // Filtering & Pagination Logic
+  onSearchTermChange(): void {
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    let temp = [...this.offers];
+
+    // Filter by search term (company name or product title)
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      temp = temp.filter(offer => 
+         offer?.company?.name?.toLowerCase().includes(term) ||
+         offer?.offerDetails?.productTitle?.toLowerCase().includes(term)
+      );
+    }
+
+    this.filteredOffers = temp;
+
+    // If grouped view is active, rebuild groups
+    if (this.viewGrouped) {
+      this.buildGroupedOffers();
+    } else {
+      this.updateDisplayedOffers();
+    }
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event.page;
+    this.rows = event.rows;
+    this.updateDisplayedOffers();
+  }
+
+  updateDisplayedOffers(): void {
+    const start = this.currentPage * this.rows;
+    const end = start + this.rows;
+    this.displayedOffers = this.filteredOffers.slice(start, end);
   }
 }

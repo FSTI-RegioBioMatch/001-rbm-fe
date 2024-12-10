@@ -1,0 +1,259 @@
+.offers-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  /* Toolbar and Actions */
+  .rbm-site-toolbar {
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 10px;
+  
+    .p-button {
+      border-radius: 8px;
+      box-shadow: none;
+    }
+  
+    .first {
+      margin-right: auto;
+    }
+  
+    .last {
+      margin-left: auto;
+    }
+  }
+  
+  .actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  
+    .p-button {
+      border-radius: 8px;
+    }
+  }
+  
+  /* Offers Card Style (similar feel to .recipe-card) */
+  .offers-card {
+    border-radius: 8px;
+    border: 1px solid #ececec;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+    box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.128);
+    background-color: #fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+  
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.336);
+    }
+  
+    .p-card-header {
+      font-size: 1.25rem;
+      font-weight: bold;
+      background-color: #f9f9f9;
+      padding: 10px;
+    }
+  
+    .p-accordion {
+      .p-accordion-header {
+        background-color: #f4f4f4;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+  
+      .p-accordion-content {
+        background-color: #fff;
+        border: none;
+      }
+    }
+  
+    .p-panel {
+      margin-bottom: 10px;
+      .p-panel-header {
+        background: #fafafa;
+        font-weight: 600;
+      }
+    }
+  
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+  
+    p {
+      margin: 0.5rem 0;
+    }
+  
+    .mb-2 {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  /* General utility classes (from provided styles) */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .pagination-info {
+    font-weight: bold;
+  }
+  
+  .text-end {
+    text-align: end;
+  }
+  
+  .mt-3 {
+    margin-top: 1rem !important;
+  }
+  
+  .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .me-2 {
+    margin-right: 0.5rem !important;
+  }
+  
+  .alert {
+    padding: 1rem;
+    border-radius: 0.25rem;
+  }
+  
+  /* Container and Main Content Layout */
+  .container {
+    display: flex;
+    padding: 20px;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    padding-top: 0;
+    margin-left: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header h2 {
+    font-size: 24px;
+    color: var(--rbm-sea-green, #4CAF50); /* fallback if var not defined */
+  }
+  
+  .header .search-bar {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header .search-bar input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .header .search-bar button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Responsive Recipes/Card Styles (for reference if needed) */
+  .recipes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .recipe-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: calc(33.333% - 20px);
+    position: relative;
+  
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 22px 0 rgba(0,0,0,0.3);
+    }
+  
+    img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+  
+    .recipe-info {
+      padding: 10px;
+      position: relative;
+  
+      h3 {
+        font-size: 18px;
+        color: #333;
+        margin: 0;
+      }
+  
+      .icons {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 5px;
+  
+        i {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 5px;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      padding: 10px;
+    }
+  
+    .sidebar {
+      display: none;
+    }
+  
+    .main-content {
+      margin-left: 0;
+      padding: 10px;
+    }
+  
+    .recipe-card {
+      width: calc(50% - 10px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .recipe-card {
+      width: 100%;
+    }
+  }
+  

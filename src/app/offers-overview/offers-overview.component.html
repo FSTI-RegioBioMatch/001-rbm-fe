@@ -1,27 +1,161 @@
-<div class="rbm-site-toolbar">
-    <p-button class="first" routerLink="/menu-planning">Menüplanung</p-button>
-    <p-button routerLink="/menu-planning/my-menus">Meine Menüs</p-button>
-    <p-button routerLink="/menu-planning/shopping-list">Einkaufszettel</p-button>
-    <p-button routerLink="/offers-overview" class="last">Angebotsliste</p-button>
+<div class="rbm-site-toolbar" style="margin-bottom: 1rem;">
+    <p-button class="first" routerLink="/menu-planning" label="Menüplanung"></p-button>
+    <p-button routerLink="/menu-planning/my-menus" label="Meine Menüs"></p-button>
+    <p-button routerLink="/menu-planning/shopping-list" label="Einkaufszettel"></p-button>
+    <p-button routerLink="/offers-overview" class="last" label="Angebotsliste"></p-button>
 </div>
 
-<div class="actions">
+<div class="actions" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
     <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
+    <button pButton label="Toggle Grouped View" (click)="toggleView()"></button>
 </div>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
-<p-slider [(ngModel)]="range" [min]="0" [max]="1000" [step]="1"></p-slider>
-<p>Selected Range: {{ range }} km</p>
+<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
+    <span>Radius: </span>
+    <p-slider [(ngModel)]="range" [min]="0" [max]="1000" [step]="1"></p-slider>
+    <span>{{ range }} km</span>
+</div>
 
-<div class="p-col-6">
-    <p-card header="Available Offers">
+<div style=" display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+    <span>Suche:</span>
+    <input pInputText type="text" [(ngModel)]="searchTerm" (input)="onSearchTermChange()"
+        placeholder="Nach Unternehmen oder Produkt..." style="flex:1" />
+</div>
+
+<p-card header="Available Offers" *ngIf="!loading">
+    <!-- If grouped view -->
+    <ng-container *ngIf="viewGrouped">
         <p-accordion>
-            <ng-container *ngFor="let offer of offers">
-                <p-accordionTab
-                    header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{offer.offerDetails?.id}}">
+            <ng-container *ngFor="let group of groupedOffers">
+                <p-accordionTab header="{{ group.companyName }}">
+                    <p-accordion>
+                        <ng-container *ngFor="let offer of group.offers">
+                            <p-accordionTab
+                                header="{{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{ offer.offerDetails?.id }}">
 
-                    <div>
+                                <div class="mb-2">
+                                    <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Kaufabsicht erstellen"
+                                        (onClick)="openRequestDialog(offer, 'purchaseIntent')">
+                                    </p-button>
+
+                                    <p-button *ngIf="!offer?.offerDetails?.pricePerUnit" label="Preisanfrage erstellen"
+                                        (onClick)="openRequestDialog(offer, 'priceRequest')">
+                                    </p-button>
+                                </div>
+
+                                <p-panel header="Company Details">
+                                    <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
+                                    <p><strong>Verified:</strong> {{ offer?.company?.verified ? 'Yes' : 'No' }}</p>
+                                    <p><strong>Address:</strong> {{ offer?.address?.city }}</p>
+                                    <p><strong>Roles:</strong> {{ offer?.roles?.join(', ') }}</p>
+                                </p-panel>
+
+                                <p-panel header="Product Details">
+                                    <p><strong>Start Date:</strong> {{ offer?.product?.dateStart }}</p>
+                                    <p><strong>End Date:</strong> {{ offer?.product?.dateEnd }}</p>
+                                    <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{
+                                        offer?.product?.unit }}</p>
+                                    <p><strong>Permanent:</strong> {{ offer?.product?.isPermanent ? 'Yes' : 'No' }}</p>
+                                </p-panel>
+
+                                <p-panel header="Offer Details">
+                                    <p><strong>Product Title:</strong> {{ offer?.offerDetails?.productTitle }}</p>
+                                    <p><strong>Brand Name:</strong> {{ offer?.offerDetails?.brandName }}</p>
+                                    <p><strong>Description:</strong> {{ offer?.offerDetails?.description }}</p>
+                                    <p><strong>Min Amount:</strong> {{ offer?.offerDetails?.minAmount?.amount }} {{
+                                        offer?.offerDetails?.minAmount?.unit }}</p>
+                                    <p><strong>Price per Unit:</strong> €{{ offer?.offerDetails?.pricePerUnit }}</p>
+                                    <p><strong>Verarbeitungen:</strong></p>
+                                    <ul>
+                                        <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
+                                            <p>{{ processing?.label }}</p>
+                                        </li>
+                                    </ul>
+                                </p-panel>
+
+                                <p-panel header="Graduated Prices">
+                                    <ul>
+                                        <li *ngFor="let price of offer?.offerDetails?.graduatedPrices">
+                                            <p>Amount: {{ price?.amount }} - Price: €{{ price?.price }}</p>
+                                        </li>
+                                    </ul>
+                                </p-panel>
+
+                                <p-panel header="Containers">
+                                    <ul>
+                                        <li *ngFor="let container of offer?.offerDetails?.containers">
+                                            <p>Amount: {{ container?.amount }} {{ container?.unit }}</p>
+                                            <p><strong>Returnable:</strong> {{ container?.returnable ? 'Yes' : 'No' }}
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </p-panel>
+
+                                <p-panel header="Product Traits, Weight, and Caliber">
+                                    <h4>Product Traits</h4>
+                                    <ul>
+                                        <li *ngFor="let trait of offer?.offerDetails?.productTraits">
+                                            <p>{{ trait?.trait }}: {{ trait?.description }}</p>
+                                        </li>
+                                    </ul>
+
+                                    <h4>Weight</h4>
+                                    <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit
+                                        }}</p>
+                                    <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit
+                                        }}</p>
+
+                                    <h4>Caliber</h4>
+                                    <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{
+                                        offer?.offerDetails?.caliber?.unit }}</p>
+                                    <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{
+                                        offer?.offerDetails?.caliber?.unit }}</p>
+                                </p-panel>
+
+                                <p-panel header="OntoFood Type">
+                                    <p><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}</p>
+                                    <p><strong>Localized:</strong> {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}
+                                    </p>
+                                    <p><strong>Company:</strong> {{ offer?.ontoFoodType?.company ? 'Yes' : 'No' }}</p>
+                                    <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No'
+                                        }}</p>
+                                    <p><strong>Supercategories:</strong></p>
+                                    <ul>
+                                        <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
+                                            <a href="{{ category }}" target="_blank">View Supercategory</a>
+                                        </li>
+                                    </ul>
+                                </p-panel>
+
+                                <p-panel header="Links">
+                                    <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View
+                                            Offer</a></p>
+                                    <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}"
+                                            target="_blank">View Company</a></p>
+                                    <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}"
+                                            target="_blank">View Category</a></p>
+                                    <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}"
+                                            target="_blank">Contact</a></p>
+                                </p-panel>
+
+                            </p-accordionTab>
+                        </ng-container>
+                    </p-accordion>
+                </p-accordionTab>
+            </ng-container>
+        </p-accordion>
+    </ng-container>
+
+    <!-- If not grouped view -->
+    <ng-container *ngIf="!viewGrouped">
+        <p-accordion *ngIf="displayedOffers && displayedOffers.length > 0">
+            <ng-container *ngFor="let offer of displayedOffers">
+                <p-accordionTab
+                    header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{ offer.offerDetails?.id }}">
+
+                    <div class="mb-2">
                         <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Kaufabsicht erstellen"
                             (onClick)="openRequestDialog(offer, 'purchaseIntent')">
                         </p-button>
@@ -41,8 +175,8 @@
                     <p-panel header="Product Details">
                         <p><strong>Start Date:</strong> {{ offer?.product?.dateStart }}</p>
                         <p><strong>End Date:</strong> {{ offer?.product?.dateEnd }}</p>
-                        <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{
-                            offer?.product?.unit }}</p>
+                        <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{ offer?.product?.unit }}
+                        </p>
                         <p><strong>Permanent:</strong> {{ offer?.product?.isPermanent ? 'Yes' : 'No' }}</p>
                     </p-panel>
 
@@ -87,24 +221,19 @@
                         </ul>
 
                         <h4>Weight</h4>
-                        <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit }}
-                        </p>
-                        <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit }}
-                        </p>
+                        <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit }}</p>
+                        <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit }}</p>
 
                         <h4>Caliber</h4>
-                        <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{ offer?.offerDetails?.caliber?.unit }}
-                        </p>
-                        <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{ offer?.offerDetails?.caliber?.unit }}
-                        </p>
+                        <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{ offer?.offerDetails?.caliber?.unit }}</p>
+                        <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{ offer?.offerDetails?.caliber?.unit }}</p>
                     </p-panel>
 
                     <p-panel header="OntoFood Type">
                         <p><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}</p>
                         <p><strong>Localized:</strong> {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}</p>
                         <p><strong>Company:</strong> {{ offer?.ontoFoodType?.company ? 'Yes' : 'No' }}</p>
-                        <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No' }}
-                        </p>
+                        <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No' }}</p>
                         <p><strong>Supercategories:</strong></p>
                         <ul>
                             <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
@@ -114,8 +243,7 @@
                     </p-panel>
 
                     <p-panel header="Links">
-                        <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View
-                                Offer</a></p>
+                        <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View Offer</a></p>
                         <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}" target="_blank">View
                                 Company</a></p>
                         <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}" target="_blank">View
@@ -126,9 +254,11 @@
                 </p-accordionTab>
             </ng-container>
         </p-accordion>
-    </p-card>
-</div>
-
+        <p-paginator [totalRecords]="filteredOffers.length" [rows]="rows" (onPageChange)="onPageChange($event)"
+            [rowsPerPageOptions]="[5,10,20]" styleClass="mt-3">
+        </p-paginator>
+    </ng-container>
+</p-card>
 
 <p-toast></p-toast>
 
