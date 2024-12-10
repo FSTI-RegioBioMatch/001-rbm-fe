@@ -6,15 +6,15 @@
 </div>
 
 <div class="actions" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-    <button pButton label="Clear Cache & Reload Offers" (click)="clearCacheAndReload()"></button>
-    <button pButton label="Toggle Grouped View" (click)="toggleView()"></button>
+    <button pButton label="Neu Suchen" (click)="clearCacheAndReload()"></button>
+    <button pButton label="Ansicht ändern" (click)="toggleView()"></button>
 </div>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
 <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
     <span>Radius: </span>
-    <p-slider [(ngModel)]="range" [min]="0" [max]="1000" [step]="1"></p-slider>
+    <p-slider [(ngModel)]="range" [min]="0" [max]="1000" [step]="1" class="slider"></p-slider>
     <span>{{ range }} km</span>
 </div>
 
