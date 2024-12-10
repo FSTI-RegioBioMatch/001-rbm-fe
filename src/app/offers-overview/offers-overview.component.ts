@@ -108,10 +108,13 @@ export class OffersOverviewComponent implements OnInit {
   }
 
   toggleView(): void {
+    this.loading = true;
     this.viewGrouped = !this.viewGrouped;
     if (this.viewGrouped && this.offers.length > 0) {
       this.buildGroupedOffers();
     }
+    this.applyFilters();
+    this.loading = false;
   }
 
   private buildGroupedOffers(): void {

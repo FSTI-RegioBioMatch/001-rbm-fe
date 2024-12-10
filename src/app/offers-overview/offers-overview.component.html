@@ -5,35 +5,34 @@
     <p-button routerLink="/offers-overview" class="last" label="Angebotsliste"></p-button>
 </div>
 
-<div class="actions" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+<div class="actions" style="display: flex; gap: 1rem; margin-bottom: 1rem;" *ngIf="!loading">
     <button pButton label="Neu Suchen" (click)="clearCacheAndReload()"></button>
     <button pButton label="Ansicht ändern" (click)="toggleView()"></button>
 </div>
 
 <p-progressSpinner *ngIf="loading"></p-progressSpinner>
 
-<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
-    <span>Radius: </span>
+<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;" *ngIf="!loading">
+    <span>Radius:</span>
     <p-slider [(ngModel)]="range" [min]="0" [max]="1000" [step]="1" class="slider"></p-slider>
     <span>{{ range }} km</span>
 </div>
 
-<div style=" display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+<div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;" *ngIf="!loading">
     <span>Suche:</span>
     <input pInputText type="text" [(ngModel)]="searchTerm" (input)="onSearchTermChange()"
         placeholder="Nach Unternehmen oder Produkt..." style="flex:1" />
 </div>
 
-<p-card header="Available Offers" *ngIf="!loading">
-    <!-- If grouped view -->
+<p-card header="Gefundene Angebote" class="offers-card" *ngIf="!loading">
+    <!-- Gruppierte Ansicht -->
     <ng-container *ngIf="viewGrouped">
         <p-accordion>
             <ng-container *ngFor="let group of groupedOffers">
                 <p-accordionTab header="{{ group.companyName }}">
                     <p-accordion>
                         <ng-container *ngFor="let offer of group.offers">
-                            <p-accordionTab
-                                header="{{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{ offer.offerDetails?.id }}">
+                            <p-accordionTab header="{{ getLocalizedLabel(offer?.ontoFoodType?.label) }}">
 
                                 <div class="mb-2">
                                     <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Kaufabsicht erstellen"
@@ -45,99 +44,126 @@
                                     </p-button>
                                 </div>
 
-                                <p-panel header="Company Details">
-                                    <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
-                                    <p><strong>Verified:</strong> {{ offer?.company?.verified ? 'Yes' : 'No' }}</p>
-                                    <p><strong>Address:</strong> {{ offer?.address?.city }}</p>
-                                    <p><strong>Roles:</strong> {{ offer?.roles?.join(', ') }}</p>
+                                <p-panel header="Unternehmensdetails"
+                                    *ngIf="offer?.company || offer?.address || offer?.roles">
+                                    <p *ngIf="offer?.company?.label"><strong>Unternehmens-Label:</strong> {{
+                                        offer?.company?.label }}</p>
+                                    <p *ngIf="offer?.company?.verified !== undefined"><strong>Verifiziert:</strong> {{
+                                        offer?.company?.verified ? 'Ja' : 'Nein' }}</p>
+                                    <p *ngIf="offer?.address?.city"><strong>Adresse:</strong> {{ offer?.address?.city }}
+                                    </p>
+                                    <p *ngIf="offer?.roles?.length"><strong>Rollen:</strong> {{ offer?.roles?.join(', ')
+                                        }}</p>
                                 </p-panel>
 
-                                <p-panel header="Product Details">
-                                    <p><strong>Start Date:</strong> {{ offer?.product?.dateStart }}</p>
-                                    <p><strong>End Date:</strong> {{ offer?.product?.dateEnd }}</p>
-                                    <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{
-                                        offer?.product?.unit }}</p>
-                                    <p><strong>Permanent:</strong> {{ offer?.product?.isPermanent ? 'Yes' : 'No' }}</p>
+                                <p-panel header="Produktdetails" *ngIf="offer?.product">
+                                    <p *ngIf="offer?.product?.dateStart"><strong>Startdatum:</strong> {{
+                                        offer?.product?.dateStart }}</p>
+                                    <p *ngIf="offer?.product?.dateEnd"><strong>Enddatum:</strong> {{
+                                        offer?.product?.dateEnd }}</p>
+                                    <p *ngIf="offer?.product?.totalAmount"><strong>Gesamtmenge:</strong> {{
+                                        offer?.product?.totalAmount }} {{ offer?.product?.unit }}</p>
+                                    <p *ngIf="offer?.product?.isPermanent !== undefined"><strong>Dauerhaft:</strong> {{
+                                        offer?.product?.isPermanent ? 'Ja' : 'Nein' }}</p>
                                 </p-panel>
 
-                                <p-panel header="Offer Details">
-                                    <p><strong>Product Title:</strong> {{ offer?.offerDetails?.productTitle }}</p>
-                                    <p><strong>Brand Name:</strong> {{ offer?.offerDetails?.brandName }}</p>
-                                    <p><strong>Description:</strong> {{ offer?.offerDetails?.description }}</p>
-                                    <p><strong>Min Amount:</strong> {{ offer?.offerDetails?.minAmount?.amount }} {{
+                                <p-panel header="Angebotsdetails" *ngIf="offer?.offerDetails">
+                                    <p *ngIf="offer?.offerDetails?.productTitle"><strong>Produktname:</strong> {{
+                                        offer?.offerDetails?.productTitle }}</p>
+                                    <p *ngIf="offer?.offerDetails?.brandName"><strong>Markenname:</strong> {{
+                                        offer?.offerDetails?.brandName }}</p>
+                                    <p *ngIf="offer?.offerDetails?.description"><strong>Beschreibung:</strong> {{
+                                        offer?.offerDetails?.description }}</p>
+                                    <p *ngIf="offer?.offerDetails?.minAmount?.amount"><strong>Mindestmenge:</strong> {{
+                                        offer?.offerDetails?.minAmount?.amount }} {{
                                         offer?.offerDetails?.minAmount?.unit }}</p>
-                                    <p><strong>Price per Unit:</strong> €{{ offer?.offerDetails?.pricePerUnit }}</p>
-                                    <p><strong>Verarbeitungen:</strong></p>
-                                    <ul>
-                                        <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
-                                            <p>{{ processing?.label }}</p>
-                                        </li>
-                                    </ul>
+                                    <p *ngIf="offer?.offerDetails?.pricePerUnit"><strong>Preis pro Einheit:</strong> €{{
+                                        offer?.offerDetails?.pricePerUnit }}</p>
+
+                                    <div *ngIf="offer?.offerDetails?.levelsOfProcessing?.length">
+                                        <strong>Verarbeitungen:</strong>
+                                        <ul>
+                                            <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
+                                                <p>{{ processing?.label }}</p>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </p-panel>
 
-                                <p-panel header="Graduated Prices">
+                                <p-panel header="Staffelpreise" *ngIf="offer?.offerDetails?.graduatedPrices?.length">
                                     <ul>
                                         <li *ngFor="let price of offer?.offerDetails?.graduatedPrices">
-                                            <p>Amount: {{ price?.amount }} - Price: €{{ price?.price }}</p>
+                                            <p>Menge: {{ price?.amount }} - Preis: €{{ price?.price }}</p>
                                         </li>
                                     </ul>
                                 </p-panel>
 
-                                <p-panel header="Containers">
+                                <p-panel header="Behälter" *ngIf="offer?.offerDetails?.containers?.length">
                                     <ul>
                                         <li *ngFor="let container of offer?.offerDetails?.containers">
-                                            <p>Amount: {{ container?.amount }} {{ container?.unit }}</p>
-                                            <p><strong>Returnable:</strong> {{ container?.returnable ? 'Yes' : 'No' }}
-                                            </p>
+                                            <p *ngIf="container?.amount"><strong>Menge:</strong> {{ container?.amount }}
+                                                {{ container?.unit }}</p>
+                                            <p *ngIf="container?.returnable !== undefined">
+                                                <strong>Rückgabepfand:</strong> {{ container?.returnable ? 'Ja' : 'Nein'
+                                                }}</p>
                                         </li>
                                     </ul>
                                 </p-panel>
 
-                                <p-panel header="Product Traits, Weight, and Caliber">
-                                    <h4>Product Traits</h4>
-                                    <ul>
+                                <p-panel header="Produkteigenschaften, Gewicht und Kaliber"
+                                    *ngIf="offer?.offerDetails?.productTraits?.length || offer?.offerDetails?.weight || offer?.offerDetails?.caliber">
+                                    <h4 *ngIf="offer?.offerDetails?.productTraits?.length">Produkteigenschaften</h4>
+                                    <ul *ngIf="offer?.offerDetails?.productTraits?.length">
                                         <li *ngFor="let trait of offer?.offerDetails?.productTraits">
                                             <p>{{ trait?.trait }}: {{ trait?.description }}</p>
                                         </li>
                                     </ul>
 
-                                    <h4>Weight</h4>
-                                    <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit
-                                        }}</p>
-                                    <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit
-                                        }}</p>
+                                    <h4 *ngIf="offer?.offerDetails?.weight">Gewicht</h4>
+                                    <p *ngIf="offer?.offerDetails?.weight?.min">Min: {{ offer?.offerDetails?.weight?.min
+                                        }} {{ offer?.offerDetails?.weight?.unit }}</p>
+                                    <p *ngIf="offer?.offerDetails?.weight?.max">Max: {{ offer?.offerDetails?.weight?.max
+                                        }} {{ offer?.offerDetails?.weight?.unit }}</p>
 
-                                    <h4>Caliber</h4>
-                                    <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{
-                                        offer?.offerDetails?.caliber?.unit }}</p>
-                                    <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{
-                                        offer?.offerDetails?.caliber?.unit }}</p>
-                                </p-panel>
-
-                                <p-panel header="OntoFood Type">
-                                    <p><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}</p>
-                                    <p><strong>Localized:</strong> {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}
+                                    <h4 *ngIf="offer?.offerDetails?.caliber">Kaliber</h4>
+                                    <p *ngIf="offer?.offerDetails?.caliber?.min">Min: {{
+                                        offer?.offerDetails?.caliber?.min }} {{ offer?.offerDetails?.caliber?.unit }}
                                     </p>
-                                    <p><strong>Company:</strong> {{ offer?.ontoFoodType?.company ? 'Yes' : 'No' }}</p>
-                                    <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No'
-                                        }}</p>
-                                    <p><strong>Supercategories:</strong></p>
-                                    <ul>
-                                        <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
-                                            <a href="{{ category }}" target="_blank">View Supercategory</a>
-                                        </li>
-                                    </ul>
+                                    <p *ngIf="offer?.offerDetails?.caliber?.max">Max: {{
+                                        offer?.offerDetails?.caliber?.max }} {{ offer?.offerDetails?.caliber?.unit }}
+                                    </p>
                                 </p-panel>
 
-                                <p-panel header="Links">
-                                    <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View
-                                            Offer</a></p>
-                                    <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}"
-                                            target="_blank">View Company</a></p>
-                                    <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}"
-                                            target="_blank">View Category</a></p>
-                                    <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}"
-                                            target="_blank">Contact</a></p>
+                                <p-panel header="OntoFood Typ" *ngIf="offer?.ontoFoodType">
+                                    <p *ngIf="offer?.ontoFoodType?.label"><strong>Label:</strong> {{
+                                        offer?.ontoFoodType?.label }}</p>
+                                    <p *ngIf="offer?.ontoFoodType?.label"><strong>Übersetzt:</strong> {{
+                                        getLocalizedLabel(offer?.ontoFoodType?.label) }}</p>
+                                    <p *ngIf="offer?.ontoFoodType?.company !== undefined"><strong>Firma:</strong> {{
+                                        offer?.ontoFoodType?.company ? 'Ja' : 'Nein' }}</p>
+                                    <p *ngIf="offer?.ontoFoodType?.market !== undefined"><strong>Im Markt
+                                            verfügbar:</strong> {{ offer?.ontoFoodType?.market ? 'Ja' : 'Nein' }}</p>
+
+                                    <div *ngIf="offer?.ontoFoodType?.links?.supercategories?.length">
+                                        <strong>Überkategorien:</strong>
+                                        <ul>
+                                            <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
+                                                <a href="{{ category }}" target="_blank">Überkategorie anzeigen</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </p-panel>
+
+                                <p-panel header="Links" *ngIf="offer?.links">
+                                    <p *ngIf="offer?.links?.self"><strong>Selbst:</strong> <a
+                                            href="{{ offer?.links?.self }}" target="_blank">Angebot anzeigen</a></p>
+                                    <p *ngIf="offer?.links?.company"><strong>Firma:</strong> <a
+                                            href="{{ offer?.links?.company }}" target="_blank">Firma anzeigen</a></p>
+                                    <p *ngIf="offer?.links?.category"><strong>Kategorie:</strong> <a
+                                            href="{{ offer?.links?.category }}" target="_blank">Kategorie anzeigen</a>
+                                    </p>
+                                    <p *ngIf="offer?.links?.contact"><strong>Kontakt:</strong> <a
+                                            href="{{ offer?.links?.contact }}" target="_blank">Kontakt</a></p>
                                 </p-panel>
 
                             </p-accordionTab>
@@ -148,12 +174,11 @@
         </p-accordion>
     </ng-container>
 
-    <!-- If not grouped view -->
+    <!-- Nicht gruppierte Ansicht -->
     <ng-container *ngIf="!viewGrouped">
         <p-accordion *ngIf="displayedOffers && displayedOffers.length > 0">
             <ng-container *ngFor="let offer of displayedOffers">
-                <p-accordionTab
-                    header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }} {{ offer.offerDetails?.id }}">
+                <p-accordionTab header="{{ offer?.company?.name }} {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}">
 
                     <div class="mb-2">
                         <p-button *ngIf="offer?.offerDetails?.pricePerUnit" label="Kaufabsicht erstellen"
@@ -165,91 +190,117 @@
                         </p-button>
                     </div>
 
-                    <p-panel header="Company Details">
-                        <p><strong>Company Label:</strong> {{ offer?.company?.label }}</p>
-                        <p><strong>Verified:</strong> {{ offer?.company?.verified ? 'Yes' : 'No' }}</p>
-                        <p><strong>Address:</strong> {{ offer?.address?.city }}</p>
-                        <p><strong>Roles:</strong> {{ offer?.roles?.join(', ') }}</p>
+                    <p-panel header="Unternehmensdetails" *ngIf="offer?.company || offer?.address || offer?.roles">
+                        <p *ngIf="offer?.company?.label"><strong>Unternehmens-Label:</strong> {{ offer?.company?.label
+                            }}</p>
+                        <p *ngIf="offer?.company?.verified !== undefined"><strong>Verifiziert:</strong> {{
+                            offer?.company?.verified ? 'Ja' : 'Nein' }}</p>
+                        <p *ngIf="offer?.address?.city"><strong>Adresse:</strong> {{ offer?.address?.city }}</p>
+                        <p *ngIf="offer?.roles?.length"><strong>Rollen:</strong> {{ offer?.roles?.join(', ') }}</p>
                     </p-panel>
 
-                    <p-panel header="Product Details">
-                        <p><strong>Start Date:</strong> {{ offer?.product?.dateStart }}</p>
-                        <p><strong>End Date:</strong> {{ offer?.product?.dateEnd }}</p>
-                        <p><strong>Total Amount:</strong> {{ offer?.product?.totalAmount }} {{ offer?.product?.unit }}
-                        </p>
-                        <p><strong>Permanent:</strong> {{ offer?.product?.isPermanent ? 'Yes' : 'No' }}</p>
+                    <p-panel header="Produktdetails" *ngIf="offer?.product">
+                        <p *ngIf="offer?.product?.dateStart"><strong>Startdatum:</strong> {{ offer?.product?.dateStart
+                            }}</p>
+                        <p *ngIf="offer?.product?.dateEnd"><strong>Enddatum:</strong> {{ offer?.product?.dateEnd }}</p>
+                        <p *ngIf="offer?.product?.totalAmount"><strong>Gesamtmenge:</strong> {{
+                            offer?.product?.totalAmount }} {{ offer?.product?.unit }}</p>
+                        <p *ngIf="offer?.product?.isPermanent !== undefined"><strong>Dauerhaft:</strong> {{
+                            offer?.product?.isPermanent ? 'Ja' : 'Nein' }}</p>
                     </p-panel>
 
-                    <p-panel header="Offer Details">
-                        <p><strong>Product Title:</strong> {{ offer?.offerDetails?.productTitle }}</p>
-                        <p><strong>Brand Name:</strong> {{ offer?.offerDetails?.brandName }}</p>
-                        <p><strong>Description:</strong> {{ offer?.offerDetails?.description }}</p>
-                        <p><strong>Min Amount:</strong> {{ offer?.offerDetails?.minAmount?.amount }} {{
-                            offer?.offerDetails?.minAmount?.unit }}</p>
-                        <p><strong>Price per Unit:</strong> €{{ offer?.offerDetails?.pricePerUnit }}</p>
-                        <p><strong>Verarbeitungen:</strong></p>
-                        <ul>
-                            <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
-                                <p>{{ processing?.label }}</p>
-                            </li>
-                        </ul>
+                    <p-panel header="Angebotsdetails" *ngIf="offer?.offerDetails">
+                        <p *ngIf="offer?.offerDetails?.productTitle"><strong>Produktname:</strong> {{
+                            offer?.offerDetails?.productTitle }}</p>
+                        <p *ngIf="offer?.offerDetails?.brandName"><strong>Markenname:</strong> {{
+                            offer?.offerDetails?.brandName }}</p>
+                        <p *ngIf="offer?.offerDetails?.description"><strong>Beschreibung:</strong> {{
+                            offer?.offerDetails?.description }}</p>
+                        <p *ngIf="offer?.offerDetails?.minAmount?.amount"><strong>Mindestmenge:</strong> {{
+                            offer?.offerDetails?.minAmount?.amount }} {{ offer?.offerDetails?.minAmount?.unit }}</p>
+                        <p *ngIf="offer?.offerDetails?.pricePerUnit"><strong>Preis pro Einheit:</strong> €{{
+                            offer?.offerDetails?.pricePerUnit }}</p>
+
+                        <div *ngIf="offer?.offerDetails?.levelsOfProcessing?.length">
+                            <strong>Verarbeitungen:</strong>
+                            <ul>
+                                <li *ngFor="let processing of offer?.offerDetails?.levelsOfProcessing">
+                                    <p>{{ processing?.label }}</p>
+                                </li>
+                            </ul>
+                        </div>
                     </p-panel>
 
-                    <p-panel header="Graduated Prices">
+                    <p-panel header="Staffelpreise" *ngIf="offer?.offerDetails?.graduatedPrices?.length">
                         <ul>
                             <li *ngFor="let price of offer?.offerDetails?.graduatedPrices">
-                                <p>Amount: {{ price?.amount }} - Price: €{{ price?.price }}</p>
+                                <p>Menge: {{ price?.amount }} - Preis: €{{ price?.price }}</p>
                             </li>
                         </ul>
                     </p-panel>
 
-                    <p-panel header="Containers">
+                    <p-panel header="Behälter" *ngIf="offer?.offerDetails?.containers?.length">
                         <ul>
                             <li *ngFor="let container of offer?.offerDetails?.containers">
-                                <p>Amount: {{ container?.amount }} {{ container?.unit }}</p>
-                                <p><strong>Returnable:</strong> {{ container?.returnable ? 'Yes' : 'No' }}</p>
+                                <p *ngIf="container?.amount"><strong>Menge:</strong> {{ container?.amount }} {{
+                                    container?.unit }}</p>
+                                <p *ngIf="container?.returnable !== undefined"><strong>Rückgabepfand:</strong> {{
+                                    container?.returnable ? 'Ja' : 'Nein' }}</p>
                             </li>
                         </ul>
                     </p-panel>
 
-                    <p-panel header="Product Traits, Weight, and Caliber">
-                        <h4>Product Traits</h4>
-                        <ul>
+                    <p-panel header="Produkteigenschaften, Gewicht und Kaliber"
+                        *ngIf="offer?.offerDetails?.productTraits?.length || offer?.offerDetails?.weight || offer?.offerDetails?.caliber">
+                        <h4 *ngIf="offer?.offerDetails?.productTraits?.length">Produkteigenschaften</h4>
+                        <ul *ngIf="offer?.offerDetails?.productTraits?.length">
                             <li *ngFor="let trait of offer?.offerDetails?.productTraits">
                                 <p>{{ trait?.trait }}: {{ trait?.description }}</p>
                             </li>
                         </ul>
 
-                        <h4>Weight</h4>
-                        <p>Min: {{ offer?.offerDetails?.weight?.min }} {{ offer?.offerDetails?.weight?.unit }}</p>
-                        <p>Max: {{ offer?.offerDetails?.weight?.max }} {{ offer?.offerDetails?.weight?.unit }}</p>
+                        <h4 *ngIf="offer?.offerDetails?.weight">Gewicht</h4>
+                        <p *ngIf="offer?.offerDetails?.weight?.min">Min: {{ offer?.offerDetails?.weight?.min }} {{
+                            offer?.offerDetails?.weight?.unit }}</p>
+                        <p *ngIf="offer?.offerDetails?.weight?.max">Max: {{ offer?.offerDetails?.weight?.max }} {{
+                            offer?.offerDetails?.weight?.unit }}</p>
 
-                        <h4>Caliber</h4>
-                        <p>Min: {{ offer?.offerDetails?.caliber?.min }} {{ offer?.offerDetails?.caliber?.unit }}</p>
-                        <p>Max: {{ offer?.offerDetails?.caliber?.max }} {{ offer?.offerDetails?.caliber?.unit }}</p>
+                        <h4 *ngIf="offer?.offerDetails?.caliber">Kaliber</h4>
+                        <p *ngIf="offer?.offerDetails?.caliber?.min">Min: {{ offer?.offerDetails?.caliber?.min }} {{
+                            offer?.offerDetails?.caliber?.unit }}</p>
+                        <p *ngIf="offer?.offerDetails?.caliber?.max">Max: {{ offer?.offerDetails?.caliber?.max }} {{
+                            offer?.offerDetails?.caliber?.unit }}</p>
                     </p-panel>
 
-                    <p-panel header="OntoFood Type">
-                        <p><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}</p>
-                        <p><strong>Localized:</strong> {{ getLocalizedLabel(offer?.ontoFoodType?.label) }}</p>
-                        <p><strong>Company:</strong> {{ offer?.ontoFoodType?.company ? 'Yes' : 'No' }}</p>
-                        <p><strong>Market Available:</strong> {{ offer?.ontoFoodType?.market ? 'Yes' : 'No' }}</p>
-                        <p><strong>Supercategories:</strong></p>
-                        <ul>
-                            <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
-                                <a href="{{ category }}" target="_blank">View Supercategory</a>
-                            </li>
-                        </ul>
-                    </p-panel>
-
-                    <p-panel header="Links">
-                        <p><strong>Self:</strong> <a href="{{ offer?.links?.self }}" target="_blank">View Offer</a></p>
-                        <p><strong>Company:</strong> <a href="{{ offer?.links?.company }}" target="_blank">View
-                                Company</a></p>
-                        <p><strong>Category:</strong> <a href="{{ offer?.links?.category }}" target="_blank">View
-                                Category</a></p>
-                        <p><strong>Contact:</strong> <a href="{{ offer?.links?.contact }}" target="_blank">Contact</a>
+                    <p-panel header="OntoFood Typ" *ngIf="offer?.ontoFoodType">
+                        <p *ngIf="offer?.ontoFoodType?.label"><strong>Label:</strong> {{ offer?.ontoFoodType?.label }}
                         </p>
+                        <p *ngIf="offer?.ontoFoodType?.label"><strong>Übersetzt:</strong> {{
+                            getLocalizedLabel(offer?.ontoFoodType?.label) }}</p>
+                        <p *ngIf="offer?.ontoFoodType?.company !== undefined"><strong>Firma:</strong> {{
+                            offer?.ontoFoodType?.company ? 'Ja' : 'Nein' }}</p>
+                        <p *ngIf="offer?.ontoFoodType?.market !== undefined"><strong>Im Markt verfügbar:</strong> {{
+                            offer?.ontoFoodType?.market ? 'Ja' : 'Nein' }}</p>
+
+                        <div *ngIf="offer?.ontoFoodType?.links?.supercategories?.length">
+                            <strong>Überkategorien:</strong>
+                            <ul>
+                                <li *ngFor="let category of offer?.ontoFoodType?.links?.supercategories">
+                                    <a href="{{ category }}" target="_blank">Überkategorie anzeigen</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </p-panel>
+
+                    <p-panel header="Links" *ngIf="offer?.links">
+                        <p *ngIf="offer?.links?.self"><strong>Selbst:</strong> <a href="{{ offer?.links?.self }}"
+                                target="_blank">Angebot anzeigen</a></p>
+                        <p *ngIf="offer?.links?.company"><strong>Firma:</strong> <a href="{{ offer?.links?.company }}"
+                                target="_blank">Firma anzeigen</a></p>
+                        <p *ngIf="offer?.links?.category"><strong>Kategorie:</strong> <a
+                                href="{{ offer?.links?.category }}" target="_blank">Kategorie anzeigen</a></p>
+                        <p *ngIf="offer?.links?.contact"><strong>Kontakt:</strong> <a href="{{ offer?.links?.contact }}"
+                                target="_blank">Kontakt</a></p>
                     </p-panel>
                 </p-accordionTab>
             </ng-container>
@@ -278,10 +329,15 @@
                 [min]="selectedOffer?.offerDetails?.minAmount?.amount || 0"
                 [max]="selectedOffer?.offerDetails?.totalAmount || 0" [step]="0.01" pInputText
                 (keypress)="preventInvalidChars($event)" />
-            <p>Verfügbare Menge: {{ selectedOffer?.offerDetails?.totalAmount?.amount }} {{
-                selectedOffer?.offerDetails?.totalAmount?.unit }}</p>
-            <p>Mindestmenge: {{ selectedOffer?.offerDetails?.minAmount?.amount }} {{
-                selectedOffer?.offerDetails?.minAmount?.unit }}</p>
+            <p
+                *ngIf="selectedOffer?.offerDetails?.totalAmount?.amount && selectedOffer?.offerDetails?.totalAmount?.unit">
+                Verfügbare Menge: {{ selectedOffer?.offerDetails?.totalAmount?.amount }}
+                {{ selectedOffer?.offerDetails?.totalAmount?.unit }}
+            </p>
+            <p *ngIf="selectedOffer?.offerDetails?.minAmount?.amount && selectedOffer?.offerDetails?.minAmount?.unit">
+                Mindestmenge: {{ selectedOffer?.offerDetails?.minAmount?.amount }}
+                {{ selectedOffer?.offerDetails?.minAmount?.unit }}
+            </p>
         </div>
         <div class="p-field">
             <label for="pricePerUnit">Preis pro Einheit:</label>

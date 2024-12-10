@@ -41,19 +41,9 @@
 
   /* Offers Card Style (similar feel to .recipe-card) */
   .offers-card {
-    border-radius: 8px;
-    border: 1px solid #ececec;
     overflow: hidden;
-    transition: transform 0.2s ease-in-out;
-    box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.128);
     background-color: #fff;
-    cursor: pointer;
     margin-bottom: 20px;
-  
-    &:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 22px 0 rgba(0, 0, 0, 0.336);
-    }
   
     .p-card-header {
       font-size: 1.25rem;
